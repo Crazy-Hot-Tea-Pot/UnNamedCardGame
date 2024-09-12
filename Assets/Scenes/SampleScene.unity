@@ -259,14 +259,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: MoveAbleObject
       objectReference: {fileID: 0}
-    - target: {fileID: 2013289599374204790, guid: a847c3b477580c44e8fa3523440364cb, type: 3}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2013289599374204790, guid: a847c3b477580c44e8fa3523440364cb, type: 3}
-      propertyPath: m_TagString
-      value: Player
-      objectReference: {fileID: 0}
     - target: {fileID: 4467942039358801863, guid: a847c3b477580c44e8fa3523440364cb, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -398,7 +390,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abe0ae29826bff047b3251a3f64c1b04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainCamera: {fileID: 0}
   selectedObjectInstance: {fileID: 0}
 --- !u!4 &619014452
 Transform:
