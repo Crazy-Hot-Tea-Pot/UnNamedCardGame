@@ -13,28 +13,28 @@ public class MoveAbleObject : MonoBehaviour
         material.SetColor("_OutlineColor", Color.clear);
     }
     //On mouseDown on the object this method is called
-    //private void OnMouseDown()
-    //{
-    //    //Get all objects that are moveable in scene
-    //    MoveAbleObject[] allObjects = FindObjectsOfType<MoveAbleObject>();
+    private void OnMouseDown()
+    {
+        //Get all objects that are moveable in scene
+        MoveAbleObject[] allObjects = FindObjectsOfType<MoveAbleObject>();
 
-    //    //Deselect other objects
-    //    foreach (var temp in allObjects)
-    //    {
-    //        temp.Deselect();  // Make sure only one object is selected at a time
-    //    }
+        //Deselect other objects
+        foreach (var temp in allObjects)
+        {
+            temp.Deselect();  // Make sure only one object is selected at a time
+        }
 
-    //    //Set Color of outline shader to green
-    //    material.SetColor("_OutlineColor", Color.green);
-    //}
+        //Set Color of outline shader to green
+        material.SetColor("_OutlineColor", Color.green);
+    }
     /// <summary>
     /// Deselect object 
     /// here for future if we have animation or some icon to show the player we have the object selected.
     /// </summary>
-    //public void Deselect()
-    //{
-    //    //Set color of outline shader to clear
-    //    material.SetColor("_OutlineColor", Color.clear);
+    public void Deselect()
+    {
+        //Set color of outline shader to clear
+        material.SetColor("_OutlineColor", Color.clear);
 
-    //}
+    }
 }

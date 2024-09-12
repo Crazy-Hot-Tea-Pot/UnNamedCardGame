@@ -398,12 +398,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abe0ae29826bff047b3251a3f64c1b04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-<<<<<<< Updated upstream
   mainCamera: {fileID: 0}
   selectedObjectInstance: {fileID: 0}
-=======
-  selectedObjectInstance: {fileID: 863130869}
->>>>>>> Stashed changes
 --- !u!4 &619014452
 Transform:
   m_ObjectHideFlags: 0
@@ -672,17 +668,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 90f0c2e778483ae4495dd0861f494ed1, type: 3}
---- !u!114 &863130869 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8754147375319245748, guid: a847c3b477580c44e8fa3523440364cb, type: 3}
-  m_PrefabInstance: {fileID: 483595440}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 925563c7d46886444b42e7b9acc103af, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &865834677
 GameObject:
   m_ObjectHideFlags: 0
