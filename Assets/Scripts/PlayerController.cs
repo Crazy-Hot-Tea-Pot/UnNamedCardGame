@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour
     private InputAction select;
     private InputAction deSelect;
 
-    private MoveAbleObject selectedObjectInstance;
+    public MoveAbleObject selectedObjectInstance;
 
     // Awake is called
     void Awake()
@@ -57,15 +57,17 @@ public class PlayerController : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit))
         {
+            Debug.Log(hit.transform.name);
+
             MoveAbleObject hitObject = hit.collider.gameObject.GetComponent<MoveAbleObject>();
 
             if (hitObject != null)
                 selectedObjectInstance = hitObject;
 
-            if(selectedObjectInstance != null && hit.collider.CompareTag("Ground"))
+            if (selectedObjectInstance != null && hit.collider.CompareTag("Ground"))
             {
                 NavMeshAgent agent = selectedObjectInstance.GetComponent<NavMeshAgent>();
-                if(agent != null)
+                if (agent != null)
                     agent.SetDestination(hit.point);
             }
         }

@@ -7,16 +7,7 @@ public class MoveAbleObject : MonoBehaviour
     private bool selected;
     private Renderer objectRenderer;
     public Material material;
-    public GameObject Selected
-    {
-        get
-        {
-            if (selected)                
-                return this.gameObject;
-            else               
-                return null;
-        }
-    }
+
     void Start()
     {
         objectRenderer = GetComponent<Renderer>();
@@ -32,8 +23,9 @@ public class MoveAbleObject : MonoBehaviour
 
         // Set this object as selected
         selected = true;
+
+        //Set Color of outline shader to green
         material.SetColor("_OutlineColor", Color.green);
-        //objectRenderer.material = outlineMaterial;
     }
     /// <summary>
     /// Deselect object 
@@ -41,7 +33,10 @@ public class MoveAbleObject : MonoBehaviour
     /// </summary>
     public void Deselect()
     {
+        //Set color of outline shader to clear
         material.SetColor("_OutlineColor", Color.clear);
+
+        // Set this object as not selected
         selected = false;
     }
 }
