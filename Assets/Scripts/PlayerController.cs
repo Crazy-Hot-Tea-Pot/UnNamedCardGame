@@ -19,10 +19,10 @@ public class PlayerController : MonoBehaviour
     private InputAction select;
 
     // The Deselect Action from inputAction class.
-    private InputAction deSelect;
+    //private InputAction deSelect;
 
     // Reference to selected object in the scene that is moveable
-    public MoveAbleObject selectedObjectInstance;
+    public GameObject MoveableObject;
 
     // Awake is called when instance is being loaded
     void Awake()
@@ -33,6 +33,12 @@ public class PlayerController : MonoBehaviour
         // Automatically finds the camera
         mainCamera = Camera.main;
     }
+    void Start()
+    {
+        //assign Object To Move if empty
+        if(MoveableObject == null)
+            MoveableObject = GameObject.FindGameObjectWithTag("Player");
+    }
     /// <summary>
     /// Enables
     /// </summary>
@@ -42,9 +48,9 @@ public class PlayerController : MonoBehaviour
         select.Enable();
         select.performed += OnClick;
 
-        deSelect = playerInputActions.Player.DeSelect;
-        deSelect.Enable();
-        deSelect.performed += OnDeselect;
+        //deSelect = playerInputActions.Player.DeSelect;
+        //deSelect.Enable();
+        //deSelect.performed += OnDeselect;
     }
 
     /// <summary>
@@ -55,8 +61,8 @@ public class PlayerController : MonoBehaviour
         select.Disable();
         select.performed -= OnClick;
 
-        deSelect.Disable();
-        deSelect.performed -= OnDeselect;
+        //deSelect.Disable();
+        //deSelect.performed -= OnDeselect;
     }
 
     /// <summary>
@@ -73,16 +79,16 @@ public class PlayerController : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit))
         {
-            Debug.Log(hit.transform.name);
+            //Debug.Log(hit.transform.name);
 
-            MoveAbleObject hitObject = hit.collider.gameObject.GetComponent<MoveAbleObject>();
+            //MoveAbleObject hitObject = hit.collider.gameObject.GetComponent<MoveAbleObject>();
 
-            if (hitObject != null)
-                selectedObjectInstance = hitObject;
+            //if (hitObject != null)
+            //    selectedObjectInstance = hitObject;
 
-            if (selectedObjectInstance != null && hit.collider.CompareTag("Ground"))
+            if (MoveableObject != null && hit.collider.CompareTag("Ground"))
             {
-                NavMeshAgent agent = selectedObjectInstance.GetComponent<NavMeshAgent>();
+                NavMeshAgent agent = MoveableObject.GetComponent<NavMeshAgent>();
                 if (agent != null)
                     agent.SetDestination(hit.point);
             }
@@ -90,12 +96,12 @@ public class PlayerController : MonoBehaviour
     }
 
     //Deselect the object in instance and do other clean up.
-    private void OnDeselect(InputAction.CallbackContext context)
-    {
-        if (selectedObjectInstance != null)
-        {
-            selectedObjectInstance.Deselect();
-            selectedObjectInstance=null;
-        }
-    }
+    //private void OnDeselect(InputAction.CallbackContext context)
+    //{
+    //    if (selectedObjectInstance != null)
+    //    {
+    //        selectedObjectInstance.Deselect();
+    //        selectedObjectInstance=null;
+    //    }
+    //}
 }
