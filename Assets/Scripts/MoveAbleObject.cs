@@ -4,25 +4,25 @@ using UnityEngine;
 
 public class MoveAbleObject : MonoBehaviour
 {
-    private bool selected;
-    private Renderer objectRenderer;
+    // Material of Object. Mainly for debugging/Testing purposes to see if object is selected or not.
     public Material material;
 
     void Start()
     {
-        objectRenderer = GetComponent<Renderer>();
+        // Set object Outline to clear as it doesn't start selected.
         material.SetColor("_OutlineColor", Color.clear);
     }
+    //On mouseDown on the object this method is called
     private void OnMouseDown()
     {
+        //Get all objects that are moveable in scene
         MoveAbleObject[] allObjects = FindObjectsOfType<MoveAbleObject>();
-        foreach (var obj in allObjects)
-        {
-            obj.Deselect();  // Make sure only one object is selected at a time
-        }
 
-        // Set this object as selected
-        selected = true;
+        //Deselect other objects
+        foreach (var temp in allObjects)
+        {
+            temp.Deselect();  // Make sure only one object is selected at a time
+        }
 
         //Set Color of outline shader to green
         material.SetColor("_OutlineColor", Color.green);
@@ -36,7 +36,5 @@ public class MoveAbleObject : MonoBehaviour
         //Set color of outline shader to clear
         material.SetColor("_OutlineColor", Color.clear);
 
-        // Set this object as not selected
-        selected = false;
     }
 }
