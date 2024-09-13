@@ -5,13 +5,13 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    //A variable to hold player turns that assumes the player turn is true and the enemy turn is false
+    ///<summary>A variable to hold player turns that assumes the player turn is true and the enemy turn is false</summary>
     bool playerTurn;
-    //Hand limit
+    ///<summary>Hand limit</summary>
     int handlimit;
-    //Deck limit
+    ///<summary>Deck limit</summary>
     int decklimit;
-    //Draws per turn
+    ///<summary>Draws per turn</summary>
     int drawsPerTurn;
     public List<GameObject> playerHand;
     public List<GameObject> playerDeck;
@@ -41,8 +41,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    //Change turn is a method that allows the turn to change whenever it's needed
-    //It assumes true is our player and false is the enemy
+    ///<summary>Change turn is a method that allows the turn to change whenever it's needed. It assumes true is our player and false is the enemy</summary>
     bool ChangeTurn(bool turn)
     {
         //Switch to enmy turn
@@ -60,7 +59,7 @@ public class GameManager : MonoBehaviour
         return turn;
     }
 
-    //Shuffles the player deck
+    ///<summary>Shuffles the player deck</summary>
     public void ShufflePlayerDeck()
     {
         //Makes sure there are atleast 3 cards and not null
@@ -85,7 +84,7 @@ public class GameManager : MonoBehaviour
 
     }
 
-    //Draws a card
+    ///<summary>Draws a card</summary>
     public void DrawCard(int draws)
     {
         //checks the hand limit and continues if possible otherwise nothing happens
@@ -109,7 +108,7 @@ public class GameManager : MonoBehaviour
 
     }
 
-    //Generates a random number
+    ///<summary>>Generates a random number</summary
     int Roll(int max, int min)
     {
         int random = Random.Range(min, max);
@@ -127,7 +126,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    //Destroys the current card
+    ///<summary>Destroys the current card</summary>
     public void cardDeath(int value)
     {
         //Remove the card from the player hand
