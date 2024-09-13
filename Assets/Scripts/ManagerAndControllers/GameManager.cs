@@ -69,14 +69,14 @@ public class GameManager : MonoBehaviour
             for (int i = 0; i < playerDeck.Count - 1; i++)
             {
                 //Collects random number for our cards
-                int num1 = Roll(0, playerDeck.Count - 1);
-                int num2 = Roll(0, playerDeck.Count - 1);
+                int num1 = Roll(0, playerDeck.Count);
+                int num2 = Roll(0, playerDeck.Count);
                 //Holds the value of the next card to be replaced
-                GameObject placeHolder = playerDeck[num2];
+                GameObject placeHolder = playerDeck[num2-1];
                 //Replaces card 2 with card 1
-                playerDeck[num2] = playerDeck[num1];
+                playerDeck[num2-1] = playerDeck[num1-1];
                 //Replaces card 1 with the place holder (Card 2)
-                playerDeck[num1] = placeHolder;
+                playerDeck[num1-1] = placeHolder;
                 //Clears our place holder
                 placeHolder = null;
             }
@@ -96,9 +96,9 @@ public class GameManager : MonoBehaviour
 
                 //take the first card on the top of the pile and add it to the players hand
                 playerHand.Add(playerDeck[0]);
-                playerDeck.RemoveAt(0);
-                UpdateUI();
+                playerDeck.RemoveAt(0);                
             }
+            UpdateUI();
         }
         //If limit reached
         else
@@ -112,15 +112,13 @@ public class GameManager : MonoBehaviour
     int Roll(int max, int min)
     {
         int random = Random.Range(min, max);
-        random = (int)(random * System.Environment.ProcessorCount / 16);
-        Debug.Log(random);
         return random;
     }
 
     //A method for updating the card ui elements
     void UpdateUI()
     {
-        for(int i = 0; i < playerHand.Count - 1; i++)
+        for(int i = 0; i < playerHand.Count; i++)
         {
             Instantiate(playerHand[i], Panel.transform);
         }
