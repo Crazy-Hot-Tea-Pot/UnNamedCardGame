@@ -32,6 +32,7 @@ public class PlayerController : MonoBehaviour
 
         // Automatically finds the camera
         mainCamera = Camera.main;
+
     }
     void Start()
     {
