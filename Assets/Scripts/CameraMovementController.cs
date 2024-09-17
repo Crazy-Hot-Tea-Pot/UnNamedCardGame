@@ -82,6 +82,9 @@ public class CameraMovementController : MonoBehaviour
 
         // Handle zoom functionality
         ZoomCamera();
+
+        // Handle panning
+        PanCamera();
     }
     /// <summary>
     /// Moves Camera when mouse it as border.
@@ -174,6 +177,41 @@ public class CameraMovementController : MonoBehaviour
 
         //// Smooth the zoom transition using Mathf.SmoothDamp
         //Camera.main.fieldOfView = Mathf.SmoothDamp(Camera.main.fieldOfView, targetFOV, ref zoomVelocity, zoomSmoothTime);
+    }
+
+    /// <summary>
+    /// Handles camera panning with the middle mouse button or arrow keys.
+    /// </summary>
+    private void PanCamera()
+    {
+        // Pan using the middle mouse button and mouse movement
+        Vector2 panInput = playerInputActions.CameraControls.Pan.ReadValue<Vector2>();
+        if (panInput != Vector2.zero)
+        {
+            Vector3 right = transform.right * panInput.x;
+            Vector3 forward = transform.forward * panInput.y;
+            forward.y = 0;  // Prevent vertical movement while panning
+
+            transform.position += (right + forward) * panSpeed * Time.deltaTime;
+        }
+
+        // Pan using arrow keys or WASD
+        Vector2 panKeyInput = playerInputActions.CameraControls.PanKeys.ReadValue<Vector2>();
+        if (panKeyInput != Vector2.zero)
+        {
+            Vector3 right = transform.right * panKeyInput.x;
+            Vector3 forward = transform.forward * panKeyInput.y;
+            forward.y = 0;
+
+            transform.position += (right + forward) * panSpeed * Time.deltaTime;
+        }
+
+        // Ensure camera stays within boundaries
+        transform.position = new Vector3(
+            Mathf.Clamp(transform.position.x, -panLimit.x, panLimit.x),
+            transform.position.y,
+            Mathf.Clamp(transform.position.z, -panLimit.y, panLimit.y)
+        );
     }
     void OnDisable()
     {

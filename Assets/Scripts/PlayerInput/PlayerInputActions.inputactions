@@ -147,26 +147,103 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "",
-                    "id": "cf89e576-8f70-4cf5-b435-aeb893c2135b",
-                    "path": "Keyboard -> ArrowUp,ArrowDown,ArrowLeft,ArrowRight",
+                    "name": "AWSD And Arrow Keys",
+                    "id": "b1c147d1-95a0-4b97-9e3b-f8be5578f2a1",
+                    "path": "2DVector",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "PanKeys",
-                    "isComposite": false,
+                    "isComposite": true,
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "",
-                    "id": "41e1e649-f7bb-4c05-b748-08af83e96ee9",
-                    "path": "Keyboard -> W,S,A,D",
+                    "name": "Up",
+                    "id": "c8677444-fd86-41d2-bfac-a02ce50612b0",
+                    "path": "<Keyboard>/w",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "PanKeys",
                     "isComposite": false,
-                    "isPartOfComposite": false
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Up",
+                    "id": "6a8e553e-1b55-4e82-bffa-ccfd83d57ddd",
+                    "path": "<Keyboard>/upArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PanKeys",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Down",
+                    "id": "78e500f0-74b8-4871-88cf-dc4ddbb536e9",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PanKeys",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Down",
+                    "id": "6245929e-a1f7-4643-b425-98ea3aa49626",
+                    "path": "<Keyboard>/downArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PanKeys",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Left",
+                    "id": "ddc90e46-4cf4-4c31-b2e4-557795a09fc7",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PanKeys",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Left",
+                    "id": "ff538032-1c81-43c5-ae2a-bc0fa2239ec5",
+                    "path": "<Keyboard>/leftArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PanKeys",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Right",
+                    "id": "a1968119-ddb7-45d8-b81d-ccbaf4d54718",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PanKeys",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Right",
+                    "id": "ac2ec0a4-7f22-426e-8262-6a8b3b8ad363",
+                    "path": "<Keyboard>/rightArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PanKeys",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 }
             ]
         }
