@@ -8,16 +8,16 @@
                 {
                     "name": "Select",
                     "type": "Button",
-                    "id": "4be15352-f6f0-4393-af71-b16562571adc",
+                    "id": "2b4b888f-8225-43ef-8f69-9ce35a4ac3f9",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
                 },
                 {
-                    "name": "DeSelect",
+                    "name": "CameraRotate",
                     "type": "Button",
-                    "id": "0274a305-b010-4f70-ae95-ee8b688493fe",
+                    "id": "b0048595-4f60-47b5-93b0-b0ceb685dc63",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -27,7 +27,7 @@
             "bindings": [
                 {
                     "name": "",
-                    "id": "3d73311c-c890-49ce-922b-2ba7f2d82815",
+                    "id": "c39f1c30-cbf0-41cf-bd32-81596613ae1a",
                     "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
@@ -38,12 +38,12 @@
                 },
                 {
                     "name": "",
-                    "id": "6316538b-0902-4eb5-b7be-f1972602e3e3",
+                    "id": "5a620521-159c-4f86-b656-48c75ddf3665",
                     "path": "<Mouse>/rightButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "DeSelect",
+                    "action": "CameraRotate",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
