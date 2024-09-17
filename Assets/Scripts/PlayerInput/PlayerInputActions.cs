@@ -99,6 +99,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""ResetCamera"",
+                    ""type"": ""Button"",
+                    ""id"": ""9b021e52-3bb9-4858-b922-f2f1dff2cfb6"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -266,6 +275,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""PanKeys"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""44c236f9-7c83-4685-9178-feb65f182c37"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ResetCamera"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -282,6 +302,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_CameraControls_Zoom = m_CameraControls.FindAction("Zoom", throwIfNotFound: true);
         m_CameraControls_Pan = m_CameraControls.FindAction("Pan", throwIfNotFound: true);
         m_CameraControls_PanKeys = m_CameraControls.FindAction("PanKeys", throwIfNotFound: true);
+        m_CameraControls_ResetCamera = m_CameraControls.FindAction("ResetCamera", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -394,6 +415,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_CameraControls_Zoom;
     private readonly InputAction m_CameraControls_Pan;
     private readonly InputAction m_CameraControls_PanKeys;
+    private readonly InputAction m_CameraControls_ResetCamera;
     public struct CameraControlsActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -403,6 +425,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @Zoom => m_Wrapper.m_CameraControls_Zoom;
         public InputAction @Pan => m_Wrapper.m_CameraControls_Pan;
         public InputAction @PanKeys => m_Wrapper.m_CameraControls_PanKeys;
+        public InputAction @ResetCamera => m_Wrapper.m_CameraControls_ResetCamera;
         public InputActionMap Get() { return m_Wrapper.m_CameraControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -427,6 +450,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @PanKeys.started += instance.OnPanKeys;
             @PanKeys.performed += instance.OnPanKeys;
             @PanKeys.canceled += instance.OnPanKeys;
+            @ResetCamera.started += instance.OnResetCamera;
+            @ResetCamera.performed += instance.OnResetCamera;
+            @ResetCamera.canceled += instance.OnResetCamera;
         }
 
         private void UnregisterCallbacks(ICameraControlsActions instance)
@@ -446,6 +472,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @PanKeys.started -= instance.OnPanKeys;
             @PanKeys.performed -= instance.OnPanKeys;
             @PanKeys.canceled -= instance.OnPanKeys;
+            @ResetCamera.started -= instance.OnResetCamera;
+            @ResetCamera.performed -= instance.OnResetCamera;
+            @ResetCamera.canceled -= instance.OnResetCamera;
         }
 
         public void RemoveCallbacks(ICameraControlsActions instance)
@@ -474,5 +503,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnZoom(InputAction.CallbackContext context);
         void OnPan(InputAction.CallbackContext context);
         void OnPanKeys(InputAction.CallbackContext context);
+        void OnResetCamera(InputAction.CallbackContext context);
     }
 }
