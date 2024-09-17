@@ -231,6 +231,12 @@ MonoBehaviour:
   panBorderThickness: 10
   panLimit: {x: 50, y: 50}
   rotationSpeed: 100
+  rotationSensitivity: 0.1
+  zoomSpeed: 1
+  zoomIncrement: 1
+  minZoom: 5
+  maxZoom: 150
+  zoomSmoothTime: 0.2
 --- !u!1 &646960386
 GameObject:
   m_ObjectHideFlags: 0

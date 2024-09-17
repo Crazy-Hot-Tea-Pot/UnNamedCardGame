@@ -72,6 +72,33 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Zoom"",
+                    ""type"": ""Value"",
+                    ""id"": ""14e449f6-402b-4f30-a20e-4cceed1db8c8"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Pan"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""bedce9e2-d8ed-4b64-9491-d363640e241d"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""PanKeys"",
+                    ""type"": ""Value"",
+                    ""id"": ""19766862-45ed-4372-ad0c-6d85417f56e6"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -96,6 +123,72 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d56fb80e-92f2-48e4-97a3-14d64af110c9"",
+                    ""path"": ""<Mouse>/scroll/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Zoom"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""One Modifier"",
+                    ""id"": ""3c3fdf09-ee77-4140-ba3b-9e065b09af9e"",
+                    ""path"": ""OneModifier"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pan"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""modifier"",
+                    ""id"": ""87a43d0e-33a3-42c6-be5e-00cff0574c87"",
+                    ""path"": ""<Mouse>/middleButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pan"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""binding"",
+                    ""id"": ""0aa7f528-582a-4128-af4f-6e3aa52e0861"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pan"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cf89e576-8f70-4cf5-b435-aeb893c2135b"",
+                    ""path"": ""Keyboard -> ArrowUp,ArrowDown,ArrowLeft,ArrowRight"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PanKeys"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""41e1e649-f7bb-4c05-b748-08af83e96ee9"",
+                    ""path"": ""Keyboard -> W,S,A,D"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""PanKeys"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -109,6 +202,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_CameraControls = asset.FindActionMap("Camera Controls", throwIfNotFound: true);
         m_CameraControls_RotateCamera = m_CameraControls.FindAction("RotateCamera", throwIfNotFound: true);
         m_CameraControls_Look = m_CameraControls.FindAction("Look", throwIfNotFound: true);
+        m_CameraControls_Zoom = m_CameraControls.FindAction("Zoom", throwIfNotFound: true);
+        m_CameraControls_Pan = m_CameraControls.FindAction("Pan", throwIfNotFound: true);
+        m_CameraControls_PanKeys = m_CameraControls.FindAction("PanKeys", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -218,12 +314,18 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private List<ICameraControlsActions> m_CameraControlsActionsCallbackInterfaces = new List<ICameraControlsActions>();
     private readonly InputAction m_CameraControls_RotateCamera;
     private readonly InputAction m_CameraControls_Look;
+    private readonly InputAction m_CameraControls_Zoom;
+    private readonly InputAction m_CameraControls_Pan;
+    private readonly InputAction m_CameraControls_PanKeys;
     public struct CameraControlsActions
     {
         private @PlayerInputActions m_Wrapper;
         public CameraControlsActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @RotateCamera => m_Wrapper.m_CameraControls_RotateCamera;
         public InputAction @Look => m_Wrapper.m_CameraControls_Look;
+        public InputAction @Zoom => m_Wrapper.m_CameraControls_Zoom;
+        public InputAction @Pan => m_Wrapper.m_CameraControls_Pan;
+        public InputAction @PanKeys => m_Wrapper.m_CameraControls_PanKeys;
         public InputActionMap Get() { return m_Wrapper.m_CameraControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -239,6 +341,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Look.started += instance.OnLook;
             @Look.performed += instance.OnLook;
             @Look.canceled += instance.OnLook;
+            @Zoom.started += instance.OnZoom;
+            @Zoom.performed += instance.OnZoom;
+            @Zoom.canceled += instance.OnZoom;
+            @Pan.started += instance.OnPan;
+            @Pan.performed += instance.OnPan;
+            @Pan.canceled += instance.OnPan;
+            @PanKeys.started += instance.OnPanKeys;
+            @PanKeys.performed += instance.OnPanKeys;
+            @PanKeys.canceled += instance.OnPanKeys;
         }
 
         private void UnregisterCallbacks(ICameraControlsActions instance)
@@ -249,6 +360,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Look.started -= instance.OnLook;
             @Look.performed -= instance.OnLook;
             @Look.canceled -= instance.OnLook;
+            @Zoom.started -= instance.OnZoom;
+            @Zoom.performed -= instance.OnZoom;
+            @Zoom.canceled -= instance.OnZoom;
+            @Pan.started -= instance.OnPan;
+            @Pan.performed -= instance.OnPan;
+            @Pan.canceled -= instance.OnPan;
+            @PanKeys.started -= instance.OnPanKeys;
+            @PanKeys.performed -= instance.OnPanKeys;
+            @PanKeys.canceled -= instance.OnPanKeys;
         }
 
         public void RemoveCallbacks(ICameraControlsActions instance)
@@ -274,5 +394,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     {
         void OnRotateCamera(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
+        void OnZoom(InputAction.CallbackContext context);
+        void OnPan(InputAction.CallbackContext context);
+        void OnPanKeys(InputAction.CallbackContext context);
     }
 }
