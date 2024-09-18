@@ -13,11 +13,17 @@ public class GameManager : MonoBehaviour
     int decklimit;
     ///<summary>Draws per turn</summary>
     int drawsPerTurn;
+    /// <summary>
+    /// Is the player in combat true is yes
+    /// </summary>
+    bool inCombat;
     public List<GameObject> playerHand;
     public List<GameObject> playerDeck;
+    public List<GameObject> enemyList;
 
     //UIVeriables
-    public GameObject Panel;
+    public GameObject panel;
+    public GameObject uiCanvas;
     
 
     // Start is called before the first frame update
@@ -120,16 +126,50 @@ public class GameManager : MonoBehaviour
     {
         for(int i = 0; i < playerHand.Count; i++)
         {
-            Instantiate(playerHand[i], Panel.transform);
+            Instantiate(playerHand[i], panel.transform);
         }
     }
 
     ///<summary>Destroys the current card</summary>
-    public void cardDeath(int value)
+    public void CardDeath(int value)
     {
         //Remove the card from the player hand
         Destroy(playerHand[value]);
         playerHand.Remove(playerHand[value]);
        
+    }
+
+    /// <summary>
+    /// A method that can be used to transition into combat when out of combat
+    /// </summary>
+    public void StartCombat()
+    {
+        //Enables combat UI
+        uiCanvas.SetActive(true);
+        //Resets player turn
+        playerTurn = true;
+        //Enables Combat
+        inCombat = true;
+    }
+
+    /// <summary>
+    /// A method to transition out of combat
+    /// </summary>
+    public void EndCombat()
+    {
+        //Deactivates the UI for combat
+        uiCanvas.SetActive(false);
+        //Disables combat
+        inCombat = false;
+    }
+
+    /// <summary>
+    /// Adds enemies to a list
+    /// </summary>
+    public void RememberEnemy(GameObject enemy)
+    {
+        Debug.Log("Added");
+        //This adds enemies to the enemy list
+        enemyList[enemyList.Count + 1] = enemy;
     }
 }
