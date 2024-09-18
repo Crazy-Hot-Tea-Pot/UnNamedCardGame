@@ -4,6 +4,7 @@ public class CameraSettings
 {
     private Vector3 defaultCameraPositon = new Vector3(0, 4, -10);
     private Quaternion defaultCameraRotation = Quaternion.Euler(30, 0, 0);
+    private float defaultFOV = 60f;
     private float cameraSpeed = 1f;
     private float cameraRotationSpeed = 100f;
     private float rotationSensitivity=0.1f;
@@ -67,6 +68,10 @@ public class CameraSettings
     public float MaximumZoom { 
         get => maximumZoom; 
         //set => maximumZoom = value; 
+    }
+    public float DefaultFOV { 
+        get => defaultFOV; 
+       // set => defaultFOV = value; 
     }
 
     // Constructor

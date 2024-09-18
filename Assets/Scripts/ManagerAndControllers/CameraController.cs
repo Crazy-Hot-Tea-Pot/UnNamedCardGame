@@ -257,6 +257,7 @@ public class CameraController : MonoBehaviour
         // Ensure the camera is exactly at the target position and rotation at the end
         transform.position = defaultCameraPosition;
         transform.rotation = defaultCameraRotation;
+        Camera.main.fieldOfView = SettingsManager.Instance.CameraSettings.DefaultFOV;
 
         isResetting = false;
     }
