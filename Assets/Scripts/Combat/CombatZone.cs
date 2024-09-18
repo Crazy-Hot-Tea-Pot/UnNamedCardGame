@@ -5,12 +5,12 @@ using UnityEngine;
 public class CombatZone : MonoBehaviour
 {
     
-    GameManager managerClass;
+    public GameManager managerClass;
     public List<GameObject> tempList;
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -24,18 +24,31 @@ public class CombatZone : MonoBehaviour
         if (other.tag == "Player")
         {
             managerClass.StartCombat();
-            for(int i = 0; i < tempList.Count - 1; i++)
+            for(int i = 0; i < tempList.Count; i++)
             {
                 managerClass.RememberEnemy(tempList[i]);
             }
-            for (int i = 0; i < tempList.Count - 1; i++)
+            for (int i = 0; i < tempList.Count; i++)
             {
                 tempList.RemoveAt(0);
             }
         }
         if (other.tag == "Enemy")
         {
-            tempList[tempList.Count] = GameObject.Find(other.name);
+            //A for each loop to chceck if the element exists in the list
+            bool tempCleared = true;
+            foreach (GameObject tempCheck in tempList)
+            {
+                if(other.name == tempCheck.name)
+                {
+                    tempCleared = false;
+                }
+            }
+            //Adds it to the list if cleared
+            if(tempCleared == true)
+            {
+                tempList.Add(GameObject.Find(other.name));
+            }
         }
     }
 

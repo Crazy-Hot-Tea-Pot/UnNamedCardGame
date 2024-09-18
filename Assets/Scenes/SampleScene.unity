@@ -783,6 +783,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1604af42aff30394d838099460ef2fb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  handlimit: 5
+  decklimit: 20
+  drawsPerTurn: 4
   playerHand: []
   playerDeck:
   - {fileID: 7436777728557001682, guid: d9849c1ec37ff6e499ec76c0fe76af67, type: 3}
@@ -902,7 +905,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &984394797
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1351,6 +1354,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acf6fe7bdbc8c754eb77416c1b4dea08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  managerClass: {fileID: 865834679}
+  tempList: []
 --- !u!1 &2013289599570480070
 GameObject:
   m_ObjectHideFlags: 0

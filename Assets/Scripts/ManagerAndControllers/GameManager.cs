@@ -8,11 +8,11 @@ public class GameManager : MonoBehaviour
     ///<summary>A variable to hold player turns that assumes the player turn is true and the enemy turn is false</summary>
     bool playerTurn;
     ///<summary>Hand limit</summary>
-    int handlimit;
+    public int handlimit;
     ///<summary>Deck limit</summary>
-    int decklimit;
+    public int decklimit;
     ///<summary>Draws per turn</summary>
-    int drawsPerTurn;
+    public int drawsPerTurn;
     /// <summary>
     /// Is the player in combat true is yes
     /// </summary>
@@ -24,17 +24,35 @@ public class GameManager : MonoBehaviour
     //UIVeriables
     public GameObject panel;
     public GameObject uiCanvas;
-    
 
+    private void Awake()
+    {
+        //Debug
+        Debug.Log("First list");
+        foreach(GameObject game in playerDeck)
+        {
+            Debug.Log(game.name);
+        }
+    }
     // Start is called before the first frame update
     void Start()
     {
+        //Debug
+        Debug.Log("List two");
+        foreach (GameObject game in playerDeck)
+        {
+            Debug.Log(game.name);
+        }
+
+        //Makes sure we have a valid number
+        if(handlimit < drawsPerTurn + 1)
+        {
+            handlimit = drawsPerTurn + 1;
+        }
         playerTurn = true;
-        handlimit = 4;
-        decklimit = 20;
-        drawsPerTurn = 3;
         ShufflePlayerDeck();
         DrawCard(drawsPerTurn);
+
     }
 
     // Update is called once per frame
@@ -168,8 +186,21 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void RememberEnemy(GameObject enemy)
     {
-        Debug.Log("Added");
-        //This adds enemies to the enemy list
-        enemyList[enemyList.Count + 1] = enemy;
+        //A for each loop to chceck if the element exists in the list
+        bool tempCleared = true;
+        foreach (GameObject tempCheck in enemyList)
+        {
+            if (enemy.name == tempCheck.name)
+            {
+                tempCleared = false;
+            }
+        }
+        //Adds it to the list if cleared
+        if (tempCleared == true)
+        {
+            //This adds enemies to the enemy list
+            enemyList.Add(enemy);
+        }
+
     }
 }
