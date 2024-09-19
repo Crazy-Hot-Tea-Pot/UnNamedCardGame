@@ -600,8 +600,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHP: 30
   currentHP: 0
-  EnemyActions: []
-  itemDrops: []
+  enemyDrops: []
+  stolenScrap: 0
+  swipeCount: 0
 --- !u!54 &1994623116
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -8,8 +8,8 @@ public class Enemy : MonoBehaviour
 
     public int maxHP;
     public int currentHP;
-    public List<string> EnemyActions;
-    public List<Drop> itemDrops;
+
+    public List<Drop> enemyDrops = new List<Drop>();
 
     public string EnemyName
     {
@@ -34,11 +34,6 @@ public class Enemy : MonoBehaviour
     public virtual void Initialize()
     {
 
-    }
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
     public virtual void TakeDamage(int damage)
     {

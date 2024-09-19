@@ -5,9 +5,11 @@ using UnityEngine;
 public class Looter : Enemy
 {
     // To keep track of stolen scrap
+    [SerializeField]
     private int stolenScrap = 0;
 
     // To track the number of Swipes performed
+    [SerializeField]
     private int swipeCount = 0;
 
     // Start is called before the first frame update
@@ -20,16 +22,12 @@ public class Looter : Enemy
     }
 
     public override void Initialize()
-    {
-
-        // Define the drops
-        itemDrops = new List<Drop>
-        {
-            new Drop("Shiv", "Weapon", 1),  // Weapon drop
-            new Drop("Scrap", "Currency", 15)  // Scrap drop
-        };
-
+    {       
         base.Initialize();
+        Drop weaponShiv = new("Shiv",Drop.DropType.Weapon, 5, 2);
+        Drop scrap = new(Drop.DropType.Scrap, 15);
+        enemyDrops.Add(weaponShiv);
+        enemyDrops.Add(scrap);
     }
 
     public override void PerformAction(string actionName)
@@ -92,5 +90,10 @@ public class Looter : Enemy
         Debug.Log($"{EnemyName} returns {stolenScrap} Scrap upon defeat.");
         // Logic to add stolen scrap back to the player's resources or similar
         stolenScrap = 0;  // Reset stolen scrap after returning
+    }
+
+    public override void TakeDamage(int damage)
+    {
+        base.TakeDamage(damage);
     }
 }
