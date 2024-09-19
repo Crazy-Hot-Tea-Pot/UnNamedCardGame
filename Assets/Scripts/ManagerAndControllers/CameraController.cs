@@ -100,6 +100,7 @@ public class CameraController : MonoBehaviour
             {
                 RotateCamera();
             }
+            else{
             CornerMovement();
 
             // Handle zoom functionality
@@ -107,6 +108,7 @@ public class CameraController : MonoBehaviour
 
             // Handle panning
             PanCamera();
+            }
         }
     }
     /// <summary>
