@@ -8,27 +8,35 @@ public class GameManager : MonoBehaviour
     ///<summary>A variable to hold player turns that assumes the player turn is true and the enemy turn is false</summary>
     bool playerTurn;
     ///<summary>Hand limit</summary>
-    int handlimit;
+    public int handlimit;
     ///<summary>Deck limit</summary>
-    int decklimit;
+    public int decklimit;
     ///<summary>Draws per turn</summary>
-    int drawsPerTurn;
+    public int drawsPerTurn;
+    /// <summary>
+    /// Is the player in combat true is yes
+    /// </summary>
+    bool inCombat;
     public List<GameObject> playerHand;
     public List<GameObject> playerDeck;
+    public List<GameObject> enemyList;
 
     //UIVeriables
-    public GameObject Panel;
-    
+    public GameObject panel;
+    public GameObject uiCanvas;
 
     // Start is called before the first frame update
     void Start()
     {
+        //Makes sure we have a valid number
+        if(handlimit < drawsPerTurn + 1)
+        {
+            handlimit = drawsPerTurn + 1;
+        }
         playerTurn = true;
-        handlimit = 4;
-        decklimit = 20;
-        drawsPerTurn = 3;
         ShufflePlayerDeck();
         DrawCard(drawsPerTurn);
+
     }
 
     // Update is called once per frame
@@ -120,16 +128,63 @@ public class GameManager : MonoBehaviour
     {
         for(int i = 0; i < playerHand.Count; i++)
         {
-            Instantiate(playerHand[i], Panel.transform);
+            Instantiate(playerHand[i], panel.transform);
         }
     }
 
     ///<summary>Destroys the current card</summary>
-    public void cardDeath(int value)
+    public void CardDeath(int value)
     {
         //Remove the card from the player hand
         Destroy(playerHand[value]);
         playerHand.Remove(playerHand[value]);
        
+    }
+
+    /// <summary>
+    /// A method that can be used to transition into combat when out of combat
+    /// </summary>
+    public void StartCombat()
+    {
+        //Enables combat UI
+        uiCanvas.SetActive(true);
+        //Resets player turn
+        playerTurn = true;
+        //Enables Combat
+        inCombat = true;
+    }
+
+    /// <summary>
+    /// A method to transition out of combat
+    /// </summary>
+    public void EndCombat()
+    {
+        //Deactivates the UI for combat
+        uiCanvas.SetActive(false);
+        //Disables combat
+        inCombat = false;
+    }
+
+    /// <summary>
+    /// Adds enemies to a list
+    /// </summary>
+    public void RememberEnemy(GameObject enemy)
+    {
+        //A for each loop to chceck if the element exists in the list
+        bool tempCleared = true;
+        foreach (GameObject tempCheck in enemyList)
+        {
+            if (enemy.name == tempCheck.name)
+            {
+                tempCleared = false;
+            }
+        }
+        //Adds it to the list if cleared
+        if (tempCleared == true)
+        {
+            //This adds enemies to the enemy list
+            enemyList.Add(enemy);
+        }
+
     }
 }
