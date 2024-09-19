@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+/// <summary>
+/// Bugs:
+/// After Rotating Camera border movement isn't correct direction.
+/// </summary>
 public class CameraController : MonoBehaviour
 {
     [Header("Camera Info")]
