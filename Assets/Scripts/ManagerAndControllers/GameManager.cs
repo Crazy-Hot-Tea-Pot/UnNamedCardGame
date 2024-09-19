@@ -25,25 +25,9 @@ public class GameManager : MonoBehaviour
     public GameObject panel;
     public GameObject uiCanvas;
 
-    private void Awake()
-    {
-        //Debug
-        Debug.Log("First list");
-        foreach(GameObject game in playerDeck)
-        {
-            Debug.Log(game.name);
-        }
-    }
     // Start is called before the first frame update
     void Start()
     {
-        //Debug
-        Debug.Log("List two");
-        foreach (GameObject game in playerDeck)
-        {
-            Debug.Log(game.name);
-        }
-
         //Makes sure we have a valid number
         if(handlimit < drawsPerTurn + 1)
         {
