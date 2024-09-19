@@ -100,6 +100,7 @@ public class CameraController : MonoBehaviour
             {
                 RotateCamera();
             }
+            CornerMovement();
 
             // Handle zoom functionality
             ZoomCamera();

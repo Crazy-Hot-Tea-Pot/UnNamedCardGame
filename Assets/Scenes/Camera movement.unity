@@ -274,14 +274,14 @@ MonoBehaviour:
   defaultCameraPosition: {x: 0, y: 4, z: -10}
   defaultCameraRotation: {x: 0.25881904, y: 0, z: 0, w: 0.9659258}
   isResetting: 0
+  isRotating: 0
   cameraRotationSpeed: 0
   cameraSpeed: 20
   rotationSensitivity: 0.1
+  minimumZoom: 0
+  maximumZoom: 0
   panBorderThickness: 10
   panLimit: {x: 50, y: 50}
-  zoomIncrement: 1
-  minZoom: 5
-  maxZoom: 150
   zoomSmoothTime: 0.2
 --- !u!1 &646960386
 GameObject:
