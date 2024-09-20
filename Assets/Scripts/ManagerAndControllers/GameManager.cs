@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    private GameManager gameManager;
+
     ///<summary>A variable to hold player turns that assumes the player turn is true and the enemy turn is false</summary>
     bool playerTurn;
     ///<summary>Hand limit</summary>
@@ -16,7 +18,18 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Is the player in combat true is yes
     /// </summary>
-    bool inCombat;
+    private bool inCombat;
+
+    /// <summary>
+    /// Is the player in combat true is yes
+    /// </summary>
+    public bool InCombat
+    {
+        get
+        {
+            return inCombat;
+        }
+    }
     public List<GameObject> playerHand;
     public List<GameObject> playerDeck;
     public List<GameObject> enemyList;
@@ -25,6 +38,16 @@ public class GameManager : MonoBehaviour
     public GameObject panel;
     public GameObject uiCanvas;
 
+
+    public static GameManager Instance
+    {
+        get;
+        private set;
+    }
+    void Awake()
+    {
+        Instance = this;
+    }
     // Start is called before the first frame update
     void Start()
     {

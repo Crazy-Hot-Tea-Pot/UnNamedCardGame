@@ -27,6 +27,7 @@ public class Enemy : MonoBehaviour
     public virtual void Start()
     {
         currentHP = maxHP;
+        gameObject.name = enemyName;
 
         Initialize();
     }
@@ -38,6 +39,7 @@ public class Enemy : MonoBehaviour
     public virtual void TakeDamage(int damage)
     {
         currentHP -= damage;
+        Debug.Log("Enemy " + name + " has taken " + damage + " damage and have " + currentHP + " remaining.");
         if(currentHP < 0)
         { 
             Die(); 

@@ -71,23 +71,26 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void OnClick(InputAction.CallbackContext context)
     {
-        Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
-        RaycastHit hit;
-
-        if (Physics.Raycast(ray, out hit))
+        if (!GameManager.Instance.InCombat)
         {
-            //Debug.Log(hit.transform.name);
+            Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
+            RaycastHit hit;
 
-            //MoveAbleObject hitObject = hit.collider.gameObject.GetComponent<MoveAbleObject>();
-
-            //if (hitObject != null)
-            //    selectedObjectInstance = hitObject;
-
-            if (MoveableObject != null && hit.collider.CompareTag("Ground"))
+            if (Physics.Raycast(ray, out hit))
             {
-                NavMeshAgent agent = MoveableObject.GetComponent<NavMeshAgent>();
-                if (agent != null)
-                    agent.SetDestination(hit.point);
+                //Debug.Log(hit.transform.name);
+
+                //MoveAbleObject hitObject = hit.collider.gameObject.GetComponent<MoveAbleObject>();
+
+                //if (hitObject != null)
+                //    selectedObjectInstance = hitObject;
+
+                if (MoveableObject != null && hit.collider.CompareTag("Ground"))
+                {
+                    NavMeshAgent agent = MoveableObject.GetComponent<NavMeshAgent>();
+                    if (agent != null)
+                        agent.SetDestination(hit.point);
+                }
             }
         }
     }

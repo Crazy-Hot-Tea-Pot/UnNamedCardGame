@@ -98,7 +98,7 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!isResetting)
+        if (!isResetting&&!GameManager.Instance.InCombat)
         {            
             if (isRotating)
             {
