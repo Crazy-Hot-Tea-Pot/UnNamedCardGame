@@ -82,7 +82,7 @@ public class Card : MonoBehaviour
     }
     void CardSelected()
     {
-        Debug.Log(CardTitle + " Title");
+        Debug.Log(CardTitle + " Card");
         active = true;
 
         switch (CardAbility)

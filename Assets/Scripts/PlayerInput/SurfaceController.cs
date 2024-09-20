@@ -20,6 +20,6 @@ public class SurfaceController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        navMeshSurface.BuildNavMesh();
+       //navMeshSurface.BuildNavMesh();
     }
 }
