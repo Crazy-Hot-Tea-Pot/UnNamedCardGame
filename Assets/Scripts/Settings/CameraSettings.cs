@@ -21,10 +21,10 @@ public class CameraSettings
         {
             return defaultCameraPositon;
         }
-        //set
-        //{
-        //    defaultCameraPositon = value;
-        //}
+        set
+        {
+            defaultCameraPositon = value;
+        }
     }
     //Default Camera Rotation
     public Quaternion DefaultCameraRotation
@@ -33,10 +33,10 @@ public class CameraSettings
         {
             return defaultCameraRotation;
         }
-        //set
-        //{
-        //    defaultCameraRotation = value;
-        //}
+        set
+        {
+            defaultCameraRotation = value;
+        }
     }
     //How fast the camera moves.
     public float CameraSpeed { 
@@ -46,7 +46,7 @@ public class CameraSettings
     //Speed for rotating the camera
     public float CameraRotationSpeed {
         get => cameraRotationSpeed;
-        //set => rotationSpeed = value; 
+        //set => camera = value; 
     }
     /// <summary>
     /// Adjust rotationSensitivity:

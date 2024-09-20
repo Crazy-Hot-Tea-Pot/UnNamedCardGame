@@ -1069,9 +1069,37 @@ PrefabInstance:
       propertyPath: m_Name
       value: Main Camera
       objectReference: {fileID: 0}
+    - target: {fileID: 1446485241968288271, guid: a988ee40e8d7e964983faa9ff82c8b35, type: 3}
+      propertyPath: defaultCameraPosition.x
+      value: -14.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446485241968288271, guid: a988ee40e8d7e964983faa9ff82c8b35, type: 3}
+      propertyPath: defaultCameraPosition.y
+      value: 14.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446485241968288271, guid: a988ee40e8d7e964983faa9ff82c8b35, type: 3}
+      propertyPath: defaultCameraPosition.z
+      value: 15.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446485241968288271, guid: a988ee40e8d7e964983faa9ff82c8b35, type: 3}
+      propertyPath: defaultCameraRotation.w
+      value: 0.6442053
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446485241968288271, guid: a988ee40e8d7e964983faa9ff82c8b35, type: 3}
+      propertyPath: defaultCameraRotation.x
+      value: 0.29154688
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446485241968288271, guid: a988ee40e8d7e964983faa9ff82c8b35, type: 3}
+      propertyPath: defaultCameraRotation.y
+      value: 0.6442053
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446485241968288271, guid: a988ee40e8d7e964983faa9ff82c8b35, type: 3}
+      propertyPath: defaultCameraRotation.z
+      value: -0.29154688
+      objectReference: {fileID: 0}
     - target: {fileID: 9089623390112372941, guid: a988ee40e8d7e964983faa9ff82c8b35, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -28.4
+      value: -14.8
       objectReference: {fileID: 0}
     - target: {fileID: 9089623390112372941, guid: a988ee40e8d7e964983faa9ff82c8b35, type: 3}
       propertyPath: m_LocalPosition.y

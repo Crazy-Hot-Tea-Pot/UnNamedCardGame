@@ -80,6 +80,9 @@ public class Card : MonoBehaviour
         imageButton.onClick.AddListener(CardSelected);
         
     }
+    /// <summary>
+    /// TODO replace this with scriptable
+    /// </summary>
     void CardSelected()
     {
         Debug.Log(CardTitle + " Card");
