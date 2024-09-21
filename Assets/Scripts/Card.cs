@@ -38,14 +38,7 @@ public class Card : MonoBehaviour
 
     public Sprite CardImage;
 
-    public enum CardAbilities
-    {
-        NoAbility,
-        Weapon,
-        Armor,
-        Trinket
-    }
-    public CardAbilities CardAbility;
+    public CardAction cardAction;
 
     /// <summary>
     /// The cost of the Card.
@@ -83,25 +76,25 @@ public class Card : MonoBehaviour
     /// <summary>
     /// TODO replace this with scriptable
     /// </summary>
-    void CardSelected()
+    public void CardSelected()
     {
         Debug.Log(CardTitle + " Card");
         active = true;
 
-        switch (CardAbility)
-        {
-            case CardAbilities.NoAbility:
-                break;
-            case CardAbilities.Weapon:
-                if (GameManager.Instance.enemyList.Count == 0)                
-                    Debug.Log("They are no enemies to do anything to.");               
-                else
-                {
-                    GameManager.Instance.enemyList[0].GetComponent<Enemy>().TakeDamage(damageAmount);
-                }    
-                break;
-            default:
-                break;
-        }
+        //switch (CardAbility)
+        //{
+        //    case CardAbilities.NoAbility:
+        //        break;
+        //    case CardAbilities.Weapon:
+        //        if (GameManager.Instance.enemyList.Count == 0)                
+        //            Debug.Log("They are no enemies to do anything to.");               
+        //        else
+        //        {
+        //            GameManager.Instance.enemyList[0].GetComponent<Enemy>().TakeDamage(damageAmount);
+        //        }    
+        //        break;
+        //    default:
+        //        break;
+        //}
     }
 }
