@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
@@ -18,7 +19,36 @@ public class PlayerController : MonoBehaviour
     //private InputAction deSelect;
 
     // Reference to selected object in the scene that is moveable
-    public GameObject MoveableObject;
+    private GameObject MoveableObject;
+
+    [Header("Player stats")]
+    [SerializeField]
+    private int health;
+    [SerializeField]
+    private int energy;
+
+    /// <summary>
+    /// Returns PLayer Health
+    /// </summary>
+    public int Health
+    {
+        get { return health; }
+    } 
+    /// <summary>
+    /// Returns PlayerEnergy
+    /// </summary>
+    public int Energy
+    {
+        get { return energy; }
+    }
+
+    [Space(50)]
+    /// <summary>
+    /// Abilities player can do.
+    /// Loaded in code.
+    /// </summary>
+    [Tooltip("Loaded on scene load.")]
+    public List<Ability> abilities = new List<Ability>();
 
     // Awake is called when instance is being loaded
     void Awake()
@@ -35,6 +65,20 @@ public class PlayerController : MonoBehaviour
         //assign Object To Move if empty
         if(MoveableObject == null)
             MoveableObject = GameObject.FindGameObjectWithTag("Player");
+
+        Initialize();
+    }
+
+    /// <summary>
+    /// Initialize Player
+    /// </summary>
+    void Initialize()
+    {
+        health = 50;
+        energy = 50;
+
+        //loads abilities from folder
+        abilities.AddRange(Resources.LoadAll<Ability>("Abilities"));
     }
     /// <summary>
     /// Enables

@@ -11,6 +11,9 @@ public class Card : MonoBehaviour
     [SerializeField]
     private bool active;
 
+    /// <summary>
+    /// Button Component so player can click on card
+    /// </summary>
     private Button imageButton;
 
     /// <summary>
@@ -80,6 +83,15 @@ public class Card : MonoBehaviour
     {
         Debug.Log(CardTitle + " Card");
         active = true;
+
+        if (cardAction != null)
+        {
+            cardAction.CardActionActivate();
+        }
+        else
+        {
+            Debug.LogWarning("No action assigned to thsi card.");
+        }
 
         //switch (CardAbility)
         //{

@@ -15,8 +15,9 @@ GameObject:
   - component: {fileID: 2181696517448560852}
   - component: {fileID: 3007749569736504765}
   - component: {fileID: 7790701717206290536}
+  - component: {fileID: 1227446777473963846}
   m_Layer: 0
-  m_Name: MoveAbleObject
+  m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -172,3 +173,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   material: {fileID: 2100000, guid: 82738f4fd2105e34c86c491017dcc057, type: 2}
+--- !u!114 &1227446777473963846
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8836494093751931086}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abe0ae29826bff047b3251a3f64c1b04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 0
+  energy: 0
+  abilities: []

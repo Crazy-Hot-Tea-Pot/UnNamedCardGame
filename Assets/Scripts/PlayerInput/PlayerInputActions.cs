@@ -35,6 +35,33 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Attack"",
+                    ""type"": ""Button"",
+                    ""id"": ""23861b7c-1c1d-485b-871a-c4ae66ab5706"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Guard"",
+                    ""type"": ""Button"",
+                    ""id"": ""0d77a29b-37dd-4324-b224-9261adccf1dd"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Use Trinket"",
+                    ""type"": ""Button"",
+                    ""id"": ""76d2d1f6-a903-4a3e-9c2b-8b0bf9643452"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -46,6 +73,39 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Select"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9e0f7710-62a3-4217-976b-92f17b58328b"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Attack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9e1c6265-387e-44ed-9ee5-6f3801795153"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Guard"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7850c5cc-d9fb-4b55-ac44-d0628f818f61"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Use Trinket"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -295,6 +355,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Select = m_Player.FindAction("Select", throwIfNotFound: true);
+        m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
+        m_Player_Guard = m_Player.FindAction("Guard", throwIfNotFound: true);
+        m_Player_UseTrinket = m_Player.FindAction("Use Trinket", throwIfNotFound: true);
         // Camera Controls
         m_CameraControls = asset.FindActionMap("Camera Controls", throwIfNotFound: true);
         m_CameraControls_RotateCamera = m_CameraControls.FindAction("RotateCamera", throwIfNotFound: true);
@@ -365,11 +428,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Player;
     private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
     private readonly InputAction m_Player_Select;
+    private readonly InputAction m_Player_Attack;
+    private readonly InputAction m_Player_Guard;
+    private readonly InputAction m_Player_UseTrinket;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
         public PlayerActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @Select => m_Wrapper.m_Player_Select;
+        public InputAction @Attack => m_Wrapper.m_Player_Attack;
+        public InputAction @Guard => m_Wrapper.m_Player_Guard;
+        public InputAction @UseTrinket => m_Wrapper.m_Player_UseTrinket;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -382,6 +451,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Select.started += instance.OnSelect;
             @Select.performed += instance.OnSelect;
             @Select.canceled += instance.OnSelect;
+            @Attack.started += instance.OnAttack;
+            @Attack.performed += instance.OnAttack;
+            @Attack.canceled += instance.OnAttack;
+            @Guard.started += instance.OnGuard;
+            @Guard.performed += instance.OnGuard;
+            @Guard.canceled += instance.OnGuard;
+            @UseTrinket.started += instance.OnUseTrinket;
+            @UseTrinket.performed += instance.OnUseTrinket;
+            @UseTrinket.canceled += instance.OnUseTrinket;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -389,6 +467,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Select.started -= instance.OnSelect;
             @Select.performed -= instance.OnSelect;
             @Select.canceled -= instance.OnSelect;
+            @Attack.started -= instance.OnAttack;
+            @Attack.performed -= instance.OnAttack;
+            @Attack.canceled -= instance.OnAttack;
+            @Guard.started -= instance.OnGuard;
+            @Guard.performed -= instance.OnGuard;
+            @Guard.canceled -= instance.OnGuard;
+            @UseTrinket.started -= instance.OnUseTrinket;
+            @UseTrinket.performed -= instance.OnUseTrinket;
+            @UseTrinket.canceled -= instance.OnUseTrinket;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -495,6 +582,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     public interface IPlayerActions
     {
         void OnSelect(InputAction.CallbackContext context);
+        void OnAttack(InputAction.CallbackContext context);
+        void OnGuard(InputAction.CallbackContext context);
+        void OnUseTrinket(InputAction.CallbackContext context);
     }
     public interface ICameraControlsActions
     {
