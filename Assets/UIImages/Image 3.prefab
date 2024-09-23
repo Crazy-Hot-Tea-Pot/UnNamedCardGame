@@ -134,12 +134,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   active: 0
-  CardTitle: Empty
-  CardDescription: Nothing at the moment
-  Uses: 1
-  CardImage: {fileID: 0}
-  CardAbility: 0
-  energyCost: 0
-  damageAmount: 0
-  sheildAmount: 0
-  powerAmount: 0
+  newCard: {fileID: 11400000, guid: 55ebf399208d9e64f942baee992564d3, type: 2}

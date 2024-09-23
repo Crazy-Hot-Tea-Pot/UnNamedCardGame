@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Attack Ability", menuName = "Abilities/Attack")]
-public class AttackAbility : Ability
+[CreateAssetMenu(fileName = "New Weapon Ability", menuName = "Abilities/Weapon")]
+public class WeaponAbility : Ability
 {
     /// <summary>
     /// Amout of Damage this ability will do

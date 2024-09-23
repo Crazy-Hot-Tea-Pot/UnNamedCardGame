@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Guard Ability", menuName = "Abilities/Guard")]
-public class GuardAbility : Ability
+[CreateAssetMenu(fileName = "New Armor Ability", menuName = "Abilities/Armor")]
+public class ArmorAbility : Ability
 {
     /// <summary>
     /// How much shielding

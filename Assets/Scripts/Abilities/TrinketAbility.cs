@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Motivate Ability", menuName = "Abilities/Motivate")]
-public class MotivateAbility : Ability
+[CreateAssetMenu(fileName = "New Trinket Ability", menuName = "Abilities/Trinket")]
+public class TrinketAbility : Ability
 {
     /// <summary>
     /// how much power gain.

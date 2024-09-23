@@ -90,15 +90,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   active: 0
-  CardTitle: Motivate
-  CardDescription: Motivate spend 30 energy and gain 1 power.
-  Uses: 1
-  CardImage: {fileID: 0}
-  CardAbility: 3
-  energyCost: 30
-  damageAmount: 0
-  sheildAmount: 0
-  powerAmount: 1
+  newCard: {fileID: 11400000, guid: af8d67b61375d7a4b9e92b3f514d9917, type: 2}
 --- !u!114 &2195038045584240431
 MonoBehaviour:
   m_ObjectHideFlags: 0

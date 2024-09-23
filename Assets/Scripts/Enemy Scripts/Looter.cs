@@ -94,6 +94,7 @@ public class Looter : Enemy
 
     public override void TakeDamage(int damage)
     {
+        Debug.Log("Looter taking damage");
         base.TakeDamage(damage);
     }
 }

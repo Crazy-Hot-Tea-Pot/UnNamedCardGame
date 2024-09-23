@@ -45,9 +45,7 @@ public class PlayerController : MonoBehaviour
     [Space(50)]
     /// <summary>
     /// Abilities player can do.
-    /// Loaded in code.
     /// </summary>
-    [Tooltip("Loaded on scene load.")]
     public List<Ability> abilities = new List<Ability>();
 
     // Awake is called when instance is being loaded
@@ -78,7 +76,7 @@ public class PlayerController : MonoBehaviour
         energy = 50;
 
         //loads abilities from folder
-        abilities.AddRange(Resources.LoadAll<Ability>("Abilities"));
+        //abilities.AddRange(Resources.LoadAll<Ability>("Abilities"));
     }
     /// <summary>
     /// Enables

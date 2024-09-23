@@ -90,15 +90,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   active: 0
-  CardTitle: Guard
-  CardDescription: Guard spending 5 energy and gain 1 Shield
-  Uses: 1
-  CardImage: {fileID: 0}
-  CardAbility: 2
-  energyCost: 5
-  damageAmount: 0
-  sheildAmount: 1
-  powerAmount: 0
+  newCard: {fileID: 11400000, guid: 8ca1dd9622ef24b4cb647a971bf2c04f, type: 2}
 --- !u!114 &3601921312132655737
 MonoBehaviour:
   m_ObjectHideFlags: 0
