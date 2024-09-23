@@ -39,14 +39,6 @@ public class CameraController : MonoBehaviour
     //rotationSensitivity for more information look at RotationSensitivity in Camera Settings
     private float rotationSensitivity;
 
-    [SerializeField]
-    //Minimum Zoom in
-    private float minimumZoom;
-
-    [SerializeField]
-    // Maxmum Zoom out
-    private float maximumZoom;
-
     [Space(20)]
 
     [Header("Camera info (Editable)")]
@@ -55,13 +47,15 @@ public class CameraController : MonoBehaviour
 
     //Allows you to define boundaries within which the camera can move.
     public Vector2 panLimit = new Vector2(50,50);
-   
+
     // Smooth zooming
-    private float targetFOV;
+    //private float targetFOV;
+
+    private Vector3 zoomTargetPosition;
     // Time for smoothing the zoom
     public float zoomSmoothTime = 0.2f;
     // A reference for smooth damp velocity
-    private float zoomVelocity = 0f;
+    private Vector3 zoomVelocity = Vector3.zero;
     
 
     // Input actions for controlling the camera
@@ -87,7 +81,7 @@ public class CameraController : MonoBehaviour
     void Start()
     {
         // Set initial FOV
-        targetFOV = Camera.main.fieldOfView;
+        //targetFOV = Camera.main.fieldOfView;
 
         playerTransform = GameObject.FindWithTag("Player").transform;
 
@@ -96,8 +90,6 @@ public class CameraController : MonoBehaviour
         cameraSpeed = SettingsManager.Instance.CameraSettings.CameraSpeed;
         cameraRotationSpeed = SettingsManager.Instance.CameraSettings.CameraRotationSpeed;
         rotationSensitivity = SettingsManager.Instance.CameraSettings.RotationSensitivity;
-        minimumZoom=SettingsManager.Instance.CameraSettings.MinimumZoom;
-        maximumZoom = SettingsManager.Instance.CameraSettings.MaximumZoom;
     }
 
     // Update is called once per frame
@@ -205,8 +197,11 @@ public class CameraController : MonoBehaviour
         // Get zoom input from action
         float scrollInput = playerInputActions.CameraControls.Zoom.ReadValue<float>();
 
-        Vector3 zoomDirection = transform.forward * scrollInput * 0.01f;
-        transform.position += zoomDirection;
+        // Calculate the desired zoom position
+        zoomTargetPosition = transform.position + transform.forward * scrollInput * 0.05f;
+
+        // Smoothly move the camera towards the zoom target position
+        transform.position = Vector3.SmoothDamp(transform.position, zoomTargetPosition, ref zoomVelocity, zoomSmoothTime);
 
         //// Only apply zoom if there is scroll input. Added this if statement as it just kept scrolling until max.
         //if (scrollInput != 0)

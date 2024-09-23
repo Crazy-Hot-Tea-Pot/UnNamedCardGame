@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e573e72ddc3cc946a14efe623b9b5c0, type: 3}
   m_Name: Testing Special Card
   m_EditorClassIdentifier: 
-  cardName: 
-  description: 
-  cardImage: {fileID: 0}
-  energyCost: 0
-  specialEffect: 
+  cardName: Special Card 1
+  description: Testing Special Card 1
+  cardImage: {fileID: 10915, guid: 0000000000000000f000000000000000, type: 0}
+  energyCost: 5
+  specialEffect: Just testing special effect one.

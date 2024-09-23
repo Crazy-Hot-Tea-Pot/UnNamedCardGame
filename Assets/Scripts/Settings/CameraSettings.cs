@@ -8,8 +8,6 @@ public class CameraSettings
     private float cameraSpeed = 3f;
     private float cameraRotationSpeed = 100f;
     private float rotationSensitivity=0.1f;
-    private float minimumZoom=10f;
-    private float maximumZoom = 150f;
 
 
     // Properties for camera settings
@@ -56,18 +54,6 @@ public class CameraSettings
     public float RotationSensitivity
     {
         get => rotationSensitivity;       
-    }
-    public float MinimumZoom
-    {
-        get
-        {
-            return minimumZoom;
-        }
-    }
-
-    public float MaximumZoom { 
-        get => maximumZoom; 
-        //set => maximumZoom = value; 
     }
     public float DefaultFOV { 
         get => defaultFOV; 
