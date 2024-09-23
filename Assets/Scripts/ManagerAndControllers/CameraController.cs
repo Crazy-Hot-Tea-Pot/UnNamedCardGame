@@ -125,20 +125,6 @@ public class CameraController : MonoBehaviour
     /// </summary>
     private void BoarderMovement()
     {
-        Vector2 panKeyInput = playerInputActions.CameraControls.Pan.ReadValue<Vector2>();
-        Vector3 right = transform.right * panKeyInput.x;
-        Vector3 forward = transform.forward * panKeyInput.y;
-        forward.y = 0; // Ensure no vertical panning
-
-        transform.position += (right + forward) * cameraSpeed * Time.deltaTime;
-
-        // Ensure the camera stays within the boundaries
-        transform.position = new Vector3(
-            Mathf.Clamp(transform.position.x, -panLimit.x, panLimit.x),
-            transform.position.y,
-            Mathf.Clamp(transform.position.z, -panLimit.y, panLimit.y)
-        );
-
         //Vector3 pos = transform.position;
 
         //if (Input.mousePosition.y >= Screen.height - panBorderThickness)
@@ -162,6 +148,20 @@ public class CameraController : MonoBehaviour
         //pos.z = Mathf.Clamp(pos.z, -panLimit.y, panLimit.y);
 
         //transform.position = pos;
+
+        Vector3 direction = Vector3.zero;
+
+        if (Input.mousePosition.x <= panBorderThickness) 
+            direction += -transform.right;
+        if (Input.mousePosition.x >= Screen.width - panBorderThickness)
+            direction += transform.right;
+        if (Input.mousePosition.y <= panBorderThickness) 
+            direction += -transform.up; 
+        if (Input.mousePosition.y >= Screen.height - panBorderThickness) 
+            direction += transform.up; 
+
+        transform.position += direction * cameraSpeed * Time.deltaTime;
+
     }
 
     /// <summary>
@@ -202,18 +202,11 @@ public class CameraController : MonoBehaviour
     /// </summary>
     private void ZoomCamera()
     {
-        Vector2 scrollData = playerInputActions.CameraControls.Zoom.ReadValue<Vector2>();
-        if (scrollData.y != 0)
-        {
-            Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
-            if (Physics.Raycast(ray, out RaycastHit hit))
-            {
-                Vector3 direction = (hit.point - transform.position).normalized;
-                transform.position += direction * scrollData.y * cameraSpeed * Time.deltaTime;
-            }
-        }
-        //// Get zoom input from action
-        //float scrollInput = playerInputActions.CameraControls.Zoom.ReadValue<float>();
+        // Get zoom input from action
+        float scrollInput = playerInputActions.CameraControls.Zoom.ReadValue<float>();
+
+        Vector3 zoomDirection = transform.forward * scrollInput * 0.01f;
+        transform.position += zoomDirection;
 
         //// Only apply zoom if there is scroll input. Added this if statement as it just kept scrolling until max.
         //if (scrollInput != 0)
@@ -226,7 +219,7 @@ public class CameraController : MonoBehaviour
 
         //    // Smoothly transition to the target FOV
         //    Camera.main.fieldOfView = Mathf.SmoothDamp(Camera.main.fieldOfView, targetFOV, ref zoomVelocity, zoomSmoothTime);
-        //}        
+        //}
     }
 
     /// <summary>
@@ -271,7 +264,9 @@ public class CameraController : MonoBehaviour
     {
         isResetting = true;
 
-        Vector3 targetPosition = playerTransform.position - playerTransform.forward * 10f + Vector3.up * 5f; // Adjust distance/height as needed
+        // Adjust distance/height as needed
+        Vector3 targetPosition = playerTransform.position - playerTransform.forward * 10f + Vector3.up * 10f; 
+
         Quaternion targetRotation = Quaternion.LookRotation(playerTransform.position - targetPosition);
 
         while (Vector3.Distance(transform.position, targetPosition) > 0.01f || Quaternion.Angle(transform.rotation, targetRotation) > 0.1f)
