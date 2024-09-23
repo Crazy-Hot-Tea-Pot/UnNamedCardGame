@@ -65,7 +65,10 @@ public class CameraController : MonoBehaviour
     
 
     // Input actions for controlling the camera
-    private PlayerInputActions playerInputActions;    
+    private PlayerInputActions playerInputActions;
+
+    //Players position for resetting camera
+    private Transform playerTransform;
 
     void Awake()
     {
@@ -86,6 +89,8 @@ public class CameraController : MonoBehaviour
         // Set initial FOV
         targetFOV = Camera.main.fieldOfView;
 
+        playerTransform = GameObject.FindWithTag("Player").transform;
+
         defaultCameraPosition = SettingsManager.Instance.CameraSettings.DefaultCameraPosition;
         defaultCameraRotation = SettingsManager.Instance.CameraSettings.DefaultCameraRotation;
         cameraSpeed = SettingsManager.Instance.CameraSettings.CameraSpeed;
@@ -105,7 +110,7 @@ public class CameraController : MonoBehaviour
                 RotateCamera();
             }
             else{
-            CornerMovement();
+            BoarderMovement();
 
             // Handle zoom functionality
             ZoomCamera();
@@ -118,31 +123,45 @@ public class CameraController : MonoBehaviour
     /// <summary>
     /// Moves Camera when mouse it as border.
     /// </summary>
-    private void CornerMovement()
+    private void BoarderMovement()
     {
-        Vector3 pos = transform.position;
+        Vector2 panKeyInput = playerInputActions.CameraControls.Pan.ReadValue<Vector2>();
+        Vector3 right = transform.right * panKeyInput.x;
+        Vector3 forward = transform.forward * panKeyInput.y;
+        forward.y = 0; // Ensure no vertical panning
 
-        if (Input.mousePosition.y >= Screen.height - panBorderThickness)
-        {
-            pos.z += cameraSpeed * Time.deltaTime;
-        }
-        if (Input.mousePosition.y <= panBorderThickness)
-        {
-            pos.z -= cameraSpeed * Time.deltaTime;
-        }
-        if (Input.mousePosition.x >= Screen.width - panBorderThickness)
-        {
-            pos.x += cameraSpeed * Time.deltaTime;
-        }
-        if (Input.mousePosition.x <= panBorderThickness)
-        {
-            pos.x -= cameraSpeed * Time.deltaTime;
-        }
+        transform.position += (right + forward) * cameraSpeed * Time.deltaTime;
 
-        pos.x = Mathf.Clamp(pos.x, -panLimit.x, panLimit.x);
-        pos.z = Mathf.Clamp(pos.z, -panLimit.y, panLimit.y);
+        // Ensure the camera stays within the boundaries
+        transform.position = new Vector3(
+            Mathf.Clamp(transform.position.x, -panLimit.x, panLimit.x),
+            transform.position.y,
+            Mathf.Clamp(transform.position.z, -panLimit.y, panLimit.y)
+        );
 
-        transform.position = pos;
+        //Vector3 pos = transform.position;
+
+        //if (Input.mousePosition.y >= Screen.height - panBorderThickness)
+        //{
+        //    pos.z += cameraSpeed * Time.deltaTime;
+        //}
+        //if (Input.mousePosition.y <= panBorderThickness)
+        //{
+        //    pos.z -= cameraSpeed * Time.deltaTime;
+        //}
+        //if (Input.mousePosition.x >= Screen.width - panBorderThickness)
+        //{
+        //    pos.x += cameraSpeed * Time.deltaTime;
+        //}
+        //if (Input.mousePosition.x <= panBorderThickness)
+        //{
+        //    pos.x -= cameraSpeed * Time.deltaTime;
+        //}
+
+        //pos.x = Mathf.Clamp(pos.x, -panLimit.x, panLimit.x);
+        //pos.z = Mathf.Clamp(pos.z, -panLimit.y, panLimit.y);
+
+        //transform.position = pos;
     }
 
     /// <summary>
@@ -183,30 +202,31 @@ public class CameraController : MonoBehaviour
     /// </summary>
     private void ZoomCamera()
     {
-        // Get zoom input from action
-        float scrollInput = playerInputActions.CameraControls.Zoom.ReadValue<float>();
-
-        // Only apply zoom if there is scroll input. Added this if statement as it just kept scrolling until max.
-        if (scrollInput != 0)
+        Vector2 scrollData = playerInputActions.CameraControls.Zoom.ReadValue<Vector2>();
+        if (scrollData.y != 0)
         {
-            // Calculate target FOV using zoomIncrement to avoid large jumps
-            targetFOV -= scrollInput * cameraSpeed; //Mathf.Sign(scrollInput) * zoomIncrement;
-
-            // Clamp target FOV to ensure it remains within the limits
-            targetFOV = Mathf.Clamp(targetFOV, minimumZoom, maximumZoom);
-
-            // Smoothly transition to the target FOV
-            Camera.main.fieldOfView = Mathf.SmoothDamp(Camera.main.fieldOfView, targetFOV, ref zoomVelocity, zoomSmoothTime);
+            Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+            if (Physics.Raycast(ray, out RaycastHit hit))
+            {
+                Vector3 direction = (hit.point - transform.position).normalized;
+                transform.position += direction * scrollData.y * cameraSpeed * Time.deltaTime;
+            }
         }
         //// Get zoom input from action
         //float scrollInput = playerInputActions.CameraControls.Zoom.ReadValue<float>();
 
-        //// Calculate target FOV
-        //targetFOV -= scrollInput * zoomSpeed;
-        //targetFOV = Mathf.Clamp(targetFOV, minZoom, maxZoom);
+        //// Only apply zoom if there is scroll input. Added this if statement as it just kept scrolling until max.
+        //if (scrollInput != 0)
+        //{
+        //    // Calculate target FOV using zoomIncrement to avoid large jumps
+        //    targetFOV -= scrollInput * cameraSpeed; //Mathf.Sign(scrollInput) * zoomIncrement;
 
-        //// Smooth the zoom transition using Mathf.SmoothDamp
-        //Camera.main.fieldOfView = Mathf.SmoothDamp(Camera.main.fieldOfView, targetFOV, ref zoomVelocity, zoomSmoothTime);
+        //    // Clamp target FOV to ensure it remains within the limits
+        //    targetFOV = Mathf.Clamp(targetFOV, minimumZoom, maximumZoom);
+
+        //    // Smoothly transition to the target FOV
+        //    Camera.main.fieldOfView = Mathf.SmoothDamp(Camera.main.fieldOfView, targetFOV, ref zoomVelocity, zoomSmoothTime);
+        //}        
     }
 
     /// <summary>
@@ -250,21 +270,36 @@ public class CameraController : MonoBehaviour
     private IEnumerator ResetCamera()
     {
         isResetting = true;
-        // Loop until the camera reaches the target position and rotation
-        while (Vector3.Distance(transform.position, defaultCameraPosition) > 0.01f || Quaternion.Angle(transform.rotation, defaultCameraRotation) > 0.1f)
-        {
-            // Smoothly interpolate position and rotation towards the default position
-            transform.position = Vector3.Lerp(transform.position, defaultCameraPosition, cameraSpeed * Time.deltaTime);
-            transform.rotation = Quaternion.Lerp(transform.rotation, defaultCameraRotation, cameraSpeed * Time.deltaTime);
 
-            // Yield to wait until the next frame
+        Vector3 targetPosition = playerTransform.position - playerTransform.forward * 10f + Vector3.up * 5f; // Adjust distance/height as needed
+        Quaternion targetRotation = Quaternion.LookRotation(playerTransform.position - targetPosition);
+
+        while (Vector3.Distance(transform.position, targetPosition) > 0.01f || Quaternion.Angle(transform.rotation, targetRotation) > 0.1f)
+        {
+            transform.position = Vector3.Lerp(transform.position, targetPosition, cameraSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, cameraSpeed * Time.deltaTime);
+
             yield return null;
         }
 
-        // Ensure the camera is exactly at the target position and rotation at the end
-        transform.position = defaultCameraPosition;
-        transform.rotation = defaultCameraRotation;
-        Camera.main.fieldOfView = SettingsManager.Instance.CameraSettings.DefaultFOV;
+        transform.position = targetPosition;
+        transform.rotation = targetRotation;
+
+        //// Loop until the camera reaches the target position and rotation
+        //while (Vector3.Distance(transform.position, defaultCameraPosition) > 0.01f || Quaternion.Angle(transform.rotation, defaultCameraRotation) > 0.1f)
+        //{
+        //    // Smoothly interpolate position and rotation towards the default position
+        //    transform.position = Vector3.Lerp(transform.position, defaultCameraPosition, cameraSpeed * Time.deltaTime);
+        //    transform.rotation = Quaternion.Lerp(transform.rotation, defaultCameraRotation, cameraSpeed * Time.deltaTime);
+
+        //    // Yield to wait until the next frame
+        //    yield return null;
+        //}
+
+        //// Ensure the camera is exactly at the target position and rotation at the end
+        //transform.position = defaultCameraPosition;
+        //transform.rotation = defaultCameraRotation;
+        //Camera.main.fieldOfView = SettingsManager.Instance.CameraSettings.DefaultFOV;
 
         isResetting = false;
     }
