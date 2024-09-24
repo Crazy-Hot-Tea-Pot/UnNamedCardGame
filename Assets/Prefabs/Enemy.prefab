@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8797287048103275905}
   - component: {fileID: 2890168514409222831}
   - component: {fileID: 3554238973276600589}
+  - component: {fileID: 6108196477726261701}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -128,6 +129,7 @@ MonoBehaviour:
   maxHP: 30
   currentHP: 0
   enemyDrops: []
+  attackRange: 3
   stolenScrap: 0
   swipeCount: 0
 --- !u!136 &3554238973276600589
@@ -153,3 +155,24 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!95 &6108196477726261701
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6560447120729858414}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a387e249e32770a49b569b61d7a72292, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

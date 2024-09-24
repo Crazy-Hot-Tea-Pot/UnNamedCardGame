@@ -16,7 +16,9 @@ public class Looter : Enemy
     public override void Start()
     {
         EnemyName = "Looter";
-        maxHP = 30;        
+        maxHP = 60;
+        swipeCount = 0;
+        stolenScrap = 0;
 
         base.Start();
     }
@@ -30,22 +32,21 @@ public class Looter : Enemy
         enemyDrops.Add(scrap);
     }
 
-    public override void PerformAction(string actionName)
+    public override void PerformNextIntent()
     {
-        switch (actionName)
+        // Since 100% on first chance i just made it this way.
+
+        if (swipeCount < 3) // First three turns are Swipe
         {
-            case "Swipe":
-                Swipe();
-                break;
-            case "Shroud":
-                Shroud();
-                break;
-            case "Escape":
-                Escape();
-                break;
-            default:
-                Debug.LogWarning($"{EnemyName} attempted to perform an undefined action: {actionName}");
-                break;
+            Swipe();
+        }
+        else if (swipeCount == 3) // After three Swipes, do Shroud
+        {
+            Shroud();
+        }
+        else if (swipeCount > 3) // After Shroud, perform Escape
+        {
+            Escape();
         }
     }
 
@@ -54,6 +55,10 @@ public class Looter : Enemy
         Debug.Log($"{EnemyName} performs Swipe, dealing 4 damage and stealing 5 Scrap.");
         stolenScrap += 5;
         swipeCount++;
+
+        stolenScrap += GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().StealScrap(5);
+
+        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().TakeDamage(6);
 
         if (swipeCount >= 3)
         {
@@ -94,7 +99,6 @@ public class Looter : Enemy
 
     public override void TakeDamage(int damage)
     {
-        Debug.Log("Looter taking damage");
         base.TakeDamage(damage);
     }
 }

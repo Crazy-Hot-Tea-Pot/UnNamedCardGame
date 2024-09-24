@@ -8,6 +8,12 @@ public class Ability : ScriptableObject
     /// Name of Ability
     /// </summary>
     public string abilityName;
+
+    /// <summary>
+    /// Description of Ability;
+    /// </summary>
+    public string abilityDescription;
+
     /// <summary>
     /// Cost to do ability
     /// </summary>

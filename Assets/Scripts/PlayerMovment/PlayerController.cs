@@ -26,6 +26,8 @@ public class PlayerController : MonoBehaviour
     private int health;
     [SerializeField]
     private int energy;
+    [SerializeField]
+    private int scrap;
 
     /// <summary>
     /// Returns PLayer Health
@@ -40,6 +42,22 @@ public class PlayerController : MonoBehaviour
     public int Energy
     {
         get { return energy; }
+    }
+    /// <summary>
+    /// Player Scrap
+    /// </summary>
+    public int Scrap
+    {
+        get
+        {
+            return scrap;
+        }
+        set
+        {
+            scrap = value;
+            if (scrap < 0) 
+                scrap = 0;
+        }
     }
 
     [Space(50)]
@@ -134,6 +152,34 @@ public class PlayerController : MonoBehaviour
                         agent.SetDestination(hit.point);
                 }
             }
+        }
+    }
+
+    /// <summary>
+    /// Deal Damage to player.
+    /// </summary>
+    /// <param name="damage">Amount of Damage as Int.</param>
+    public void TakeDamage(int damage)
+    {
+        health = Health - damage;
+    }
+    /// <summary>
+    /// Returns the scrap stolen or whats left.
+    /// </summary>
+    /// <param name="amount">the amount of scrap want to steal</param>
+    /// <returns></returns>
+    public int StealScrap(int amount)
+    {
+        if (Scrap < amount)
+        {
+            int scrapleft = Scrap;
+            Scrap -= amount;
+            return scrapleft;
+        }
+        else
+        {
+            Scrap = Scrap - amount;
+            return amount;
         }
     }
 
