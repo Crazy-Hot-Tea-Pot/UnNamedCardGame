@@ -27,7 +27,7 @@ public class Looter : Enemy
     {       
         base.Initialize();
         Drop weaponShiv = new("Shiv",Drop.DropType.Weapon, 5, 2);
-        Drop scrap = new(Drop.DropType.Scrap, 15);
+        Drop scrap = new(Drop.DropType.Scrap, 15);//new(Drop.DropType.Scrap, 15);
         enemyDrops.Add(weaponShiv);
         enemyDrops.Add(scrap);
     }
@@ -84,10 +84,10 @@ public class Looter : Enemy
     }
 
     public override void Die()
-    {
-        Debug.Log($"{EnemyName} has been defeated!");
+    {        
         DropItems();
         ReturnStolenScrap();
+        base.Die();
     }
 
     private void ReturnStolenScrap()

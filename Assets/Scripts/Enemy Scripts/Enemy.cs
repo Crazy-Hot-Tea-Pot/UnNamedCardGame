@@ -7,6 +7,7 @@ using static UnityEngine.Rendering.VolumeComponent;
 public class Enemy : MonoBehaviour
 {
     private string enemyName;
+    [SerializeField]
     private int currentHp;
     private NavMeshAgent agent;
 
@@ -27,7 +28,7 @@ public class Enemy : MonoBehaviour
         set
         {            
             currentHp = value;
-            if (currentHp < 0)
+            if (currentHp <= 0)
             {
                 Die();
             }
@@ -93,6 +94,7 @@ public class Enemy : MonoBehaviour
     public virtual void Die()
     {
         Debug.Log($"{enemyName} has been defeated!");
+        Destroy(this.gameObject);
     }
 
     /// <summary>

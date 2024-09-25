@@ -1,21 +1,19 @@
+using System;
+using Unity.VisualScripting;
+using UnityEngine;
+
 /// <summary>
 /// Class for drops in game.
 /// </summary>
 [System.Serializable]
 public class Drop
 {
+    [SerializeField]
     private int energyCost;
+    [SerializeField]
     private int damage;
+    [SerializeField]
     private int amount;
-
-    public int EnergyCost
-    {
-        get { return energyCost; }
-    }
-    public int Damage
-    {
-        get { return damage; }
-    }
 
     // The name of the item (e.g., "Scrap", "Shiv", "Chip")
     public string dropName;
@@ -29,6 +27,10 @@ public class Drop
         get
         {
             return amount;
+        }
+        set
+        {
+            amount = value;
         }
     }
 
@@ -51,13 +53,13 @@ public class Drop
     }
     /// <summary>
     /// Create Scrap type drop
-    /// </summary>
-    /// <param name="itemName"></param>
+    /// </summary>    
     /// <param name="type"></param>
     /// <param name="amount"></param>
     public Drop(DropType type,int amount)
     {
+        dropName = "Scrap";
         this.dropType = type;
-        this.amount = amount;
+        Amount = amount;
     }    
 }
