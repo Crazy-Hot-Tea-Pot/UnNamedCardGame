@@ -35,7 +35,7 @@ public class CombatZone : MonoBehaviour
         }
         if (other.tag == "Enemy")
         {
-            //A for each loop to chceck if the element exists in the list
+            //A for each loop to check if the element exists in the list
             bool tempCleared = true;
             foreach (GameObject tempCheck in tempList)
             {

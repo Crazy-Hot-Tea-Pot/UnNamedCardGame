@@ -126,8 +126,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1968876173aa3ac44b99c12437daafa6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentHp: 0
+  inCombat: 0
   maxHP: 30
-  currentHP: 0
   enemyDrops: []
   attackRange: 3
   stolenScrap: 0

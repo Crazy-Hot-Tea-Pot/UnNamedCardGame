@@ -18,7 +18,8 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Is the player in combat true is yes
     /// </summary>
-    private bool inCombat;
+    //private bool inCombat;
+    //Since this is player combat i moved it to the player class.
 
     /// <summary>
     /// Is the player in combat true is yes
@@ -27,7 +28,7 @@ public class GameManager : MonoBehaviour
     {
         get
         {
-            return inCombat;
+            return GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().InCombat;
         }
     }
     public List<GameObject> playerHand;
@@ -174,7 +175,9 @@ public class GameManager : MonoBehaviour
         //Resets player turn
         playerTurn = true;
         //Enables Combat
-        inCombat = true;
+        //inCombat = true;
+        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().InCombat = true;
+              
     }
 
     /// <summary>
@@ -185,7 +188,8 @@ public class GameManager : MonoBehaviour
         //Deactivates the UI for combat
         uiCanvas.SetActive(false);
         //Disables combat
-        inCombat = false;
+        //inCombat = false;
+        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().InCombat = false;
     }
 
     /// <summary>
@@ -207,6 +211,12 @@ public class GameManager : MonoBehaviour
         {
             //This adds enemies to the enemy list
             enemyList.Add(enemy);
+        }
+
+        //Set enemies to combat mode in combat zone
+        foreach (GameObject combatEnemy in enemyList)
+        {
+            combatEnemy.GetComponent<Enemy>().InCombat = true;
         }
 
     }

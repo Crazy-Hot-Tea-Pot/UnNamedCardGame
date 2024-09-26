@@ -9,7 +9,10 @@ public class Enemy : MonoBehaviour
     private string enemyName;
     [SerializeField]
     private int currentHp;
+    private Animator animator;
     private NavMeshAgent agent;
+    [SerializeField]
+    private bool inCombat;
 
     /// <summary>
     /// Max Hp of Enemy
@@ -60,10 +63,24 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    public bool InCombat
+    {
+        get
+        {
+            return inCombat;
+        }
+        set
+        {
+            inCombat = value;
+            animator.SetBool("inCombat", value);
+        }
+    }
+
 
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
+        animator = GetComponent<Animator>();
 
     }
 

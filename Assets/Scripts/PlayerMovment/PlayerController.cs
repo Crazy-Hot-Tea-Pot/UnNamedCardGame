@@ -14,6 +14,8 @@ public class PlayerController : MonoBehaviour
 
     // The Select Action from inputAction class.
     private InputAction select;
+    
+    private bool inCombat;
 
     // The Deselect Action from inputAction class.
     //private InputAction deSelect;
@@ -57,6 +59,15 @@ public class PlayerController : MonoBehaviour
             scrap = value;
             if (scrap < 0) 
                 scrap = 0;
+        }
+    }
+
+    public bool InCombat
+    {
+        get { return inCombat; }
+        set
+        {
+            inCombat = value;
         }
     }
 
