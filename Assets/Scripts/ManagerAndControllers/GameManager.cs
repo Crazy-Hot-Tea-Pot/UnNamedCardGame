@@ -178,8 +178,7 @@ public class GameManager : MonoBehaviour
         playerTurn = true;
         //Enables Combat
         //inCombat = true;
-        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().InCombat = true;
-              
+        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().InCombat = true;        
     }
 
     /// <summary>
@@ -215,12 +214,8 @@ public class GameManager : MonoBehaviour
             enemyList.Add(enemy);
         }
 
-        //Set enemies to combat mode in combat zone
-        foreach (GameObject combatEnemy in enemyList)
-        {
-            combatEnemy.GetComponent<Enemy>().InCombat = true;
-        }
-
+        //Had to put this here cause this is after all enemies are added @_@
+        GameObject.FindGameObjectWithTag("CombatController").GetComponent<CombatController>().StartCombat();
     }
 
     /// <summary>

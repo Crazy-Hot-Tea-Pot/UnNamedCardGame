@@ -103,11 +103,26 @@ public class Enemy : MonoBehaviour
         CurrentHP -= damage;
         Debug.Log("Enemy " + name + " has taken " + damage + " damage and have " + CurrentHP + " remaining.");
     }
+    /// <summary>
+    /// Base Perform Intent.
+    /// when overriding make sure to tell combatcontroller you made a turn.
+    /// </summary>
     public virtual void PerformNextIntent()
     {
-        
+        if(GameObject.FindGameObjectWithTag("CombatController").
+            GetComponent<CombatController>().CanIMakeAction(this.gameObject))
+        {
+            // run override code
+        }
+        else
+        {
+            Debug.Log("Can't make action.");
+            return;
+        }
     }
-
+    /// <summary>
+    /// Call when enemy die.
+    /// </summary>
     public virtual void Die()
     {
         Debug.Log($"{enemyName} has been defeated!");
