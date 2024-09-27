@@ -53,6 +53,9 @@ public class PlayerUIManager : MonoBehaviour
 
     private void Awake()
     {
+        //Fills the inventory UI for deck
+        fillDeck();
+
         //assigns player input class
         inputActions = new PlayerInputActions();
         //Assigns the input for the player to open the UI for inventory
@@ -63,8 +66,7 @@ public class PlayerUIManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //Fills the inventory UI for deck
-        fillDeck();
+
     }
 
     // Update is called once per frame
