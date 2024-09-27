@@ -36,6 +36,9 @@
                     "name": "Use Trinket",
                     "type": "Button",
                     "id": "76d2d1f6-a903-4a3e-9c2b-8b0bf9643452",
+                    "name": "InventoryUI",
+                    "type": "Button",
+                    "id": "1ffe68cf-d2c4-4c26-9d80-6140a850751d",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -84,6 +87,12 @@
                     "processors": "",
                     "groups": "",
                     "action": "Use Trinket",
+                    "id": "18dded6c-e3dc-4cc9-b6e2-c0fd371a2012",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "InventoryUI",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

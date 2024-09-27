@@ -6,6 +6,8 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     private GameManager gameManager;
+    public PlayerUIManager uiManager;
+
 
     ///<summary>A variable to hold player turns that assumes the player turn is true and the enemy turn is false</summary>
     bool playerTurn;
@@ -160,9 +162,9 @@ public class GameManager : MonoBehaviour
     public void CardDeath(int value)
     {
         //Remove the card from the player hand
-        Destroy(playerHand[value]);
         playerHand.Remove(playerHand[value]);
-       
+        //Remove the card from the InventoryUI
+        uiManager.RemoveFromUI(playerHand[value]);
     }
 
     /// <summary>
@@ -219,5 +221,30 @@ public class GameManager : MonoBehaviour
             combatEnemy.GetComponent<Enemy>().InCombat = true;
         }
 
+    }
+
+    /// <summary>
+    /// Picks up a card and adds it to the deck aswell as deck inventory
+    /// </summary>
+    /// <param name="card"></param>
+    public void PickUpCard(GameObject card)
+    {
+        //If the player deck isn't at limit
+        if(playerDeck.Count !< decklimit)
+        {
+            //Destroy the card from the game world
+            Destroy(card);
+            //Add card to deck
+            playerDeck.Add(card);
+            //Add to the inventory UI
+            uiManager.AddCardToDeck(card);
+  
+        }
+        else
+        {
+            //In the future play a sound or have a visual effect for can't pick it up
+            Debug.Log("Can't pick it up");
+        }
+        
     }
 }

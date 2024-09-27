@@ -58,6 +58,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""name"": ""Use Trinket"",
                     ""type"": ""Button"",
                     ""id"": ""76d2d1f6-a903-4a3e-9c2b-8b0bf9643452"",
+                    ""name"": ""InventoryUI"",
+                    ""type"": ""Button"",
+                    ""id"": ""1ffe68cf-d2c4-4c26-9d80-6140a850751d"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -106,6 +109,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Use Trinket"",
+                    ""id"": ""18dded6c-e3dc-4cc9-b6e2-c0fd371a2012"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""InventoryUI"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -358,6 +367,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
         m_Player_Guard = m_Player.FindAction("Guard", throwIfNotFound: true);
         m_Player_UseTrinket = m_Player.FindAction("Use Trinket", throwIfNotFound: true);
+        m_Player_InventoryUI = m_Player.FindAction("InventoryUI", throwIfNotFound: true);
         // Camera Controls
         m_CameraControls = asset.FindActionMap("Camera Controls", throwIfNotFound: true);
         m_CameraControls_RotateCamera = m_CameraControls.FindAction("RotateCamera", throwIfNotFound: true);
@@ -431,6 +441,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Attack;
     private readonly InputAction m_Player_Guard;
     private readonly InputAction m_Player_UseTrinket;
+    private readonly InputAction m_Player_InventoryUI;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -439,6 +450,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @Attack => m_Wrapper.m_Player_Attack;
         public InputAction @Guard => m_Wrapper.m_Player_Guard;
         public InputAction @UseTrinket => m_Wrapper.m_Player_UseTrinket;
+        public InputAction @InventoryUI => m_Wrapper.m_Player_InventoryUI;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -460,6 +472,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @UseTrinket.started += instance.OnUseTrinket;
             @UseTrinket.performed += instance.OnUseTrinket;
             @UseTrinket.canceled += instance.OnUseTrinket;
+            @InventoryUI.started += instance.OnInventoryUI;
+            @InventoryUI.performed += instance.OnInventoryUI;
+            @InventoryUI.canceled += instance.OnInventoryUI;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -476,6 +491,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @UseTrinket.started -= instance.OnUseTrinket;
             @UseTrinket.performed -= instance.OnUseTrinket;
             @UseTrinket.canceled -= instance.OnUseTrinket;
+            @InventoryUI.started -= instance.OnInventoryUI;
+            @InventoryUI.performed -= instance.OnInventoryUI;
+            @InventoryUI.canceled -= instance.OnInventoryUI;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -585,6 +603,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnAttack(InputAction.CallbackContext context);
         void OnGuard(InputAction.CallbackContext context);
         void OnUseTrinket(InputAction.CallbackContext context);
+        void OnInventoryUI(InputAction.CallbackContext context);
     }
     public interface ICameraControlsActions
     {
