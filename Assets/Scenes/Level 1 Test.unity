@@ -1637,6 +1637,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: maintenance room
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 37ede159ce529a343a1f899f2dc796aa, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1240339421791659200, guid: 37ede159ce529a343a1f899f2dc796aa, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
