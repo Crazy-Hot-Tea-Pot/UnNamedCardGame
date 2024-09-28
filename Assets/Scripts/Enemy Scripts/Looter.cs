@@ -34,6 +34,7 @@ public class Looter : Enemy
 
     public override void PerformNextIntent()
     {
+        base.PerformNextIntent();
         // Since 100% on first chance i just made it this way.
 
         if (swipeCount < 3) // First three turns are Swipe
@@ -48,6 +49,8 @@ public class Looter : Enemy
         {
             Escape();
         }
+        GameObject.FindGameObjectWithTag("CombatController").
+            GetComponent<CombatController>().TurnUsed(this.gameObject);        
     }
 
     private void Swipe()

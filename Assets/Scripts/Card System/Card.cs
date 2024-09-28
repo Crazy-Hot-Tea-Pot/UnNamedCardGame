@@ -62,14 +62,20 @@ public class Card : MonoBehaviour
     {
         Debug.Log(CardTitle + " Card");
         active = true;
-
-        if (newCard != null)
+        if (GameObject.FindGameObjectWithTag("CombatController").
+            GetComponent<CombatController>().
+            CanIMakeAction(GameObject.FindGameObjectWithTag("Player")))
         {
-            newCard.OnCardPlayed();
-        }
-        else
-        {
-            Debug.LogWarning("No script attached.");
+            if (newCard != null)
+            {
+                newCard.OnCardPlayed();
+                GameObject.FindGameObjectWithTag("CombatController").
+                GetComponent<CombatController>().TurnUsed(GameObject.FindGameObjectWithTag("Player"));
+            }
+            else
+            {
+                Debug.LogWarning("No script attached.");
+            }
         }
     }
 }
