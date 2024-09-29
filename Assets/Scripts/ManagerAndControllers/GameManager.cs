@@ -164,7 +164,7 @@ public class GameManager : MonoBehaviour
         //Remove the card from the player hand
         playerHand.Remove(playerHand[value]);
         //Remove the card from the InventoryUI
-        uiManager.RemoveFromUI(playerHand[value]);
+        uiManager.RemoveFromUI(playerHand[value], uiManager.panelDeck);
     }
 
     /// <summary>
@@ -219,16 +219,17 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Picks up a card and adds it to the deck aswell as deck inventory
+    /// Picks up a card and adds it to the deck aswell as deck inventory. This method needs first a card and second the object to be deleted because card objects
+    /// Are UI specific
     /// </summary>
     /// <param name="card"></param>
-    public void PickUpCard(GameObject card)
+    public void PickUpCard(GameObject card, GameObject deleteOb)
     {
         //If the player deck isn't at limit
         if(playerDeck.Count !< decklimit)
         {
             //Destroy the card from the game world
-            Destroy(card);
+            Destroy(deleteOb);
             //Add card to deck
             playerDeck.Add(card);
             //Add to the inventory UI

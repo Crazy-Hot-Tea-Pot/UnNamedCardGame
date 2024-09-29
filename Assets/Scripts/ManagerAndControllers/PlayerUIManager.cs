@@ -20,6 +20,15 @@ public class PlayerUIManager : MonoBehaviour
     /// </summary>
     private InputAction openInventory;
 
+    /// <summary>
+    /// This input action holds input for dropping Inventory Items
+    /// </summary>
+    private InputAction dropItem;
+
+    /// <summary>
+    /// A player camera for the ray casting
+    /// </summary>
+    private Camera playerCam;
 
     #region InventoryUIVariables
     /// <summary>
@@ -60,13 +69,15 @@ public class PlayerUIManager : MonoBehaviour
         inputActions = new PlayerInputActions();
         //Assigns the input for the player to open the UI for inventory
         openInventory = inputActions.Player.InventoryUI;
+        //Assign the input for the player to drop items from the UI
+        dropItem = inputActions.Player.InventoryRemove;
         //Enables the UI
         openInventory.Enable();
     }
     // Start is called before the first frame update
     void Start()
     {
-
+        playerCam = Camera.main;
     }
 
     // Update is called once per frame
@@ -77,7 +88,34 @@ public class PlayerUIManager : MonoBehaviour
        {
             OpenInventroy();
        }
-      
+
+        //The button input for drop item
+        if (dropItem.IsPressed() && isActive)
+        {
+            
+            Debug.Log("Boom");
+            //This creates a ray from the player camera
+            Ray ray = playerCam.ScreenPointToRay(Mouse.current.position.ReadValue());
+            //This is a variable to hold the ray cast hit target
+            RaycastHit target;
+
+            //If the raycast hit's something
+            if (Physics.Raycast(ray, out target))
+            {
+                //If the mouse is over a card
+                if (target.transform.tag == "Card")
+                {
+                    //Remove the card based on the targets name in the appropriate parent
+                    RemoveFromUI(GameObject.Find(target.transform.name), panelDeck);
+                }
+            }
+        }
+
+        if(dropItem.IsPressed())
+        {
+            Debug.Log("Is open");
+        }
+
     }
 
     #region InventoryUIStuff
@@ -170,14 +208,17 @@ public class PlayerUIManager : MonoBehaviour
     {
         Instantiate(item, panelInventory.transform);
     }
+
     /// <summary>
-    /// This function just destroys anything you put in here put the card or item you want destroyed as in the UI element and it's gone. If you shove an enemy in here
-    /// that's gone too.
+    /// This function allows items to be removed from the UI it requires a object first and then a parent
     /// </summary>
     /// <param name="card"></param>
-    public void RemoveFromUI(GameObject card)
+    public void RemoveFromUI(GameObject remObject, GameObject parent)
     {
-        Destroy(card);
+        //Destroys the game object from the UI element
+        Destroy(parent.transform.Find(remObject.name));
     }
+
+    
     #endregion
 }

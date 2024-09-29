@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 2195038045584240431}
   m_Layer: 5
   m_Name: Image 2
-  m_TagString: Untagged
+  m_TagString: Card
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -131,7 +131,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
+  m_TargetGraphic: {fileID: 8459738676113486515}
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
