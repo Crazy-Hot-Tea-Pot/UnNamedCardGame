@@ -77,5 +77,9 @@ public class Card : MonoBehaviour
                 Debug.LogWarning("No script attached.");
             }
         }
+        else
+        {
+            Debug.Log("Not this obejcts turn yet.");
+        }
     }
 }

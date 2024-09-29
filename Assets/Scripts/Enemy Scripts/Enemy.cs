@@ -92,6 +92,17 @@ public class Enemy : MonoBehaviour
 
         Initialize();
     }
+    public virtual void Update()
+    {
+        if (InCombat)
+        {
+            if(GameObject.FindGameObjectWithTag("CombatController").
+            GetComponent<CombatController>().CanIMakeAction(this.gameObject))
+            {
+                PerformIntent();
+            }
+        }
+    }
 
     public virtual void Initialize()
     {
@@ -107,7 +118,7 @@ public class Enemy : MonoBehaviour
     /// Base Perform Intent.
     /// when overriding make sure to tell combatcontroller you made a turn.
     /// </summary>
-    public virtual void PerformNextIntent()
+    public virtual void PerformIntent()
     {
         if(GameObject.FindGameObjectWithTag("CombatController").
             GetComponent<CombatController>().CanIMakeAction(this.gameObject))

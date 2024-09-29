@@ -32,9 +32,9 @@ public class Looter : Enemy
         enemyDrops.Add(scrap);
     }
 
-    public override void PerformNextIntent()
+    public override void PerformIntent()
     {
-        base.PerformNextIntent();
+        base.PerformIntent();
         // Since 100% on first chance i just made it this way.
 
         if (swipeCount < 3) // First three turns are Swipe
