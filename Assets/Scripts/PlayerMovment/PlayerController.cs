@@ -14,7 +14,8 @@ public class PlayerController : MonoBehaviour
 
     // The Select Action from inputAction class.
     private InputAction select;
-    
+
+    [SerializeField]
     private bool inCombat;
 
     // The Deselect Action from inputAction class.
@@ -27,6 +28,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private int health;
     [SerializeField]
+    private int shield;
+    [SerializeField]
     private int energy;
     [SerializeField]
     private int scrap;
@@ -37,13 +40,29 @@ public class PlayerController : MonoBehaviour
     public int Health
     {
         get { return health; }
-    } 
+        private set { health = value; }
+    }
+    public int Shield
+    {
+        get
+        {
+            return shield;
+        }
+        private set
+        {
+            shield = value;
+        }
+    }
     /// <summary>
     /// Returns PlayerEnergy
     /// </summary>
     public int Energy
     {
         get { return energy; }
+        private set
+        {
+            energy = value;
+        }
     }
     /// <summary>
     /// Player Scrap
@@ -101,8 +120,9 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     void Initialize()
     {
-        health = 50;
-        energy = 50;
+        Health = 50;
+        Energy = 50;
+        Scrap = 100;
 
         //loads abilities from folder
         //abilities.AddRange(Resources.LoadAll<Ability>("Abilities"));
@@ -149,12 +169,6 @@ public class PlayerController : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit))
             {
-                //Debug.Log(hit.transform.name);
-
-                //MoveAbleObject hitObject = hit.collider.gameObject.GetComponent<MoveAbleObject>();
-
-                //if (hitObject != null)
-                //    selectedObjectInstance = hitObject;
 
                 if (MoveableObject != null && hit.collider.CompareTag("Ground"))
                 {
@@ -165,14 +179,47 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-
+    /// <summary>
+    /// Give player shield.
+    /// </summary>
+    /// <param name="shieldAmount"></param>
+    public void ApplyShieldToPlayer(int shieldAmount)
+    {
+        Shield += shieldAmount;
+    }
+    /// <summary>
+    /// Called when player has played a card or use an ability.
+    /// will remove energy.
+    /// </summary>
+    /// <param name="energyUseage"></param>
+    public void PlayedCardOrAbility(int energyUseage)
+    {
+        Energy -= energyUseage;
+    }
     /// <summary>
     /// Deal Damage to player.
     /// </summary>
     /// <param name="damage">Amount of Damage as Int.</param>
     public void TakeDamage(int damage)
     {
-        health = Health - damage;
+        // if has shield
+        if (Shield > 0)
+        {
+            if (damage >= Shield)
+            {
+                damage -= Shield;
+                Shield = 0;
+                Debug.Log(name + "Shield destroyed.");
+            }
+            else
+            {
+                // Reduce the shield by the damage amount
+                Shield -= damage;
+                // No remaining damage to apply to HP
+                damage = 0;
+            }            
+        }
+        Health = Health - damage;
     }
     /// <summary>
     /// Returns the scrap stolen or whats left.

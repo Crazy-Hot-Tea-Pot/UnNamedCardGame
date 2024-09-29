@@ -18,7 +18,7 @@ public class Drop
     // The name of the item (e.g., "Scrap", "Shiv", "Chip")
     public string dropName;
     // The type of the item (e.g., "Scrap", "Weapon", "Chip")
-    public enum DropType { Weapon, Scrap };
+    public enum DropType { Armor, Chips, Scrap, Trinkets, Weapon };
 
     public DropType dropType;
     // The amount of the item dropped (for items like Scrap)
