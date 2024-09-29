@@ -83,38 +83,12 @@ public class PlayerUIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         //On hold open the inventroy UI if input is recieved
-       if(openInventory.IsPressed())
+        if (openInventory.IsPressed())
        {
             OpenInventroy();
        }
-
-        //The button input for drop item
-        if (dropItem.IsPressed() && isActive)
-        {
-            
-            Debug.Log("Boom");
-            //This creates a ray from the player camera
-            Ray ray = playerCam.ScreenPointToRay(Mouse.current.position.ReadValue());
-            //This is a variable to hold the ray cast hit target
-            RaycastHit target;
-
-            //If the raycast hit's something
-            if (Physics.Raycast(ray, out target))
-            {
-                //If the mouse is over a card
-                if (target.transform.tag == "Card")
-                {
-                    //Remove the card based on the targets name in the appropriate parent
-                    RemoveFromUI(GameObject.Find(target.transform.name), panelDeck);
-                }
-            }
-        }
-
-        if(dropItem.IsPressed())
-        {
-            Debug.Log("Is open");
-        }
 
     }
 
@@ -210,15 +184,24 @@ public class PlayerUIManager : MonoBehaviour
     }
 
     /// <summary>
-    /// This function allows items to be removed from the UI it requires a object first and then a parent
+    /// This function allows items to be removed from the UI it requires a object first and then a parent name deck or inventory as a string
     /// </summary>
     /// <param name="card"></param>
-    public void RemoveFromUI(GameObject remObject, GameObject parent)
+    public void RemoveFromUI(GameObject remObject, string parent)
     {
-        //Destroys the game object from the UI element
-        Destroy(parent.transform.Find(remObject.name));
+        //If we are removing from deck
+        if (parent == "deck" || parent == "Deck")
+        {
+            //Destroys the game object from the UI element
+            Destroy(panelDeck.transform.Find(remObject.name));
+        }
+        //If we are removing from inventory
+        else if (parent == "inventory" || parent == "Inventroy")
+        {
+            //Destroy the game object from the UI element
+            Destroy(panelInventory.transform.Find(remObject.name));
+        }
     }
-
     
     #endregion
 }

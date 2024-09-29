@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 887ac691cf694c54eabb0a00bae29d6b, type: 3}
   m_Name: Default Guard
   m_EditorClassIdentifier: 
-  abiliityName: Guard
+  abilityName: Default Guard
+  abilityDescription: Empty
   energyCost: 5
   shield: 1
