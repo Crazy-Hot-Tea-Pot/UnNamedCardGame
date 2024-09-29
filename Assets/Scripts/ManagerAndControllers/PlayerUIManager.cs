@@ -70,7 +70,7 @@ public class PlayerUIManager : MonoBehaviour
         //Assigns the input for the player to open the UI for inventory
         openInventory = inputActions.Player.InventoryUI;
         //Assign the input for the player to drop items from the UI
-        dropItem = inputActions.Player.InventoryRemove;
+        dropItem = inputActions.Player.DropItem;
         //Enables the UI
         openInventory.Enable();
     }

@@ -51,9 +51,9 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "InventoryRemove",
+                    "name": "DropItem",
                     "type": "Button",
-                    "id": "6fa2b711-d4a8-4dff-9713-cd8a78abc0ae",
+                    "id": "b974d7b3-3052-4a48-971f-8d53336ed433",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -97,7 +97,7 @@
                 {
                     "name": "",
                     "id": "7850c5cc-d9fb-4b55-ac44-d0628f818f61",
-                    "path": "",
+                    "path": "<Keyboard>/f",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -118,12 +118,12 @@
                 },
                 {
                     "name": "",
-                    "id": "0459e6ae-dd8b-4a08-a532-00f04840a0a3",
+                    "id": "cd869680-8243-4e69-9f36-a8cd0fa1c034",
                     "path": "<Keyboard>/x",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "InventoryRemove",
+                    "action": "DropItem",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
