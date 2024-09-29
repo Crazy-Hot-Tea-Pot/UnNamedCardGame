@@ -22,6 +22,6 @@ public class UIDrop : MonoBehaviour
     public void DropCard()
     {
             //Remove the card based on the targets name in the appropriate parent
-            uiManager.RemoveFromUI(GameObject.Find(this.name), "Card");
+            //uiManager.RemoveFromUI(GameObject.Find(this.name), "Card");
     }
 }

@@ -11,6 +11,7 @@ public class DefenseCard : NewCard
     public override void OnCardPlayed()
     {
         base.OnCardPlayed();
+
         Debug.Log(cardName + " used to gain " + shieldAmount + " shield.");
 
         GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().ApplyShieldToPlayer(shieldAmount);

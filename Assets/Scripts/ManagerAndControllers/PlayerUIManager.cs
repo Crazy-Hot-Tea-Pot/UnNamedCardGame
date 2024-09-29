@@ -187,20 +187,11 @@ public class PlayerUIManager : MonoBehaviour
     /// This function allows items to be removed from the UI it requires a object first and then a parent name deck or inventory as a string
     /// </summary>
     /// <param name="card"></param>
-    public void RemoveFromUI(GameObject remObject, string parent)
+    public void RemoveFromUI(GameObject remObject, GameObject parent)
     {
-        //If we are removing from deck
-        if (parent == "deck" || parent == "Deck")
-        {
             //Destroys the game object from the UI element
-            Destroy(panelDeck.transform.Find(remObject.name));
-        }
-        //If we are removing from inventory
-        else if (parent == "inventory" || parent == "Inventroy")
-        {
-            //Destroy the game object from the UI element
-            Destroy(panelInventory.transform.Find(remObject.name));
-        }
+            Destroy(parent.transform.Find(remObject.name));
+        
     }
     
     #endregion
