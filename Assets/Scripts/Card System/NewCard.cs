@@ -24,5 +24,8 @@ public class NewCard : ScriptableObject
     {
         // This will be overridden by specific card types
         Debug.Log(cardName + " played.");
+        GameObject.FindGameObjectWithTag("Player").
+            GetComponent<PlayerController>().
+            PlayedCardOrAbility(energyCost);
     }
 }

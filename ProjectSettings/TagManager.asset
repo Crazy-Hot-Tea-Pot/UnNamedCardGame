@@ -7,6 +7,7 @@ TagManager:
   - Ground
   - Enemy
   - CombatController
+  - Drop
   layers:
   - Default
   - TransparentFX

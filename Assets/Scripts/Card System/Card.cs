@@ -56,21 +56,33 @@ public class Card : MonoBehaviour
         
     }
     /// <summary>
-    /// TODO replace this with scriptable
+    /// Runs Scriptable Card
     /// </summary>
     public void CardSelected()
     {
         Debug.Log(CardTitle + " Card");
-        active = true;
+        active = true;  
+        //Check if player can play card
         if (GameObject.FindGameObjectWithTag("CombatController").
             GetComponent<CombatController>().
             CanIMakeAction(GameObject.FindGameObjectWithTag("Player")))
         {
+            //Check if newCard is assigned
             if (newCard != null)
             {
-                newCard.OnCardPlayed();
-                GameObject.FindGameObjectWithTag("CombatController").
-                GetComponent<CombatController>().TurnUsed(GameObject.FindGameObjectWithTag("Player"));
+                //Check if player has enough energy to play card.
+                if (newCard.energyCost > GameObject.
+                    FindGameObjectWithTag("Player").
+                    GetComponent<PlayerController>().Energy)
+                {
+                    //for when player doesn't have enough energy
+                }
+                else
+                {
+                    newCard.OnCardPlayed();
+                    GameObject.FindGameObjectWithTag("CombatController").
+                    GetComponent<CombatController>().TurnUsed(GameObject.FindGameObjectWithTag("Player"));
+                }
             }
             else
             {

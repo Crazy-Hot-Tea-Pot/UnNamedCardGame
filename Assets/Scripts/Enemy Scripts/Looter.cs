@@ -12,6 +12,14 @@ public class Looter : Enemy
     [SerializeField]
     private int swipeCount = 0;
 
+    private bool shrouded;
+
+    public bool Shrouded
+    {
+        get { return shrouded; }
+        private set { shrouded = value; }
+    }
+
     // Start is called before the first frame update
     public override void Start()
     {
@@ -33,62 +41,58 @@ public class Looter : Enemy
     }
 
     public override void PerformIntent()
-    {
-        base.PerformIntent();
+    {       
         // Since 100% on first chance i just made it this way.
 
         if (swipeCount < 3) // First three turns are Swipe
         {
             Swipe();
         }
-        else if (swipeCount == 3) // After three Swipes, do Shroud
+        else if (swipeCount == 3 && !Shrouded) // After three Swipes, do Shroud
         {
             Shroud();
         }
-        else if (swipeCount > 3) // After Shroud, perform Escape
+        else if (Shrouded) // After Shroud, perform Escape
         {
             Escape();
         }
-        GameObject.FindGameObjectWithTag("CombatController").
-            GetComponent<CombatController>().TurnUsed(this.gameObject);        
-    }
 
+        base.PerformIntent();
+    }
+    /// <summary>
+    /// 
+    ///  After the 3rd Swipe, perform Shroud
+    /// </summary>
     private void Swipe()
     {
         Debug.Log($"{EnemyName} performs Swipe, dealing 4 damage and stealing 5 Scrap.");
-        stolenScrap += 5;
         swipeCount++;
 
         stolenScrap += GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().StealScrap(5);
 
         GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().TakeDamage(6);
 
-        if (swipeCount >= 3)
-        {
-            // After the 3rd Swipe, perform Shroud
-            Shroud();
-        }
     }
 
     private void Shroud()
     {
         Debug.Log($"{EnemyName} performs Shroud, gaining 10 Shield.");
-        // TODO: shield logic here
+        Shield += 10;
 
-        // After Shroud, perform Escape
-        Escape();
+        Shrouded = true;
     }
 
     private void Escape()
     {
         Debug.Log($"{EnemyName} performs Escape, exiting the fight with {stolenScrap} Scrap.");
-        // Logic to handle escaping from the fight
-        // Return all stolen scrap upon killing
+        CombatController.RemoveCombadant(this.gameObject);
+        Destroy( this.gameObject );
     }
-
+    /// <summary>
+    /// Return all stolen scrap upon killing
+    /// </summary>
     public override void Die()
     {        
-        DropItems();
         ReturnStolenScrap();
         base.Die();
     }

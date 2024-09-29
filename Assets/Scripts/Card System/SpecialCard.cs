@@ -11,7 +11,7 @@ public class SpecialCard : NewCard
 
     public override void OnCardPlayed()
     {
-        // Implement special card logic here
+        base.OnCardPlayed();
         Debug.Log(cardName + " triggered a special effect: " + specialEffect);
     }
 }

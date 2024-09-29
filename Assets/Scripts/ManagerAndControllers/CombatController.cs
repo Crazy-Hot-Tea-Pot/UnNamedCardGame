@@ -73,7 +73,10 @@ public class CombatController : MonoBehaviour
     {
         if (GameManager.Instance.InCombat)
         {
-            CheckIfAllAttacked();
+            if (AreEnemiesRemaining())
+                CheckIfAllAttacked();
+            else
+                EndCombat();
         }        
     }
     /// <summary>
@@ -148,6 +151,34 @@ public class CombatController : MonoBehaviour
         return false;
     }
     /// <summary>
+    /// Check if enemies are still in combat zone.
+    /// </summary>
+    /// <returns></returns>
+    public bool AreEnemiesRemaining()
+    {
+        foreach (Combadant combadant in Combadants)
+        {
+            if (combadant.combadant.CompareTag("Enemy"))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    /// <summary>
+    /// Call this after enemy death to remove enemy from list of combadants"
+    /// </summary>
+    /// <param name="combadant"></param>
+    public void RemoveCombadant(GameObject combadant)
+    {
+        Combadant combatantToRemove = Combadants.Find(c => c.combadant == combadant);
+        if (combatantToRemove != null)
+        {
+            Combadants.Remove(combatantToRemove);
+            Debug.Log($"{combadant.name} has been removed from combat.");
+        }
+    }
+    /// <summary>
     /// Move to next round.
     /// Increase round counter
     /// Reset the current combatant index to the start of the list
@@ -165,4 +196,21 @@ public class CombatController : MonoBehaviour
             combadant.attacked = false;
         }
     }
+    /// <summary>
+    /// End combat.
+    /// leanup and reset
+    /// </summary>
+    public void EndCombat()
+    {
+        Debug.Log("Combat has ended. Only the player remains.");
+
+        Combadants.Clear();
+        roundCounter = 0;
+        currentCombatantIndex = 0;
+        CurrentCombatant = "No Combat Yet";
+
+        // Notify the GameManager or other systems
+        GameManager.Instance.EndCombat();
+    }
+
 }

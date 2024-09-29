@@ -112,7 +112,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!114 &2890168514409222831
 MonoBehaviour:
@@ -128,6 +128,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentHp: 0
   inCombat: 0
+  shield: 0
+  dropPrefab: {fileID: 3878734626312032459, guid: 001b1e36a7e3fd74b9ff90f86e7e1ced, type: 3}
   maxHP: 30
   enemyDrops: []
   attackRange: 3
@@ -166,7 +168,7 @@ Animator:
   m_GameObject: {fileID: 6560447120729858414}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: a387e249e32770a49b569b61d7a72292, type: 2}
+  m_Controller: {fileID: 22100000, guid: 0ed2b6f203471fa4c8ec2839f3906dde, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

@@ -10,7 +10,7 @@ public class AttackCard : NewCard
 
     public override void OnCardPlayed()
     {
-        // Implement attack card logic here        
+        base.OnCardPlayed();
         Debug.Log(cardName +
             " used to deal " +
             damage +

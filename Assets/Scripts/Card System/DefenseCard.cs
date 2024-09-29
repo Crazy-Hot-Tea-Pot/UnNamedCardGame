@@ -10,7 +10,9 @@ public class DefenseCard : NewCard
 
     public override void OnCardPlayed()
     {
-        // Implement defense card logic here
+        base.OnCardPlayed();
         Debug.Log(cardName + " used to gain " + shieldAmount + " shield.");
+
+        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().ApplyShieldToPlayer(shieldAmount);
     }
 }
