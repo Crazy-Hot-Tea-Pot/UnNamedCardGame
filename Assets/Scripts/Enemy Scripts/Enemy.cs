@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,18 +9,35 @@ public class Enemy : MonoBehaviour
 {
     private string enemyName;
 
-    [SerializeField]
-    private int currentHp;
-
     private Animator animator;
 
     private NavMeshAgent agent;
 
+    [Header("Enemy stats")]
+    /// <summary>
+    /// Max Hp of Enemy
+    /// </summary>
+    public int maxHP;
     [SerializeField]
-    private bool inCombat;
-
+    private int currentHp;   
     [SerializeField]
     private int shield;
+
+    [Header("Status Effects")]
+    [SerializeField]
+    private bool inCombat;
+    [SerializeField]
+    private int galvanizedStacks;
+    [SerializeField]
+    private bool isGalvanized;
+    [SerializeField]
+    private int powerStacks;
+    [SerializeField]
+    private bool isPowered;
+    [SerializeField]
+    private int drainStacks;
+    [SerializeField]
+    private bool isDrained;
 
     /// <summary>
     /// Reference to combat controller.
@@ -32,9 +50,19 @@ public class Enemy : MonoBehaviour
     public GameObject dropPrefab;
 
     /// <summary>
-    /// Max Hp of Enemy
+    /// Returns name of enemy
     /// </summary>
-    public int maxHP;
+    public string EnemyName
+    {
+        get
+        {
+            return enemyName;
+        }
+        protected set
+        {
+            enemyName = value;
+        }
+    }    
 
     /// <summary>
     /// Enemy Current Hp
@@ -63,22 +91,8 @@ public class Enemy : MonoBehaviour
     /// <summary>
     /// AttackRange is 3.0f by default;
     /// </summary>
-    public float attackRange = 3.0f;
-
-    /// <summary>
-    /// Returns name of enemy
-    /// </summary>
-    public string EnemyName
-    {
-        get
-        {
-            return enemyName;
-        }
-        protected set
-        {
-            enemyName = value;
-        }
-    }
+    //public float attackRange = 3.0f;
+   
     /// <summary>
     /// Is the Enemy in Combat.
     /// </summary>
@@ -108,7 +122,82 @@ public class Enemy : MonoBehaviour
             shield = value;
         }
     }
+    /// <summary>
+    /// Is enemy GalvanizedStacks.
+    /// Added for animation or effect later.
+    /// </summary>
+    public bool IsGalvanized
+    {
+        get
+        {
+            return isGalvanized;
+        }
+        private set
+        {
+            isGalvanized = value;
+        }
+    }
+    /// <summary>
+    /// Is enemy Drained.
+    /// Added for animation or effect later.
+    /// </summary>
+    public bool IsDrained
+    {
+        get => isDrained;
+        private set
+        {
+            isDrained = value;
+        }
+    }
+    public int GalvanizedStacks
+    {
+        get => galvanizedStacks;
+        protected set
+        {
+            galvanizedStacks = value;
+            if (galvanizedStacks <= 0)
+                IsGalvanized = false;
+            else if(galvanizedStacks >= 1)
+                IsGalvanized = true;
+        }
+    }
+    public int PowerStacks { 
+        get => powerStacks;
+        protected set {  
+            powerStacks = value;
+            if (powerStacks <= 0)
+                IsPowered = false;
+            else
+                IsPowered = true;
+        } 
+    }
+    /// <summary>
+    /// Is enemy powered.
+    /// Added for animation or effect later.
+    /// </summary>
+    public bool IsPowered
+    {
+        get
+        {
+            return isPowered;
+        }
+        protected set
+        {
+            isPowered = value;
+        }
+    }
 
+    public int DrainStacks { 
+        get => drainStacks;
+        protected set
+        {
+            drainStacks = value;
+            if(drainStacks <= 0)
+                IsDrained = false;
+            else
+                IsDrained = true;
+        }
+    }
 
     void Awake()
     {
@@ -194,6 +283,50 @@ public class Enemy : MonoBehaviour
         foreach(Drop drop in enemyDrops)
         {
             GameObject instantiatedDrop = Instantiate(dropPrefab, Vector3.zero, Quaternion.identity);
+        }
+    }
+    /// <summary>
+    /// Called when round ends to apply buffs or debuffs.
+    /// </summary>
+    public virtual void RoundEnd()
+    {
+        if (GalvanizedStacks > 0)
+        {
+            Shield += GalvanizedStacks;
+            IsGalvanized = false;
+        }
+    }
+    /// <summary>
+    /// Apply Debuffs to Enemy
+    /// </summary>
+    /// <param name="debuffToApply"></param>
+    /// <param name="debuffStacks"></param>
+    public virtual void ApplyDebuff(Effects.Debuff debuffToApply, int debuffStacks)
+    {
+        switch (debuffToApply)
+        {
+            case Effects.Debuff.Drained:
+                drainStacks += debuffStacks;
+                break;
+            default:
+                break;
+        }
+    }
+    /// <summary>
+    /// Apply Buff to Enemy
+    /// </summary>
+    /// <param name="buffToApply"></param>
+    /// <param name="buffStacks"></param>
+    public virtual void ApplyBuff(Effects.Buff buffToApply, int buffStacks)
+    {
+        switch (buffToApply)
+        {
+            case Effects.Buff.Galvanize:
+                GalvanizedStacks+= buffStacks;
+                break;
+            case Effects.Buff.Power:
+                PowerStacks+= buffStacks;
+                break;
         }
     }
 }

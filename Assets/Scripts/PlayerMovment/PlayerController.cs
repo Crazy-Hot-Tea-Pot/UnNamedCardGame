@@ -27,21 +27,73 @@ public class PlayerController : MonoBehaviour
     [Header("Player stats")]
     [SerializeField]
     private int health;
+    private int maxHealth;
     [SerializeField]
     private int shield;
     [SerializeField]
     private int energy;
+    private int maxEnergy;
     [SerializeField]
     private int scrap;
 
+    [Header("Status Effects")]
+    [SerializeField]
+    private bool isGalvanized;
+    [SerializeField]
+    private int galvanizedStack;
+    [SerializeField]
+    private bool isPowered;
+    [SerializeField]
+    private int poweredStacks;
+    [SerializeField]
+    private bool isGunked;
+    [SerializeField]
+    private int gunkStacks;
+    [SerializeField]
+    private int amountOfTurnsGunkedLeft;
+    [SerializeField]
+    private int drainedStacks;
+    [SerializeField]
+    private bool isDrained;
+    [SerializeField]
+    private bool isWornDown;
+    [SerializeField]
+    private int wornDownStacks;
+    [SerializeField]
+    private bool isJammed;
+    [SerializeField]
+    private int jammedStacks;
+    [SerializeField]
+    private bool nextChipActivatesTwice;
+    [SerializeField]
+    private bool isImpervious;
+
+    /// <summary>
+    /// Returns if player is in combat.
+    /// </summary>
+    public bool InCombat
+    {
+        get { return inCombat; }
+        set
+        {
+            inCombat = value;
+        }
+    }
     /// <summary>
     /// Returns PLayer Health
     /// </summary>
     public int Health
     {
         get { return health; }
-        private set { health = value; }
+        private set { 
+            health = value;
+            if(health > maxHealth)
+                health = maxHealth;
+        }
     }
+    /// <summary>
+    /// Player Shield amount
+    /// </summary>
     public int Shield
     {
         get
@@ -81,12 +133,168 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public bool InCombat
+    public bool IsGalvanized
     {
-        get { return inCombat; }
+        get
+        {
+            return isGalvanized;
+        }
+        private set
+        {
+            isGalvanized = value;
+        }
+    }
+    public int GalvanizedStack
+    {
+        get => galvanizedStack;
         set
         {
-            inCombat = value;
+            galvanizedStack = value;
+            if (galvanizedStack <= 0)
+            {
+                IsGalvanized = false;
+                galvanizedStack = 0;
+            }
+            else
+                IsGalvanized = true;
+        }
+    }
+    public bool IsPowered { 
+        get => isPowered; 
+        private set => isPowered = value; 
+    }
+    public int PoweredStacks
+    {
+        get => poweredStacks;
+        set
+        {
+            poweredStacks = value;
+            if (poweredStacks <= 0)
+            {
+                IsPowered = false;
+                poweredStacks = 0;
+            }
+            else
+                IsPowered = true;
+        }
+    }
+    public bool IsGunked {
+        get => isGunked;
+        private set {
+         isGunked = value;
+        }
+    }
+    public int GunkStacks
+    {
+        get => gunkStacks;
+        set
+        {
+            gunkStacks = value;
+
+            if (gunkStacks >= 3)
+            {
+                IsGunked = true;
+                gunkStacks = 0;
+                AmountOfTurnsGunkedLeft = 1;
+            }
+        }
+    }
+    public int AmountOfTurnsGunkedLeft
+    {
+        get => amountOfTurnsGunkedLeft;
+        private set
+        {
+            amountOfTurnsGunkedLeft = value;
+            if (amountOfTurnsGunkedLeft <= 0)
+                IsGunked = false;
+        }
+    }
+    public int DrainedStacks
+    {
+        get
+        {
+            return drainedStacks;
+        }
+        set
+        {
+            drainedStacks = value;
+            if (drainedStacks <= 0)
+            {
+                IsDrained = false;
+                drainedStacks = 0;
+            }
+            else
+                IsDrained = true;
+        }
+    }
+    public bool IsDrained { 
+        get => isDrained;
+        private set => isDrained = value; 
+    }
+    public bool IsWornDown { 
+        get => isWornDown;
+        private set => isWornDown = value; 
+    }
+    public int WornDownStacks
+    {
+        get
+        {
+            return wornDownStacks;
+        }
+        set
+        {
+            wornDownStacks = value;
+            if (wornDownStacks <= 0)
+            {
+                IsWornDown = false;
+                wornDownStacks = 0;
+            }
+            else
+                IsWornDown = true;
+        }
+    }
+    public bool IsJammed { 
+        get => isJammed;
+        private set => isJammed = value; 
+    }           
+    public int JammedStacks
+    {
+        get
+        {
+            return jammedStacks;
+        }
+        set
+        {
+            jammedStacks = value;
+            if (jammedStacks <= 0)
+            {
+                IsJammed = false;
+                jammedStacks = 0;
+            }
+            else
+                IsJammed = true;
+        }
+    }   
+    public bool NextChipActivatesTwice
+    {
+        get
+        {
+            return nextChipActivatesTwice;
+        }
+        private set
+        {
+            nextChipActivatesTwice = value;
+        }
+    }
+    public bool IsImpervious
+    {
+        get
+        {
+            return isImpervious;
+        }
+        private set
+        {
+            isImpervious = value;
         }
     }
 
@@ -121,7 +329,9 @@ public class PlayerController : MonoBehaviour
     void Initialize()
     {
         Health = 50;
+        maxHealth = 50;
         Energy = 50;
+        maxEnergy = 50;
         Scrap = 100;
 
         //loads abilities from folder
@@ -180,12 +390,42 @@ public class PlayerController : MonoBehaviour
         }
     }
     /// <summary>
+    /// heal player by amount
+    /// </summary>
+    /// <param name="amountHeal"></param>
+    public void Heal(int amountHeal)
+    {
+        Health += amountHeal;
+    }
+    /// <summary>
+    /// Heal to max hp.
+    /// </summary>
+    public void FullHeal()
+    {
+        Health = maxHealth;
+    }
+    /// <summary>
     /// Give player shield.
     /// </summary>
     /// <param name="shieldAmount"></param>
-    public void ApplyShieldToPlayer(int shieldAmount)
+    public void ApplyShield(int shieldAmount)
     {
         Shield += shieldAmount;
+    }
+    /// <summary>
+    /// Give player energy.
+    /// </summary>
+    /// <param name="energyAmount"></param>
+    public void RecoverEnergy(int energyAmount)
+    {
+        Energy += energyAmount;
+    }
+    /// <summary>
+    /// Recover energy to max.
+    /// </summary>
+    public void RecoverFullEnergy()
+    {
+        Energy = maxEnergy;
     }
     /// <summary>
     /// Called when player has played a card or use an ability.
@@ -202,24 +442,106 @@ public class PlayerController : MonoBehaviour
     /// <param name="damage">Amount of Damage as Int.</param>
     public void TakeDamage(int damage)
     {
-        // if has shield
-        if (Shield > 0)
-        {
-            if (damage >= Shield)
-            {
-                damage -= Shield;
-                Shield = 0;
-                Debug.Log(name + "Shield destroyed.");
-            }
-            else
-            {
-                // Reduce the shield by the damage amount
-                Shield -= damage;
-                // No remaining damage to apply to HP
-                damage = 0;
-            }            
+        //if Impervious
+        if (IsImpervious)
+        {            
         }
-        Health = Health - damage;
+        else
+        {
+            // if has shield
+            if (Shield > 0)
+            {
+                if (damage >= Shield)
+                {
+                    damage -= Shield;
+                    Shield = 0;
+                    Debug.Log(name + "Shield destroyed.");
+                }
+                else
+                {
+                    // Reduce the shield by the damage amount
+                    Shield -= damage;
+                    // No remaining damage to apply to HP
+                    damage = 0;
+                }
+            }
+            Health = Health - damage;
+        }
+    }
+    /// <summary>
+    /// Apply Skill Effect
+    /// </summary>
+    /// <param name="effect"></param>
+    public void ApplyEffect(Effects.Effect effect)
+    {
+        switch (effect)
+        {
+            case Effects.Effect.Motivation:
+                NextChipActivatesTwice = true;
+                break;
+            case Effects.Effect.Impervious:
+                IsImpervious = true;
+                break;
+            default:
+                break;
+        }
+    }
+    /// <summary>
+    /// Apply Buff to Player
+    /// </summary>
+    /// <param name="buffToApply"></param>
+    /// <param name="buffStacks"></param>
+    public void ApplyEffect(Effects.Buff buffToApply, int buffStacks)
+    {
+        switch (buffToApply)
+        {
+            case Effects.Buff.Galvanize:
+                GalvanizedStack += buffStacks;
+                break;
+            case Effects.Buff.Power:
+                PoweredStacks += buffStacks;
+                break;
+        }
+    }
+    /// <summary>
+    /// Apply Debuff to player.
+    /// </summary>
+    /// <param name="deBuffToApply"></param>
+    /// <param name="deBuffStacks"></param>
+    public void ApplyEffect(Effects.Debuff deBuffToApply, int deBuffStacks)
+    {
+        switch (deBuffToApply)
+        {
+            case Effects.Debuff.Gunked:
+                GunkStacks += deBuffStacks;
+                break;
+            case Effects.Debuff.Drained:
+                DrainedStacks += deBuffStacks;
+                break;
+            case Effects.Debuff.WornDown:
+                WornDownStacks += deBuffStacks;
+                break;
+            case Effects.Debuff.Jam:
+                JammedStacks += deBuffStacks;
+                break;
+            default:
+                break;
+        }
+    }
+    /// <summary>
+    /// Remove an affect from being active.
+    /// </summary>
+    /// <param name="effect"></param>
+    public void RemoveEffect(Effects.Effect effect)
+    {
+        switch (effect)
+        {
+            case Effects.Effect.Motivation:
+                NextChipActivatesTwice = false;
+                break;
+            default:
+                break;
+        }
     }
     /// <summary>
     /// Returns the scrap stolen or whats left.
@@ -240,7 +562,21 @@ public class PlayerController : MonoBehaviour
             return amount;
         }
     }
-
+    /// <summary>
+    /// Called when round ends to apply buffs or debuffs.
+    /// </summary>
+    public void RoundEnd()
+    {
+        if (galvanizedStack > 0)
+        {
+            ApplyShield(galvanizedStack);
+            galvanizedStack = 0;
+        }
+        if (isGunked)
+        {
+            AmountOfTurnsGunkedLeft--;
+        }
+    }
     //Deselect the object in instance and do other clean up.
     //private void OnDeselect(InputAction.CallbackContext context)
     //{

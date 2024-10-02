@@ -86,11 +86,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 2898211387026377424}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c58be7854c04a284aa1965d1a23f1baf, type: 3}
+  m_Script: {fileID: 11500000, guid: 8980b81e20ad8314bb44689776086377, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   active: 0
-  newCard: {fileID: 11400000, guid: af8d67b61375d7a4b9e92b3f514d9917, type: 2}
+  CombatController: {fileID: 0}
+  Player: {fileID: 0}
+  newCard: {fileID: 11400000, guid: 80bd3d30c595bec48b1f376b6f3736f1, type: 2}
 --- !u!114 &2195038045584240431
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -131,7 +133,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
+  m_TargetGraphic: {fileID: 8459738676113486515}
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []

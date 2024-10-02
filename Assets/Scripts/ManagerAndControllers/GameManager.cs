@@ -109,7 +109,7 @@ public class GameManager : MonoBehaviour
                 GameObject placeHolder = playerDeck[num2-1];
                 //Replaces card 2 with card 1
                 playerDeck[num2-1] = playerDeck[num1-1];
-                //Replaces card 1 with the place holder (Card 2)
+                //Replaces card 1 with the place holder (Chip 2)
                 playerDeck[num1-1] = placeHolder;
                 //Clears our place holder
                 placeHolder = null;

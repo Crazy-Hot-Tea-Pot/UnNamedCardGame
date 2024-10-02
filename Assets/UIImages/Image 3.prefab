@@ -130,8 +130,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 3164616844752775387}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c58be7854c04a284aa1965d1a23f1baf, type: 3}
+  m_Script: {fileID: 11500000, guid: 8980b81e20ad8314bb44689776086377, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   active: 0
-  newCard: {fileID: 11400000, guid: 55ebf399208d9e64f942baee992564d3, type: 2}
+  CombatController: {fileID: 0}
+  Player: {fileID: 0}
+  newCard: {fileID: 11400000, guid: 1f04b1f225942644bbf7c1f01ca2418e, type: 2}
