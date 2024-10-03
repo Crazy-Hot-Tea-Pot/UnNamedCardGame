@@ -27,11 +27,11 @@ public class PlayerUIManager : MonoBehaviour
     /// </summary>
     public GameObject uiCanvas;
     /// <summary>
-    /// Holds the panel that the inventory UI must instantiate into
+    /// Holds the chipPanel that the inventory UI must instantiate into
     /// </summary>
     public GameObject panelInventory;
     /// <summary>
-    /// Holds the panel that displays deck
+    /// Holds the chipPanel that displays deck
     /// </summary>
     public GameObject panelDeck;
 
@@ -87,7 +87,7 @@ public class PlayerUIManager : MonoBehaviour
     public void OpenInventroy()
     {
         //If the UI canvas is closed open it otherwise continue on
-        if(uiCanvas.active == false)
+        if(uiCanvas.activeSelf == false)
         {
             //set ui canvas as active
             uiCanvas.SetActive(true);
@@ -122,7 +122,7 @@ public class PlayerUIManager : MonoBehaviour
     /// </summary>
     public void switchMenuDeck()
     {
-        //Disables active panel and activate decks
+        //Disables active chipPanel and activate decks
         panelInventory.SetActive(false);
         panelDeck.SetActive(true);
         //Disable and enable buttons
@@ -135,7 +135,7 @@ public class PlayerUIManager : MonoBehaviour
     /// </summary>
     public void switchMenuInventory()
     {
-        //Disables active panel and activate inventory
+        //Disables active chipPanel and activate inventory
         panelDeck.SetActive(false);
         panelInventory.SetActive(true);
         //Disable and enable buttons

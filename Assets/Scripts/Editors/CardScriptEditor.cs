@@ -16,7 +16,7 @@ public class CardScriptEditor : Editor
 
         // Display fields in the desired order
         //EditorGUILayout.LabelField("Is Active", card.IsActive.ToString());
-        //card.CardTitle = EditorGUILayout.TextField("Chip Title", card.CardTitle);
+        //card.ChipTitle = EditorGUILayout.TextField("Chip Title", card.ChipTitle);
         //card.CardDescription = EditorGUILayout.TextField("Chip Description", card.CardDescription);
         //card.Uses = EditorGUILayout.IntField("Uses", card.Uses);
         //// Display the Chip Image field as a Sprite

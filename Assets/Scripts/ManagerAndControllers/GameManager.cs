@@ -2,26 +2,43 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.InputManagerEntry;
 
 public class GameManager : MonoBehaviour
 {
     private GameManager gameManager;
+
     public PlayerUIManager uiManager;
 
 
-    ///<summary>A variable to hold player turns that assumes the player turn is true and the enemy turn is false</summary>
-    bool playerTurn;
+    ///<summary>
+    ///A variable to hold player turns that assumes the player turn is true and the enemy turn is false
+    ///</summary>
+    private bool playerTurn;
+
+    [Header("Deck Veriables")]
     ///<summary>Hand limit</summary>
     public int handlimit;
     ///<summary>Deck limit</summary>
     public int decklimit;
     ///<summary>Draws per turn</summary>
     public int drawsPerTurn;
-    /// <summary>
-    /// Is the player in combat true is yes
-    /// </summary>
-    //private bool inCombat;
-    //Since this is player combat i moved it to the player class.
+
+    public List<NewChip> playerHand;
+    public List<NewChip> playerDeck;    
+    public List<NewChip> usedChips;
+    //will get the chips from resources
+    public List<NewChip> NewChips;
+    // Default newChipInPlayerHand
+    public GameObject ChipPrefab;
+
+    [Header("UI Veriables")]
+    //UIVeriables
+    public GameObject chipPanel;
+    public GameObject uiCanvas;
+
+    [Header("Enemy Variables")]
+    public List<GameObject> enemyList;
 
     /// <summary>
     /// Is the player in combat true is yes
@@ -33,15 +50,6 @@ public class GameManager : MonoBehaviour
             return GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().InCombat;
         }
     }
-    public List<GameObject> playerHand;
-    public List<GameObject> playerDeck;
-    public List<GameObject> enemyList;
-    public List<GameObject> usedChips;
-
-    //UIVeriables
-    public GameObject panel;
-    public GameObject uiCanvas;
-
 
     public static GameManager Instance
     {
@@ -70,14 +78,15 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Initialize();
         //Makes sure we have a valid number
-        if(handlimit < DrawsPerTurn + 1)
-        {
-            handlimit = DrawsPerTurn + 1;
-        }
+        //if(handlimit < DrawsPerTurn + 1)
+        //{
+        //    handlimit = DrawsPerTurn + 1;
+        //}
         playerTurn = true;
         ShufflePlayerDeck();
-        DrawCard(DrawsPerTurn);
+        DrawChip(DrawsPerTurn);
 
     }
 
@@ -91,6 +100,21 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void Initialize()
+    {
+        // Load all NewChip ScriptableObjects from "Scriptables/Cards/Attack"
+        NewChips = new List<NewChip>(Resources.LoadAll<NewChip>("Scriptables/Cards"));
+
+        // Doing this for testing
+        AddChipToDeck(NewChips[Random.Range(0, NewChips.Count)]);
+        AddChipToDeck(NewChips[Random.Range(0, NewChips.Count)]);
+        AddChipToDeck(NewChips[Random.Range(0, NewChips.Count)]);
+        AddChipToDeck(NewChips[Random.Range(0, NewChips.Count)]);
+        AddChipToDeck(NewChips[Random.Range(0, NewChips.Count)]);
+        AddChipToDeck(NewChips[Random.Range(0, NewChips.Count)]);
+    }
+
+
     ///<summary>Change turn is a method that allows the turn to change whenever it's needed. It assumes true is our player and false is the enemy</summary>
     bool ChangeTurn(bool turn)
     {
@@ -103,10 +127,15 @@ public class GameManager : MonoBehaviour
         else if(turn == false)
         {
             turn = true;
-            //Draw one card
-            DrawCard(DrawsPerTurn);
+            //Draw one newChipInPlayerHand
+            DrawChip(DrawsPerTurn);
         }
         return turn;
+    }
+
+    public void AddChipToDeck(NewChip newChipToAdd)
+    {
+        playerDeck.Add(newChipToAdd);
     }
 
     ///<summary>Shuffles the player deck</summary>
@@ -121,11 +150,11 @@ public class GameManager : MonoBehaviour
                 //Collects random number for our cards
                 int num1 = Roll(0, playerDeck.Count);
                 int num2 = Roll(0, playerDeck.Count);
-                //Holds the value of the next card to be replaced
-                GameObject placeHolder = playerDeck[num2-1];
-                //Replaces card 2 with card 1
+                //Holds the value of the next newChipInPlayerHand to be replaced
+                NewChip placeHolder = playerDeck[num2-1];
+                //Replaces newChipInPlayerHand 2 with newChipInPlayerHand 1
                 playerDeck[num2-1] = playerDeck[num1-1];
-                //Replaces card 1 with the place holder (Chip 2)
+                //Replaces newChipInPlayerHand 1 with the place holder (Chip 2)
                 playerDeck[num1-1] = placeHolder;
                 //Clears our place holder
                 placeHolder = null;
@@ -134,27 +163,36 @@ public class GameManager : MonoBehaviour
 
     }
 
-    ///<summary>Draws a card</summary>
-    public void DrawCard(int draws)
-    {        
-            //How many cards need to be drawn
-        for (int i = 0; i < draws; i++)
+    ///<summary>Draws a newChipInPlayerHand</summary>
+    public void DrawChip(int draws)
+    {
+        //Check if player deck has cards to draw
+        if (playerDeck.Count != 0)
         {
-
+            //How many cards need to be drawn
             //checks the hand limit and continues if possible otherwise nothing happens
-            if (playerHand.Count + 1 < handlimit)
+            if (playerHand.Count < handlimit)
             {
-                //take the first card on the top of the pile and add it to the players hand
-                playerHand.Add(playerDeck[0]);
-                playerDeck.RemoveAt(0);
+                //How many cards need to be drawn
+                for (int i = playerHand.Count; i < handlimit; i++)
+                {
+
+                    //take the first card on the top of the pile and add it to the players hand
+                    playerHand.Add(playerDeck[0]);
+                    playerDeck.RemoveAt(0);
+                }
+                UpdateUI();
             }
             //If limit reached
             else
             {
-                Debug.LogWarning("Limit Reached");
+                Debug.Log("Limit Reached");
             }
         }
-         UpdateUI();       
+        else
+        {
+            Debug.LogError("Player Deck is Empty");
+        }
 
     }
 
@@ -165,23 +203,54 @@ public class GameManager : MonoBehaviour
         return random;
     }
 
-    //A method for updating the card ui elements
+    //A method for updating the newChipInPlayerHand ui elements
     void UpdateUI()
     {
-        for(int i = 0; i < playerHand.Count; i++)
+        foreach (Transform child in chipPanel.transform)
         {
-            Instantiate(playerHand[i], panel.transform);
+            Destroy(child.gameObject);
         }
+        foreach (NewChip newChipInPlayerHand in playerHand)
+        {
+            GameObject newChipInstance = Instantiate(ChipPrefab, chipPanel.transform);
+
+            //Find the Chip component on the prefab instance
+            Chip chipComponent = newChipInstance.GetComponent<Chip>();
+
+            chipComponent.newChip = newChipInPlayerHand;
+            //Apply name to newChipInPlayerHand.
+            if (newChipInPlayerHand.chipName == "" || newChipInPlayerHand.chipName == null)
+                Debug.LogWarning("Scriptable {chipName} is empty on " + newChipInPlayerHand.name + " and this will cause errors.");
+            else
+                newChipInstance.name = newChipInPlayerHand.chipName;
+        }
+        //for(int i = playerHand.Count; i < handlimit; i++)
+        //{
+        //   // Instantiate(playerHand[i], chipPanel.transform);
+
+        //    GameObject newChipInstance = Instantiate(ChipPrefab, chipPanel.transform);
+
+        //    //Find the Chip component on the prefab instance
+        //    Chip chipComponent = newChipInstance.GetComponent<Chip>();
+
+        //    chipComponent.newChip = playerHand[i];
+
+        //    //Apply name to newChipInPlayerHand.
+        //    if (playerHand[i].chipName == "" || playerHand[i].chipName == null)
+        //        Debug.LogWarning("Scriptable {chipName} is empty on " + playerHand[i].name + " and this will cause errors.");
+        //    else
+        //        newChipInstance.name = playerHand[i].chipName;
+        //}
     }
 
-    ///<summary>Destroys the current card</summary>
-    public void CardDeath(int value)
-    {
-        //Remove the card from the player hand
-        playerHand.Remove(playerHand[value]);
-        //Remove the card from the InventoryUI
-        uiManager.RemoveFromUI(playerHand[value]);
-    }
+    ///<summary>Destroys the current chip</summary>
+    //public void CardDeath(int value)
+    //{
+    //    //Remove the newChipInPlayerHand from the player hand
+    //    playerHand.Remove(playerHand[value]);
+    //    //Remove the newChipInPlayerHand from the InventoryUI
+    //    uiManager.RemoveFromUI(playerHand[value]);
+    //}
 
     /// <summary>
     /// A method that can be used to transition into combat when out of combat
@@ -235,20 +304,20 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Picks up a card and adds it to the deck aswell as deck inventory
+    /// Picks up a newChipInPlayerHand and adds it to the deck aswell as deck inventory
     /// </summary>
-    /// <param name="card"></param>
-    public void PickUpCard(GameObject card)
+    /// <param name="chip"></param>
+    public void PickUpChip(GameObject chip)
     {
         //If the player deck isn't at limit
         if(playerDeck.Count !< decklimit)
         {
-            //Destroy the card from the game world
-            Destroy(card);
-            //Add card to deck
-            playerDeck.Add(card);
+            //Destroy the newChipInPlayerHand from the game world
+            Destroy(chip);
+            //Add newChipInPlayerHand to deck
+            playerDeck.Add(chip.GetComponent<Chip>().newChip);
             //Add to the inventory UI
-            uiManager.AddCardToDeck(card);
+            uiManager.AddCardToDeck(chip);
   
         }
         else
@@ -260,22 +329,13 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// TO FIX
-    /// have this called either at end of turn or after a card has been used.
-    /// Retry foreach loop to remove correct chip.
+    /// called when newChipInPlayerHand has been used and to be removed.
     /// </summary>
-    /// <param name="card"></param>
-    public void KillCard(GameObject card)
+    /// <param name="chip"></param>
+    public void KillChip(GameObject chip)
     {
-        usedChips.Add(card);
-        
-        foreach(GameObject temp in playerHand)
-        {
-            if(temp.GetComponent<Chip>().newCard.chipName == card.GetComponent<Chip>().newCard.chipName)
-            {
-                playerHand.Remove(temp);
-            }
-        }
-        DrawCard(DrawsPerTurn);
+        usedChips.Add(chip.GetComponent<Chip>().newChip);
+        playerHand.Remove(chip.GetComponent<Chip>().newChip);
+        DrawChip(DrawsPerTurn);
     }
 }

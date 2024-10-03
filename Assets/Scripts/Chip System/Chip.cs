@@ -25,20 +25,20 @@ public class Chip : MonoBehaviour
         }
     }
 
-    private string cardTitle;    
+    private string chipTitle;    
 
     /// <summary>
     /// Chip title is the title that the card will display in game and the ID of the card.
     /// </summary>
-    public string CardTitle
+    public string ChipTitle
     {
         get
         {
-            return cardTitle;
+            return chipTitle;
         }
         private set
         {
-            cardTitle = value;
+            chipTitle = value;
         }
     }
 
@@ -47,19 +47,19 @@ public class Chip : MonoBehaviour
     /// </summary>
     private Button imageButton;  
 
-    public NewChip newCard;
+    public NewChip newChip;
 
     void Start()
     {
-        cardTitle = newCard.chipName + " Chip";
-        this.gameObject.name = CardTitle;
+        chipTitle = newChip.chipName + " Chip";
+        this.gameObject.name = ChipTitle;
 
         // Set image to card
-        GetComponent<Image>().sprite = newCard.chipImage;
+        GetComponent<Image>().sprite = newChip.chipImage;
 
         //Assign method to button
         imageButton = GetComponent<Button>();
-        imageButton.onClick.AddListener(CardSelected);
+        imageButton.onClick.AddListener(ChipSelected);
 
 
         CombatController = GameObject.FindGameObjectWithTag("CombatController").GetComponent<CombatController>();
@@ -68,9 +68,9 @@ public class Chip : MonoBehaviour
     /// <summary>
     /// Runs Scriptable Chip
     /// </summary>
-    public void CardSelected()
+    public void ChipSelected()
     {
-        Debug.Log(CardTitle + " Card");
+        Debug.Log(ChipTitle + " Chip");
         active = true;  
         //Check if player turn to play play card
         if (CombatController.CanIMakeAction(Player))
@@ -83,12 +83,12 @@ public class Chip : MonoBehaviour
             }
             else
             {
-                //Check if newCard is assigned
-                if (newCard != null)
+                //Check if newChip is assigned
+                if (newChip != null)
                 {
                     //REMOVED AS NO LONGER NEED ENERGY TO PLAY CARD
                     //Check if player has enough energy to play card.
-                    //if (newCard.energyCost > GameObject.
+                    //if (newChip.energyCost > GameObject.
                     //    FindGameObjectWithTag("Player").
                     //    GetComponent<PlayerController>().Energy)
                     //{
@@ -98,20 +98,20 @@ public class Chip : MonoBehaviour
                     //{
                     if (Player.GetComponent<PlayerController>().NextChipActivatesTwice)
                     {
-                        newCard.OnChipPlayed(Player.GetComponent<PlayerController>());
-                        newCard.OnChipPlayed(Player.GetComponent<PlayerController>());
+                        newChip.OnChipPlayed(Player.GetComponent<PlayerController>());
+                        newChip.OnChipPlayed(Player.GetComponent<PlayerController>());
                         CombatController.TurnUsed(Player);
                         //Remove effect after it has been used.
                         Player.GetComponent<PlayerController>().RemoveEffect(Effects.Effect.Motivation);
                     }
                     else
                     {
-                        newCard.OnChipPlayed(Player.GetComponent<PlayerController>());
+                        newChip.OnChipPlayed(Player.GetComponent<PlayerController>());
                         CombatController.TurnUsed(Player);
                     }
                     //}
                     //After card has been used add to kill cards and destroy.
-                    GameManager.Instance.KillCard(this.gameObject);
+                    GameManager.Instance.KillChip(this.gameObject);
                     Destroy(this.gameObject);
                 }
                 else
