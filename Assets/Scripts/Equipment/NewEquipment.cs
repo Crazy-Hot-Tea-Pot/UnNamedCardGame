@@ -6,7 +6,6 @@ using UnityEngine.UI;
 public class NewEquipment : MonoBehaviour
 {
 
-
     //Holds the button
     private Button buttonVar;
 

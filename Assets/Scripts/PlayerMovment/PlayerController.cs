@@ -132,7 +132,7 @@ public class PlayerController : MonoBehaviour
                 scrap = 0;
         }
     }
-
+    #region statusEffects
     public bool IsGalvanized
     {
         get
@@ -297,7 +297,7 @@ public class PlayerController : MonoBehaviour
             isImpervious = value;
         }
     }
-
+#endregion
     [Space(50)]
     /// <summary>
     /// Abilities player can do.
@@ -395,7 +395,13 @@ public class PlayerController : MonoBehaviour
     /// <param name="amountHeal"></param>
     public void Heal(int amountHeal)
     {
-        Health += amountHeal;
+            //Heal the player using the getter and setter value
+            //This will also check for over healing and correct
+            Health += amountHeal;
+
+        //Debug log healing
+        Debug.Log("Health Restored: " + health);
+        
     }
     /// <summary>
     /// Heal to max hp.
@@ -410,7 +416,10 @@ public class PlayerController : MonoBehaviour
     /// <param name="shieldAmount"></param>
     public void ApplyShield(int shieldAmount)
     {
+        //Restore Shield
         Shield += shieldAmount;
+
+        Debug.Log("Shield Restored: " + shield);
     }
     /// <summary>
     /// Give player energy.
@@ -418,7 +427,10 @@ public class PlayerController : MonoBehaviour
     /// <param name="energyAmount"></param>
     public void RecoverEnergy(int energyAmount)
     {
-        Energy += energyAmount;
+            //Restore energy this will inside of the getter and setter variable check if we are over energizing and correct
+            Energy += energyAmount;
+
+        Debug.Log("Energy Restored: " + energy);
     }
     /// <summary>
     /// Recover energy to max.

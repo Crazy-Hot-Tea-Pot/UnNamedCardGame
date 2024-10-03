@@ -2,8 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[CreateAssetMenu(fileName = "Equipment", menuName = "Equipment/Consumable")]
 public class Consumable : Equipment
 {
+    /// <summary>
+    /// The UI object that must be removed
+    /// </summary>
+    public GameObject UIObject;
     /// <summary>
     /// How much health this consumable restores
     /// </summary>
@@ -23,7 +28,17 @@ public class Consumable : Equipment
         base.ActivateEquipmnet();
 
         //Find the player controller and in order add shield, add health and add energy based on our variables above
-        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().ApplyShieldToPlayer(restoreShield);
-        
+        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().ApplyShield(restoreShield);
+        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().Heal(restoreHP);
+        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().RecoverEnergy(restoreEnergy);
+
+        //Delete the object
+        Destroy(this);
+        //Remove from invenotry UI
+        GameObject.Find("PlayerUIManager").GetComponent<PlayerUIManager>().RemoveFromUI(UIObject, "Inventory");
+        //Remove item from the actual inventory
+        GameObject.Find("PlayerUIManager").GetComponent<PlayerUIManager>().InventoryList.Remove(UIObject);
+
+
     }
 }

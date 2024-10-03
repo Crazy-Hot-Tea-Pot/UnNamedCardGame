@@ -180,7 +180,7 @@ public class GameManager : MonoBehaviour
         //Remove the card from the player hand
         playerHand.Remove(playerHand[value]);
         //Remove the card from the InventoryUI
-        uiManager.RemoveFromUI(playerHand[value], uiManager.panelDeck);
+        uiManager.RemoveFromUI(playerHand[value], "Deck");
     }
 
     /// <summary>

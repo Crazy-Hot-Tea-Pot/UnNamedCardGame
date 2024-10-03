@@ -32,6 +32,11 @@ public class PlayerUIManager : MonoBehaviour
 
     #region InventoryUIVariables
     /// <summary>
+    /// Inventory List for items in the players hands
+    /// </summary>
+    public List<GameObject> InventoryList;
+
+    /// <summary>
     /// Holds the UI canvas for inventory
     /// </summary>
     public GameObject uiCanvas;
@@ -43,6 +48,10 @@ public class PlayerUIManager : MonoBehaviour
     /// Holds the panel that displays deck
     /// </summary>
     public GameObject panelDeck;
+    /// <summary>
+    /// Holds all active abilities
+    /// </summary>
+    public GameObject panelAbilty;
 
     /// <summary>
     /// A variable to tell us if the inventory UI is open
@@ -180,17 +189,50 @@ public class PlayerUIManager : MonoBehaviour
     /// <param name="item"></param>
     public void AddToInventory(GameObject item)
     {
-        Instantiate(item, panelInventory.transform);
+        //No duplicated items
+        if(!GameObject.FindGameObjectWithTag(item.tag))
+        {
+            Instantiate(item, panelInventory.transform);
+        }
+    }
+
+    /// <summary>
+    /// Instantiates abilites as UI objects so that they might be added into the game
+    /// </summary>
+    public void MakeActiveAbility(GameObject ability)
+    {
+        if(!GameObject.FindGameObjectWithTag(ability.tag))
+        {
+            Instantiate(ability, panelAbilty.transform);
+        }
+    }
+
+    /// <summary>
+    /// Destroys the ability from the UI
+    /// </summary>
+    /// <param name="ability"></param>
+    public void MakeDeactiveAbility(string ability)
+    {
+        Destroy(GameObject.FindGameObjectWithTag(ability));
     }
 
     /// <summary>
     /// This function allows items to be removed from the UI it requires a object first and then a parent name deck or inventory as a string
     /// </summary>
     /// <param name="card"></param>
-    public void RemoveFromUI(GameObject remObject, GameObject parent)
+    public void RemoveFromUI(GameObject remObject, string parent)
     {
+        if(parent == "Inventory")
+        {
             //Destroys the game object from the UI element
-            Destroy(parent.transform.Find(remObject.name));
+            Destroy(GameObject.FindGameObjectWithTag(remObject.tag));
+        }
+        else if(parent == "Deck")
+        {
+            //Destroys the game object from the UI element
+            Destroy(panelDeck.transform.Find(remObject.name));
+        }
+
         
     }
     

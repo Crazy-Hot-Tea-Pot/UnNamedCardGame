@@ -20,7 +20,7 @@ public class ArmorAbility : Ability
         if(energyCost - GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().GetEnergy() > 0)
         {
             //Apply shield to the player
-            GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().ApplyShieldToPlayer(shield);
+            GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().ApplyShield(shield);
         }
         else
         {
