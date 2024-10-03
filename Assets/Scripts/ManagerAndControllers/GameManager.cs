@@ -36,6 +36,7 @@ public class GameManager : MonoBehaviour
     public List<GameObject> playerHand;
     public List<GameObject> playerDeck;
     public List<GameObject> enemyList;
+    public List<GameObject> usedChips;
 
     //UIVeriables
     public GameObject panel;
@@ -47,6 +48,21 @@ public class GameManager : MonoBehaviour
         get;
         private set;
     }
+    /// <summary>
+    /// Gets Draws per turn amount.
+    /// </summary>
+    public int DrawsPerTurn
+    {
+        get
+        {
+            return drawsPerTurn;
+        }
+        private set
+        {
+            drawsPerTurn = value;
+        }
+    }
+
     void Awake()
     {
         Instance = this;
@@ -55,13 +71,13 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         //Makes sure we have a valid number
-        if(handlimit < drawsPerTurn + 1)
+        if(handlimit < DrawsPerTurn + 1)
         {
-            handlimit = drawsPerTurn + 1;
+            handlimit = DrawsPerTurn + 1;
         }
         playerTurn = true;
         ShufflePlayerDeck();
-        DrawCard(drawsPerTurn);
+        DrawCard(DrawsPerTurn);
 
     }
 
@@ -88,7 +104,7 @@ public class GameManager : MonoBehaviour
         {
             turn = true;
             //Draw one card
-            DrawCard(drawsPerTurn);
+            DrawCard(DrawsPerTurn);
         }
         return turn;
     }
@@ -120,25 +136,25 @@ public class GameManager : MonoBehaviour
 
     ///<summary>Draws a card</summary>
     public void DrawCard(int draws)
-    {
-        //checks the hand limit and continues if possible otherwise nothing happens
-        if (playerHand.Count + draws < handlimit)
-        {
+    {        
             //How many cards need to be drawn
-            for (int i = 0; i < draws; i++)
-            {
+        for (int i = 0; i < draws; i++)
+        {
 
+            //checks the hand limit and continues if possible otherwise nothing happens
+            if (playerHand.Count + 1 < handlimit)
+            {
                 //take the first card on the top of the pile and add it to the players hand
                 playerHand.Add(playerDeck[0]);
-                playerDeck.RemoveAt(0);                
+                playerDeck.RemoveAt(0);
             }
-            UpdateUI();
+            //If limit reached
+            else
+            {
+                Debug.LogWarning("Limit Reached");
+            }
         }
-        //If limit reached
-        else
-        {
-            Debug.Log("Limit Reached");
-        }
+         UpdateUI();       
 
     }
 
@@ -241,5 +257,25 @@ public class GameManager : MonoBehaviour
             Debug.Log("Can't pick it up");
         }
         
+    }
+
+    /// <summary>
+    /// TO FIX
+    /// have this called either at end of turn or after a card has been used.
+    /// Retry foreach loop to remove correct chip.
+    /// </summary>
+    /// <param name="card"></param>
+    public void KillCard(GameObject card)
+    {
+        usedChips.Add(card);
+        
+        foreach(GameObject temp in playerHand)
+        {
+            if(temp.GetComponent<Chip>().newCard.chipName == card.GetComponent<Chip>().newCard.chipName)
+            {
+                playerHand.Remove(temp);
+            }
+        }
+        DrawCard(DrawsPerTurn);
     }
 }

@@ -34,10 +34,10 @@ public class Looter : Enemy
     public override void Initialize()
     {       
         base.Initialize();
-        Drop weaponShiv = new("Shiv",Drop.DropType.Weapon, 5, 2);
-        Drop scrap = new(Drop.DropType.Scrap, 15);//new(Drop.DropType.Scrap, 15);
-        enemyDrops.Add(weaponShiv);
-        enemyDrops.Add(scrap);
+        //Drop weaponShiv = new("Shiv",Drop.DropType.Weapon, 5, 2);
+        //Drop scrap = new(Drop.DropType.Scrap, 15);//new(Drop.DropType.Scrap, 15);
+        //enemyDrops.Add(weaponShiv);
+        //enemyDrops.Add(scrap);
     }
 
     public override void PerformIntent()

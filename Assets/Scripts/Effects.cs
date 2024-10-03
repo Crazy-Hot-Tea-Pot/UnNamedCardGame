@@ -25,6 +25,7 @@ public static class Effects
     }
     public enum Effect
     {
+        None,
         Impervious,
         Motivation
     }

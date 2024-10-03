@@ -36,6 +36,10 @@ public class Chip : MonoBehaviour
         {
             return cardTitle;
         }
+        private set
+        {
+            cardTitle = value;
+        }
     }
 
     /// <summary>
@@ -47,7 +51,7 @@ public class Chip : MonoBehaviour
 
     void Start()
     {
-        cardTitle = newCard.chipName + " Card";
+        cardTitle = newCard.chipName + " Chip";
         this.gameObject.name = CardTitle;
 
         // Set image to card
@@ -75,8 +79,7 @@ public class Chip : MonoBehaviour
             if (Player.GetComponent<PlayerController>().IsJammed)
             {
                 Debug.Log("Player is Jammed");
-                CombatController.TurnUsed(Player);
-                Player.GetComponent<PlayerController>().JammedStacks--;
+                CombatController.TurnUsed(Player);             
             }
             else
             {
@@ -107,6 +110,9 @@ public class Chip : MonoBehaviour
                         CombatController.TurnUsed(Player);
                     }
                     //}
+                    //After card has been used add to kill cards and destroy.
+                    GameManager.Instance.KillCard(this.gameObject);
+                    Destroy(this.gameObject);
                 }
                 else
                 {

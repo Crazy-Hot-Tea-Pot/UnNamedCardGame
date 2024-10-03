@@ -86,7 +86,7 @@ public class Enemy : MonoBehaviour
     /// <summary>
     /// Drops for that enemy.
     /// </summary>
-    public List<Drop> enemyDrops = new List<Drop>();
+    //public List<Drop> enemyDrops = new List<Drop>();
 
     /// <summary>
     /// AttackRange is 3.0f by default;
@@ -280,10 +280,10 @@ public class Enemy : MonoBehaviour
     /// </summary>
     public virtual void DropItems()
     {
-        foreach(Drop drop in enemyDrops)
-        {
-            GameObject instantiatedDrop = Instantiate(dropPrefab, Vector3.zero, Quaternion.identity);
-        }
+        //foreach (Drop drop in enemyDrops)
+        //{
+        //    GameObject instantiatedDrop = Instantiate(dropPrefab, Vector3.zero, Quaternion.identity);
+        //}
     }
     /// <summary>
     /// Called when round ends to apply buffs or debuffs.

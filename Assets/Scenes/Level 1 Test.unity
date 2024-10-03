@@ -2297,6 +2297,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2181696517448560852, guid: 4b5acdc5716c4e54593e1cdb1b57db28, type: 3}
+      propertyPath: m_Speed
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 6591943734183549131, guid: 4b5acdc5716c4e54593e1cdb1b57db28, type: 3}
       propertyPath: m_LocalPosition.x
       value: -30.76
@@ -3231,6 +3235,14 @@ PrefabInstance:
       propertyPath: uiManager
       value: 
       objectReference: {fileID: 1306406282}
+    - target: {fileID: 8769331303162726971, guid: ae731594bcd7ad944932e8fa9a4f6126, type: 3}
+      propertyPath: playerDeck.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8769331303162726971, guid: ae731594bcd7ad944932e8fa9a4f6126, type: 3}
+      propertyPath: playerDeck.Array.data[4]
+      value: 
+      objectReference: {fileID: 3164616844752775387, guid: 56b20c89e8f98034fba4e8a64019d07d, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

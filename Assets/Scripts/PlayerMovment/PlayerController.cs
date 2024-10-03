@@ -566,7 +566,7 @@ public class PlayerController : MonoBehaviour
     /// Called when round ends to apply buffs or debuffs.
     /// </summary>
     public void RoundEnd()
-    {
+    {       
         if (galvanizedStack > 0)
         {
             ApplyShield(galvanizedStack);
@@ -576,6 +576,11 @@ public class PlayerController : MonoBehaviour
         {
             AmountOfTurnsGunkedLeft--;
         }
+        drainedStacks--;
+        gunkStacks--;
+        jammedStacks--;
+        
+
     }
     //Deselect the object in instance and do other clean up.
     //private void OnDeselect(InputAction.CallbackContext context)

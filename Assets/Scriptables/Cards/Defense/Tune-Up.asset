@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Tune-Up
   m_EditorClassIdentifier: 
   chipRarity: 0
-  chipName: 
+  chipName: Tune-Up
   description: Removes the effects of "Jammed"
   chipImage: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
   canBeUpgraded: 1
