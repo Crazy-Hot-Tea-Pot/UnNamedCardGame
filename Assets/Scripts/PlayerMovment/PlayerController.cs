@@ -223,16 +223,6 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// Restores the players energy
-    /// </summary>
-    /// <param name="energyRest"></param>
-    public void RestoreEnergy(int energyRest)
-    {
-        energy += energyRest;
-        Debug.Log("Energy: " + energy);
-    }
-
-    /// <summary>
     /// A getter for enegry
     /// </summary>
     /// <returns></returns>

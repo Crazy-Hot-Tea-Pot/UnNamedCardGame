@@ -3,21 +3,25 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class NewAbility : MonoBehaviour
+public class NewEquipment : MonoBehaviour
 {
+
 
     //Holds the button
     private Button buttonVar;
 
-    //Holds the class for ability
-    public Ability abilityButton;
+    /// <summary>
+    /// Holds the button that activates on press
+    /// </summary>
+    public Equipment equipmentButton;
+
     // Start is called before the first frame update
     void Start()
     {
         //Assign method to button
         buttonVar = GetComponent<Button>();
         //Creates a listener that triggers the onabilityactive method when pressed
-        buttonVar.onClick.AddListener(OnAbilityAcitve);
+        buttonVar.onClick.AddListener(DisplayAbilities);
     }
 
     // Update is called once per frame
@@ -26,8 +30,9 @@ public class NewAbility : MonoBehaviour
         
     }
 
-    private void OnAbilityAcitve()
+    public void DisplayAbilities()
     {
-        abilityButton.Activate();
+        //On button press
+        equipmentButton.ActivateEquipmnet();
     }
 }
