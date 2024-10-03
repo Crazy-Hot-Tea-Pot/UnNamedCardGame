@@ -20,5 +20,6 @@ MonoBehaviour:
   damage: 0
   upgradedDamageByAmount: 0
   numberOfHits: 1
+  debuffToApply: 0
   debuffStacks: 0
   upgradedDebuffStacksByAmout: 0
