@@ -10,10 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6809844b7762fe74eb18f9fe19518433, type: 3}
-  m_Name: Testing Attack Card
+  m_Name: Twin Jabs
   m_EditorClassIdentifier: 
-  cardName: Attacking
-  description: Testing Attack Card
-  cardImage: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  energyCost: 5
-  damage: 5
+  chipRarity: 0
+  chipName: 
+  description: Deal 4 Damage Twice.
+  chipImage: {fileID: 10915, guid: 0000000000000000f000000000000000, type: 0}
+  canBeUpgraded: 1
+  damage: 4
+  upgradedDamageByAmount: 0
+  numberOfHits: 2
+  debuffToApply: 0
+  debuffStacks: 0
+  upgradedDebuffStacksByAmout: 0

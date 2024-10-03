@@ -86,11 +86,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1717545940520766145}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c58be7854c04a284aa1965d1a23f1baf, type: 3}
+  m_Script: {fileID: 11500000, guid: 8980b81e20ad8314bb44689776086377, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   active: 0
-  newCard: {fileID: 11400000, guid: 8ca1dd9622ef24b4cb647a971bf2c04f, type: 2}
+  CombatController: {fileID: 0}
+  Player: {fileID: 0}
+  newCard: {fileID: 11400000, guid: af8d67b61375d7a4b9e92b3f514d9917, type: 2}
 --- !u!114 &3601921312132655737
 MonoBehaviour:
   m_ObjectHideFlags: 0

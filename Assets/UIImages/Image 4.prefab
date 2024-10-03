@@ -14,8 +14,8 @@ GameObject:
   - component: {fileID: -2300514763223272837}
   - component: {fileID: 2324910379380576164}
   m_Layer: 5
-  m_Name: Image 3
-  m_TagString: Card
+  m_Name: Image 4
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -120,19 +120,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 522304151972056420}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1547318834282421529, guid: 3bcad2dafce2054409b2eeb7a77bef78, type: 3}
-        m_TargetAssemblyTypeName: PlayerUIManager, Assembly-CSharp
-        m_MethodName: DropItem
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 3164616844752775387}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &2324910379380576164
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -148,4 +136,4 @@ MonoBehaviour:
   active: 0
   CombatController: {fileID: 0}
   Player: {fileID: 0}
-  newCard: {fileID: 11400000, guid: 1f04b1f225942644bbf7c1f01ca2418e, type: 2}
+  newCard: {fileID: 11400000, guid: 27b83e771aa4f0a448abe213e528e05b, type: 2}

@@ -194,6 +194,10 @@ public class CombatController : MonoBehaviour
         foreach (Combadant combadant in Combadants)
         {
             combadant.attacked = false;
+            if (combadant.combadant.tag == "Player")
+                combadant.combadant.GetComponent<PlayerController>().RoundEnd();
+            else if(combadant.combadant.tag=="Enemy")
+                combadant.combadant.GetComponent<Enemy>().RoundEnd();
         }
     }
     /// <summary>
