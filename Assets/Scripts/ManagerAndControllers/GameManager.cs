@@ -91,12 +91,12 @@ public class GameManager : MonoBehaviour
         // Load all NewChip ScriptableObjects from "Scriptables/Cards/Attack"
         NewChips = new List<NewChip>(Resources.LoadAll<NewChip>("Scriptables/Cards"));
 
-        //Adds basic chips to deck
-        foreach (var ch in NewChips)
-        {
-            if (ch.chipRarity == NewChip.ChipRarity.Basic)
-                AddChipToDeck(ch);
-        }
+        //Adds basic chips to deck manually add these in inspector instead
+        //foreach (var ch in NewChips)
+        //{
+        //    if (ch.chipRarity == NewChip.ChipRarity.Basic)
+        //        AddChipToDeck(ch);
+        //}
         // Doing this for testing
         //AddChipToDeck(NewChips[Random.Range(0, NewChips.Count)]);
         //AddChipToDeck(NewChips[Random.Range(0, NewChips.Count)]);
@@ -229,6 +229,8 @@ public class GameManager : MonoBehaviour
     {
         //Enables combat UI
         uiCanvas.SetActive(true);
+        DrawChip(drawsPerTurn);
+        UpdateUI();
         GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().InCombat = true;
     }
 
