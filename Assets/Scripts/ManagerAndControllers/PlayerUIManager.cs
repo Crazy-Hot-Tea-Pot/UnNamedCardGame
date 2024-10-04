@@ -92,8 +92,6 @@ public class PlayerUIManager : MonoBehaviour
 
     private void Awake()
     {
-        //Fills the inventory UI for deck
-        fillDeck();
 
         //assigns player input class
         inputActions = new PlayerInputActions();
@@ -123,7 +121,8 @@ public class PlayerUIManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        //Fills the inventory UI for deck
+        fillDeck();
     }
 
     // Update is called once per frame
@@ -208,7 +207,9 @@ public class PlayerUIManager : MonoBehaviour
     {
         for(int i = 0; i < gameManager.playerDeck.Count; i++)
         {
-            Instantiate(gameManager.playerDeck[i], panelDeck.transform);
+            GameObject chipTemp = Instantiate(gameManager.ChipPrefab, panelDeck.transform);
+            Chip chipComponenet = chipTemp.GetComponent<Chip>();
+            chipComponenet.newChip = gameManager.playerDeck[i];
         }
     }
 
