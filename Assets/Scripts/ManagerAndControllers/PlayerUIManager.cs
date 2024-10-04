@@ -26,9 +26,18 @@ public class PlayerUIManager : MonoBehaviour
     private InputAction dropItem;
 
     /// <summary>
-    /// A player camera for the ray casting
+    /// Instance variable for creating instances 
     /// </summary>
-    private Camera playerCam;
+    private PlayerUIManager instance;
+
+    /// <summary>
+    /// Instance getter and setter
+    /// </summary>
+    public PlayerUIManager Instance
+    {
+        get;
+        private set;
+    }
 
     #region InventoryUIVariables
     /// <summary>
@@ -94,11 +103,27 @@ public class PlayerUIManager : MonoBehaviour
         dropItem = inputActions.Player.DropItem;
         //Enables the UI
         openInventory.Enable();
+
+        #region donotdistroy
+        //Checks if the instance is null
+        if (Instance == null)
+        {
+            //Makes the object and instance
+            Instance = this;
+            //Makes the instance do not distroy
+            DontDestroyOnLoad(this.gameObject);
+        }
+        //Deletes doublicates if there are any
+        else
+        {
+            Destroy(this.gameObject);
+        }
+        #endregion
     }
     // Start is called before the first frame update
     void Start()
     {
-        playerCam = Camera.main;
+
     }
 
     // Update is called once per frame
