@@ -10,6 +10,9 @@ public class TrinketAbility : Ability
 
     public override void Activate()
     {
+        base.Activate();
 
+        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().TakeDamage(powerGain);
+        //GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().RestoreEnergy(powerGain);
     }
 }

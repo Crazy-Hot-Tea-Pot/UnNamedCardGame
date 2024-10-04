@@ -19,12 +19,15 @@ public class Ability : ScriptableObject
     /// </summary>
     public int energyCost;
 
+    
+
     /// <summary>
     /// Activate Ability
     /// </summary>
     public virtual void Activate()
     {
-
+        //Decrease the players energy by the appropriate amount
+        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().PlayedCardOrAbility(energyCost);
     }
     
 }

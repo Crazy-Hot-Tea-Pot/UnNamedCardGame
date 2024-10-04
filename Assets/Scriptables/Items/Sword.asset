@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9706551dd7293664abb220a6ffbf0387, type: 3}
+  m_Name: Sword
+  m_EditorClassIdentifier: 
+  itemName: 
+  itemDescription: 
+  AbilityList:
+  - {fileID: 9178745675451368154, guid: a8a2b595bdd58824888058ca1125fccc, type: 3}
+  - {fileID: 6997298212168128428, guid: e9e587936e29f664fbc782f24c918817, type: 3}
