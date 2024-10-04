@@ -215,9 +215,9 @@ public class PlayerUIManager : MonoBehaviour
     /// <summary>
     /// Adds a card to the UI of the player inventory. NOTE THIS HAS NOTHING TO DO WITH FUNCTIONAL DECK INVENTORY THAT'S GAMEMANAGER
     /// </summary>
-    public void AddCardToDeck(GameObject card)
+    public void AddCardToDeck(NewChip card)
     {
-        Instantiate(card, panelDeck.transform);
+        Instantiate(card.chipImage, panelDeck.transform);
     }
 
     /// <summary>
