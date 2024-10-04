@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a98f0b0eea9e8146857dd831ee9a090, type: 3}
   m_Name: Default Trinket
   m_EditorClassIdentifier: 
-  abiliityName: Motivate
+  abilityName: Default Trinket
+  abilityDescription: Empty
   energyCost: 30
   powerGain: 1

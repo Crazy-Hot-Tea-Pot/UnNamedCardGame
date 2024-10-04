@@ -14,14 +14,12 @@ public class GameManager : MonoBehaviour
 <<<<<<< Updated upstream
     ///<summary>
     ///A variable to hold player turns that assumes the player turn is true and the enemy turn is false
+    ///is this still being used?
     ///</summary>
     private bool playerTurn;
 
-    [Header("Deck Veriables")]
-=======
     //Since gameManager isn't acting really like a gameManager adding headers to make sense to me.
     [Header("Chip Manager stuff")]
->>>>>>> Stashed changes
     ///<summary>Hand limit</summary>
     public int handlimit;
     ///<summary>Deck limit</summary>
@@ -30,19 +28,19 @@ public class GameManager : MonoBehaviour
     public int drawsPerTurn;
 
     public List<NewChip> playerHand;
-    public List<NewChip> playerDeck;    
+    public List<NewChip> playerDeck;
     public List<NewChip> usedChips;
     //will get the chips from resources
     public List<NewChip> NewChips;
     // Default newChipInPlayerHand
     public GameObject ChipPrefab;
 
-    [Header("UI Veriables")]
+    [Header("UI Manager stuff")]
     //UIVeriables
     public GameObject chipPanel;
     public GameObject uiCanvas;
 
-    [Header("Enemy Variables")]
+    [Header("Enemy Manager stuff")]
     public List<GameObject> enemyList;
 
     /// <summary>
@@ -61,6 +59,7 @@ public class GameManager : MonoBehaviour
         get;
         private set;
     }
+
     /// <summary>
     /// Gets Draws per turn amount.
     /// </summary>
@@ -78,18 +77,20 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        Instance = this;
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
     // Start is called before the first frame update
     void Start()
     {
         Initialize();
-<<<<<<< Updated upstream
-        //Makes sure we have a valid number
-        //if(handlimit < DrawsPerTurn + 1)
-        //{
-        //    handlimit = DrawsPerTurn + 1;
-        //}
         playerTurn = true;
 =======
 >>>>>>> Stashed changes
@@ -101,11 +102,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Remove this later it represents AI that doesn't exist
-        if(playerTurn == false)
-        {
-            playerTurn = ChangeTurn(playerTurn);
-        }
+
     }
 
     private void Initialize()
@@ -123,16 +120,19 @@ public class GameManager : MonoBehaviour
     }
 
 
-    ///<summary>Change turn is a method that allows the turn to change whenever it's needed. It assumes true is our player and false is the enemy</summary>
+    ///<summary>
+    ///Change turn is a method that allows the turn to change whenever it's needed. It assumes true is our player and false is the enemy
+    ///is this still needed?
+    ///</summary>
     bool ChangeTurn(bool turn)
     {
         //Switch to enmy turn
-        if(turn == true)
+        if (turn == true)
         {
             turn = false;
         }
         //Switch to player turn
-        else if(turn == false)
+        else if (turn == false)
         {
             turn = true;
             //Draw one newChipInPlayerHand
@@ -140,17 +140,22 @@ public class GameManager : MonoBehaviour
         }
         return turn;
     }
-
+    /// <summary>
+    /// Add chip to player Deck
+    /// </summary>
+    /// <param name="newChipToAdd"></param>
     public void AddChipToDeck(NewChip newChipToAdd)
     {
         playerDeck.Add(newChipToAdd);
     }
 
-    ///<summary>Shuffles the player deck</summary>
+    ///<summary>
+    ///Shuffles the player deck
+    ///</summary>
     public void ShufflePlayerDeck()
     {
         //Makes sure there are atleast 3 cards and not null
-        if(playerDeck.Count != 0 && playerDeck.Count != 1 && playerDeck != null)
+        if (playerDeck.Count != 0 && playerDeck.Count != 1 && playerDeck != null)
         {
             //Cycles through the player deck
             for (int i = 0; i < playerDeck.Count - 1; i++)
@@ -159,11 +164,11 @@ public class GameManager : MonoBehaviour
                 int num1 = Roll(0, playerDeck.Count);
                 int num2 = Roll(0, playerDeck.Count);
                 //Holds the value of the next newChipInPlayerHand to be replaced
-                NewChip placeHolder = playerDeck[num2-1];
+                NewChip placeHolder = playerDeck[num2 - 1];
                 //Replaces newChipInPlayerHand 2 with newChipInPlayerHand 1
-                playerDeck[num2-1] = playerDeck[num1-1];
+                playerDeck[num2 - 1] = playerDeck[num1 - 1];
                 //Replaces newChipInPlayerHand 1 with the place holder (Chip 2)
-                playerDeck[num1-1] = placeHolder;
+                playerDeck[num1 - 1] = placeHolder;
                 //Clears our place holder
                 placeHolder = null;
             }
@@ -171,7 +176,9 @@ public class GameManager : MonoBehaviour
 
     }
 
-    ///<summary>Draws a newChipInPlayerHand</summary>
+    ///<summary>
+    ///Draws a newChipInPlayerHand
+    ///</summary>
     public void DrawChip(int draws)
     {
         //Check if player deck has cards to draw
@@ -232,33 +239,8 @@ public class GameManager : MonoBehaviour
             else
                 newChipInstance.name = newChipInPlayerHand.chipName;
         }
-        //for(int i = playerHand.Count; i < handlimit; i++)
-        //{
-        //   // Instantiate(playerHand[i], chipPanel.transform);
-
-        //    GameObject newChipInstance = Instantiate(ChipPrefab, chipPanel.transform);
-
-        //    //Find the Chip component on the prefab instance
-        //    Chip chipComponent = newChipInstance.GetComponent<Chip>();
-
-        //    chipComponent.newChip = playerHand[i];
-
-        //    //Apply name to newChipInPlayerHand.
-        //    if (playerHand[i].chipName == "" || playerHand[i].chipName == null)
-        //        Debug.LogWarning("Scriptable {chipName} is empty on " + playerHand[i].name + " and this will cause errors.");
-        //    else
-        //        newChipInstance.name = playerHand[i].chipName;
-        //}
+        
     }
-
-    ///<summary>Destroys the current chip</summary>
-    //public void CardDeath(int value)
-    //{
-    //    //Remove the newChipInPlayerHand from the player hand
-    //    playerHand.Remove(playerHand[value]);
-    //    //Remove the newChipInPlayerHand from the InventoryUI
-    //    uiManager.RemoveFromUI(playerHand[value]);
-    //}
 
     /// <summary>
     /// A method that can be used to transition into combat when out of combat
@@ -269,7 +251,7 @@ public class GameManager : MonoBehaviour
         uiCanvas.SetActive(true);        
         //Enables Combat
         //inCombat = true;
-        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().InCombat = true;        
+        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().InCombat = true;
     }
 
     /// <summary>
@@ -316,8 +298,7 @@ public class GameManager : MonoBehaviour
     public void PickUpChip(GameObject chip)
     {
         //If the player deck isn't at limit
-<<<<<<< Updated upstream
-        if(playerDeck.Count !< decklimit)
+        if (playerDeck.Count! < decklimit)
         {
             //Destroy the newChipInPlayerHand from the game world
             Destroy(chip);
@@ -330,21 +311,14 @@ public class GameManager : MonoBehaviour
 
             //Add to the inventory UI
             uiManager.AddCardToDeck(chip);
-<<<<<<< Updated upstream
-  
-=======
 
-            //Destroy the newChipInPlayerHand from the game world 
-            Destroy(chip);
-
->>>>>>> Stashed changes
         }
         else
         {
             //In the future play a sound or have a visual effect for can't pick it up
             Debug.Log("Can't pick it up");
         }
-        
+
     }
 
     /// <summary>

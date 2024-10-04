@@ -8,6 +8,13 @@ TagManager:
   - Enemy
   - CombatController
   - Drop
+  - Card
+  - abilityTrinket
+  - abilitySword
+  - abilityShield
+  - potionHealth
+  - weaponSword
+  - itemNecklace
   layers:
   - Default
   - TransparentFX

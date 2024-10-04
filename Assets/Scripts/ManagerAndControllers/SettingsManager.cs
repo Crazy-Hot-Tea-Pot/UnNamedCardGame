@@ -5,6 +5,7 @@
 /// </summary>
 public class SettingsManager : MonoBehaviour
 {
+    [SerializeField]
     private CameraSettings cameraSettings;
 
     public static SettingsManager Instance {

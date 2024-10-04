@@ -20,8 +20,31 @@ public class PlayerUIManager : MonoBehaviour
     /// </summary>
     private InputAction openInventory;
 
+    /// <summary>
+    /// This input action holds input for dropping Inventory Items
+    /// </summary>
+    private InputAction dropItem;
+
+    /// <summary>
+    /// Instance variable for creating instances 
+    /// </summary>
+    private PlayerUIManager instance;
+
+    /// <summary>
+    /// Instance getter and setter
+    /// </summary>
+    public PlayerUIManager Instance
+    {
+        get;
+        private set;
+    }
 
     #region InventoryUIVariables
+    /// <summary>
+    /// Inventory List for items in the players hands
+    /// </summary>
+    public List<GameObject> InventoryList;
+
     /// <summary>
     /// Holds the UI canvas for inventory
     /// </summary>
@@ -34,11 +57,27 @@ public class PlayerUIManager : MonoBehaviour
     /// Holds the chipPanel that displays deck
     /// </summary>
     public GameObject panelDeck;
+    /// <summary>
+    /// Holds all active abilities
+    /// </summary>
+    public GameObject panelAbilty;
 
     /// <summary>
     /// A variable to tell us if the inventory UI is open
     /// </summary>
     private bool isActive = false;
+
+    public bool IsActive
+    {
+        get
+        {
+            return isActive;
+        }
+        private set
+        {
+            isActive = value;
+        }
+    }
 
     /// <summary>
     /// Inventory button
@@ -60,8 +99,26 @@ public class PlayerUIManager : MonoBehaviour
         inputActions = new PlayerInputActions();
         //Assigns the input for the player to open the UI for inventory
         openInventory = inputActions.Player.InventoryUI;
+        //Assign the input for the player to drop items from the UI
+        dropItem = inputActions.Player.DropItem;
         //Enables the UI
         openInventory.Enable();
+
+        #region donotdistroy
+        //Checks if the instance is null
+        if (Instance == null)
+        {
+            //Makes the object and instance
+            Instance = this;
+            //Makes the instance do not distroy
+            DontDestroyOnLoad(this.gameObject);
+        }
+        //Deletes doublicates if there are any
+        else
+        {
+            Destroy(this.gameObject);
+        }
+        #endregion
     }
     // Start is called before the first frame update
     void Start()
@@ -72,12 +129,13 @@ public class PlayerUIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         //On hold open the inventroy UI if input is recieved
-       if(openInventory.IsPressed())
+        if (openInventory.IsPressed())
        {
             OpenInventroy();
        }
-      
+
     }
 
     #region InventoryUIStuff
@@ -94,7 +152,7 @@ public class PlayerUIManager : MonoBehaviour
         }
 
         //Tell the program the inventory is open
-        isActive = true;
+        IsActive = true;
 
     }
 
@@ -104,9 +162,9 @@ public class PlayerUIManager : MonoBehaviour
     public void CloseInventory()
     {
         //If canvas is open close it
-        if(uiCanvas.active == true)
+        if(uiCanvas.activeInHierarchy == true)
         {
-            if(panelDeck.active == true)
+            if(panelDeck.activeInHierarchy == true)
             {
                 switchMenuInventory();
             }
@@ -114,7 +172,7 @@ public class PlayerUIManager : MonoBehaviour
         }
 
         //Tell the program the inventory is closed
-        isActive = false;
+        IsActive = false;
     }
 
     /// <summary>
@@ -168,16 +226,52 @@ public class PlayerUIManager : MonoBehaviour
     /// <param name="item"></param>
     public void AddToInventory(GameObject item)
     {
-        Instantiate(item, panelInventory.transform);
+        //No duplicated items
+        if(!GameObject.FindGameObjectWithTag(item.tag))
+        {
+            Instantiate(item, panelInventory.transform);
+        }
     }
+
     /// <summary>
-    /// This function just destroys anything you put in here put the card or item you want destroyed as in the UI element and it's gone. If you shove an enemy in here
-    /// that's gone too.
+    /// Instantiates abilites as UI objects so that they might be added into the game
+    /// </summary>
+    public void MakeActiveAbility(GameObject ability)
+    {
+        if(!GameObject.FindGameObjectWithTag(ability.tag))
+        {
+            Instantiate(ability, panelAbilty.transform);
+        }
+    }
+
+    /// <summary>
+    /// Destroys the ability from the UI
+    /// </summary>
+    /// <param name="ability"></param>
+    public void MakeDeactiveAbility(string ability)
+    {
+        Destroy(GameObject.FindGameObjectWithTag(ability));
+    }
+
+    /// <summary>
+    /// This function allows items to be removed from the UI it requires a object first and then a parent name deck or inventory as a string
     /// </summary>
     /// <param name="card"></param>
-    public void RemoveFromUI(GameObject card)
+    public void RemoveFromUI(GameObject remObject, string parent)
     {
-        Destroy(card);
+        if(parent == "Inventory")
+        {
+            //Destroys the game object from the UI element
+            Destroy(GameObject.FindGameObjectWithTag(remObject.tag));
+        }
+        else if(parent == "Deck")
+        {
+            //Destroys the game object from the UI element
+            Destroy(panelDeck.transform.Find(remObject.name));
+        }
+
+        
     }
+    
     #endregion
 }

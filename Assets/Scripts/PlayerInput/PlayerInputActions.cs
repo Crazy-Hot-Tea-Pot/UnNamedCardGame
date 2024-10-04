@@ -71,6 +71,24 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""DropItem"",
+                    ""type"": ""Button"",
+                    ""id"": ""b974d7b3-3052-4a48-971f-8d53336ed433"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""CycleTarget"",
+                    ""type"": ""Button"",
+                    ""id"": ""a1eb7447-1477-4f8f-a8d3-58cbcf881ce7"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -110,7 +128,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""7850c5cc-d9fb-4b55-ac44-d0628f818f61"",
-                    ""path"": """",
+                    ""path"": ""<Keyboard>/f"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -126,6 +144,28 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""InventoryUI"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cd869680-8243-4e69-9f36-a8cd0fa1c034"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DropItem"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ad391f86-3965-439d-a147-04cf1084ff30"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CycleTarget"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -379,6 +419,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_Guard = m_Player.FindAction("Guard", throwIfNotFound: true);
         m_Player_UseTrinket = m_Player.FindAction("Use Trinket", throwIfNotFound: true);
         m_Player_InventoryUI = m_Player.FindAction("InventoryUI", throwIfNotFound: true);
+        m_Player_DropItem = m_Player.FindAction("DropItem", throwIfNotFound: true);
+        m_Player_CycleTarget = m_Player.FindAction("CycleTarget", throwIfNotFound: true);
         // Camera Controls
         m_CameraControls = asset.FindActionMap("Camera Controls", throwIfNotFound: true);
         m_CameraControls_RotateCamera = m_CameraControls.FindAction("RotateCamera", throwIfNotFound: true);
@@ -453,6 +495,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Guard;
     private readonly InputAction m_Player_UseTrinket;
     private readonly InputAction m_Player_InventoryUI;
+    private readonly InputAction m_Player_DropItem;
+    private readonly InputAction m_Player_CycleTarget;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -462,6 +506,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @Guard => m_Wrapper.m_Player_Guard;
         public InputAction @UseTrinket => m_Wrapper.m_Player_UseTrinket;
         public InputAction @InventoryUI => m_Wrapper.m_Player_InventoryUI;
+        public InputAction @DropItem => m_Wrapper.m_Player_DropItem;
+        public InputAction @CycleTarget => m_Wrapper.m_Player_CycleTarget;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -486,6 +532,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @InventoryUI.started += instance.OnInventoryUI;
             @InventoryUI.performed += instance.OnInventoryUI;
             @InventoryUI.canceled += instance.OnInventoryUI;
+            @DropItem.started += instance.OnDropItem;
+            @DropItem.performed += instance.OnDropItem;
+            @DropItem.canceled += instance.OnDropItem;
+            @CycleTarget.started += instance.OnCycleTarget;
+            @CycleTarget.performed += instance.OnCycleTarget;
+            @CycleTarget.canceled += instance.OnCycleTarget;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -505,6 +557,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @InventoryUI.started -= instance.OnInventoryUI;
             @InventoryUI.performed -= instance.OnInventoryUI;
             @InventoryUI.canceled -= instance.OnInventoryUI;
+            @DropItem.started -= instance.OnDropItem;
+            @DropItem.performed -= instance.OnDropItem;
+            @DropItem.canceled -= instance.OnDropItem;
+            @CycleTarget.started -= instance.OnCycleTarget;
+            @CycleTarget.performed -= instance.OnCycleTarget;
+            @CycleTarget.canceled -= instance.OnCycleTarget;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -615,6 +673,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnGuard(InputAction.CallbackContext context);
         void OnUseTrinket(InputAction.CallbackContext context);
         void OnInventoryUI(InputAction.CallbackContext context);
+        void OnDropItem(InputAction.CallbackContext context);
+        void OnCycleTarget(InputAction.CallbackContext context);
     }
     public interface ICameraControlsActions
     {
