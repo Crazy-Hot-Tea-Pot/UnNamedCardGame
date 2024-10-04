@@ -243,6 +243,25 @@ public class GameManager : MonoBehaviour
         uiCanvas.SetActive(false);
         //Disables combat
         GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().InCombat = false;
+
+        // Add unused chips to playerdeck.
+        foreach(var usedChips in usedChips)
+        {
+            playerDeck.Add(usedChips);
+        }
+        usedChips.Clear();
+        foreach(var leftOverChip in playerHand)
+        {
+            playerDeck.Add(leftOverChip);
+        }
+        playerHand.Clear();
+
+        ShufflePlayerDeck();
+
+        //Call fill deck to repopulate inventory.
+        PlayerUIManager.Instance.fillDeck();
+
+
     }
 
     /// <summary>

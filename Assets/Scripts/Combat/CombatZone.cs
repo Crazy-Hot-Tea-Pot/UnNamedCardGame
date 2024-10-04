@@ -24,6 +24,7 @@ public class CombatZone : MonoBehaviour
         if (other.tag == "Player")
         {
             managerClass.StartCombat();
+            this.GetComponent<BoxCollider>().enabled = false;
             for(int i = 0; i < tempList.Count; i++)
             {
                 managerClass.RememberEnemy(tempList[i]);

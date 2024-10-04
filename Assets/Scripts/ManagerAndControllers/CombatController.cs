@@ -20,6 +20,7 @@ public class CombatController : MonoBehaviour
 
     public List<Combadant> Combadants = new();
 
+
     /// <summary>
     /// Amount of rounds that has passed.
     /// </summary>

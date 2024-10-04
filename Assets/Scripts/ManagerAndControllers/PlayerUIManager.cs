@@ -33,7 +33,7 @@ public class PlayerUIManager : MonoBehaviour
     /// <summary>
     /// Instance getter and setter
     /// </summary>
-    public PlayerUIManager Instance
+    public static PlayerUIManager Instance
     {
         get;
         private set;
@@ -205,7 +205,13 @@ public class PlayerUIManager : MonoBehaviour
     /// </summary>
     public void fillDeck()
     {
-        for(int i = 0; i < gameManager.playerDeck.Count; i++)
+        //Removes all objects from panelDeck to repopulate.
+        foreach (Transform child in panelDeck.transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+        for (int i = 0; i < gameManager.playerDeck.Count; i++)
         {
             GameObject chipTemp = Instantiate(gameManager.ChipPrefab, panelDeck.transform);
             Chip chipComponenet = chipTemp.GetComponent<Chip>();
