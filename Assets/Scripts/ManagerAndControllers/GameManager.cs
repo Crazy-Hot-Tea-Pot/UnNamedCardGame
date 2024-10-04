@@ -11,6 +11,70 @@ public class GameManager : MonoBehaviour
     public PlayerUIManager uiManager;
 
 
+    //Since gameManager isn't acting really like a gameManager adding headers to make sense to me.
+    [Header("Chip Manager stuff")]
+    ///<summary>Hand limit</summary>
+    public int handlimit;
+    ///<summary>Deck limit</summary>
+    public int decklimit;
+    ///<summary>Draws per turn</summary>
+    public int drawsPerTurn;
+
+    public List<NewChip> playerHand;
+    public List<NewChip> playerDeck;
+    public List<NewChip> usedChips;
+    //will get the chips from resources
+    public List<NewChip> NewChips;
+    // Default newChipInPlayerHand
+    public GameObject ChipPrefab;
+
+    [Header("UI Veriables")]
+    //UIVeriables
+    public GameObject chipPanel;
+    public GameObject uiCanvas;
+
+    [Header("Enemy Variables")]
+    public List<GameObject> enemyList;
+
+    /// <summary>
+    /// Is the player in combat true is yes
+    /// </summary>
+    public bool InCombat
+    {
+        get
+        {
+            return GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().InCombat;
+        }
+    }
+
+    public static GameManager Instance
+    {
+        get;
+        private set;
+    }
+    /// <summary>
+    /// Gets Draws per turn amount.
+    /// </summary>
+    public int DrawsPerTurn
+    {
+        get
+        {
+            return drawsPerTurn;
+        }
+        private set
+        {
+            drawsPerTurn = value;
+        }
+    }
+
+    void Awake()
+    {
+        Instance = this;
+    }
+    // Start is called before the first frame update
+    void Start()
+    {
+        Initialize();
         ShufflePlayerDeck();
         DrawChip(DrawsPerTurn);
 
@@ -37,10 +101,7 @@ public class GameManager : MonoBehaviour
     }
 
 
-    ///<summary>
-    ///Change turn is a method that allows the turn to change whenever it's needed. It assumes true is our player and false is the enemy
-    ///is this still needed?
-    ///</summary>
+    ///<summary>Change turn is a method that allows the turn to change whenever it's needed. It assumes true is our player and false is the enemy</summary>
     bool ChangeTurn(bool turn)
     {
         //Switch to enmy turn
@@ -57,18 +118,13 @@ public class GameManager : MonoBehaviour
         }
         return turn;
     }
-    /// <summary>
-    /// Add chip to player Deck
-    /// </summary>
-    /// <param name="newChipToAdd"></param>
+
     public void AddChipToDeck(NewChip newChipToAdd)
     {
         playerDeck.Add(newChipToAdd);
     }
 
-    ///<summary>
-    ///Shuffles the player deck
-    ///</summary>
+    ///<summary>Shuffles the player deck</summary>
     public void ShufflePlayerDeck()
     {
         //Makes sure there are atleast 3 cards and not null
@@ -93,9 +149,7 @@ public class GameManager : MonoBehaviour
 
     }
 
-    ///<summary>
-    ///Draws a newChipInPlayerHand
-    ///</summary>
+    ///<summary>Draws a newChipInPlayerHand</summary>
     public void DrawChip(int draws)
     {
         //Check if player deck has cards to draw
@@ -155,9 +209,9 @@ public class GameManager : MonoBehaviour
                 Debug.LogWarning("Scriptable {chipName} is empty on " + newChipInPlayerHand.name + " and this will cause errors.");
             else
                 newChipInstance.name = newChipInPlayerHand.chipName;
-        }
-        
+        }      
     }
+
 
     /// <summary>
     /// A method that can be used to transition into combat when out of combat
@@ -165,9 +219,7 @@ public class GameManager : MonoBehaviour
     public void StartCombat()
     {
         //Enables combat UI
-        uiCanvas.SetActive(true);        
-        //Enables Combat
-        //inCombat = true;
+        uiCanvas.SetActive(true);
         GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().InCombat = true;
     }
 
@@ -179,7 +231,6 @@ public class GameManager : MonoBehaviour
         //Deactivates the UI for combat
         uiCanvas.SetActive(false);
         //Disables combat
-        //inCombat = false;
         GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().InCombat = false;
     }
 
@@ -214,21 +265,17 @@ public class GameManager : MonoBehaviour
     /// <param name="chip"></param>
     public void PickUpChip(GameObject chip)
     {
-        //If the player deck isn't at limit
-        if (playerDeck.Count! < decklimit)
-        {
-            //Destroy the newChipInPlayerHand from the game world
-            Destroy(chip);
-=======
+       //If the player deck isn't at limit
         if (playerDeck.Count! < decklimit)
         {            
->>>>>>> Stashed changes
             //Add newChipInPlayerHand to deck
             playerDeck.Add(chip.GetComponent<Chip>().newChip);
 
             //Add to the inventory UI
             uiManager.AddCardToDeck(chip);
 
+            //Destroy the newChipInPlayerHand from the game world 
+            Destroy(chip);
         }
         else
         {
