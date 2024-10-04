@@ -22,7 +22,6 @@ public class Enemy : MonoBehaviour
     private int currentHp;   
     [SerializeField]
     private int shield;
-
     [Header("Status Effects")]
     [SerializeField]
     private bool inCombat;
@@ -43,11 +42,6 @@ public class Enemy : MonoBehaviour
     /// Reference to combat controller.
     /// </summary>
     public CombatController CombatController;
-
-    /// <summary>
-    /// Placeholder for testing.
-    /// </summary>
-    public GameObject dropPrefab;
 
     /// <summary>
     /// Returns name of enemy
@@ -82,16 +76,6 @@ public class Enemy : MonoBehaviour
             }
         }
     }
-
-    /// <summary>
-    /// Drops for that enemy.
-    /// </summary>
-    //public List<Drop> enemyDrops = new List<Drop>();
-
-    /// <summary>
-    /// AttackRange is 3.0f by default;
-    /// </summary>
-    //public float attackRange = 3.0f;
    
     /// <summary>
     /// Is the Enemy in Combat.

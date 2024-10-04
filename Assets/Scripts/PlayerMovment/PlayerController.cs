@@ -37,6 +37,7 @@ public class PlayerController : MonoBehaviour
     private int scrap;
 
     [Header("Status Effects")]
+    [Header("Buffs")]
     [SerializeField]
     private bool isGalvanized;
     [SerializeField]
@@ -45,6 +46,8 @@ public class PlayerController : MonoBehaviour
     private bool isPowered;
     [SerializeField]
     private int poweredStacks;
+
+    [Header("DeBuffs")]
     [SerializeField]
     private bool isGunked;
     [SerializeField]
@@ -52,9 +55,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private int amountOfTurnsGunkedLeft;
     [SerializeField]
-    private int drainedStacks;
-    [SerializeField]
     private bool isDrained;
+    [SerializeField]
+    private int drainedStacks;    
     [SerializeField]
     private bool isWornDown;
     [SerializeField]
@@ -63,6 +66,8 @@ public class PlayerController : MonoBehaviour
     private bool isJammed;
     [SerializeField]
     private int jammedStacks;
+
+    [Header("Effects")]
     [SerializeField]
     private bool nextChipActivatesTwice;
     [SerializeField]
@@ -132,7 +137,9 @@ public class PlayerController : MonoBehaviour
                 scrap = 0;
         }
     }
-    #region statusEffects
+    /// <summary>
+    /// Returns if player is Galvanized.
+    /// </summary>
     public bool IsGalvanized
     {
         get
@@ -144,6 +151,9 @@ public class PlayerController : MonoBehaviour
             isGalvanized = value;
         }
     }
+    /// <summary>
+    /// Returns how many stacks of Galvanized the player has.
+    /// </summary>
     public int GalvanizedStack
     {
         get => galvanizedStack;
@@ -159,10 +169,16 @@ public class PlayerController : MonoBehaviour
                 IsGalvanized = true;
         }
     }
+    /// <summary>
+    /// Returns if player is Powered.
+    /// </summary>
     public bool IsPowered { 
         get => isPowered; 
         private set => isPowered = value; 
     }
+    /// <summary>
+    /// Returns how many stacks of power the player has.
+    /// </summary>
     public int PoweredStacks
     {
         get => poweredStacks;
@@ -178,12 +194,18 @@ public class PlayerController : MonoBehaviour
                 IsPowered = true;
         }
     }
+    /// <summary>
+    /// Returns if player is gunked.
+    /// </summary>
     public bool IsGunked {
         get => isGunked;
         private set {
          isGunked = value;
         }
     }
+    /// <summary>
+    /// Returns how many stacks of gunk the player has.
+    /// </summary>
     public int GunkStacks
     {
         get => gunkStacks;
@@ -199,6 +221,9 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+    /// <summary>
+    /// Use this to prevent player from attacking when gunked.
+    /// </summary>
     public int AmountOfTurnsGunkedLeft
     {
         get => amountOfTurnsGunkedLeft;
@@ -209,6 +234,9 @@ public class PlayerController : MonoBehaviour
                 IsGunked = false;
         }
     }
+    /// <summary>
+    /// Returns how many stacks of drained the player has.
+    /// </summary>
     public int DrainedStacks
     {
         get
@@ -227,14 +255,23 @@ public class PlayerController : MonoBehaviour
                 IsDrained = true;
         }
     }
+    /// <summary>
+    /// Returns if the player is drained.
+    /// </summary>
     public bool IsDrained { 
         get => isDrained;
         private set => isDrained = value; 
     }
+    /// <summary>
+    /// Returns if the player is in worndown state.
+    /// </summary>
     public bool IsWornDown { 
         get => isWornDown;
         private set => isWornDown = value; 
     }
+    /// <summary>
+    /// Returns how many stacks of worn down the player has.
+    /// </summary>
     public int WornDownStacks
     {
         get
@@ -253,10 +290,16 @@ public class PlayerController : MonoBehaviour
                 IsWornDown = true;
         }
     }
+    /// <summary>
+    /// Returns if player is Jammed.
+    /// </summary>
     public bool IsJammed { 
         get => isJammed;
         private set => isJammed = value; 
     }           
+    /// <summary>
+    /// Returns how many stacks of jammed the palyer has.
+    /// </summary>
     public int JammedStacks
     {
         get
@@ -275,6 +318,9 @@ public class PlayerController : MonoBehaviour
                 IsJammed = true;
         }
     }   
+    /// <summary>
+    /// Used to apply effect of activing a chip twice.
+    /// </summary>
     public bool NextChipActivatesTwice
     {
         get
@@ -286,6 +332,9 @@ public class PlayerController : MonoBehaviour
             nextChipActivatesTwice = value;
         }
     }
+    /// <summary>
+    /// Used to apply effect to not take damage.
+    /// </summary>
     public bool IsImpervious
     {
         get
@@ -296,13 +345,7 @@ public class PlayerController : MonoBehaviour
         {
             isImpervious = value;
         }
-    }
-#endregion
-    [Space(50)]
-    /// <summary>
-    /// Abilities player can do.
-    /// </summary>
-    public List<Ability> abilities = new List<Ability>();
+    }    
 
     // Awake is called when instance is being loaded
     void Awake()
@@ -322,7 +365,6 @@ public class PlayerController : MonoBehaviour
 
         Initialize();
     }
-
     /// <summary>
     /// Initialize Player
     /// </summary>
@@ -350,7 +392,6 @@ public class PlayerController : MonoBehaviour
         //deSelect.Enable();
         //deSelect.performed += OnDeselect;
     }
-
     /// <summary>
     /// Disables
     /// </summary>
@@ -438,15 +479,6 @@ public class PlayerController : MonoBehaviour
     public void RecoverFullEnergy()
     {
         Energy = maxEnergy;
-    }
-    /// <summary>
-    /// Called when player has played a card or use an ability.
-    /// will remove energy.
-    /// </summary>
-    /// <param name="energyUseage"></param>
-    public void PlayedCardOrAbility(int energyUseage)
-    {
-        Energy -= energyUseage;
     }
     /// <summary>
     /// Deal Damage to player.
@@ -555,15 +587,6 @@ public class PlayerController : MonoBehaviour
                 break;
         }
     }
-
-    /// <summary>
-    /// A getter for enegry
-    /// </summary>
-    /// <returns></returns>
-    public int GetEnergy()
-    {
-        return energy;
-    }
     /// <summary>
     /// Returns the scrap stolen or whats left.
     /// </summary>
@@ -585,13 +608,14 @@ public class PlayerController : MonoBehaviour
     }
     /// <summary>
     /// Called when round ends to apply buffs or debuffs.
+    /// Buffs Stack don't go away.
+    /// Debuffs Stack go away every round.
     /// </summary>
     public void RoundEnd()
     {       
         if (galvanizedStack > 0)
         {
-            ApplyShield(galvanizedStack);
-            galvanizedStack = 0;
+            ApplyShield(galvanizedStack);            
         }
         if (isGunked)
         {
@@ -600,16 +624,7 @@ public class PlayerController : MonoBehaviour
         drainedStacks--;
         gunkStacks--;
         jammedStacks--;
-        
+        wornDownStacks--;
 
     }
-    //Deselect the object in instance and do other clean up.
-    //private void OnDeselect(InputAction.CallbackContext context)
-    //{
-    //    if (selectedObjectInstance != null)
-    //    {
-    //        selectedObjectInstance.Deselect();
-    //        selectedObjectInstance=null;
-    //    }
-    //}
 }

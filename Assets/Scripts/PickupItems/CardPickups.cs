@@ -17,12 +17,15 @@ public class CardPickups : MonoBehaviour
     {
         
     }
-
+    /// <summary>
+    /// This will no longer work.
+    /// </summary>
+    /// <param name="other"></param>
     private void OnTriggerEnter(Collider other)
     {
         if(other.tag == "Player")
         {
-            gameManger.PickUpCard(cardObject, this.gameObject);
+           // gameManger.PickUpChip(cardObject, this.gameObject);
         }
     }
 }

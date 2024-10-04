@@ -58,6 +58,18 @@ public class PlayerUIManager : MonoBehaviour
     /// </summary>
     private bool isActive = false;
 
+    public bool IsActive
+    {
+        get
+        {
+            return isActive;
+        }
+        private set
+        {
+            isActive = value;
+        }
+    }
+
     /// <summary>
     /// Inventory button
     /// </summary>
@@ -115,7 +127,7 @@ public class PlayerUIManager : MonoBehaviour
         }
 
         //Tell the program the inventory is open
-        isActive = true;
+        IsActive = true;
 
     }
 
@@ -125,9 +137,9 @@ public class PlayerUIManager : MonoBehaviour
     public void CloseInventory()
     {
         //If canvas is open close it
-        if(uiCanvas.active == true)
+        if(uiCanvas.activeInHierarchy == true)
         {
-            if(panelDeck.active == true)
+            if(panelDeck.activeInHierarchy == true)
             {
                 switchMenuInventory();
             }
@@ -135,7 +147,7 @@ public class PlayerUIManager : MonoBehaviour
         }
 
         //Tell the program the inventory is closed
-        isActive = false;
+        IsActive = false;
     }
 
     /// <summary>

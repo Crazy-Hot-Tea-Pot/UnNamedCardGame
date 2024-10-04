@@ -36,12 +36,8 @@ public class AttackChip : NewChip
     public override void OnChipPlayed(PlayerController player)
     {
         base.OnChipPlayed(player);
-        //Debug.Log(chipName +
-        //    " used to deal " +
-        //    damage +
-        //    "damage to " +
-        //    GameManager.Instance.enemyList[0].GetComponent<Enemy>().name);
-        if (player.PoweredStacks > 0)
+        
+        if (player.IsPowered)
         {
             Debug.Log("Player does Empower attack.");
             GameManager.Instance.enemyList[0].GetComponent<Enemy>().TakeDamage(damage+player.PoweredStacks);

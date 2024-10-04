@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 3850231655135637281}
   - component: {fileID: 2181696517448560852}
   - component: {fileID: 3007749569736504765}
-  - component: {fileID: 7790701717206290536}
   - component: {fileID: 1227446777473963846}
   m_Layer: 0
   m_Name: Player
@@ -121,7 +120,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 3.5
+  m_Speed: 9
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -160,19 +159,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &7790701717206290536
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8836494093751931086}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 925563c7d46886444b42e7b9acc103af, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  material: {fileID: 2100000, guid: 82738f4fd2105e34c86c491017dcc057, type: 2}
 --- !u!114 &1227446777473963846
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -185,6 +171,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abe0ae29826bff047b3251a3f64c1b04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inCombat: 0
   health: 0
+  shield: 0
   energy: 0
+  scrap: 0
+  isGalvanized: 0
+  galvanizedStack: 0
+  isPowered: 0
+  poweredStacks: 0
+  isGunked: 0
+  gunkStacks: 0
+  amountOfTurnsGunkedLeft: 0
+  isDrained: 0
+  drainedStacks: 0
+  isWornDown: 0
+  wornDownStacks: 0
+  isJammed: 0
+  jammedStacks: 0
+  nextChipActivatesTwice: 0
+  isImpervious: 0
   abilities: []
