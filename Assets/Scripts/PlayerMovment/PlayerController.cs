@@ -627,4 +627,22 @@ public class PlayerController : MonoBehaviour
         wornDownStacks--;
 
     }
+
+    /// <summary>
+    /// Spend energy for card or ability
+    /// </summary>
+    /// <param name="loss"></param>
+    public void PlayedCardOrAbility(int loss)
+    {
+        //If energy - loss is greater then 0 or equal to 0 then continue
+        if(Energy - loss >= 0)
+        {
+            Energy -= loss;
+        }
+        //If not then don't be negative
+        else
+        {
+            Energy = 0;
+        }
+    }
 }
