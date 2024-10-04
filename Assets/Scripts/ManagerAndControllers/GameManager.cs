@@ -11,12 +11,17 @@ public class GameManager : MonoBehaviour
     public PlayerUIManager uiManager;
 
 
+<<<<<<< Updated upstream
     ///<summary>
     ///A variable to hold player turns that assumes the player turn is true and the enemy turn is false
     ///</summary>
     private bool playerTurn;
 
     [Header("Deck Veriables")]
+=======
+    //Since gameManager isn't acting really like a gameManager adding headers to make sense to me.
+    [Header("Chip Manager stuff")]
+>>>>>>> Stashed changes
     ///<summary>Hand limit</summary>
     public int handlimit;
     ///<summary>Deck limit</summary>
@@ -79,12 +84,15 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         Initialize();
+<<<<<<< Updated upstream
         //Makes sure we have a valid number
         //if(handlimit < DrawsPerTurn + 1)
         //{
         //    handlimit = DrawsPerTurn + 1;
         //}
         playerTurn = true;
+=======
+>>>>>>> Stashed changes
         ShufflePlayerDeck();
         DrawChip(DrawsPerTurn);
 
@@ -258,9 +266,7 @@ public class GameManager : MonoBehaviour
     public void StartCombat()
     {
         //Enables combat UI
-        uiCanvas.SetActive(true);
-        //Resets player turn
-        playerTurn = true;
+        uiCanvas.SetActive(true);        
         //Enables Combat
         //inCombat = true;
         GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().InCombat = true;        
@@ -310,15 +316,28 @@ public class GameManager : MonoBehaviour
     public void PickUpChip(GameObject chip)
     {
         //If the player deck isn't at limit
+<<<<<<< Updated upstream
         if(playerDeck.Count !< decklimit)
         {
             //Destroy the newChipInPlayerHand from the game world
             Destroy(chip);
+=======
+        if (playerDeck.Count! < decklimit)
+        {            
+>>>>>>> Stashed changes
             //Add newChipInPlayerHand to deck
             playerDeck.Add(chip.GetComponent<Chip>().newChip);
+
             //Add to the inventory UI
             uiManager.AddCardToDeck(chip);
+<<<<<<< Updated upstream
   
+=======
+
+            //Destroy the newChipInPlayerHand from the game world 
+            Destroy(chip);
+
+>>>>>>> Stashed changes
         }
         else
         {
