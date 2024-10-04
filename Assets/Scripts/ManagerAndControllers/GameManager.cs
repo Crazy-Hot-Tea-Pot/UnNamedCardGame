@@ -76,7 +76,7 @@ public class GameManager : MonoBehaviour
     {
         Initialize();
         ShufflePlayerDeck();
-        DrawChip(DrawsPerTurn);
+        //DrawChip(DrawsPerTurn);
 
     }
 
@@ -91,13 +91,19 @@ public class GameManager : MonoBehaviour
         // Load all NewChip ScriptableObjects from "Scriptables/Cards/Attack"
         NewChips = new List<NewChip>(Resources.LoadAll<NewChip>("Scriptables/Cards"));
 
+        //Adds basic chips to deck
+        foreach (var ch in NewChips)
+        {
+            if (ch.chipRarity == NewChip.ChipRarity.Basic)
+                AddChipToDeck(ch);
+        }
         // Doing this for testing
-        AddChipToDeck(NewChips[Random.Range(0, NewChips.Count)]);
-        AddChipToDeck(NewChips[Random.Range(0, NewChips.Count)]);
-        AddChipToDeck(NewChips[Random.Range(0, NewChips.Count)]);
-        AddChipToDeck(NewChips[Random.Range(0, NewChips.Count)]);
-        AddChipToDeck(NewChips[Random.Range(0, NewChips.Count)]);
-        AddChipToDeck(NewChips[Random.Range(0, NewChips.Count)]);
+        //AddChipToDeck(NewChips[Random.Range(0, NewChips.Count)]);
+        //AddChipToDeck(NewChips[Random.Range(0, NewChips.Count)]);
+        //AddChipToDeck(NewChips[Random.Range(0, NewChips.Count)]);
+        //AddChipToDeck(NewChips[Random.Range(0, NewChips.Count)]);
+        //AddChipToDeck(NewChips[Random.Range(0, NewChips.Count)]);
+        //AddChipToDeck(NewChips[Random.Range(0, NewChips.Count)]);
     }
 
 
@@ -118,7 +124,10 @@ public class GameManager : MonoBehaviour
         }
         return turn;
     }
-
+    /// <summary>
+    /// Adds chips to player deck.
+    /// </summary>
+    /// <param name="newChipToAdd"></param>
     public void AddChipToDeck(NewChip newChipToAdd)
     {
         playerDeck.Add(newChipToAdd);
@@ -263,13 +272,13 @@ public class GameManager : MonoBehaviour
     /// Picks up a newChipInPlayerHand and adds it to the deck aswell as deck inventory
     /// </summary>
     /// <param name="chip"></param>
-    public void PickUpChip(GameObject chip)
+    public void PickUpChip(NewChip chip)
     {
        //If the player deck isn't at limit
         if (playerDeck.Count! < decklimit)
         {            
             //Add newChipInPlayerHand to deck
-            playerDeck.Add(chip.GetComponent<Chip>().newChip);
+            playerDeck.Add(chip);
 
             //Add to the inventory UI
             uiManager.AddCardToDeck(chip);
