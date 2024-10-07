@@ -20,7 +20,6 @@ public class Ability : ScriptableObject
     public int energyCost;
 
     
-
     /// <summary>
     /// Activate Ability
     /// </summary>
@@ -28,6 +27,14 @@ public class Ability : ScriptableObject
     {
         //Decrease the players energy by the appropriate amount
         GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().PlayedCardOrAbility(energyCost);
+    }
+
+    /// <summary>
+    /// A method activated on update for passive abilites. Rules about how often and when it activates should be over written on this method
+    /// </summary>
+    public virtual void PassiveAbility()
+    {
+        //Designed to be overwritten
     }
     
 }

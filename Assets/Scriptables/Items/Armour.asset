@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 887ac691cf694c54eabb0a00bae29d6b, type: 3}
-  m_Name: Default Guard
+  m_Script: {fileID: 11500000, guid: 9706551dd7293664abb220a6ffbf0387, type: 3}
+  m_Name: Armour
   m_EditorClassIdentifier: 
-  abilityName: Default Guard
-  abilityDescription: Empty
-  energyCost: 5
-  shield: 2
+  itemName: Armour
+  itemDescription: Grains the wearer Steel Plating
+  AbilityList:
+  - {fileID: 6997298212168128428, guid: e9e587936e29f664fbc782f24c918817, type: 3}

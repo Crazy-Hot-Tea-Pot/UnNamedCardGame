@@ -17,10 +17,13 @@ public class ArmorAbility : Ability
         Debug.Log("Ability used" + abilityName);
 
         //If there is enough energy for the card
-        if(energyCost - GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().Energy > 0)
+        if(GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().Energy - energyCost > 0)
         {
             //Apply shield to the player
             GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().ApplyShield(shield);
+            //Cost energy
+            GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().PlayedCardOrAbility(energyCost);
+            Debug.Log(GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().Shield + "Current shield " + shield + " Restored and cost " + energyCost + " Making energy " + GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().Energy);
         }
         else
         {

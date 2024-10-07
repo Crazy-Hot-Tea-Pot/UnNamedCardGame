@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 887ac691cf694c54eabb0a00bae29d6b, type: 3}
-  m_Name: Default Guard
+  m_Script: {fileID: 11500000, guid: 6b543462da257ab46b91c48515e15b96, type: 3}
+  m_Name: Lucky Trinket
   m_EditorClassIdentifier: 
-  abilityName: Default Guard
-  abilityDescription: Empty
-  energyCost: 5
-  shield: 2
+  abilityName: Lucky Tricket
+  abilityDescription: Gain 10 Scrap whe combat ends
+  energyCost: 0
+  gainedScrap: 10

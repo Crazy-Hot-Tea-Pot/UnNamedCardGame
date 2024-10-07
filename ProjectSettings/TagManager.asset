@@ -15,6 +15,10 @@ TagManager:
   - potionHealth
   - weaponSword
   - itemNecklace
+  - itemLuckyTrinket
+  - abilityLuckyTrinket
+  - itemArmour
+  - abilityBasicPunch
   layers:
   - Default
   - TransparentFX
