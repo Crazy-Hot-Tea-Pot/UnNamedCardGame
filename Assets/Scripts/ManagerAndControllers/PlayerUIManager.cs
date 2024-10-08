@@ -90,6 +90,17 @@ public class PlayerUIManager : MonoBehaviour
     public GameObject buttonDeck;
     #endregion
 
+    #region UIResourcePools
+    /// <summary>
+    /// Health bar UI element
+    /// </summary>
+    public Slider healthBar;
+    /// <summary>
+    /// Energy bar UI element
+    /// </summary>
+    public Slider energyBar;
+    #endregion
+
     private void Awake()
     {
 
@@ -123,12 +134,17 @@ public class PlayerUIManager : MonoBehaviour
     {
         //Fills the inventory UI for deck
         fillDeck();
+
+        //Sets UI maximums for resource pools
+        StartingPools();
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        //Update resource pool ui elements
+        UpdateEnergy();
+        UpdateHealth();
         //On hold open the inventroy UI if input is recieved
         if (openInventory.IsPressed())
        {
@@ -279,6 +295,36 @@ public class PlayerUIManager : MonoBehaviour
 
         
     }
-    
+
+    #endregion
+
+    #region Resource Pool Methods
+
+    /// <summary>
+    /// Updates the UI for player health
+    /// </summary>
+    public void UpdateHealth()
+    {
+        //Change value of health bar
+        healthBar.value = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().Health;
+    }
+
+    /// <summary>
+    /// Update the UI for player energy
+    /// </summary>
+    public void UpdateEnergy()
+    {
+        //Change value of energy bar
+        energyBar.value = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().Energy;
+    }
+
+    /// <summary>
+    /// UI starting points that set the sliders to the maximum of the variables
+    /// </summary>
+    public void StartingPools()
+    {
+        //energyBar.maxValue = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>()
+        //healthBar.maxValue = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>()
+    }
     #endregion
 }

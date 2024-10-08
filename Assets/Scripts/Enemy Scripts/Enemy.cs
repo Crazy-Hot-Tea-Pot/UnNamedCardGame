@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.AI;
 using static UnityEngine.Rendering.VolumeComponent;
 
@@ -37,6 +38,20 @@ public class Enemy : MonoBehaviour
     private int drainStacks;
     [SerializeField]
     private bool isDrained;
+
+
+    /// <summary>
+    /// UI Bar
+    /// </summary>
+    public Slider sliderBar;
+    /// <summary>
+    /// Camera Alignment
+    /// </summary>
+    public Camera cameraAlignment;
+    /// <summary>
+    /// Canvas for enemy health
+    /// </summary>
+    public Canvas enemyCanvas;
 
     /// <summary>
     /// Reference to combat controller.
@@ -187,15 +202,25 @@ public class Enemy : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
+        cameraAlignment = Camera.main;
     }
 
     // Start is called before the first frame update
     public virtual void Start()
     {        
         Initialize();
+        //Sets the hp maximum for the slider bar
+        UIEnemyMaxHealthStart();
+    }
+
+    private void FixedUpdate()
+    {
+        //Update UI for enemy health
+        UIEnemyHealth();
     }
     public virtual void Update()
     {
+
         if (InCombat)
         {
             if(CombatController.CanIMakeAction(this.gameObject))
@@ -312,5 +337,22 @@ public class Enemy : MonoBehaviour
                 PowerStacks+= buffStacks;
                 break;
         }
+    }
+
+    /// <summary>
+    /// This method allows us to change the UI in world enemy health bar based on the enemies health
+    /// </summary>
+    public void UIEnemyHealth()
+    {
+        //Rotate the ui to match camera angle
+        enemyCanvas.transform.rotation = new Quaternion(enemyCanvas.transform.position.x, cameraAlignment.transform.rotation.y, enemyCanvas.transform.position.z, 0);
+        //Set the bars value
+        sliderBar.value = CurrentHP;
+    }
+
+    //Sets the max health of the slider bar
+    public void UIEnemyMaxHealthStart()
+    {
+        sliderBar.maxValue = maxHP;
     }
 }
