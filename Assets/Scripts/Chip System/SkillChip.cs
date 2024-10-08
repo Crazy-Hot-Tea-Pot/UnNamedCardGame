@@ -12,21 +12,17 @@ public class SkillChip : NewChip
             specialEffect.IsUpgraded = value;
         } 
     }
-    /// <summary>
-    /// TODO go over your structure think this can be improved
-    /// </summary>
-    /// <param name="player"></param>
-    public override void OnChipPlayed(PlayerController player)
+
+    public override void OnChipPlayed(PlayerController player, Enemy target)
     {
-        base.OnChipPlayed(player);
+        base.OnChipPlayed(player,target);
 
         // If the effect is player-only
         if (specialEffect != null)
         {
             if (specialEffect is LeechEffect leechEffect)
             {
-                // Get target enemy for Leech effect
-                Enemy target = GameManager.Instance.enemyList[0].GetComponent<Enemy>();
+                // Get target enemy for Leech effect                
                 leechEffect.ApplyEffect(player, target,this);
             }
             else

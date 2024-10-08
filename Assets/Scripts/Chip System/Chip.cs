@@ -98,15 +98,15 @@ public class Chip : MonoBehaviour
                     //{
                     if (Player.GetComponent<PlayerController>().NextChipActivatesTwice)
                     {
-                        newChip.OnChipPlayed(Player.GetComponent<PlayerController>());
-                        newChip.OnChipPlayed(Player.GetComponent<PlayerController>());
+                        newChip.OnChipPlayed(Player.GetComponent<PlayerController>(), CombatController.Target.GetComponent<Enemy>());
+                        newChip.OnChipPlayed(Player.GetComponent<PlayerController>(), CombatController.Target.GetComponent<Enemy>());
                         CombatController.TurnUsed(Player);
                         //Remove effect after it has been used.
                         Player.GetComponent<PlayerController>().RemoveEffect(Effects.Effect.Motivation);
                     }
                     else
                     {
-                        newChip.OnChipPlayed(Player.GetComponent<PlayerController>());
+                        newChip.OnChipPlayed(Player.GetComponent<PlayerController>(), CombatController.Target.GetComponent<Enemy>());
                         CombatController.TurnUsed(Player);
                     }
                     //}

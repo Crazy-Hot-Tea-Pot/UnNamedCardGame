@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Looter : Enemy
 {
+    [Header("Custom for Enemy type")]
     // To keep track of stolen scrap
     [SerializeField]
     private int stolenScrap = 0;

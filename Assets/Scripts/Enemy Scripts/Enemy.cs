@@ -20,9 +20,11 @@ public class Enemy : MonoBehaviour
     /// </summary>
     public int maxHP;
     [SerializeField]
-    private int currentHp;   
+    private int currentHp;
     [SerializeField]
     private int shield;
+    [SerializeField]
+    private bool isTargeted;
     [Header("Status Effects")]
     [SerializeField]
     private bool inCombat;
@@ -38,6 +40,11 @@ public class Enemy : MonoBehaviour
     private int drainStacks;
     [SerializeField]
     private bool isDrained;
+
+    [Header("Needed Assets")]
+    public Shader outlineShader;
+    private Shader defaultShader;
+    private Renderer enemyRenderer;
 
 
     /// <summary>
@@ -122,6 +129,30 @@ public class Enemy : MonoBehaviour
         protected set
         {
             shield = value;
+        }
+    }
+    /// <summary>
+    /// Is enemy being targeted by player
+    /// </summary>
+    public bool IsTargeted
+    {
+        get
+        {
+            return isTargeted;
+        }
+        set
+        {
+            isTargeted = value;
+            if (value)
+            {
+                enemyRenderer.material.shader = outlineShader;
+                enemyRenderer.material.SetColor("_OutlineColor", Color.red);
+                enemyRenderer.material.SetFloat("_OutlineWidth", 0.1f);
+            }
+            else
+            {
+                enemyRenderer.material.shader = defaultShader;
+            }
         }
     }
     /// <summary>
@@ -215,11 +246,12 @@ public class Enemy : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
         cameraAlignment = Camera.main;
+        enemyRenderer = GetComponent<Renderer>();
     }
 
     // Start is called before the first frame update
     public virtual void Start()
-    {        
+    {
         Initialize();
         //Sets the hp maximum for the slider bar
         UIEnemyMaxHealthStart();
@@ -247,6 +279,7 @@ public class Enemy : MonoBehaviour
     {
         CurrentHP = maxHP;
         gameObject.name = EnemyName;
+        defaultShader=enemyRenderer.material.shader;
 
         CombatController = GameObject.FindGameObjectWithTag("CombatController").
             GetComponent<CombatController>();

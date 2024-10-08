@@ -2,68 +2,59 @@ Shader "Custom/OutlineShader"
 {
     Properties
     {
-        _Color ("Main Color", Color) = (0.5, 0.5, 0.5, 1)
-        _OutlineColor ("Outline Color", Color) = (0,1,0,1)
-        _OutlineWidth ("Outline Width", Range (0.001, 1.000)) = .005
+        _Color ("Color", Color) = (1,1,1,1)
+        _MainTex ("Albedo (RGB)", 2D) = "white" {}
+        _Glossiness ("Smoothness", Range(0.0,1.0)) = 0.5
+        _Metallic ("Metallic", Range(0.0,1.0)) = 0.0
+        _OutlineColor ("Outline Color", Color) = (1, 0, 0, 1)
+        _OutlineWidth ("Outline Width", Range(0.001, 10)) = 0.1
     }
+
     SubShader
     {
-        // First pass: Render the base object color
-        Tags {"Queue"="Geometry" }
-        LOD 100
+        Tags { "RenderType"="Opaque" }
+        LOD 200
 
-        Pass
+        // First Pass: Standard Surface Shader (for Unity's default appearance)
+        CGPROGRAM
+        #pragma surface surf Standard fullforwardshadows
+
+        sampler2D _MainTex;
+        half _Glossiness;
+        half _Metallic;
+        fixed4 _Color;
+
+        struct Input
         {
-            Name "BASE"
-            Tags { "LightMode" = "ForwardBase" }
+            float2 uv_MainTex;
+        };
 
-            CGPROGRAM
-            #pragma vertex vert_base
-            #pragma fragment frag_base
-            #include "UnityCG.cginc"
-
-            struct appdata
-            {
-                float4 vertex : POSITION;
-                float3 normal : NORMAL;
-            };
-
-            struct v2f
-            {
-                float4 pos : POSITION;
-            };
-
-            fixed4 _Color;
-
-            v2f vert_base (appdata v)
-            {
-                v2f o;
-                o.pos = UnityObjectToClipPos(v.vertex);
-                return o;
-            }
-
-            fixed4 frag_base(v2f i) : SV_Target
-            {
-                return _Color;
-            }
-            ENDCG
+        void surf(Input IN, inout SurfaceOutputStandard o)
+        {
+            fixed4 c = tex2D(_MainTex, IN.uv_MainTex) * _Color;
+            o.Albedo = c.rgb;
+            o.Metallic = _Metallic;
+            o.Smoothness = _Glossiness;
+            o.Alpha = c.a;
         }
+        ENDCG
 
+        // Second Pass: Outline Effect
         Pass
         {
             Name "OUTLINE"
             Tags { "LightMode" = "Always" }
-
             Cull Front
             ZWrite On
             ZTest LEqual
-            ColorMask RGB
-            Blend SrcAlpha OneMinusSrcAlpha
 
             CGPROGRAM
-            #pragma vertex vert_outline
-            #pragma fragment frag_outline
+            #pragma vertex vert
+            #pragma fragment frag
             #include "UnityCG.cginc"
+
+            float _OutlineWidth;
+            float4 _OutlineColor;
 
             struct appdata
             {
@@ -73,23 +64,20 @@ Shader "Custom/OutlineShader"
 
             struct v2f
             {
-                float4 pos : POSITION;
+                float4 pos : SV_POSITION;
                 float4 color : COLOR;
             };
 
-            fixed4 _OutlineColor;
-            float _OutlineWidth;
-
-            v2f vert_outline (appdata v)
+            v2f vert(appdata v)
             {
                 v2f o;
-                float3 norm = normalize(mul((float3x3)unity_ObjectToWorld, v.normal));
-                o.pos = UnityObjectToClipPos(v.vertex + float4(norm * _OutlineWidth, 0));
+                float3 norm = mul((float3x3) unity_ObjectToWorld, v.normal);
+                o.pos = UnityObjectToClipPos(v.vertex + float4(norm * _OutlineWidth, 0.0));
                 o.color = _OutlineColor;
                 return o;
             }
 
-            fixed4 frag_outline(v2f i) : SV_Target
+            half4 frag(v2f i) : SV_Target
             {
                 return i.color;
             }
