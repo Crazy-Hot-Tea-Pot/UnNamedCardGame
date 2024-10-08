@@ -176,19 +176,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             ""id"": ""80c3423b-559a-42a2-850b-dff08de73c29"",
             ""actions"": [
                 {
-                    ""name"": ""RotateCamera"",
-                    ""type"": ""Button"",
-                    ""id"": ""49337c1c-dbc0-4816-ac85-80052830c030"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""Look"",
                     ""type"": ""Value"",
                     ""id"": ""e6939c3a-9d94-4eef-9673-5de7a224aba1"",
-                    ""expectedControlType"": ""Vector2"",
+                    ""expectedControlType"": ""Delta"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
@@ -228,20 +219,18 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RotateCamera"",
+                    ""type"": ""Button"",
+                    ""id"": ""afbc1ac7-41e2-4a71-a4dc-ca679b03ec13"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
-                {
-                    ""name"": """",
-                    ""id"": ""be8864b5-afc1-4e02-a9f3-abf16fa71c2e"",
-                    ""path"": ""<Mouse>/rightButton"",
-                    ""interactions"": ""Hold"",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""RotateCamera"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
                 {
                     ""name"": """",
                     ""id"": ""c69e392e-99db-41f4-aee8-e6ef8cda9bb8"",
@@ -406,6 +395,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""ResetCamera"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cd23861b-08b8-4970-ad23-3365cb2bb09b"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotateCamera"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -423,12 +423,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_CycleTarget = m_Player.FindAction("CycleTarget", throwIfNotFound: true);
         // Camera Controls
         m_CameraControls = asset.FindActionMap("Camera Controls", throwIfNotFound: true);
-        m_CameraControls_RotateCamera = m_CameraControls.FindAction("RotateCamera", throwIfNotFound: true);
         m_CameraControls_Look = m_CameraControls.FindAction("Look", throwIfNotFound: true);
         m_CameraControls_Zoom = m_CameraControls.FindAction("Zoom", throwIfNotFound: true);
         m_CameraControls_Pan = m_CameraControls.FindAction("Pan", throwIfNotFound: true);
         m_CameraControls_PanKeys = m_CameraControls.FindAction("PanKeys", throwIfNotFound: true);
         m_CameraControls_ResetCamera = m_CameraControls.FindAction("ResetCamera", throwIfNotFound: true);
+        m_CameraControls_RotateCamera = m_CameraControls.FindAction("RotateCamera", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -584,22 +584,22 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     // Camera Controls
     private readonly InputActionMap m_CameraControls;
     private List<ICameraControlsActions> m_CameraControlsActionsCallbackInterfaces = new List<ICameraControlsActions>();
-    private readonly InputAction m_CameraControls_RotateCamera;
     private readonly InputAction m_CameraControls_Look;
     private readonly InputAction m_CameraControls_Zoom;
     private readonly InputAction m_CameraControls_Pan;
     private readonly InputAction m_CameraControls_PanKeys;
     private readonly InputAction m_CameraControls_ResetCamera;
+    private readonly InputAction m_CameraControls_RotateCamera;
     public struct CameraControlsActions
     {
         private @PlayerInputActions m_Wrapper;
         public CameraControlsActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
-        public InputAction @RotateCamera => m_Wrapper.m_CameraControls_RotateCamera;
         public InputAction @Look => m_Wrapper.m_CameraControls_Look;
         public InputAction @Zoom => m_Wrapper.m_CameraControls_Zoom;
         public InputAction @Pan => m_Wrapper.m_CameraControls_Pan;
         public InputAction @PanKeys => m_Wrapper.m_CameraControls_PanKeys;
         public InputAction @ResetCamera => m_Wrapper.m_CameraControls_ResetCamera;
+        public InputAction @RotateCamera => m_Wrapper.m_CameraControls_RotateCamera;
         public InputActionMap Get() { return m_Wrapper.m_CameraControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -609,9 +609,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         {
             if (instance == null || m_Wrapper.m_CameraControlsActionsCallbackInterfaces.Contains(instance)) return;
             m_Wrapper.m_CameraControlsActionsCallbackInterfaces.Add(instance);
-            @RotateCamera.started += instance.OnRotateCamera;
-            @RotateCamera.performed += instance.OnRotateCamera;
-            @RotateCamera.canceled += instance.OnRotateCamera;
             @Look.started += instance.OnLook;
             @Look.performed += instance.OnLook;
             @Look.canceled += instance.OnLook;
@@ -627,13 +624,13 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @ResetCamera.started += instance.OnResetCamera;
             @ResetCamera.performed += instance.OnResetCamera;
             @ResetCamera.canceled += instance.OnResetCamera;
+            @RotateCamera.started += instance.OnRotateCamera;
+            @RotateCamera.performed += instance.OnRotateCamera;
+            @RotateCamera.canceled += instance.OnRotateCamera;
         }
 
         private void UnregisterCallbacks(ICameraControlsActions instance)
         {
-            @RotateCamera.started -= instance.OnRotateCamera;
-            @RotateCamera.performed -= instance.OnRotateCamera;
-            @RotateCamera.canceled -= instance.OnRotateCamera;
             @Look.started -= instance.OnLook;
             @Look.performed -= instance.OnLook;
             @Look.canceled -= instance.OnLook;
@@ -649,6 +646,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @ResetCamera.started -= instance.OnResetCamera;
             @ResetCamera.performed -= instance.OnResetCamera;
             @ResetCamera.canceled -= instance.OnResetCamera;
+            @RotateCamera.started -= instance.OnRotateCamera;
+            @RotateCamera.performed -= instance.OnRotateCamera;
+            @RotateCamera.canceled -= instance.OnRotateCamera;
         }
 
         public void RemoveCallbacks(ICameraControlsActions instance)
@@ -678,11 +678,11 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     }
     public interface ICameraControlsActions
     {
-        void OnRotateCamera(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
         void OnZoom(InputAction.CallbackContext context);
         void OnPan(InputAction.CallbackContext context);
         void OnPanKeys(InputAction.CallbackContext context);
         void OnResetCamera(InputAction.CallbackContext context);
+        void OnRotateCamera(InputAction.CallbackContext context);
     }
 }
