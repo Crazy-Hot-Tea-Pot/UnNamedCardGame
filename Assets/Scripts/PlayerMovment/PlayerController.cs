@@ -18,9 +18,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private bool inCombat;
 
-    // The Deselect Action from inputAction class.
-    //private InputAction deSelect;
-
     // Reference to selected object in the scene that is moveable
     private GameObject MoveableObject;
 
@@ -94,6 +91,8 @@ public class PlayerController : MonoBehaviour
             health = value;
             if(health > maxHealth)
                 health = maxHealth;
+            else if(health<=0)
+                health = 0;
         }
     }
     /// <summary>
@@ -370,8 +369,8 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     void Initialize()
     {
-        Health = 50;
         maxHealth = 50;
+        Health=maxHealth;
         Energy = 50;
         maxEnergy = 50;
         Scrap = 100;

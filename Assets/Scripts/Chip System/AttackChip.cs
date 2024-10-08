@@ -48,6 +48,10 @@ public class AttackChip : NewChip
             player.DrainedStacks--;
             Debug.Log("Player is Drained! Damage reduced to: " + Mathf.FloorToInt(damage * 0.8f));
         }
+        else
+        {
+            GameManager.Instance.enemyList[0].GetComponent<Enemy>().TakeDamage(damage);
+        }
 
         //Now to apply debuffs
         if (debuffStacks > 0)

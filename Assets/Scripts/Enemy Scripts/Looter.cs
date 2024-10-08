@@ -34,10 +34,7 @@ public class Looter : Enemy
     public override void Initialize()
     {       
         base.Initialize();
-        //Drop weaponShiv = new("Shiv",Drop.DropType.Weapon, 5, 2);
-        //Drop scrap = new(Drop.DropType.Scrap, 15);//new(Drop.DropType.Scrap, 15);
-        //enemyDrops.Add(weaponShiv);
-        //enemyDrops.Add(scrap);
+
     }
 
     public override void PerformIntent()
@@ -69,15 +66,22 @@ public class Looter : Enemy
 
         stolenScrap += GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().StealScrap(5);
 
+        // Empower Swipe
         if (PowerStacks > 0)
         {
             GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().TakeDamage(6 + PowerStacks);
             PowerStacks = 0;
         }
+        // Drained Swipe
         else if (DrainStacks>0)
         {
             GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().TakeDamage(Mathf.FloorToInt(6 - 0.8f));
             DrainStacks--;
+        }
+        // Default Swipe
+        else
+        {
+            GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().TakeDamage(6);
         }
 
     }

@@ -85,6 +85,9 @@ public class Enemy : MonoBehaviour
         set
         {
             currentHp = value;
+            //Update UI for enemy health
+            UIEnemyHealth();
+
             if (currentHp <= 0)
             {
                 Die();
@@ -148,6 +151,24 @@ public class Enemy : MonoBehaviour
             isDrained = value;
         }
     }
+    /// <summary>
+    /// Amount of stacks of Drained the enemy have.
+    /// </summary>
+    public int DrainStacks
+    {
+        get => drainStacks;
+        protected set
+        {
+            drainStacks = value;
+            if (drainStacks <= 0)
+                IsDrained = false;
+            else
+                IsDrained = true;
+        }
+    }
+    /// <summary>
+    /// Amount of stacks of Galvanize the enemy have.
+    /// </summary>
     public int GalvanizedStacks
     {
         get => galvanizedStacks;
@@ -160,6 +181,9 @@ public class Enemy : MonoBehaviour
                 IsGalvanized = true;
         }
     }
+    /// <summary>
+    /// Amount of stacks of Power the enemy have.
+    /// </summary>
     public int PowerStacks { 
         get => powerStacks;
         protected set {  
@@ -184,19 +208,7 @@ public class Enemy : MonoBehaviour
         {
             isPowered = value;
         }
-    }
-
-    public int DrainStacks { 
-        get => drainStacks;
-        protected set
-        {
-            drainStacks = value;
-            if(drainStacks <= 0)
-                IsDrained = false;
-            else
-                IsDrained = true;
-        }
-    }
+    }    
 
     void Awake()
     {
@@ -213,10 +225,11 @@ public class Enemy : MonoBehaviour
         UIEnemyMaxHealthStart();
     }
 
-    public void FixedUpdate()
+    public virtual void FixedUpdate()
     {
         //Update UI for enemy health
-        UIEnemyHealth();
+        //UIEnemyHealth();
+        // Moved it to current health property so its not called repeatedly.
     }
     public virtual void Update()
     {
