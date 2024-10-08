@@ -1,4 +1,5 @@
 using Cinemachine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,64 +11,49 @@ using UnityEngine.InputSystem;
 /// </summary>
 public class CameraController : MonoBehaviour
 {
+    private Transform player;
+    private enum Camera
+    {
+        Default,
+        Rotating,
+        Pan
+    }
+
+    [Header("Cameras")]
+    [SerializeField]
+    private Camera currentCamera;
+
+    public CinemachineVirtualCamera defaultCamera;
+    public CinemachineFreeLook rotationCamera;    
+
+
+
     [Header("Camera Info")]
+    [SerializeField]
+    private float cameraSpeed;
 
-    public CinemachineFreeLook freeLookCamera;
-    public float rotationSpeed = 1f;
+    [SerializeField]
+    private float rotationSpeed;
+
+    [SerializeField]
+    private float panSpeed;
+
+    public float borderThickness = 10f;
 
 
-    //[SerializeField]
-    ////Default Camera Positon   
-    //private Vector3 defaultCameraPosition;
-
-    //[SerializeField]
-    ////Default Camera Rotation    
-    //private Quaternion defaultCameraRotation;
-
-    //[SerializeField]
-    ////Camera is in process of resetting
-    //private bool isResetting = false;
+    [SerializeField]
+    private float minZoomDistance = 0.01f;
+    [SerializeField]
+    private float maxZoomDistance = 20f;
 
     [SerializeField]
     // Rotation tracking
     private bool isRotating = false;
 
-    //[SerializeField]
-    ////Speed for rotating the camera
-    //private float cameraRotationSpeed;
-
-    //[SerializeField]
-    ////Controls how fast the camera moves.    
-    //private float cameraSpeed;
-
-    //[SerializeField]
-    ////rotationSensitivity for more information look at RotationSensitivity in Camera Settings
-    //private float rotationSensitivity;
-
-    //[Space(20)]
-
-    //[Header("Camera info (Editable)")]
-    ////Defines how close the mouse should be to the screen edges to trigger the camera movement.
-    //public float panBorderThickness = 10f;
-
-    ////Allows you to define boundaries within which the camera can move.
-    //public Vector2 panLimit = new Vector2(50,50);
-
-    //// Smooth zooming
-    ////private float targetFOV;
-
-    //private Vector3 zoomTargetPosition;
-    //// Time for smoothing the zoom
-    //public float zoomSmoothTime = 0.2f;
-    //// A reference for smooth damp velocity
-    //private Vector3 zoomVelocity = Vector3.zero;
-
 
     // Input actions for controlling the camera
     private PlayerInputActions playerInputActions;
 
-    ////Players position for resetting camera
-    //private Transform playerTransform;
 
     void Awake()
     {
@@ -79,86 +65,44 @@ public class CameraController : MonoBehaviour
         playerInputActions.CameraControls.Enable();
         playerInputActions.CameraControls.RotateCamera.performed += _ => StartRotation();
         playerInputActions.CameraControls.RotateCamera.canceled += _ => StopRotation();
-       // playerInputActions.CameraControls.ResetCamera.performed += _ => StartCoroutine(ResetCamera());
+        playerInputActions.CameraControls.ResetCamera.performed += _ => ResetToDefaultCamera();
+        playerInputActions.CameraControls.Zoom.performed += _ => ZoomCamera();
     }
+
 
     // Start is called before the first frame update
     void Start()
     {
-        // Set initial FOV
-        //targetFOV = Camera.main.fieldOfView;
+        currentCamera = Camera.Default;
 
-       // playerTransform = GameObject.FindWithTag("Player").transform;
+        cameraSpeed = SettingsManager.Instance.CameraSettings.CameraSpeed;
 
-        //defaultCameraPosition = SettingsManager.Instance.CameraSettings.DefaultCameraPosition;
-        //defaultCameraRotation = SettingsManager.Instance.CameraSettings.DefaultCameraRotation;
-        //cameraSpeed = SettingsManager.Instance.CameraSettings.CameraSpeed;
-        //cameraRotationSpeed = SettingsManager.Instance.CameraSettings.CameraRotationSpeed;
-        //rotationSensitivity = SettingsManager.Instance.CameraSettings.RotationSensitivity;
+        rotationSpeed = SettingsManager.Instance.CameraSettings.RotationSpeed;
+
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
+
+        defaultCamera.Follow = player;
+        defaultCamera.LookAt = player;
+        rotationCamera.Follow = player;
+        rotationCamera.LookAt = player;
     }
 
     // Update is called once per frame
     void Update()
     {
-       // if (!isResetting)//&&!GameManager.Instance.InCombat)
-        //{            
-            if (isRotating)
-            {
-                RotateCamera();
-            }
-        //    else{
-        //    BoarderMovement();
-        
-            // Handle zoom functionality
-         //   ZoomCamera();
-
-            // Handle panning
-         //   PanCamera();
-         //   }
-       // }
+        if (isRotating)        
+            RotateCamera();        
+    }
+    private void ResetToDefaultCamera()
+    {
+        SwitchToCamera(Camera.Default);
     }
     /// <summary>
     /// Moves Camera when mouse it as border.
     /// </summary>
     private void BoarderMovement()
     {
-        //Vector3 pos = transform.position;
-
-        //if (Input.mousePosition.y >= Screen.height - panBorderThickness)
-        //{
-        //    pos.z += cameraSpeed * Time.deltaTime;
-        //}
-        //if (Input.mousePosition.y <= panBorderThickness)
-        //{
-        //    pos.z -= cameraSpeed * Time.deltaTime;
-        //}
-        //if (Input.mousePosition.x >= Screen.width - panBorderThickness)
-        //{
-        //    pos.x += cameraSpeed * Time.deltaTime;
-        //}
-        //if (Input.mousePosition.x <= panBorderThickness)
-        //{
-        //    pos.x -= cameraSpeed * Time.deltaTime;
-        //}
-
-        //pos.x = Mathf.Clamp(pos.x, -panLimit.x, panLimit.x);
-        //pos.z = Mathf.Clamp(pos.z, -panLimit.y, panLimit.y);
-
-        //transform.position = pos;
-
-        //Vector3 direction = Vector3.zero;
-
-        //if (Input.mousePosition.x <= panBorderThickness) 
-        //    direction += -transform.right;
-        //if (Input.mousePosition.x >= Screen.width - panBorderThickness)
-        //    direction += transform.right;
-        //if (Input.mousePosition.y <= panBorderThickness) 
-        //    direction += -transform.up; 
-        //if (Input.mousePosition.y >= Screen.height - panBorderThickness) 
-        //    direction += transform.up; 
-
-        //transform.position += direction * cameraSpeed * Time.deltaTime;
-
+        
     }
 
     /// <summary>
@@ -182,22 +126,12 @@ public class CameraController : MonoBehaviour
     /// </summary>
     private void RotateCamera()
     {
-        //float mouseX = playerInputActions.CameraControls.Look.ReadValue<Vector2>().x;
-        //float mouseY = playerInputActions.CameraControls.Look.ReadValue<Vector2>().y;
-
-        //// Rotate the camera around its Y-axis (horizontal movement of the mouse).
-        ////transform.Rotate(Vector3.up, mouseX * rotationSpeed * Time.deltaTime, Space.World);
-        //transform.Rotate(Vector3.up, mouseX * cameraRotationSpeed * rotationSensitivity * Time.deltaTime, Space.World);
-
-        //// Rotate the camera around its X-axis (vertical movement of the mouse).
-        ////transform.Rotate(Vector3.right, -mouseY * rotationSpeed * Time.deltaTime, Space.Self);
-        //transform.Rotate(Vector3.right, -mouseY * cameraRotationSpeed * rotationSensitivity * Time.deltaTime, Space.Self);
-
+        SwitchToCamera(Camera.Rotating);
         Vector2 mouseDelta = playerInputActions.CameraControls.Look.ReadValue<Vector2>();
 
         // Rotate the camera based on mouse movement
-        freeLookCamera.m_XAxis.Value += mouseDelta.x * rotationSpeed * Time.deltaTime;
-        freeLookCamera.m_YAxis.Value -= mouseDelta.y * rotationSpeed * Time.deltaTime;
+        rotationCamera.m_XAxis.Value += mouseDelta.x * rotationSpeed * Time.deltaTime;
+        rotationCamera.m_YAxis.Value -= mouseDelta.y * rotationSpeed * Time.deltaTime;
 
     }
 
@@ -206,26 +140,35 @@ public class CameraController : MonoBehaviour
     /// </summary>
     private void ZoomCamera()
     {
-        //// Get zoom input from action
-        //float scrollInput = playerInputActions.CameraControls.Zoom.ReadValue<float>();
+        // Read the scroll value as a float (since it's a single axis control)
+        float scrollAmount = playerInputActions.CameraControls.Zoom.ReadValue<float>();
 
-        //// Calculate the desired zoom position
-        //zoomTargetPosition = transform.position + transform.forward * scrollInput * 0.05f;
+        // Adjust the camera distance (z offset) for zooming on the default camera
+        if (defaultCamera != null)
+        {
+            var framingTransposer = defaultCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
+            if (framingTransposer != null)
+            {
+                float currentDistance = framingTransposer.m_CameraDistance;
+                currentDistance -= scrollAmount * cameraSpeed; // Use the scroll amount for zooming
+                currentDistance = Mathf.Clamp(currentDistance, minZoomDistance, maxZoomDistance);
+                framingTransposer.m_CameraDistance = currentDistance;
+            }
+        }
 
-        //// Smoothly move the camera towards the zoom target position
-        //transform.position = Vector3.SmoothDamp(transform.position, zoomTargetPosition, ref zoomVelocity, zoomSmoothTime);
-
-        //// Only apply zoom if there is scroll input. Added this if statement as it just kept scrolling until max.
-        //if (scrollInput != 0)
+        // If we want zooming with other camera
+        //// If using a FreeLookCamera, adjust the radius (zoom effect for FreeLook)
+        //if (rotationCamera != null)
         //{
-        //    // Calculate target FOV using zoomIncrement to avoid large jumps
-        //    targetFOV -= scrollInput * cameraSpeed; //Mathf.Sign(scrollInput) * zoomIncrement;
+        //    float currentRadius = rotationCamera.m_Orbits[1].m_Radius; // Middle rig (default)
+        //    currentRadius -= scrollAmount * cameraSpeed;
+        //    currentRadius = Mathf.Clamp(currentRadius, minZoomDistance, maxZoomDistance);
 
-        //    // Clamp target FOV to ensure it remains within the limits
-        //    targetFOV = Mathf.Clamp(targetFOV, minimumZoom, maximumZoom);
-
-        //    // Smoothly transition to the target FOV
-        //    Camera.main.fieldOfView = Mathf.SmoothDamp(Camera.main.fieldOfView, targetFOV, ref zoomVelocity, zoomSmoothTime);
+        //    // Apply the same radius to all orbits (top, middle, bottom)
+        //    for (int i = 0; i < rotationCamera.m_Orbits.Length; i++)
+        //    {
+        //        rotationCamera.m_Orbits[i].m_Radius = currentRadius;
+        //    }
         //}
     }
 
@@ -234,82 +177,34 @@ public class CameraController : MonoBehaviour
     /// </summary>
     private void PanCamera()
     {
-        // Pan using the middle mouse button and mouse movement
-        //Vector2 panInput = playerInputActions.CameraControls.Pan.ReadValue<Vector2>();
-        //if (panInput != Vector2.zero)
-        //{
-        //    Vector3 right = transform.right * panInput.x;
-        //    Vector3 forward = transform.forward * panInput.y;
-        //    forward.y = 0;  // Prevent vertical movement while panning
 
-        //    transform.position += (right + forward) * cameraSpeed * Time.deltaTime;
-        //}
-
-        //// Pan using arrow keys or WASD
-        //Vector2 panKeyInput = playerInputActions.CameraControls.PanKeys.ReadValue<Vector2>();
-        //if (panKeyInput != Vector2.zero)
-        //{
-        //    Vector3 right = transform.right * panKeyInput.x;
-        //    Vector3 forward = transform.forward * panKeyInput.y;
-        //    forward.y = 0;
-
-        //    transform.position += (right + forward) * cameraSpeed * Time.deltaTime;
-        //}
-
-        //// Ensure camera stays within boundaries
-        //transform.position = new Vector3(
-        //    Mathf.Clamp(transform.position.x, -panLimit.x, panLimit.x),
-        //    transform.position.y,
-        //    Mathf.Clamp(transform.position.z, -panLimit.y, panLimit.y)
-        //);
     }
 
-    /// <summary>
-    /// Reset Camera
-    /// </summary>
-    //private IEnumerator ResetCamera()
-    //{
-    //    //isResetting = true;
+    private void SwitchToCamera(Camera camera)
+    {
+        switch (camera)
+        {
+            case Camera.Default:
+                defaultCamera.Priority = 10;
+                //panCamera.Priority = 0;
+                rotationCamera.Priority = 0;
+                currentCamera = camera;
+                break;
+            case Camera.Rotating:
+                rotationCamera.Priority = 10;
+               // panCamera.Priority = 0;
+                defaultCamera.Priority = 0;
+                currentCamera = camera;
+                break;                
+            default:
+                break;
+        }
+    }
 
-    //    //// Adjust distance/height as needed
-    //    //Vector3 targetPosition = playerTransform.position - playerTransform.forward * 10f + Vector3.up * 10f; 
-
-    //    //Quaternion targetRotation = Quaternion.LookRotation(playerTransform.position - targetPosition);
-
-    //    //while (Vector3.Distance(transform.position, targetPosition) > 0.01f || Quaternion.Angle(transform.rotation, targetRotation) > 0.1f)
-    //    //{
-    //    //    transform.position = Vector3.Lerp(transform.position, targetPosition, cameraSpeed * Time.deltaTime);
-    //    //    transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, cameraSpeed * Time.deltaTime);
-
-    //    //    yield return null;
-    //    //}
-
-    //    //transform.position = targetPosition;
-    //    //transform.rotation = targetRotation;
-
-    //    ////// Loop until the camera reaches the target position and rotation
-    //    ////while (Vector3.Distance(transform.position, defaultCameraPosition) > 0.01f || Quaternion.Angle(transform.rotation, defaultCameraRotation) > 0.1f)
-    //    ////{
-    //    ////    // Smoothly interpolate position and rotation towards the default position
-    //    ////    transform.position = Vector3.Lerp(transform.position, defaultCameraPosition, cameraSpeed * Time.deltaTime);
-    //    ////    transform.rotation = Quaternion.Lerp(transform.rotation, defaultCameraRotation, cameraSpeed * Time.deltaTime);
-
-    //    ////    // Yield to wait until the next frame
-    //    ////    yield return null;
-    //    ////}
-
-    //    ////// Ensure the camera is exactly at the target position and rotation at the end
-    //    ////transform.position = defaultCameraPosition;
-    //    ////transform.rotation = defaultCameraRotation;
-    //    ////Camera.main.fieldOfView = SettingsManager.Instance.CameraSettings.DefaultFOV;
-
-    //    //isResetting = false;
-    //}
     void OnDisable()
     {
         playerInputActions.CameraControls.RotateCamera.performed -= _ => StartRotation();
         playerInputActions.CameraControls.RotateCamera.canceled -= _ => StopRotation();
-       // playerInputActions.CameraControls.ResetCamera.performed -= _ => StartCoroutine(ResetCamera());
         playerInputActions.CameraControls.Disable();
     }
 }

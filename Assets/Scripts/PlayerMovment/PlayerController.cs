@@ -363,6 +363,9 @@ public class PlayerController : MonoBehaviour
         if(MoveableObject == null)
             MoveableObject = GameObject.FindGameObjectWithTag("Player");
 
+        NavMeshAgent agent = MoveableObject.GetComponent<NavMeshAgent>();
+        agent.updateRotation = false;
+
         Initialize();
     }
     /// <summary>
@@ -387,10 +390,6 @@ public class PlayerController : MonoBehaviour
         select = playerInputActions.Player.Select;
         select.Enable();
         select.performed += OnClick;
-
-        //deSelect = playerInputActions.Player.DeSelect;
-        //deSelect.Enable();
-        //deSelect.performed += OnDeselect;
     }
     /// <summary>
     /// Disables
@@ -399,9 +398,6 @@ public class PlayerController : MonoBehaviour
     {
         select.Disable();
         select.performed -= OnClick;
-
-        //deSelect.Disable();
-        //deSelect.performed -= OnDeselect;
     }
 
     /// <summary>
@@ -425,7 +421,10 @@ public class PlayerController : MonoBehaviour
                 {
                     NavMeshAgent agent = MoveableObject.GetComponent<NavMeshAgent>();
                     if (agent != null)
+                    {
                         agent.SetDestination(hit.point);
+                        this.gameObject.transform.LookAt(hit.point);
+                    }
                 }
             }
         }

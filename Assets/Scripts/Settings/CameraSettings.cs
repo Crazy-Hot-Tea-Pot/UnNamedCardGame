@@ -4,10 +4,9 @@ public class CameraSettings
 {
     private Vector3 defaultCameraPositon = new Vector3(0, 4, -10);
     private Quaternion defaultCameraRotation = Quaternion.Euler(30, 0, 0);
-    private float defaultFOV = 60f;
     private float cameraSpeed = 3f;
-    private float cameraRotationSpeed = 100f;
-    private float rotationSensitivity=0.1f;
+    private float rotationSpeed = 1f;
+    private bool boarderMouseMovement;
 
 
     // Properties for camera settings
@@ -41,23 +40,25 @@ public class CameraSettings
         get => cameraSpeed; 
         //set => cameraSpeed = value; 
     }
-    //Speed for rotating the camera
-    public float CameraRotationSpeed {
-        get => cameraRotationSpeed;
-        //set => camera = value; 
-    }
     /// <summary>
-    /// Adjust rotationSensitivity:
-    /// Increase rotationSensitivity for faster, more sensitive rotation.
-    /// Decrease rotationSensitivity for smoother, slower camera rotation.
+    /// Adjust rotationSpeed:
+    /// Increase rotationSpeed for faster, more sensitive rotation.
+    /// Decrease rotationSpeed for smoother, slower camera rotation.
     /// </summary>
-    public float RotationSensitivity
+    public float RotationSpeed
     {
-        get => rotationSensitivity;       
+        get => rotationSpeed;       
     }
-    public float DefaultFOV { 
-        get => defaultFOV; 
-       // set => defaultFOV = value; 
+    public bool BoarderMouseMovement
+    {
+        get
+        {
+            return boarderMouseMovement;
+        }
+        set
+        {
+            boarderMouseMovement = value;
+        }
     }
 
     // Constructor
