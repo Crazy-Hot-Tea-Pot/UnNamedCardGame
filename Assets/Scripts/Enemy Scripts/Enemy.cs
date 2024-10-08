@@ -1,10 +1,6 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.AI;
-using static UnityEngine.Rendering.VolumeComponent;
 
 public class Enemy : MonoBehaviour
 {
@@ -13,6 +9,8 @@ public class Enemy : MonoBehaviour
     private Animator animator;
 
     private NavMeshAgent agent;
+
+    private GameObject enemyTarget;
 
     [Header("Enemy stats")]
     /// <summary>
@@ -45,6 +43,15 @@ public class Enemy : MonoBehaviour
     public Shader outlineShader;
     private Shader defaultShader;
     private Renderer enemyRenderer;
+
+    public GameObject EnemyTarget
+    {
+        get { return enemyTarget; }
+        private set
+        {
+            enemyTarget = value;
+        }
+    }
 
 
     /// <summary>
@@ -283,6 +290,7 @@ public class Enemy : MonoBehaviour
 
         CombatController = GameObject.FindGameObjectWithTag("CombatController").
             GetComponent<CombatController>();
+        enemyTarget = GameObject.FindGameObjectWithTag("Player");
     }
    /// <summary>
    /// Is called when enemy is attacked by player.

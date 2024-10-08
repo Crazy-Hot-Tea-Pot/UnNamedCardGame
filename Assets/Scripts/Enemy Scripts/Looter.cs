@@ -25,17 +25,11 @@ public class Looter : Enemy
     public override void Start()
     {
         EnemyName = "Looter";
-        maxHP = 60;
+        maxHP = 50;
         swipeCount = 0;
         stolenScrap = 0;
 
         base.Start();
-    }
-
-    public override void Initialize()
-    {       
-        base.Initialize();
-
     }
 
     public override void PerformIntent()
@@ -55,7 +49,7 @@ public class Looter : Enemy
             Escape();
         }
 
-        base.PerformIntent();
+        //base.PerformIntent();
     }
     /// <summary>
     ///  After the 3rd Swipe, perform Shroud
@@ -65,7 +59,7 @@ public class Looter : Enemy
         Debug.Log($"{EnemyName} performs Swipe, dealing 4 damage and stealing 5 Scrap.");
         swipeCount++;
 
-        stolenScrap += GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().StealScrap(5);
+        stolenScrap += EnemyTarget.GetComponent<PlayerController>().StealScrap(5);
 
         // Empower Swipe
         if (PowerStacks > 0)

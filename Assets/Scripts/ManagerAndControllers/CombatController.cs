@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -268,16 +269,20 @@ public class CombatController : MonoBehaviour
     // Method to select target by clicking on an enemy
     private void OnSelectTarget(InputAction.CallbackContext context)
     {
+        if (!GameManager.Instance.InCombat)
+        {
+            return;
+        }
+
         Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
         RaycastHit hit;
 
         if (Physics.Raycast(ray, out hit))
         {
             // Check if the clicked object is an enemy combatant
-            Combadant clickedCombatant = hit.collider.GetComponent<Combadant>();
-            if (clickedCombatant != null && clickedCombatant.combadant.CompareTag("Enemy"))
+            if (hit.collider.CompareTag("Enemy"))
             {
-                SetTarget(clickedCombatant.combadant);
+                SetTarget(hit.collider.gameObject);
             }
         }
     }
@@ -285,6 +290,11 @@ public class CombatController : MonoBehaviour
     // Method to cycle through enemies using Tab key
     private void OnCycleTarget(InputAction.CallbackContext context)
     {
+        if (!GameManager.Instance.InCombat)
+        {
+            return;
+        }
+
         if (Combadants.Count == 0) return;
 
         int startIndex = currentTargetIndex;
@@ -322,6 +332,14 @@ public class CombatController : MonoBehaviour
         {
             newEnemy.IsTargeted = true;
         }
+    }
+    /// <summary>
+    /// Add enemy to combat 
+    /// </summary>
+    /// <param name="newCombadant"></param>
+    public void AddEnemyToCombat(GameObject newCombadant)
+    {
+        Combadants.Add(new Combadant { combadant = newCombadant, attacked = false });
     }
 
     void OnDisable()
