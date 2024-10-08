@@ -213,7 +213,7 @@ public class Enemy : MonoBehaviour
         UIEnemyMaxHealthStart();
     }
 
-    private void FixedUpdate()
+    public void FixedUpdate()
     {
         //Update UI for enemy health
         UIEnemyHealth();
