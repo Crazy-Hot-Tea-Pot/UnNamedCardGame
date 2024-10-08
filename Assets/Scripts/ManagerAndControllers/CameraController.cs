@@ -24,7 +24,7 @@ public class CameraController : MonoBehaviour
     private Camera currentCamera;
 
     public CinemachineVirtualCamera defaultCamera;
-    public CinemachineFreeLook rotationCamera;    
+    public CinemachineFreeLook rotationCamera;
 
 
 
@@ -35,8 +35,8 @@ public class CameraController : MonoBehaviour
     [SerializeField]
     private float rotationSpeed;
 
-    [SerializeField]
-    private float panSpeed;
+    //[SerializeField]
+    //private float panSpeed;
 
     public float borderThickness = 10f;
 
@@ -46,9 +46,12 @@ public class CameraController : MonoBehaviour
     [SerializeField]
     private float maxZoomDistance = 20f;
 
+    public float panSpeed;
+
     [SerializeField]
     // Rotation tracking
     private bool isRotating = false;
+    private bool isPaning = false;
 
 
     // Input actions for controlling the camera
@@ -63,10 +66,12 @@ public class CameraController : MonoBehaviour
     void OnEnable()
     {
         playerInputActions.CameraControls.Enable();
-        playerInputActions.CameraControls.RotateCamera.performed += _ => StartRotation();
-        playerInputActions.CameraControls.RotateCamera.canceled += _ => StopRotation();
+        //playerInputActions.CameraControls.RotateCamera.performed += _ => StartRotation();
+        //playerInputActions.CameraControls.RotateCamera.canceled += _ => StopRotation();
+        //playerInputActions.CameraControls.Pan.performed += _ => StartPanCamera();
+        //playerInputActions.CameraControls.Pan.canceled -= _ => StopPanCamera();
         playerInputActions.CameraControls.ResetCamera.performed += _ => ResetToDefaultCamera();
-        playerInputActions.CameraControls.Zoom.performed += _ => ZoomCamera();
+        playerInputActions.CameraControls.Zoom.performed += _ => ZoomCamera();        
     }
 
 
@@ -85,13 +90,17 @@ public class CameraController : MonoBehaviour
         defaultCamera.LookAt = player;
         rotationCamera.Follow = player;
         rotationCamera.LookAt = player;
+        //panCamera.Follow = player;
+       // panCamera.LookAt = player;
     }
 
     // Update is called once per frame
     void Update()
     {
         if (isRotating)        
-            RotateCamera();        
+            RotateCamera();
+        else if (isPaning)
+            PanCamera();
     }
     private void ResetToDefaultCamera()
     {
@@ -112,6 +121,10 @@ public class CameraController : MonoBehaviour
     {
         isRotating = true;
     }
+    private void StartPanCamera()
+    {
+        isPaning = true;
+    }
 
     /// <summary>
     /// Stops camera rotation.
@@ -119,6 +132,11 @@ public class CameraController : MonoBehaviour
     private void StopRotation()
     {
         isRotating = false;
+    }
+    private void StopPanCamera()
+    {
+        isPaning = false;
+        SwitchToCamera(Camera.Default);
     }
 
     /// <summary>
@@ -177,7 +195,17 @@ public class CameraController : MonoBehaviour
     /// </summary>
     private void PanCamera()
     {
+        //// Switch to the Pan Camera
+        //SwitchToCamera(Camera.Pan);
 
+        //// Get mouse delta movement from the Look input
+        //Vector2 mouseDelta = playerInputActions.CameraControls.MouseDelta.ReadValue<Vector2>();
+
+        //// Move the camera based on the mouse delta
+        //Vector3 movement = new Vector3(-mouseDelta.x, 0, -mouseDelta.y) * panSpeed * Time.deltaTime;
+
+        //// Apply the movement to the pan camera
+        //panCamera.transform.Translate(movement, Space.World);
     }
 
     private void SwitchToCamera(Camera camera)
@@ -186,16 +214,19 @@ public class CameraController : MonoBehaviour
         {
             case Camera.Default:
                 defaultCamera.Priority = 10;
-                //panCamera.Priority = 0;
                 rotationCamera.Priority = 0;
                 currentCamera = camera;
                 break;
             case Camera.Rotating:
                 rotationCamera.Priority = 10;
-               // panCamera.Priority = 0;
                 defaultCamera.Priority = 0;
                 currentCamera = camera;
-                break;                
+                break;   
+                case Camera.Pan:
+                defaultCamera.Priority = 0;
+                rotationCamera.Priority = 0;
+                currentCamera=camera;
+                break;
             default:
                 break;
         }
@@ -203,8 +234,8 @@ public class CameraController : MonoBehaviour
 
     void OnDisable()
     {
-        playerInputActions.CameraControls.RotateCamera.performed -= _ => StartRotation();
-        playerInputActions.CameraControls.RotateCamera.canceled -= _ => StopRotation();
+        //playerInputActions.CameraControls.RotateCamera.performed -= _ => StartRotation();
+        //playerInputActions.CameraControls.RotateCamera.canceled -= _ => StopRotation();
         playerInputActions.CameraControls.Disable();
     }
 }
