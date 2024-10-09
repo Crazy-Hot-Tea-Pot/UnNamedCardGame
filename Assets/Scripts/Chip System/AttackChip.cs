@@ -45,7 +45,7 @@ public class AttackChip : NewChip
         else if (player.IsDrained)
         {
             Target.TakeDamage(Mathf.FloorToInt(damage * 0.8f));
-            player.DrainedStacks--;
+            player.RemoveEffect(Effects.Debuff.Drained, 1,false);            
             Debug.Log("Player is Drained! Damage reduced to: " + Mathf.FloorToInt(damage * 0.8f));
         }
         else

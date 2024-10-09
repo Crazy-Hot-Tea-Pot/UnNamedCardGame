@@ -2311,6 +2311,7 @@ MonoBehaviour:
   enemyCanvas: {fileID: 1896314145}
   CombatController: {fileID: 0}
   intentsPerformed: 0
+  isAlertDrone: 0
 --- !u!136 &1460375857
 CapsuleCollider:
   m_ObjectHideFlags: 0

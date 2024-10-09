@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47d0769e81cc8764e9edccdc142672ca, type: 3}
   m_Name: Leech Effect
   m_EditorClassIdentifier: 
+  amountToUpgradeBy: 5
   damageAmount: 5

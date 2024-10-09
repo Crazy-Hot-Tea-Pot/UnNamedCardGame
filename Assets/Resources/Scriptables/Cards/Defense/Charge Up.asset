@@ -12,14 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 189603f79c685cb4197e0e073f20c64a, type: 3}
   m_Name: Charge Up
   m_EditorClassIdentifier: 
-  chipRarity: 0
+  chipRarity: 1
   chipName: Charge Up
   description: Activates "Power" and reduces "Drained" effects
   chipImage: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
   canBeUpgraded: 1
+  hitAllTargets: 0
   shieldAmount: 0
   upgradedShieldAmountToApply: 0
+  effectToApply: 0
   buffToApply: 2
-  buffStacks: 1
-  upgradedBuffStacksByAmout: 0
-  deBuffsToRemove: 02000000
+  buffStacks: 2
+  upgradedBuffStacksByAmout: 2
+  deBuffsToRemove:
+  - debuffType: 2
+    amountToDebuff: 0
+    removeAll: 1

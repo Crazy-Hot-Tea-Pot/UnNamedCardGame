@@ -49,7 +49,7 @@ public class Looter : Enemy
             Escape();
         }
 
-        //base.PerformIntent();
+        base.PerformIntent();
     }
     /// <summary>
     ///  After the 3rd Swipe, perform Shroud

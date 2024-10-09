@@ -146,7 +146,7 @@ public class PlayerUIManager : MonoBehaviour
         UpdateEnergy();
         UpdateHealth();
         //On hold open the inventroy UI if input is recieved
-        if (openInventory.IsPressed())
+        if (openInventory.IsPressed() && !GameManager.Instance.InCombat)
        {
             OpenInventroy();
        }

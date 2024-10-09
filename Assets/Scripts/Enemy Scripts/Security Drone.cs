@@ -4,8 +4,12 @@ using UnityEngine;
 public class SecurityDrone : Enemy
 {
     [Header("Custom for Enemy type")]
+
     [SerializeField]
     private int intentsPerformed;
+
+    [SerializeField]
+    private bool isAlertDrone;
 
     /// <summary>
     /// Amount of Intents done.
@@ -21,6 +25,20 @@ public class SecurityDrone : Enemy
             intentsPerformed = value;
         }
     }
+    /// <summary>
+    /// If this is a drone thats been summoned by Alert.
+    /// </summary>
+    public bool IsAlertDrone
+    {
+        get
+        {
+            return isAlertDrone;
+        }
+        private set
+        {
+            isAlertDrone = value;
+        }
+    }
     // Start is called before the first frame update
     public override void Start()
     {
@@ -33,7 +51,7 @@ public class SecurityDrone : Enemy
     {
         IntentsPerformed++;
 
-       if(IntentsPerformed >= 5 && NumberOfDronesInCombat() < 3)
+       if(IntentsPerformed > 5 && NumberOfDronesInCombat() < 3)
         {
             Alert();
         }
@@ -44,6 +62,8 @@ public class SecurityDrone : Enemy
             else
                 Ram();
         }
+
+       base.PerformIntent();
 
     }
 
@@ -125,11 +145,14 @@ public class SecurityDrone : Enemy
         }
         return temp;
     }
-
+    /// <summary>
+    /// Different stuff for Alerted Drone
+    /// </summary>
     public void IAmAlertDrone()
     {
         maxHP = 60;
         EnemyName = "Alert Drone";
+        IsAlertDrone = true;
         IntentsPerformed = 0;
 
         base.Initialize();

@@ -17,7 +17,7 @@ public class SkillChip : NewChip
     {
         base.OnChipPlayed(player,target);
 
-        // If the effect is player-only
+        // If the effect is player-only. might change to switch case later
         if (specialEffect != null)
         {
             if (specialEffect is LeechEffect leechEffect)

@@ -12,14 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 189603f79c685cb4197e0e073f20c64a, type: 3}
   m_Name: Tune-Up
   m_EditorClassIdentifier: 
-  chipRarity: 0
+  chipRarity: 1
   chipName: Tune-Up
   description: Removes the effects of "Jammed"
   chipImage: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
   canBeUpgraded: 1
+  hitAllTargets: 0
   shieldAmount: 0
   upgradedShieldAmountToApply: 0
+  effectToApply: 0
   buffToApply: 0
   buffStacks: 0
   upgradedBuffStacksByAmout: 0
-  deBuffsToRemove: 0400000003000000
+  deBuffsToRemove:
+  - debuffType: 4
+    amountToDebuff: 0
+    removeAll: 1
+  - debuffType: 3
+    amountToDebuff: 0
+    removeAll: 1

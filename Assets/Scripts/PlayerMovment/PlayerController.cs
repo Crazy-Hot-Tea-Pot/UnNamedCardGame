@@ -156,7 +156,7 @@ public class PlayerController : MonoBehaviour
     public int GalvanizedStack
     {
         get => galvanizedStack;
-        set
+        private set
         {
             galvanizedStack = value;
             if (galvanizedStack <= 0)
@@ -181,7 +181,7 @@ public class PlayerController : MonoBehaviour
     public int PoweredStacks
     {
         get => poweredStacks;
-        set
+        private set
         {
             poweredStacks = value;
             if (poweredStacks <= 0)
@@ -218,6 +218,8 @@ public class PlayerController : MonoBehaviour
                 gunkStacks = 0;
                 AmountOfTurnsGunkedLeft = 1;
             }
+            else if (gunkStacks <= 0)
+                gunkStacks = 0;
         }
     }
     /// <summary>
@@ -242,7 +244,7 @@ public class PlayerController : MonoBehaviour
         {
             return drainedStacks;
         }
-        set
+        private set
         {
             drainedStacks = value;
             if (drainedStacks <= 0)
@@ -258,8 +260,14 @@ public class PlayerController : MonoBehaviour
     /// Returns if the player is drained.
     /// </summary>
     public bool IsDrained { 
-        get => isDrained;
-        private set => isDrained = value; 
+        get
+        {
+            return isDrained;
+        }
+        private set
+        {
+            isDrained = value;
+        }
     }
     /// <summary>
     /// Returns if the player is in worndown state.
@@ -277,7 +285,7 @@ public class PlayerController : MonoBehaviour
         {
             return wornDownStacks;
         }
-        set
+        private set
         {
             wornDownStacks = value;
             if (wornDownStacks <= 0)
@@ -305,7 +313,7 @@ public class PlayerController : MonoBehaviour
         {
             return jammedStacks;
         }
-        set
+        private set
         {
             jammedStacks = value;
             if (jammedStacks <= 0)
@@ -386,10 +394,6 @@ public class PlayerController : MonoBehaviour
         select = playerInputActions.Player.Select;
         select.Enable();
         select.performed += OnClick;
-
-        //deSelect = playerInputActions.Player.DeSelect;
-        //deSelect.Enable();
-        //deSelect.performed += OnDeselect;
     }
     /// <summary>
     /// Disables
@@ -571,8 +575,41 @@ public class PlayerController : MonoBehaviour
                 break;
         }
     }
+    public void RemoveEffect(Effects.Debuff deBuffToRemove, int amount,bool removeAll)
+    {
+        switch (deBuffToRemove)
+        {
+            case Effects.Debuff.Drained:
+                if (removeAll)
+                    DrainedStacks = 0;
+                else
+                    DrainedStacks-= amount;
+                break;
+            case Effects.Debuff.Gunked:
+                if (removeAll)
+                    GunkStacks = 0;
+                else
+                    GunkStacks-= amount;
+                break;
+            case Effects.Debuff.Jam:
+                if (removeAll)
+                    JammedStacks = 0; 
+                else
+                    JammedStacks-= amount;
+                break;
+            case Effects.Debuff.WornDown:
+                if (removeAll)
+                    WornDownStacks = 0;
+                else
+                    WornDownStacks-= amount;
+                break;                
+            default:
+                Debug.LogWarning("Debuff not found.");
+                break;
+        }
+    }
     /// <summary>
-    /// Remove an affect from being active.
+    /// Remove an special affect from being active.
     /// </summary>
     /// <param name="effect"></param>
     public void RemoveEffect(Effects.Effect effect)

@@ -16,6 +16,7 @@ public class StatEffect : SkillEffects
     public StatType statWillBeEffect;
     // Fill Stat to max.
     public bool toFull;
+    public bool toHalf;
     public int amount;
     public int upgradedAmount;
 
@@ -45,6 +46,8 @@ public class StatEffect : SkillEffects
             case StatType.Energy:
                 if (toFull)
                     player.RecoverFullEnergy();
+                else if(toHalf)
+                    player.RecoverEnergy((Mathf.FloorToInt(player.Energy * 0.5f)));
                 else
                     player.RecoverEnergy(amount);
                 Debug.Log("Player's energy modified by: " + amount);

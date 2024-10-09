@@ -5,6 +5,9 @@
 public class SkillEffects : ScriptableObject
 {
     protected bool isUpgraded;
+    
+    public int amountToUpgradeBy;
+
     public virtual bool IsUpgraded
     {
         get
@@ -21,6 +24,7 @@ public class SkillEffects : ScriptableObject
     {
         Debug.Log("Chip Upgraded");
     }
+
     /// <summary>
     /// Default method for player-only effects
     /// </summary>
