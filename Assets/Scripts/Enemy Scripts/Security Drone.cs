@@ -9,6 +9,9 @@ public class SecurityDrone : Enemy
     private int intentsPerformed;
 
     [SerializeField]
+    private int numberOfAlertDrones;
+
+    [SerializeField]
     private bool isAlertDrone;
 
     /// <summary>
@@ -23,6 +26,18 @@ public class SecurityDrone : Enemy
         private set
         {
             intentsPerformed = value;
+        }
+    }
+
+    public int NumberOfAlertDrones
+    {
+        get
+        {
+            return numberOfAlertDrones;
+        }
+        private set
+        {
+            numberOfAlertDrones = value;
         }
     }
     /// <summary>
@@ -51,7 +66,7 @@ public class SecurityDrone : Enemy
     {
         IntentsPerformed++;
 
-       if(IntentsPerformed > 5 && NumberOfDronesInCombat() < 3)
+       if(IntentsPerformed > 5 && NumberOfAlertDrones < 3)
         {
             Alert();
         }
@@ -63,6 +78,7 @@ public class SecurityDrone : Enemy
                 Ram();
         }
 
+       //THIS IS NEEDED DON'T REMOVE. don't want that again.
        base.PerformIntent();
 
     }
@@ -131,20 +147,21 @@ public class SecurityDrone : Enemy
     }
     /// <summary>
     /// Checks for how many Security Drones are in the combat zone.
+    /// moved as per GDD
     /// </summary>
     /// <returns></returns>
-    private int NumberOfDronesInCombat()
-    {
-        int temp = 0;
-        foreach (var combatant in CombatController.Combadants)
-        {
-            if (combatant.combadant.CompareTag("Enemy") && combatant.combadant.GetComponent<SecurityDrone>() != null)
-            {
-                temp++;
-            }
-        }
-        return temp;
-    }
+    //private int NumberOfDronesInCombat()
+    //{
+    //    int temp = 0;
+    //    foreach (var combatant in CombatController.Combadants)
+    //    {
+    //        if (combatant.combadant.CompareTag("Enemy") && combatant.combadant.GetComponent<SecurityDrone>() != null)
+    //        {
+    //            temp++;
+    //        }
+    //    }
+    //    return temp;
+    //}
     /// <summary>
     /// Different stuff for Alerted Drone
     /// </summary>
