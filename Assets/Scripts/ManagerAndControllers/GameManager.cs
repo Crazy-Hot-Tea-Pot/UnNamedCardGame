@@ -78,6 +78,9 @@ public class GameManager : MonoBehaviour
         ShufflePlayerDeck();
         //DrawChip(DrawsPerTurn);
 
+        //test
+       // SoundManager.StartBackground(SoundManager.BgSound.Test);
+
     }
 
     // Update is called once per frame

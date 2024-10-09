@@ -42,7 +42,7 @@ public class Looter : Enemy
 
     public override void PerformIntent()
     {       
-        // Since 100% on first chance i just made it this way.
+        // Since 100% on first chance soundAssets just made it this way.
 
         if (swipeCount < 3) // First three turns are Swipe
         {

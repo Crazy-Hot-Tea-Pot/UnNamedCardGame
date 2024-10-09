@@ -8,6 +8,8 @@ public class SettingsManager : MonoBehaviour
     [SerializeField]
     private CameraSettings cameraSettings;
 
+    private SoundSettings soundSettings;
+
     public static SettingsManager Instance {
         get; 
         private set; }
@@ -20,6 +22,13 @@ public class SettingsManager : MonoBehaviour
             return cameraSettings;
         }
         //private set;
+    }
+    public SoundSettings SoundSettings
+    {
+        get
+        {
+            return soundSettings;
+        }
     }
 
     void Awake()
@@ -42,6 +51,7 @@ public class SettingsManager : MonoBehaviour
     void InitializeSettings()
     {
         cameraSettings = new CameraSettings();
+        soundSettings = new SoundSettings();
         // Initialize other settings like AudioSettings, GameplaySettings, etc.
     }
 
