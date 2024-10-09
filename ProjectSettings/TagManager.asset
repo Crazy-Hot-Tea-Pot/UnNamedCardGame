@@ -7,7 +7,6 @@ TagManager:
   - Ground
   - Enemy
   - CombatController
-  - Drop
   - Card
   - abilityTrinket
   - abilitySword

@@ -62,7 +62,7 @@ public class SecurityDrone : Enemy
 
         base.Start();
     }
-    public override void PerformIntent()
+    protected override void PerformIntent()
     {
         IntentsPerformed++;
 

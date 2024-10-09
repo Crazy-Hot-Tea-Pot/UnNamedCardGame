@@ -104,6 +104,7 @@ public class Enemy : MonoBehaviour
 
             if (currentHp <= 0)
             {
+                currentHp = 0;
                 Die();
             }
         }
@@ -121,7 +122,7 @@ public class Enemy : MonoBehaviour
         set
         {
             inCombat = value;
-            animator.SetBool("inCombat", value);
+            //animator.SetBool("inCombat", value);
         }
     }
     /// <summary>
@@ -136,6 +137,10 @@ public class Enemy : MonoBehaviour
         protected set
         {
             shield = value;
+            if (shield <= 0)
+            {
+                shield = 0;
+            }
         }
     }
     /// <summary>
@@ -322,7 +327,7 @@ public class Enemy : MonoBehaviour
     /// Base Perform Intent.
     /// Make sure the base is run after you perform an action.
     /// </summary>
-    public virtual void PerformIntent()
+    protected virtual void PerformIntent()
     {
         CombatController.TurnUsed(this.gameObject);
     }
@@ -408,5 +413,17 @@ public class Enemy : MonoBehaviour
     public void UIEnemyMaxHealthStart()
     {
         sliderBar.maxValue = maxHP;
+    }
+
+    /// <summary>
+    /// Give enemy shield.
+    /// </summary>
+    /// <param name="shieldAmount"></param>
+    public virtual void ApplyShield(int shieldAmount)
+    {
+        //Restore Shield
+        Shield += shieldAmount;
+
+        Debug.Log("Shield Restored: " + shield);
     }
 }

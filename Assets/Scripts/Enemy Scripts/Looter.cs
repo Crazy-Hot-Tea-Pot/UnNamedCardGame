@@ -32,7 +32,7 @@ public class Looter : Enemy
         base.Start();
     }
 
-    public override void PerformIntent()
+    protected override void PerformIntent()
     {       
         // Since 100% on first chance soundAssets just made it this way.
 
