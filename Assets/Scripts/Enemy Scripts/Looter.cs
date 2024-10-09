@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Looter : Enemy
 {
+    [Header("Custom for Enemy type")]
     // To keep track of stolen scrap
     [SerializeField]
     private int stolenScrap = 0;
@@ -24,20 +25,11 @@ public class Looter : Enemy
     public override void Start()
     {
         EnemyName = "Looter";
-        maxHP = 60;
+        maxHP = 50;
         swipeCount = 0;
         stolenScrap = 0;
 
         base.Start();
-    }
-
-    public override void Initialize()
-    {       
-        base.Initialize();
-        //Drop weaponShiv = new("Shiv",Drop.DropType.Weapon, 5, 2);
-        //Drop scrap = new(Drop.DropType.Scrap, 15);//new(Drop.DropType.Scrap, 15);
-        //enemyDrops.Add(weaponShiv);
-        //enemyDrops.Add(scrap);
     }
 
     public override void PerformIntent()
@@ -67,17 +59,24 @@ public class Looter : Enemy
         Debug.Log($"{EnemyName} performs Swipe, dealing 4 damage and stealing 5 Scrap.");
         swipeCount++;
 
-        stolenScrap += GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().StealScrap(5);
+        stolenScrap += EnemyTarget.GetComponent<PlayerController>().StealScrap(5);
 
+        // Empower Swipe
         if (PowerStacks > 0)
         {
             GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().TakeDamage(6 + PowerStacks);
             PowerStacks = 0;
         }
+        // Drained Swipe
         else if (DrainStacks>0)
         {
             GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().TakeDamage(Mathf.FloorToInt(6 - 0.8f));
             DrainStacks--;
+        }
+        // Default Swipe
+        else
+        {
+            GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().TakeDamage(6);
         }
 
     }

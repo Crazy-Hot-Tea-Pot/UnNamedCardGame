@@ -1,35 +1,53 @@
 using System.Collections.Generic;
 using UnityEngine;
+using static Effects;
 
 [CreateAssetMenu(fileName = "NewDefenseChip", menuName = "Chip System/Defense Chip")]
 public class DefenseChip : NewChip
 {
+    [System.Serializable]
+    public class DebuffInfo
+    {
+        public Effects.Debuff debuffType;
+        public int amountToDebuff;
+        public bool removeAll;
+    }
     /// <summary>
     /// How much shield the card will give.
     /// </summary>
     public int shieldAmount;
+
     /// <summary>
     /// The amount to upgrade by.
     /// </summary>
     public int upgradedShieldAmountToApply;
+
+    /// <summary>
+    /// Effect to give.
+    /// </summary>
+    public Effects.Effect effectToApply = Effect.None;
+
     /// <summary>
     /// The buff to apply.
     /// </summary>
     public Effects.Buff buffToApply=Effects.Buff.None;
+
     /// <summary>
     /// Amount of that buff to apply.
     /// </summary>
     public int buffStacks = 0;
+
     /// <summary>
     /// Amount to upgrade the buff amount by.
     /// </summary>
     public int upgradedBuffStacksByAmout;
+
     /// <summary>
     /// List of Debuffs to remove.
     /// Put the main debuff to remove first and the rest will be if upgraded.
     /// </summary>
     [Tooltip("The first debuff is the main Debuff to remove. Any more will be removed if card is upgraded")]
-    public List<Effects.Debuff> deBuffsToRemove = new List<Effects.Debuff>();
+    public List<DebuffInfo> deBuffsToRemove = new List<DebuffInfo>();
 
     public override bool IsUpgraded
     {
@@ -60,32 +78,26 @@ public class DefenseChip : NewChip
         else
             GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().ApplyShield(shieldAmount);
 
+        //ApplyEffect to player
+        player.ApplyEffect(effectToApply);
+
         //Apply buffs to player
         player.ApplyEffect(buffToApply, buffStacks);
-        Debug.Log($"{player.name} receives {buffStacks} stacks of {buffToApply}.");
 
         // Remove specified debuffs will only remove first one if not upgraded
-        foreach (Effects.Debuff debuff in deBuffsToRemove)
+        foreach (DebuffInfo debuffToRemove in deBuffsToRemove)
         {
-            switch (debuff)
+            try
             {
-                case Effects.Debuff.Gunked:
-                    player.GunkStacks--;
-                    break;
-                case Effects.Debuff.Drained:
-                    player.DrainedStacks--;
-                    break;
-                case Effects.Debuff.Jam:                    
-                    player.JammedStacks--;
-                    break;
-                case Effects.Debuff.WornDown:                    
-                    player.WornDownStacks--;
-                    break;
-                default:
-                    Debug.LogWarning($"Debuff {debuff} not recognized.");
-                    break;
+                player.RemoveEffect(debuffToRemove.debuffType, debuffToRemove.amountToDebuff, debuffToRemove.removeAll);
             }
-            Debug.Log($"{player.name} removes the {debuff} debuff.");
+            catch
+            {
+                Debug.LogWarning($"Debuff {debuffToRemove.debuffType} not recognized.");
+            }                                                           
+
+            Debug.Log($"{player.name} removes the {debuffToRemove.debuffType} debuff.");
+
             //Break out if not upgraded
             if (!IsUpgraded)
                 break;           

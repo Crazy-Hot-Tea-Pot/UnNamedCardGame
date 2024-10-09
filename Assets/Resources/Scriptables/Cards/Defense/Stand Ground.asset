@@ -12,14 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 189603f79c685cb4197e0e073f20c64a, type: 3}
   m_Name: Stand Ground
   m_EditorClassIdentifier: 
-  chipRarity: 0
+  chipRarity: 1
   chipName: Stand Ground
   description: Gain 7 Shield, Gain 1 "Galvanize".
   chipImage: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
   canBeUpgraded: 1
+  hitAllTargets: 0
   shieldAmount: 7
   upgradedShieldAmountToApply: 2
+  effectToApply: 0
   buffToApply: 1
   buffStacks: 1
   upgradedBuffStacksByAmout: 1
-  deBuffsToRemove: 
+  deBuffsToRemove: []

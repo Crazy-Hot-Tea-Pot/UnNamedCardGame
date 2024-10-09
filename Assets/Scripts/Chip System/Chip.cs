@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -71,58 +72,92 @@ public class Chip : MonoBehaviour
     public void ChipSelected()
     {
         Debug.Log(ChipTitle + " Chip");
-        active = true;  
-        //Check if player turn to play play card
-        if (CombatController.CanIMakeAction(Player))
+        active = true;
+        try
         {
-            //Check if player is jammed
-            if (Player.GetComponent<PlayerController>().IsJammed)
+            //Check if player turn to play play card
+            if (CombatController.CanIMakeAction(Player))
             {
-                Debug.Log("Player is Jammed");
-                CombatController.TurnUsed(Player);             
-            }
-            else
-            {
+
+                // Check if there is a target available
+                if (CombatController.Target == null)
+                {
+                    throw new NullReferenceException("No target assigned.");
+                }
+
+                //Check if player is jammed
+                if (Player.GetComponent<PlayerController>().IsJammed)
+                {
+                    CombatController.TurnUsed(Player);
+                    return;
+                }
+
                 //Check if newChip is assigned
                 if (newChip != null)
                 {
-                    //REMOVED AS NO LONGER NEED ENERGY TO PLAY CARD
-                    //Check if player has enough energy to play card.
-                    //if (newChip.energyCost > GameObject.
-                    //    FindGameObjectWithTag("Player").
-                    //    GetComponent<PlayerController>().Energy)
-                    //{
-                    //    //for when player doesn't have enough energy
-                    //}
-                    //else
-                    //{
                     if (Player.GetComponent<PlayerController>().NextChipActivatesTwice)
                     {
-                        newChip.OnChipPlayed(Player.GetComponent<PlayerController>());
-                        newChip.OnChipPlayed(Player.GetComponent<PlayerController>());
+                        if (newChip is DefenseChip defenseChip)
+                            newChip.OnChipPlayed(Player.GetComponent<PlayerController>());
+                        else
+                        {
+                            if (newChip.hitAllTargets)
+                            {
+                                // Looping to attack twice
+                                for (int i = 0; i < 2; i++)
+                                {
+                                    foreach (GameObject target in GameManager.Instance.enemyList)
+                                    {
+                                        newChip.OnChipPlayed(Player.GetComponent<PlayerController>(), target.GetComponent<Enemy>());
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                newChip.OnChipPlayed(Player.GetComponent<PlayerController>(), CombatController.Target.GetComponent<Enemy>());
+                                newChip.OnChipPlayed(Player.GetComponent<PlayerController>(), CombatController.Target.GetComponent<Enemy>());
+                            }
+                        }
                         CombatController.TurnUsed(Player);
                         //Remove effect after it has been used.
                         Player.GetComponent<PlayerController>().RemoveEffect(Effects.Effect.Motivation);
                     }
                     else
                     {
-                        newChip.OnChipPlayed(Player.GetComponent<PlayerController>());
+                        if (newChip is DefenseChip defenseChip)
+                            newChip.OnChipPlayed(Player.GetComponent<PlayerController>());
+                        else
+                        {
+                            if (newChip.hitAllTargets)
+                            {
+                                foreach (GameObject target in GameManager.Instance.enemyList)
+                                {
+                                    newChip.OnChipPlayed(Player.GetComponent<PlayerController>(), target.GetComponent<Enemy>());
+                                }
+                            }
+                            else
+                                newChip.OnChipPlayed(Player.GetComponent<PlayerController>(), CombatController.Target.GetComponent<Enemy>());
+                        }
+
                         CombatController.TurnUsed(Player);
                     }
-                    //}
-                    //After card has been used add to kill cards and destroy.
                     GameManager.Instance.KillChip(this.gameObject);
                     Destroy(this.gameObject);
                 }
                 else
                 {
-                    Debug.LogWarning("No script attached.");
+                    throw new NullReferenceException("No chip script attached.");
                 }
             }
         }
-        else
+        catch (NullReferenceException ex)
         {
-            Debug.Log("Not this obejcts turn yet.");
+            Debug.LogWarning($"Null reference error: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            // Generic catch for any other exceptions that may occur
+            Debug.LogError($"An unexpected error occurred: {ex.Message}");
         }
     }
 }

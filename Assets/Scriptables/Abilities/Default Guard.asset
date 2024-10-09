@@ -15,4 +15,4 @@ MonoBehaviour:
   abilityName: Default Guard
   abilityDescription: Empty
   energyCost: 5
-  shield: 1
+  shield: 2

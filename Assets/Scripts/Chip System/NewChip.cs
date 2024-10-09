@@ -51,7 +51,17 @@ public class NewChip : ScriptableObject
         }
     }
 
+    /// <summary>
+    /// This chip hits all enemies
+    /// </summary>
+    public bool hitAllTargets;
+
     public virtual void OnChipPlayed(PlayerController player)
+    {
+        Debug.Log(chipName + " played.");
+    }
+
+    public virtual void OnChipPlayed(PlayerController player, Enemy Target)
     {
         // This will be overridden by specific card types
         Debug.Log(chipName + " played.");

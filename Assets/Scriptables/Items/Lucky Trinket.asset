@@ -9,9 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 99401f06abfecf145b9cfeed2c3586d0, type: 3}
-  m_Name: Well Structured Effect
+  m_Script: {fileID: 11500000, guid: 8af9eef2b7e945e49a6a26b8efe0dccc, type: 3}
+  m_Name: Lucky Trinket
   m_EditorClassIdentifier: 
-  buffToApply: 1
-  amountOfBuffToApply: 3
-  amountOfbuffToUpgradeBy: 2
+  itemName: Lucky Trinket
+  itemDescription: Gain 10 Scrap at the END of combat
+  AbilityList:
+  - {fileID: 5262613651752118115, guid: 51eb3f7bd8418074a8b2e4d669326580, type: 3}

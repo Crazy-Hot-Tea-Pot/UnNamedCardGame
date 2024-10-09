@@ -27,7 +27,8 @@ public static class Effects
     {
         None,
         Impervious,
-        Motivation
+        Motivation,
+        Leech
     }
 
 }
