@@ -14,6 +14,11 @@ public class Equipment : ScriptableObject
     /// </summary>
     public string itemDescription;
 
+    /// <summary>
+    /// A variable to destroy objects
+    /// </summary>
+    public bool destroyme = false;
+
 
     /// <summary>
     /// This method instantiates the equipment depending on the item

@@ -35,7 +35,7 @@ public class SoundEnumGenerator
         string enumFilePath = "Assets/Scripts/SoundEnums.cs";
         File.WriteAllText(enumFilePath, enumBuilder.ToString());
 
-        AssetDatabase.Refresh(); // Refresh to update the new file in Unity Editor
+       // AssetDatabase.Refresh(); // Refresh to update the new file in Unity Editor
         Debug.Log("Sound enums generated successfully.");
     }
 

@@ -14,6 +14,7 @@ public class NewEquipment : MonoBehaviour
     /// </summary>
     public Equipment equipmentButton;
 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -26,7 +27,11 @@ public class NewEquipment : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        //Destroys consumable objects
+        if(equipmentButton.destroyme)
+        {
+            Destroy(this.gameObject);
+        }
     }
 
     public void DisplayAbilities()
