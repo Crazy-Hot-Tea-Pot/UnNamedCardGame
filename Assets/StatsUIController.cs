@@ -68,37 +68,6 @@ public class StatsUIController : MonoBehaviour
     }
 
     /// <summary>
-    /// Call this to change the Energy Bar UI. this method accepts both UI and Float no need to change before.
-    /// </summary>
-    /// <param name="currentEnergy"></param>
-    /// <param name="maxEnergy"></param>
-    public void UpdateUIEnergyBar(int currentEnergy, int maxEnergy)
-    {
-
-        if (energyBar != null)
-        {
-            // Convert int to float for accurate division
-            float tempCurrentEnergy = (float)currentEnergy;
-            float tempMaxEnergy = (float)maxEnergy;
-
-            // Normalize the energy value to a 0-1 range
-            float tempTargetFillAmount = tempCurrentEnergy / tempMaxEnergy;
-
-            // Clamp the value between 0 and 1 to avoid overfilling
-            tempTargetFillAmount = Mathf.Clamp01(tempTargetFillAmount);
-
-            StopAllCoroutines();
-
-            // Start the coroutine to smoothly fill the bar to the target amount
-            StartCoroutine(FillEnergyOverTime(tempTargetFillAmount));
-        }
-        else
-        {
-            Debug.LogError("Energy Bar Image component not found.");
-        }
-    }
-
-    /// <summary>
     /// Fill EnergyBar by amount over time.
     /// </summary>
     /// <param name="targetFillAmount"></param>

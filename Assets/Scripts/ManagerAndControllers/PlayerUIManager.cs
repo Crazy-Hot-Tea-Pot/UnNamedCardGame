@@ -95,10 +95,13 @@ public class PlayerUIManager : MonoBehaviour
     /// Health bar UI element
     /// </summary>
     public Slider healthBar;
-    /// <summary>
-    /// Energy bar UI element
-    /// </summary>
-    public Slider energyBar;
+
+    [Header("Energy Stuff")]
+
+    public Image energyBar;
+
+    //Speed to fill the bar at.
+    public float fillSpeed;
     #endregion
 
     private void Awake()
@@ -137,13 +140,16 @@ public class PlayerUIManager : MonoBehaviour
 
         //Sets UI maximums for resource pools
         StartingPools();
+
+        //Initalizatoin for fill
+        Initialize();
     }
 
     // Update is called once per frame
     void Update()
     {
         //Update resource pool ui elements
-        UpdateEnergy();
+        UpdateEnergy(GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().Energy, GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().MaxEnergy);
         UpdateHealth();
         //On hold open the inventroy UI if input is recieved
         if (openInventory.IsPressed() && !GameManager.Instance.InCombat)
@@ -309,13 +315,65 @@ public class PlayerUIManager : MonoBehaviour
         healthBar.value = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().Health;
     }
 
-    /// <summary>
-    /// Update the UI for player energy
-    /// </summary>
-    public void UpdateEnergy()
+    //Sets variables to initalize fill speed
+    public void Initialize()
     {
-        //Change value of energy bar
-        energyBar.value = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().Energy;
+        fillSpeed = 0.5f;
+    }
+
+    //Provides the ability to update energy right away
+    public void InstantUpdateEnergy(float currentEnergy)
+    {
+        energyBar.fillAmount = currentEnergy;
+    }
+
+    /// <summary>
+    /// Call this to change the Energy Bar UI. this method accepts both UI and Float no need to change before.
+    /// </summary>
+    /// <param name="currentEnergy"></param>
+    /// <param name="maxEnergy"></param>
+    public void UpdateEnergy(float currentEnergy, float maxEnergy)
+    {
+        if (energyBar != null)
+        {
+            // Normalize the energy value to a 0-1 range
+            float tempTargetFillAmount = currentEnergy / maxEnergy;
+
+            //Clap at 0 and 1 so don't go over
+            tempTargetFillAmount = Mathf.Clamp01(tempTargetFillAmount);
+
+            StopAllCoroutines();
+
+            StartCoroutine(FillEnergyOverTime(tempTargetFillAmount));
+        }
+        else
+        {
+            Debug.LogError("Energy Bar Image component not found.");
+        }
+    }
+
+
+    /// <summary>
+    /// Fill EnergyBar by amount over time.
+    /// </summary>
+    /// <param name="targetFillAmount"></param>
+    /// <returns></returns>
+    private IEnumerator FillEnergyOverTime(float targetFillAmount)
+    {
+
+        // While the bar is not at the target fill amount, update it
+        while (!Mathf.Approximately(energyBar.fillAmount, targetFillAmount))
+        {
+            // Lerp between current fill and target fill by the fill speed
+            energyBar.fillAmount = Mathf.Lerp(energyBar.fillAmount, targetFillAmount, fillSpeed * Time.deltaTime);
+
+            // Ensure the fill value gradually updates each frame
+            yield return null;
+        }
+
+        // Ensure it snaps to the exact target amount at the end
+        energyBar.fillAmount = targetFillAmount;
+
     }
 
     /// <summary>
@@ -323,8 +381,7 @@ public class PlayerUIManager : MonoBehaviour
     /// </summary>
     public void StartingPools()
     {
-        //energyBar.maxValue = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>()
-        //healthBar.maxValue = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>()
+        healthBar.maxValue = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().MaxHealth;
     }
     #endregion
 }

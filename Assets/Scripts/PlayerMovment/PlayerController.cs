@@ -121,6 +121,28 @@ public class PlayerController : MonoBehaviour
         }
     }
     /// <summary>
+    /// Returns max energy
+    /// </summary>
+    public int MaxEnergy
+    {
+        get { return maxEnergy; }
+        private set
+        {
+            maxEnergy = value;
+        }
+    }
+    /// <summary>
+    /// Returns max health
+    /// </summary>
+    public int MaxHealth
+    {
+        get { return maxHealth; }
+        private set
+        {
+            maxHealth = value;
+        }
+    }
+    /// <summary>
     /// Player Scrap
     /// </summary>
     public int Scrap
