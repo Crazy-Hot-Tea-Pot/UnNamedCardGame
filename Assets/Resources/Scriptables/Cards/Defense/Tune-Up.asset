@@ -15,7 +15,7 @@ MonoBehaviour:
   chipRarity: 1
   chipName: Tune-Up
   description: Removes the effects of "Jammed"
-  chipImage: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  chipImage: {fileID: 21300000, guid: 0a927c9dfefcef848a627253cb72f260, type: 3}
   canBeUpgraded: 1
   hitAllTargets: 0
   shieldAmount: 0

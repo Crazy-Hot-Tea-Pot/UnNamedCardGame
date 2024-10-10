@@ -15,7 +15,7 @@ MonoBehaviour:
   chipRarity: 2
   chipName: Recharge
   description: Refresh  your Energy.
-  chipImage: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
+  chipImage: {fileID: 21300000, guid: 31ed4a108ab52794e95423dc3dcf4371, type: 3}
   canBeUpgraded: 0
   hitAllTargets: 0
   specialEffect: {fileID: 11400000, guid: bd075ab368830c7409b2e740dc79966c, type: 2}
