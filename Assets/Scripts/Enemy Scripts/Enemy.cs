@@ -4,13 +4,27 @@ using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
-    private string enemyName;
+    public string enemyName;
 
-    private Animator animator;
+    public GameObject enemyTarget;
 
-    private NavMeshAgent agent;
+    public float AttackRange;    
+    [SerializeField]
+    private float distanceToPlayer;
 
-    private GameObject enemyTarget;
+    public float DistanceToPlayer
+    {
+        get
+        {
+            distanceToPlayer= Vector3.Distance(transform.position, EnemyTarget.transform.position); ;
+            return distanceToPlayer;
+        }               
+    }
+
+    [Header("Enemy Components")]
+    public Animator animator;
+
+    public NavMeshAgent agent;
 
     [Header("Enemy stats")]
     /// <summary>
@@ -23,6 +37,7 @@ public class Enemy : MonoBehaviour
     private int shield;
     [SerializeField]
     private bool isTargeted;
+
     [Header("Status Effects")]
     [SerializeField]
     private bool inCombat;
@@ -47,7 +62,7 @@ public class Enemy : MonoBehaviour
     public GameObject EnemyTarget
     {
         get { return enemyTarget; }
-        private set
+        protected set
         {
             enemyTarget = value;
         }
@@ -282,7 +297,17 @@ public class Enemy : MonoBehaviour
         {
             if(CombatController.CanIMakeAction(this.gameObject))
             {
-                PerformIntent();
+                //Check if player is in range
+                if (DistanceToPlayer <= AttackRange)
+                {
+                    agent.ResetPath();
+                    PerformIntent();
+                }
+                else
+                {
+                    // move to player
+                    agent.SetDestination(EnemyTarget.transform.position);
+                }
             }
         }
     }
