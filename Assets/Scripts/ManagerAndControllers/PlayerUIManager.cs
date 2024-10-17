@@ -58,7 +58,7 @@ public class PlayerUIManager : MonoBehaviour
     /// </summary>
     public GameObject panelDeck;
     /// <summary>
-    /// Holds all active abilities
+    /// Holds all isActive abilities
     /// </summary>
     public GameObject panelAbilty;
 
@@ -168,7 +168,7 @@ public class PlayerUIManager : MonoBehaviour
         //If the UI canvas is closed open it otherwise continue on
         if(uiCanvas.activeSelf == false)
         {
-            //set ui canvas as active
+            //set ui canvas as isActive
             uiCanvas.SetActive(true);
         }
 
@@ -201,7 +201,7 @@ public class PlayerUIManager : MonoBehaviour
     /// </summary>
     public void switchMenuDeck()
     {
-        //Disables active chipPanel and activate decks
+        //Disables isActive chipPanel and activate decks
         panelInventory.SetActive(false);
         panelDeck.SetActive(true);
         //Disable and enable buttons
@@ -214,7 +214,7 @@ public class PlayerUIManager : MonoBehaviour
     /// </summary>
     public void switchMenuInventory()
     {
-        //Disables active chipPanel and activate inventory
+        //Disables isActive chipPanel and activate inventory
         panelDeck.SetActive(false);
         panelInventory.SetActive(true);
         //Disable and enable buttons

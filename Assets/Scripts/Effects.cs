@@ -28,8 +28,7 @@ public static class Effects
         None,
         Impervious,
         Motivation,
-        Leech,
-        AbilityDisabled
+        Leech
     }
 
 }

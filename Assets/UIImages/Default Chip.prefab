@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: -2427300658012633085}
   - component: {fileID: 8308470880536474269}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Default Chip
   m_TagString: Card
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -89,10 +89,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8980b81e20ad8314bb44689776086377, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  active: 0
+  isActive: 0
   CombatController: {fileID: 0}
   Player: {fileID: 0}
-  newCard: {fileID: 11400000, guid: 8ca1dd9622ef24b4cb647a971bf2c04f, type: 2}
+  newChip: {fileID: 0}
 --- !u!114 &8308470880536474269
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -112,7 +112,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 0
+  m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}

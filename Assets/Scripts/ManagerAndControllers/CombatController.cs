@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 public class Combadant
@@ -247,6 +248,11 @@ public class CombatController : MonoBehaviour
                 combadant.combadant.GetComponent<PlayerController>().RoundEnd();
             else if(combadant.combadant.tag=="Enemy")
                 combadant.combadant.GetComponent<Enemy>().RoundEnd();
+        }
+
+        foreach(var chip in GameManager.Instance.playerHand)
+        {
+            chip.GetComponent<Chip>().EndRound();
         }
     }
     /// <summary>

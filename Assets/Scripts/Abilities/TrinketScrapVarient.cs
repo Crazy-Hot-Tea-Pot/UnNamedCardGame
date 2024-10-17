@@ -9,7 +9,7 @@ public class TrinketScrapVarient : Ability
     public int gainedScrap;
 
     /// <summary>
-    /// This variable allows us to know if the ability has been used but is not yet ready to be active
+    /// This variable allows us to know if the ability has been used but is not yet ready to be isActive
     /// </summary>
     private bool isWaiting = false;
 
@@ -53,8 +53,8 @@ public class TrinketScrapVarient : Ability
                     Debug.Log(GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().Scrap + "At modified");
                 }
             }
-            //This part is the only reason this method doesn't run a million times while active
-            //If recharge is not active again false is charged
+            //This part is the only reason this method doesn't run a million times while isActive
+            //If recharge is not isActive again false is charged
             else if(isRecharged)
             {
                 //but we are out of combat

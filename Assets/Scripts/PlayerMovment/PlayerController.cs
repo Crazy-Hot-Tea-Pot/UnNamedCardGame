@@ -69,8 +69,6 @@ public class PlayerController : MonoBehaviour
     private bool nextChipActivatesTwice;
     [SerializeField]
     private bool isImpervious;
-    [SerializeField]
-    private bool isAbilityDisabled;
 
     /// <summary>
     /// Returns if player is in combat.
@@ -377,20 +375,6 @@ public class PlayerController : MonoBehaviour
             isImpervious = value;
         }
     }    
-    /// <summary>
-    /// If player is disabled
-    /// </summary>
-    public bool IsAbilitiesDisabled
-    {
-        get
-        {
-            return isAbilityDisabled;
-        }
-        private set
-        {
-            isAbilityDisabled = value;
-        }
-    }
 
     // Awake is called when instance is being loaded
     void Awake()
@@ -567,9 +551,6 @@ public class PlayerController : MonoBehaviour
             case Effects.Effect.Impervious:
                 IsImpervious = true;
                 break;
-            case Effects.Effect.AbilityDisabled:
-                IsAbilitiesDisabled = true;
-                break;
             default:
                 break;
         }
@@ -650,7 +631,7 @@ public class PlayerController : MonoBehaviour
         }
     }
     /// <summary>
-    /// Remove an special affect from being active.
+    /// Remove an special affect from being isActive.
     /// </summary>
     /// <param name="effect"></param>
     public void RemoveEffect(Effects.Effect effect)
@@ -699,7 +680,6 @@ public class PlayerController : MonoBehaviour
         {
             AmountOfTurnsGunkedLeft--;
         }
-        IsAbilitiesDisabled = false;
         drainedStacks--;
         gunkStacks--;
         jammedStacks--;

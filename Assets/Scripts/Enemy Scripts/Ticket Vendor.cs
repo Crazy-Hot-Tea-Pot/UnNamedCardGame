@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 /// <summary>
 /// Ticket Vendor: 90 HP (Robot Enemy) SUBWAY EXCLUSIVE
@@ -13,6 +14,7 @@ public class TicketVendor : Enemy
     // Start is called before the first frame update
     public override void Start()
     {
+        EnemyName = "Ticket Vendor";
         maxHP = 90;
         base.Start();
     }
@@ -32,13 +34,24 @@ public class TicketVendor : Enemy
     private void Redirect()
     {
         EnemyTarget.GetComponent<PlayerController>().TakeDamage(7);
-        EnemyTarget.GetComponent<PlayerController>().ApplyEffect(Effects.Effect.AbilityDisabled);
+
+        //TODO Sabastian implement ability disabled.
     }
     private void Confiscate()
     {
         EnemyTarget.GetComponent<PlayerController>().TakeDamage(7);
-        Debug.LogWarning("Not yet implement to disable chips.");
-        //TODO disable chips.
+
+        int temp1 = Random.Range(0, GameManager.Instance.playerHand.Count);
+
+        int temp2 = Random.Range(0, GameManager.Instance.playerHand.Count);
+
+        while (temp1 == temp2)
+        {
+            temp2 = Random.Range(0, GameManager.Instance.playerHand.Count);
+        }
+
+        GameManager.Instance.playerHand[temp1].GetComponent<Chip>().IsActive = false;
+        GameManager.Instance.playerHand[temp2].GetComponent<Chip>().IsActive = false;
     }
     private void Halt()
     {

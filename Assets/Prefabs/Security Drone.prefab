@@ -401,7 +401,6 @@ GameObject:
   - component: {fileID: 1172881644321547558}
   - component: {fileID: 576772800218337636}
   - component: {fileID: 4526562015437403812}
-  - component: {fileID: 205360050749750562}
   - component: {fileID: 88308045590616471}
   m_Layer: 0
   m_Name: Security Drone
@@ -562,22 +561,6 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 2403283451262950110, guid: bbf033a0f5d0a2549b6d0051220d4f38, type: 3}
---- !u!208 &205360050749750562
-NavMeshObstacle:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8879099704411737662}
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Shape: 1
-  m_Extents: {x: 2.0770001, y: 4.095, z: 1.917}
-  m_MoveThreshold: 0.1
-  m_Carve: 1
-  m_CarveOnlyStationary: 1
-  m_Center: {x: -0.49400002, y: 0.303, z: -0.004}
-  m_TimeToStationary: 0.5
 --- !u!195 &88308045590616471
 NavMeshAgent:
   m_ObjectHideFlags: 0
