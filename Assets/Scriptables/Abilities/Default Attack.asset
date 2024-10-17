@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed957402865a574458fa5dc49a9275b2, type: 3}
   m_Name: Default Attack
   m_EditorClassIdentifier: 
-  abilityName: Default Ability
-  abilityDescription: Empty
-  energyCost: 5
+  abilityName: Punch
+  abilityDescription: If all else fails we can always punch
+  energyCost: 0
   damage: 1

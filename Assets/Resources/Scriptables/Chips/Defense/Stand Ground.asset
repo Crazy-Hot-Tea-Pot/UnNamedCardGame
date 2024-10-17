@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 189603f79c685cb4197e0e073f20c64a, type: 3}
+  m_Name: Stand Ground
+  m_EditorClassIdentifier: 
+  chipRarity: 1
+  chipName: Stand Ground
+  description: Gain 7 Shield, Gain 1 "Galvanize".
+  chipImage: {fileID: 21300000, guid: b0346f9ac352917489d6b4d25f3e1ada, type: 3}
+  canBeUpgraded: 1
+  hitAllTargets: 0
+  shieldAmount: 7
+  upgradedShieldAmountToApply: 2
+  effectToApply: 0
+  buffToApply: 1
+  buffStacks: 1
+  upgradedBuffStacksByAmout: 1
+  deBuffsToRemove: []

@@ -58,7 +58,7 @@ public class PlayerUIManager : MonoBehaviour
     /// </summary>
     public GameObject panelDeck;
     /// <summary>
-    /// Holds all active abilities
+    /// Holds all isActive abilities
     /// </summary>
     public GameObject panelAbilty;
 
@@ -88,6 +88,20 @@ public class PlayerUIManager : MonoBehaviour
     /// Deck button
     /// </summary>
     public GameObject buttonDeck;
+    #endregion
+
+    #region UIResourcePools
+    /// <summary>
+    /// Health bar UI element
+    /// </summary>
+    public Slider healthBar;
+
+    [Header("Energy Stuff")]
+
+    public Image energyBar;
+
+    //Speed to fill the bar at.
+    public float fillSpeed;
     #endregion
 
     private void Awake()
@@ -123,14 +137,22 @@ public class PlayerUIManager : MonoBehaviour
     {
         //Fills the inventory UI for deck
         fillDeck();
+
+        //Sets UI maximums for resource pools
+        StartingPools();
+
+        //Initalizatoin for fill
+        Initialize();
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        //Update resource pool ui elements
+        UpdateEnergy(GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().Energy, GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().MaxEnergy);
+        UpdateHealth();
         //On hold open the inventroy UI if input is recieved
-        if (openInventory.IsPressed())
+        if (openInventory.IsPressed() && !GameManager.Instance.InCombat)
        {
             OpenInventroy();
        }
@@ -146,7 +168,7 @@ public class PlayerUIManager : MonoBehaviour
         //If the UI canvas is closed open it otherwise continue on
         if(uiCanvas.activeSelf == false)
         {
-            //set ui canvas as active
+            //set ui canvas as isActive
             uiCanvas.SetActive(true);
         }
 
@@ -179,7 +201,7 @@ public class PlayerUIManager : MonoBehaviour
     /// </summary>
     public void switchMenuDeck()
     {
-        //Disables active chipPanel and activate decks
+        //Disables isActive chipPanel and activate decks
         panelInventory.SetActive(false);
         panelDeck.SetActive(true);
         //Disable and enable buttons
@@ -192,7 +214,7 @@ public class PlayerUIManager : MonoBehaviour
     /// </summary>
     public void switchMenuInventory()
     {
-        //Disables active chipPanel and activate inventory
+        //Disables isActive chipPanel and activate inventory
         panelDeck.SetActive(false);
         panelInventory.SetActive(true);
         //Disable and enable buttons
@@ -279,6 +301,87 @@ public class PlayerUIManager : MonoBehaviour
 
         
     }
-    
+
+    #endregion
+
+    #region Resource Pool Methods
+
+    /// <summary>
+    /// Updates the UI for player health
+    /// </summary>
+    public void UpdateHealth()
+    {
+        //Change value of health bar
+        healthBar.value = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().Health;
+    }
+
+    //Sets variables to initalize fill speed
+    public void Initialize()
+    {
+        fillSpeed = 0.5f;
+    }
+
+    //Provides the ability to update energy right away
+    public void InstantUpdateEnergy(float currentEnergy)
+    {
+        energyBar.fillAmount = currentEnergy;
+    }
+
+    /// <summary>
+    /// Call this to change the Energy Bar UI. this method accepts both UI and Float no need to change before.
+    /// </summary>
+    /// <param name="currentEnergy"></param>
+    /// <param name="maxEnergy"></param>
+    public void UpdateEnergy(float currentEnergy, float maxEnergy)
+    {
+        if (energyBar != null)
+        {
+            // Normalize the energy value to a 0-1 range
+            float tempTargetFillAmount = currentEnergy / maxEnergy;
+
+            //Clap at 0 and 1 so don't go over
+            tempTargetFillAmount = Mathf.Clamp01(tempTargetFillAmount);
+
+            StopAllCoroutines();
+
+            StartCoroutine(FillEnergyOverTime(tempTargetFillAmount));
+        }
+        else
+        {
+            Debug.LogError("Energy Bar Image component not found.");
+        }
+    }
+
+
+    /// <summary>
+    /// Fill EnergyBar by amount over time.
+    /// </summary>
+    /// <param name="targetFillAmount"></param>
+    /// <returns></returns>
+    private IEnumerator FillEnergyOverTime(float targetFillAmount)
+    {
+
+        // While the bar is not at the target fill amount, update it
+        while (!Mathf.Approximately(energyBar.fillAmount, targetFillAmount))
+        {
+            // Lerp between current fill and target fill by the fill speed
+            energyBar.fillAmount = Mathf.Lerp(energyBar.fillAmount, targetFillAmount, fillSpeed * Time.deltaTime);
+
+            // Ensure the fill value gradually updates each frame
+            yield return null;
+        }
+
+        // Ensure it snaps to the exact target amount at the end
+        energyBar.fillAmount = targetFillAmount;
+
+    }
+
+    /// <summary>
+    /// UI starting points that set the sliders to the maximum of the variables
+    /// </summary>
+    public void StartingPools()
+    {
+        healthBar.maxValue = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().MaxHealth;
+    }
     #endregion
 }

@@ -18,9 +18,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private bool inCombat;
 
-    // The Deselect Action from inputAction class.
-    //private InputAction deSelect;
-
     // Reference to selected object in the scene that is moveable
     private GameObject MoveableObject;
 
@@ -94,6 +91,8 @@ public class PlayerController : MonoBehaviour
             health = value;
             if(health > maxHealth)
                 health = maxHealth;
+            else if(health<=0)
+                health = 0;
         }
     }
     /// <summary>
@@ -119,6 +118,28 @@ public class PlayerController : MonoBehaviour
         private set
         {
             energy = value;
+        }
+    }
+    /// <summary>
+    /// Returns max energy
+    /// </summary>
+    public int MaxEnergy
+    {
+        get { return maxEnergy; }
+        private set
+        {
+            maxEnergy = value;
+        }
+    }
+    /// <summary>
+    /// Returns max health
+    /// </summary>
+    public int MaxHealth
+    {
+        get { return maxHealth; }
+        private set
+        {
+            maxHealth = value;
         }
     }
     /// <summary>
@@ -157,7 +178,7 @@ public class PlayerController : MonoBehaviour
     public int GalvanizedStack
     {
         get => galvanizedStack;
-        set
+        private set
         {
             galvanizedStack = value;
             if (galvanizedStack <= 0)
@@ -182,7 +203,7 @@ public class PlayerController : MonoBehaviour
     public int PoweredStacks
     {
         get => poweredStacks;
-        set
+        private set
         {
             poweredStacks = value;
             if (poweredStacks <= 0)
@@ -219,6 +240,8 @@ public class PlayerController : MonoBehaviour
                 gunkStacks = 0;
                 AmountOfTurnsGunkedLeft = 1;
             }
+            else if (gunkStacks <= 0)
+                gunkStacks = 0;
         }
     }
     /// <summary>
@@ -243,7 +266,7 @@ public class PlayerController : MonoBehaviour
         {
             return drainedStacks;
         }
-        set
+        private set
         {
             drainedStacks = value;
             if (drainedStacks <= 0)
@@ -259,8 +282,14 @@ public class PlayerController : MonoBehaviour
     /// Returns if the player is drained.
     /// </summary>
     public bool IsDrained { 
-        get => isDrained;
-        private set => isDrained = value; 
+        get
+        {
+            return isDrained;
+        }
+        private set
+        {
+            isDrained = value;
+        }
     }
     /// <summary>
     /// Returns if the player is in worndown state.
@@ -278,7 +307,7 @@ public class PlayerController : MonoBehaviour
         {
             return wornDownStacks;
         }
-        set
+        private set
         {
             wornDownStacks = value;
             if (wornDownStacks <= 0)
@@ -306,7 +335,7 @@ public class PlayerController : MonoBehaviour
         {
             return jammedStacks;
         }
-        set
+        private set
         {
             jammedStacks = value;
             if (jammedStacks <= 0)
@@ -373,8 +402,8 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     void Initialize()
     {
-        Health = 50;
         maxHealth = 50;
+        Health=maxHealth;
         Energy = 50;
         maxEnergy = 50;
         Scrap = 100;
@@ -571,8 +600,41 @@ public class PlayerController : MonoBehaviour
                 break;
         }
     }
+    public void RemoveEffect(Effects.Debuff deBuffToRemove, int amount,bool removeAll)
+    {
+        switch (deBuffToRemove)
+        {
+            case Effects.Debuff.Drained:
+                if (removeAll)
+                    DrainedStacks = 0;
+                else
+                    DrainedStacks-= amount;
+                break;
+            case Effects.Debuff.Gunked:
+                if (removeAll)
+                    GunkStacks = 0;
+                else
+                    GunkStacks-= amount;
+                break;
+            case Effects.Debuff.Jam:
+                if (removeAll)
+                    JammedStacks = 0; 
+                else
+                    JammedStacks-= amount;
+                break;
+            case Effects.Debuff.WornDown:
+                if (removeAll)
+                    WornDownStacks = 0;
+                else
+                    WornDownStacks-= amount;
+                break;                
+            default:
+                Debug.LogWarning("Debuff not found.");
+                break;
+        }
+    }
     /// <summary>
-    /// Remove an affect from being active.
+    /// Remove an special affect from being isActive.
     /// </summary>
     /// <param name="effect"></param>
     public void RemoveEffect(Effects.Effect effect)
@@ -583,6 +645,7 @@ public class PlayerController : MonoBehaviour
                 NextChipActivatesTwice = false;
                 break;
             default:
+                Debug.LogWarning("Effect hasn't been programmed.");
                 break;
         }
     }

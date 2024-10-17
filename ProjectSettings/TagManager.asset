@@ -7,7 +7,6 @@ TagManager:
   - Ground
   - Enemy
   - CombatController
-  - Drop
   - Card
   - abilityTrinket
   - abilitySword
@@ -15,6 +14,10 @@ TagManager:
   - potionHealth
   - weaponSword
   - itemNecklace
+  - itemLuckyTrinket
+  - abilityLuckyTrinket
+  - itemArmour
+  - abilityBasicPunch
   layers:
   - Default
   - TransparentFX

@@ -33,7 +33,7 @@ public class Consumable : Equipment
         GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().RecoverEnergy(restoreEnergy);
 
         //Delete the object
-        Destroy(this);
+        destroyme = true;
         //Remove from invenotry UI
         GameObject.Find("PlayerUIManager").GetComponent<PlayerUIManager>().RemoveFromUI(UIObject, "Inventory");
         //Remove item from the actual inventory

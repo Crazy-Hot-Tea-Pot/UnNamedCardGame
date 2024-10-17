@@ -33,26 +33,30 @@ public class AttackChip : NewChip
         }
     }
 
-    public override void OnChipPlayed(PlayerController player)
+    public override void OnChipPlayed(PlayerController player, Enemy Target)
     {
-        base.OnChipPlayed(player);
+        base.OnChipPlayed(player,Target);
         
         if (player.IsPowered)
         {
             Debug.Log("Player does Empower attack.");
-            GameManager.Instance.enemyList[0].GetComponent<Enemy>().TakeDamage(damage+player.PoweredStacks);
+            Target.TakeDamage(damage+player.PoweredStacks);
         }
         else if (player.IsDrained)
         {
-            GameManager.Instance.enemyList[0].GetComponent<Enemy>().TakeDamage(Mathf.FloorToInt(damage * 0.8f));
-            player.DrainedStacks--;
+            Target.TakeDamage(Mathf.FloorToInt(damage * 0.8f));
+            player.RemoveEffect(Effects.Debuff.Drained, 1,false);            
             Debug.Log("Player is Drained! Damage reduced to: " + Mathf.FloorToInt(damage * 0.8f));
+        }
+        else
+        {
+            Target.TakeDamage(damage);
         }
 
         //Now to apply debuffs
         if (debuffStacks > 0)
         {
-            GameManager.Instance.enemyList[0].GetComponent<Enemy>().ApplyDebuff(debuffToApply, debuffStacks);
+            Target.ApplyDebuff(debuffToApply, debuffStacks);
         }
     }
 }

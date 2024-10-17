@@ -15,24 +15,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Attack",
-                    "type": "Button",
-                    "id": "23861b7c-1c1d-485b-871a-c4ae66ab5706",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Guard",
-                    "type": "Button",
-                    "id": "0d77a29b-37dd-4324-b224-9261adccf1dd",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "Use Trinket",
                     "type": "Button",
                     "id": "76d2d1f6-a903-4a3e-9c2b-8b0bf9643452",
@@ -58,15 +40,6 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
-                },
-                {
-                    "name": "CycleTarget",
-                    "type": "Button",
-                    "id": "a1eb7447-1477-4f8f-a8d3-58cbcf881ce7",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -78,28 +51,6 @@
                     "processors": "",
                     "groups": "",
                     "action": "Select",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "9e0f7710-62a3-4217-976b-92f17b58328b",
-                    "path": "",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Attack",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "9e1c6265-387e-44ed-9ee5-6f3801795153",
-                    "path": "",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Guard",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -133,17 +84,6 @@
                     "processors": "",
                     "groups": "",
                     "action": "DropItem",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "ad391f86-3965-439d-a147-04cf1084ff30",
-                    "path": "<Keyboard>/tab",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "CycleTarget",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -400,6 +340,54 @@
                     "processors": "",
                     "groups": "",
                     "action": "MoveCamera",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Player Combat",
+            "id": "8acf1a4a-0637-4483-bdee-123f836b2c76",
+            "actions": [
+                {
+                    "name": "SelectTarget",
+                    "type": "Button",
+                    "id": "168c1a2e-cdcc-4626-9c6c-f92da6d9a699",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "CycleTarget",
+                    "type": "Button",
+                    "id": "2822abb1-e85f-442f-a427-dee798af4a9c",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "59db52d5-87f6-487c-a229-755a211c1deb",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SelectTarget",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cc1adbae-dbb7-49ee-bf65-fc7be30575ef",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CycleTarget",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

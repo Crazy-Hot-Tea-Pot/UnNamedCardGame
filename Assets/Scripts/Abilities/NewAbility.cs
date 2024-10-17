@@ -17,17 +17,26 @@ public class NewAbility : MonoBehaviour
         //Assign method to button
         buttonVar = GetComponent<Button>();
         //Creates a listener that triggers the onabilityactive method when pressed
-        buttonVar.onClick.AddListener(OnAbilityAcitve);
+        try
+        {
+            buttonVar.onClick.AddListener(OnAbilityAcitve);
+        }
+        catch
+        {
+            Debug.Log("Ability is passive no button");
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        //Allows for abilites with passive function to function
+        abilityButton.PassiveAbility();
     }
 
     private void OnAbilityAcitve()
     {
+        //Allows for abilites activated on press to function
         abilityButton.Activate();
     }
 }

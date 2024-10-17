@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9706551dd7293664abb220a6ffbf0387, type: 3}
+  m_Name: Armour
+  m_EditorClassIdentifier: 
+  itemName: Armour
+  itemDescription: Grains the wearer Steel Plating
+  AbilityList:
+  - {fileID: 6997298212168128428, guid: e9e587936e29f664fbc782f24c918817, type: 3}

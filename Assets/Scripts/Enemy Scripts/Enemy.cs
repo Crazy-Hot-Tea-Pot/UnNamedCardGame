@@ -1,17 +1,30 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.AI;
-using static UnityEngine.Rendering.VolumeComponent;
 
 public class Enemy : MonoBehaviour
 {
-    private string enemyName;
+    public string enemyName;
 
-    private Animator animator;
+    public GameObject enemyTarget;
 
-    private NavMeshAgent agent;
+    public float AttackRange;    
+    [SerializeField]
+    private float distanceToPlayer;
+
+    public float DistanceToPlayer
+    {
+        get
+        {
+            distanceToPlayer= Vector3.Distance(transform.position, EnemyTarget.transform.position); ;
+            return distanceToPlayer;
+        }               
+    }
+
+    [Header("Enemy Components")]
+    public Animator animator;
+
+    public NavMeshAgent agent;
 
     [Header("Enemy stats")]
     /// <summary>
@@ -19,9 +32,12 @@ public class Enemy : MonoBehaviour
     /// </summary>
     public int maxHP;
     [SerializeField]
-    private int currentHp;   
+    private int currentHp;
     [SerializeField]
     private int shield;
+    [SerializeField]
+    private bool isTargeted;
+
     [Header("Status Effects")]
     [SerializeField]
     private bool inCombat;
@@ -37,6 +53,34 @@ public class Enemy : MonoBehaviour
     private int drainStacks;
     [SerializeField]
     private bool isDrained;
+
+    [Header("Needed Assets")]
+    public Shader outlineShader;
+    private Shader defaultShader;
+    private Renderer enemyRenderer;
+
+    public GameObject EnemyTarget
+    {
+        get { return enemyTarget; }
+        protected set
+        {
+            enemyTarget = value;
+        }
+    }
+
+
+    /// <summary>
+    /// UI Bar
+    /// </summary>
+    public Slider sliderBar;
+    /// <summary>
+    /// Camera Alignment
+    /// </summary>
+    public Camera cameraAlignment;
+    /// <summary>
+    /// Canvas for enemy health
+    /// </summary>
+    public Canvas enemyCanvas;
 
     /// <summary>
     /// Reference to combat controller.
@@ -70,8 +114,12 @@ public class Enemy : MonoBehaviour
         set
         {
             currentHp = value;
+            //Update UI for enemy health
+            UIEnemyHealth();
+
             if (currentHp <= 0)
             {
+                currentHp = 0;
                 Die();
             }
         }
@@ -89,7 +137,7 @@ public class Enemy : MonoBehaviour
         set
         {
             inCombat = value;
-            animator.SetBool("inCombat", value);
+            //animator.SetBool("inCombat", value);
         }
     }
     /// <summary>
@@ -104,6 +152,34 @@ public class Enemy : MonoBehaviour
         protected set
         {
             shield = value;
+            if (shield <= 0)
+            {
+                shield = 0;
+            }
+        }
+    }
+    /// <summary>
+    /// Is enemy being targeted by player
+    /// </summary>
+    public bool IsTargeted
+    {
+        get
+        {
+            return isTargeted;
+        }
+        set
+        {
+            isTargeted = value;
+            if (value)
+            {
+                enemyRenderer.material.shader = outlineShader;
+                enemyRenderer.material.SetColor("_OutlineColor", Color.red);
+                enemyRenderer.material.SetFloat("_OutlineWidth", 0.1f);
+            }
+            else
+            {
+                enemyRenderer.material.shader = defaultShader;
+            }
         }
     }
     /// <summary>
@@ -133,6 +209,24 @@ public class Enemy : MonoBehaviour
             isDrained = value;
         }
     }
+    /// <summary>
+    /// Amount of stacks of Drained the enemy have.
+    /// </summary>
+    public int DrainStacks
+    {
+        get => drainStacks;
+        protected set
+        {
+            drainStacks = value;
+            if (drainStacks <= 0)
+                IsDrained = false;
+            else
+                IsDrained = true;
+        }
+    }
+    /// <summary>
+    /// Amount of stacks of Galvanize the enemy have.
+    /// </summary>
     public int GalvanizedStacks
     {
         get => galvanizedStacks;
@@ -145,6 +239,9 @@ public class Enemy : MonoBehaviour
                 IsGalvanized = true;
         }
     }
+    /// <summary>
+    /// Amount of stacks of Power the enemy have.
+    /// </summary>
     public int PowerStacks { 
         get => powerStacks;
         protected set {  
@@ -169,38 +266,48 @@ public class Enemy : MonoBehaviour
         {
             isPowered = value;
         }
-    }
-
-    public int DrainStacks { 
-        get => drainStacks;
-        protected set
-        {
-            drainStacks = value;
-            if(drainStacks <= 0)
-                IsDrained = false;
-            else
-                IsDrained = true;
-        }
-    }
+    }    
 
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
+        cameraAlignment = Camera.main;
+        enemyRenderer = GetComponent<Renderer>();
     }
 
     // Start is called before the first frame update
     public virtual void Start()
-    {        
+    {
         Initialize();
+        //Sets the hp maximum for the slider bar
+        UIEnemyMaxHealthStart();
+    }
+
+    public virtual void FixedUpdate()
+    {
+        //Update UI for enemy health
+        //UIEnemyHealth();
+        // Moved it to current health property so its not called repeatedly.
     }
     public virtual void Update()
     {
+
         if (InCombat)
         {
             if(CombatController.CanIMakeAction(this.gameObject))
             {
-                PerformIntent();
+                //Check if player is in range
+                if (DistanceToPlayer <= AttackRange)
+                {
+                    agent.ResetPath();
+                    PerformIntent();
+                }
+                else
+                {
+                    // move to player
+                    agent.SetDestination(EnemyTarget.transform.position);
+                }
             }
         }
     }
@@ -209,9 +316,11 @@ public class Enemy : MonoBehaviour
     {
         CurrentHP = maxHP;
         gameObject.name = EnemyName;
+        defaultShader=enemyRenderer.material.shader;
 
         CombatController = GameObject.FindGameObjectWithTag("CombatController").
             GetComponent<CombatController>();
+        enemyTarget = GameObject.FindGameObjectWithTag("Player");
     }
    /// <summary>
    /// Is called when enemy is attacked by player.
@@ -243,7 +352,7 @@ public class Enemy : MonoBehaviour
     /// Base Perform Intent.
     /// Make sure the base is run after you perform an action.
     /// </summary>
-    public virtual void PerformIntent()
+    protected virtual void PerformIntent()
     {
         CombatController.TurnUsed(this.gameObject);
     }
@@ -312,5 +421,34 @@ public class Enemy : MonoBehaviour
                 PowerStacks+= buffStacks;
                 break;
         }
+    }
+
+    /// <summary>
+    /// This method allows us to change the UI in world enemy health bar based on the enemies health
+    /// </summary>
+    public void UIEnemyHealth()
+    {
+        //Rotate the ui to match camera angle
+        enemyCanvas.transform.rotation = new Quaternion(enemyCanvas.transform.position.x, cameraAlignment.transform.rotation.y, enemyCanvas.transform.position.z, 0);
+        //Set the bars value
+        sliderBar.value = CurrentHP;
+    }
+
+    //Sets the max health of the slider bar
+    public void UIEnemyMaxHealthStart()
+    {
+        sliderBar.maxValue = maxHP;
+    }
+
+    /// <summary>
+    /// Give enemy shield.
+    /// </summary>
+    /// <param name="shieldAmount"></param>
+    public virtual void ApplyShield(int shieldAmount)
+    {
+        //Restore Shield
+        Shield += shieldAmount;
+
+        Debug.Log("Shield Restored: " + shield);
     }
 }
