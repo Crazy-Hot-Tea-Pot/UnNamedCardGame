@@ -12,6 +12,21 @@ public class WeaponAbility : Ability
 
     public override void Activate()
     {
+        //For each object in the list of targetable objects
+        foreach(GameObject enemy in GameObject.Find("Player").GetComponent<PlayerController>().abilityRangedEnemies)
+        {
+            //Try to deal damage one by one to each enemy
+            try
+            {
+                //Does damage to the enemy
+                enemy.GetComponent<Enemy>().TakeDamage(damage);
+            }
+            catch
+            {
+                //Assume we couldn't find the enemy
+                Debug.LogWarning("We couldn't find the right enemy object it had no enemy script attached");
+            }
+        }
 
     }
 }

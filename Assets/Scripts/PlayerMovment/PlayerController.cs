@@ -12,6 +12,9 @@ public class PlayerController : MonoBehaviour
     //Camera in the scene
     private Camera mainCamera;
 
+    //A list of enemies in range for abilites
+    public List<GameObject> abilityRangedEnemies;
+
     // The Select Action from inputAction class.
     private InputAction select;
 
@@ -394,6 +397,11 @@ public class PlayerController : MonoBehaviour
 
         Initialize();
     }
+
+    private void Update()
+    {
+        TargetAbilityRangedVisual();
+    }
     /// <summary>
     /// Initialize Player
     /// </summary>
@@ -703,4 +711,55 @@ public class PlayerController : MonoBehaviour
             Energy = 0;
         }
     }
+
+    #region rangesForAbilites
+    private void OnTriggerEnter(Collider other)
+    {
+        //If the hit is an enemy
+        if(other.tag == "Enemy")
+        {
+            //Add to the list
+            abilityRangedEnemies.Add(other.gameObject);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        //If an enemy leaves the target range
+        if(other.tag == "Enemy")
+        {
+            //remove from the list
+            abilityRangedEnemies.Remove(other.gameObject);
+            //Untarget it
+            try
+            {
+                //Enemy is set as untargeted
+               other.GetComponent<Enemy>().IsTargeted = false;
+            }
+            catch
+            {
+                //Assume we couldn't find the enemy
+                Debug.LogWarning("We couldn't find the right enemy object it had no enemy script attached in player controller when leaving range");
+            }
+        }
+    }
+
+    public void TargetAbilityRangedVisual()
+    {
+        foreach (GameObject enemy in abilityRangedEnemies)
+        {
+            //Try to deal damage one by one to each enemy
+            try
+            {
+                //Enemy is set as targed
+                enemy.GetComponent<Enemy>().IsTargeted = true;
+            }
+            catch
+            {
+                //Assume we couldn't find the enemy
+                Debug.LogWarning("We couldn't find the right enemy object it had no enemy script attached in player controller");
+            }
+        }
+    }
+    #endregion
 }
