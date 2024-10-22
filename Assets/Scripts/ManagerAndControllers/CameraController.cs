@@ -17,6 +17,7 @@ public class CameraController : MonoBehaviour
 
     public CinemachineVirtualCamera DefaultCamera;
     public CinemachineFreeLook RotationCamera;
+    public CinemachineVirtualCamera PanCamera;
 
 
 
@@ -41,7 +42,10 @@ public class CameraController : MonoBehaviour
         playerInputActions.CameraControls.Enable();
 
         playerInputActions.CameraControls.RotateCamera.performed += ctx => SwitchToRotationCamera();
-        playerInputActions.CameraControls.RotateCamera.canceled += ctx => SwitchToDefaultCamera();
+       // playerInputActions.CameraControls.RotateCamera.canceled += ctx => SwitchToDefaultCamera();
+        playerInputActions.CameraControls.FreeCam.performed += ctx => SwitchToPanCamera();
+        // playerInputActions.CameraControls.FreeCam.canceled += ctx => SwitchToDefaultCamera();
+        playerInputActions.CameraControls.ResetCamera.performed += ctx => SwitchToDefaultCamera();
     }    
 
 
@@ -62,19 +66,42 @@ public class CameraController : MonoBehaviour
 
     void Update()
     {
+        if (PanCamera.Priority == 10)
+        {
+            Vector2 mouseDelta = playerInputActions.CameraControls.MoveCamera.ReadValue<Vector2>();            
 
+            // Move the camera relative to its local space
+            Vector3 rightMovement = PanCamera.transform.right * mouseDelta.x * cameraSpeed * Time.deltaTime;
+            Vector3 forwardMovement = PanCamera.transform.forward * mouseDelta.y * cameraSpeed * Time.deltaTime;
+
+            // Keep the movement on a flat plane (ignore vertical movement)
+            rightMovement.y = 0;
+            forwardMovement.y = 0;
+
+            // Apply the movement
+            PanCamera.transform.position += rightMovement + forwardMovement;
+
+        }
     }
 
     private void SwitchToDefaultCamera()
     {
         DefaultCamera.Priority = 10;
         RotationCamera.Priority = 0;
+        PanCamera.Priority = 0;
     }
 
     private void SwitchToRotationCamera()
     {
         DefaultCamera.Priority = 0;
         RotationCamera.Priority = 10;
+        PanCamera.Priority = 0;
+    }
+    private void SwitchToPanCamera()
+    {
+        PanCamera.Priority = 10;
+        RotationCamera.Priority = 0;
+        DefaultCamera.Priority = 0;
     }
 
     void OnDisable()

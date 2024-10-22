@@ -132,6 +132,42 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""FreeCam"",
+                    ""type"": ""Button"",
+                    ""id"": ""dc31d6bd-3198-4766-bcf0-59ee1b5cbfe7"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MoveCamera"",
+                    ""type"": ""Value"",
+                    ""id"": ""c3a28029-dce4-4b58-9497-3d1459e6b515"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""ZoomCamera"",
+                    ""type"": ""Value"",
+                    ""id"": ""41c39193-02fd-4556-891d-99dad3cd7e01"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""ResetCamera"",
+                    ""type"": ""Button"",
+                    ""id"": ""ad1b2e8f-4f63-4090-91bc-96ddb9850b48"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -154,6 +190,50 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""RotateCamera"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e06d9125-5ffd-4a64-9e4a-01e9f6bf6c68"",
+                    ""path"": ""<Mouse>/middleButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""FreeCam"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5bf28a3e-e38e-423b-9b68-10ba2c2a579f"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MoveCamera"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a3135fae-0dad-43df-8393-8152d6d49bdf"",
+                    ""path"": ""<Mouse>/scroll"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ZoomCamera"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7f97299d-e53d-4e03-a0a6-a81bd5a5c26f"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ResetCamera"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -220,6 +300,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_CameraControls = asset.FindActionMap("Camera Controls", throwIfNotFound: true);
         m_CameraControls_Look = m_CameraControls.FindAction("Look", throwIfNotFound: true);
         m_CameraControls_RotateCamera = m_CameraControls.FindAction("RotateCamera", throwIfNotFound: true);
+        m_CameraControls_FreeCam = m_CameraControls.FindAction("FreeCam", throwIfNotFound: true);
+        m_CameraControls_MoveCamera = m_CameraControls.FindAction("MoveCamera", throwIfNotFound: true);
+        m_CameraControls_ZoomCamera = m_CameraControls.FindAction("ZoomCamera", throwIfNotFound: true);
+        m_CameraControls_ResetCamera = m_CameraControls.FindAction("ResetCamera", throwIfNotFound: true);
         // Player Combat
         m_PlayerCombat = asset.FindActionMap("Player Combat", throwIfNotFound: true);
         m_PlayerCombat_SelectTarget = m_PlayerCombat.FindAction("SelectTarget", throwIfNotFound: true);
@@ -357,12 +441,20 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private List<ICameraControlsActions> m_CameraControlsActionsCallbackInterfaces = new List<ICameraControlsActions>();
     private readonly InputAction m_CameraControls_Look;
     private readonly InputAction m_CameraControls_RotateCamera;
+    private readonly InputAction m_CameraControls_FreeCam;
+    private readonly InputAction m_CameraControls_MoveCamera;
+    private readonly InputAction m_CameraControls_ZoomCamera;
+    private readonly InputAction m_CameraControls_ResetCamera;
     public struct CameraControlsActions
     {
         private @PlayerInputActions m_Wrapper;
         public CameraControlsActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @Look => m_Wrapper.m_CameraControls_Look;
         public InputAction @RotateCamera => m_Wrapper.m_CameraControls_RotateCamera;
+        public InputAction @FreeCam => m_Wrapper.m_CameraControls_FreeCam;
+        public InputAction @MoveCamera => m_Wrapper.m_CameraControls_MoveCamera;
+        public InputAction @ZoomCamera => m_Wrapper.m_CameraControls_ZoomCamera;
+        public InputAction @ResetCamera => m_Wrapper.m_CameraControls_ResetCamera;
         public InputActionMap Get() { return m_Wrapper.m_CameraControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -378,6 +470,18 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @RotateCamera.started += instance.OnRotateCamera;
             @RotateCamera.performed += instance.OnRotateCamera;
             @RotateCamera.canceled += instance.OnRotateCamera;
+            @FreeCam.started += instance.OnFreeCam;
+            @FreeCam.performed += instance.OnFreeCam;
+            @FreeCam.canceled += instance.OnFreeCam;
+            @MoveCamera.started += instance.OnMoveCamera;
+            @MoveCamera.performed += instance.OnMoveCamera;
+            @MoveCamera.canceled += instance.OnMoveCamera;
+            @ZoomCamera.started += instance.OnZoomCamera;
+            @ZoomCamera.performed += instance.OnZoomCamera;
+            @ZoomCamera.canceled += instance.OnZoomCamera;
+            @ResetCamera.started += instance.OnResetCamera;
+            @ResetCamera.performed += instance.OnResetCamera;
+            @ResetCamera.canceled += instance.OnResetCamera;
         }
 
         private void UnregisterCallbacks(ICameraControlsActions instance)
@@ -388,6 +492,18 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @RotateCamera.started -= instance.OnRotateCamera;
             @RotateCamera.performed -= instance.OnRotateCamera;
             @RotateCamera.canceled -= instance.OnRotateCamera;
+            @FreeCam.started -= instance.OnFreeCam;
+            @FreeCam.performed -= instance.OnFreeCam;
+            @FreeCam.canceled -= instance.OnFreeCam;
+            @MoveCamera.started -= instance.OnMoveCamera;
+            @MoveCamera.performed -= instance.OnMoveCamera;
+            @MoveCamera.canceled -= instance.OnMoveCamera;
+            @ZoomCamera.started -= instance.OnZoomCamera;
+            @ZoomCamera.performed -= instance.OnZoomCamera;
+            @ZoomCamera.canceled -= instance.OnZoomCamera;
+            @ResetCamera.started -= instance.OnResetCamera;
+            @ResetCamera.performed -= instance.OnResetCamera;
+            @ResetCamera.canceled -= instance.OnResetCamera;
         }
 
         public void RemoveCallbacks(ICameraControlsActions instance)
@@ -470,6 +586,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     {
         void OnLook(InputAction.CallbackContext context);
         void OnRotateCamera(InputAction.CallbackContext context);
+        void OnFreeCam(InputAction.CallbackContext context);
+        void OnMoveCamera(InputAction.CallbackContext context);
+        void OnZoomCamera(InputAction.CallbackContext context);
+        void OnResetCamera(InputAction.CallbackContext context);
     }
     public interface IPlayerCombatActions
     {
