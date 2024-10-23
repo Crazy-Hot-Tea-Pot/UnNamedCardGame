@@ -13,6 +13,8 @@ public class CameraController : MonoBehaviour
 {
     private Transform player;
 
+    public bool AllowBoarderMovement;
+
     public float screenWidth;
     public float screenHeight;
     public Vector2 mousePosition;
@@ -112,11 +114,14 @@ public class CameraController : MonoBehaviour
 
     void Update()
     {
-        mousePosition = Mouse.current.position.ReadValue();
-        if (IsMouseAtLeftBorder || IsMouseAtRightBorder || IsMouseAtTopBorder || IsMouseAtBottomBorder)
+        if (AllowBoarderMovement)
         {
-            SwitchCamera(CameraState.BorderMovement);            
-            HandleBorderMovement();
+            mousePosition = Mouse.current.position.ReadValue();
+            if (IsMouseAtLeftBorder || IsMouseAtRightBorder || IsMouseAtTopBorder || IsMouseAtBottomBorder)
+            {
+                SwitchCamera(CameraState.BorderMovement);
+                HandleBorderMovement();
+            }
         }
         if (PanCamera.Priority == 10)
         {

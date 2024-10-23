@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -254,8 +255,9 @@ public class PlayerUIManager : MonoBehaviour
 
         for (int i = 0; i < gameManager.playerDeck.Count; i++)
         {
-            GameObject chipTemp = Instantiate(gameManager.ChipPrefab, panelDeck.transform);
+            GameObject chipTemp = Instantiate(gameManager.ChipPrefab, panelDeck.transform);           
             Chip chipComponenet = chipTemp.GetComponent<Chip>();
+            chipComponenet.IsInInventoryChip = true;
             chipComponenet.newChip = gameManager.playerDeck[i];
         }
     }
@@ -265,7 +267,8 @@ public class PlayerUIManager : MonoBehaviour
     /// </summary>
     public void AddCardToDeck(NewChip card)
     {
-        Instantiate(card.chipImage, panelDeck.transform);
+       Instantiate(card.chipImage, panelDeck.transform);
+        card.GameObject().GetComponent<Chip>().IsInInventoryChip = true;
     }
 
     /// <summary>

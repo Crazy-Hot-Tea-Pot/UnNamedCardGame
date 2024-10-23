@@ -67,7 +67,7 @@ GameObject:
   - component: {fileID: 2181696517448560852}
   - component: {fileID: 3007749569736504765}
   - component: {fileID: 1227446777473963846}
-  - component: {fileID: 2102196011608358944}
+  - component: {fileID: 613447968063264353}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -98,7 +98,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8836494093751931086}
-  m_Mesh: {fileID: 8314571269056883277, guid: eebc06df75896ac48a7935e3944e10db, type: 3}
+  m_Mesh: {fileID: -8839368762345780380, guid: a5d49268229db2d43b39c0ec2779a3e3, type: 3}
 --- !u!23 &6572960531166743146
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -160,7 +160,7 @@ NavMeshAgent:
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 2
-  m_BaseOffset: 7.46
+  m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!54 &3007749569736504765
@@ -223,8 +223,8 @@ MonoBehaviour:
   jammedStacks: 0
   nextChipActivatesTwice: 0
   isImpervious: 0
---- !u!64 &2102196011608358944
-MeshCollider:
+--- !u!136 &613447968063264353
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -241,7 +241,8 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 8314571269056883277, guid: eebc06df75896ac48a7935e3944e10db, type: 3}
+  serializedVersion: 2
+  m_Radius: 1.2482624
+  m_Height: 2.4870205
+  m_Direction: 1
+  m_Center: {x: 0, y: 1.2382026, z: 0.03194114}

@@ -13,6 +13,9 @@ public class Chip : MonoBehaviour
     private int disableCounter;
 
     [SerializeField]
+    private bool isInInventoryChip;
+
+    [SerializeField]
     private bool isActive;
 
     public CombatController CombatController;
@@ -33,6 +36,19 @@ public class Chip : MonoBehaviour
             GetComponent<Button>().interactable = value;
             if (!isActive)
                 disableCounter = 0;
+        }
+    }
+
+    //Make chip know its not an clickable chip
+    public bool IsInInventoryChip
+    {
+        get
+        {
+            return isInInventoryChip;
+        }
+        set
+        {
+            isInInventoryChip = value;
         }
     }
 
@@ -77,6 +93,12 @@ public class Chip : MonoBehaviour
         Player = GameObject.FindGameObjectWithTag("Player");
 
         IsActive = true;
+
+        //Turn off click button
+        if (IsInInventoryChip)
+        {
+            GetComponent<Button>().interactable = false;
+        }
     }
     /// <summary>
     /// Runs Scriptable Chip
