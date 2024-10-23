@@ -15,4 +15,4 @@ MonoBehaviour:
   abilityName: Punch
   abilityDescription: If all else fails we can always punch
   energyCost: 0
-  damage: 1
+  damage: 10

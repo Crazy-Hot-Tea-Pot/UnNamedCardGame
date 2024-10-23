@@ -7,9 +7,15 @@ using UnityEngine.UI;
 public class PlayerUIManager : MonoBehaviour
 {
     /// <summary>
+    /// Holds the ui for player screen like health bars
+    /// </summary>
+    public GameObject uiPlayerCanvas;
+
+    /// <summary>
     /// This variable holds the game manager a different script and allows us to pull and pass variables and methods between them.
     /// </summary>
     public GameManager gameManager;
+
     /// <summary>
     /// This variable holds the input actions for the player to allow for user input
     /// </summary>
@@ -48,7 +54,8 @@ public class PlayerUIManager : MonoBehaviour
     /// <summary>
     /// Holds the UI canvas for inventory
     /// </summary>
-    public GameObject uiCanvas;
+    public GameObject uiInventoryCanvas;
+
     /// <summary>
     /// Holds the chipPanel that the inventory UI must instantiate into
     /// </summary>
@@ -58,7 +65,7 @@ public class PlayerUIManager : MonoBehaviour
     /// </summary>
     public GameObject panelDeck;
     /// <summary>
-    /// Holds all isActive abilities
+    /// Holds all active abilities
     /// </summary>
     public GameObject panelAbilty;
 
@@ -151,11 +158,18 @@ public class PlayerUIManager : MonoBehaviour
         //Update resource pool ui elements
         UpdateEnergy(GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().Energy, GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().MaxEnergy);
         UpdateHealth();
-        //On hold open the inventroy UI if input is recieved
-        if (openInventory.IsPressed() && !GameManager.Instance.InCombat)
-       {
-            OpenInventroy();
-       }
+        //On press open the inventroy UI if input is recieved or close if already in combat. WasPressedThisFrame() makes the input not be spammed it waits till the frame ends before recollecting
+        if (openInventory.WasPressedThisFrame() && !GameManager.Instance.InCombat)
+        {
+            if(uiInventoryCanvas.activeSelf == false)
+            {
+                OpenInventroy();
+            }
+            else if (uiInventoryCanvas.activeSelf == true)
+            {
+                CloseInventory();
+            }
+        }
 
     }
 
@@ -166,15 +180,16 @@ public class PlayerUIManager : MonoBehaviour
     public void OpenInventroy()
     {
         //If the UI canvas is closed open it otherwise continue on
-        if(uiCanvas.activeSelf == false)
+        if(uiInventoryCanvas.activeSelf == false)
         {
-            //set ui canvas as isActive
-            uiCanvas.SetActive(true);
+            //set ui canvas as active
+            uiInventoryCanvas.SetActive(true);
         }
 
         //Tell the program the inventory is open
         IsActive = true;
-
+        //Close playerUI
+        uiPlayerCanvas.SetActive(false);
     }
 
     /// <summary>
@@ -183,17 +198,21 @@ public class PlayerUIManager : MonoBehaviour
     public void CloseInventory()
     {
         //If canvas is open close it
-        if(uiCanvas.activeInHierarchy == true)
+        if(uiInventoryCanvas.activeInHierarchy == true)
         {
+            //If deck panel is open
             if(panelDeck.activeInHierarchy == true)
             {
+                //Switch to default screen
                 switchMenuInventory();
             }
-            uiCanvas.SetActive(false);
+            uiInventoryCanvas.SetActive(false);
         }
 
         //Tell the program the inventory is closed
         IsActive = false;
+        //Open PlayerUI
+        uiPlayerCanvas.SetActive(true);
     }
 
     /// <summary>
@@ -201,7 +220,7 @@ public class PlayerUIManager : MonoBehaviour
     /// </summary>
     public void switchMenuDeck()
     {
-        //Disables isActive chipPanel and activate decks
+        //Disables active chipPanel and activate decks
         panelInventory.SetActive(false);
         panelDeck.SetActive(true);
         //Disable and enable buttons
@@ -214,7 +233,7 @@ public class PlayerUIManager : MonoBehaviour
     /// </summary>
     public void switchMenuInventory()
     {
-        //Disables isActive chipPanel and activate inventory
+        //Disables active chipPanel and activate inventory
         panelDeck.SetActive(false);
         panelInventory.SetActive(true);
         //Disable and enable buttons
@@ -277,9 +296,13 @@ public class PlayerUIManager : MonoBehaviour
     /// Destroys the ability from the UI
     /// </summary>
     /// <param name="ability"></param>
-    public void MakeDeactiveAbility(string ability)
+    public void MakeDeactiveAbility(GameObject ability)
     {
-        Destroy(GameObject.FindGameObjectWithTag(ability));
+        //We have to renable the player canvas to delete from it
+        uiPlayerCanvas.SetActive(true);
+        Destroy(GameObject.FindGameObjectWithTag(ability.tag));
+        //Hide it quick enough the player doesn't see
+        uiPlayerCanvas.SetActive(false);
     }
 
     /// <summary>

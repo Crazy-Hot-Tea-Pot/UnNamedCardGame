@@ -29,11 +29,10 @@ public class Gear : Equipment
         //If being unequipted
         else
         {
-            Debug.Log("Delete");
             //Loop through and remove each UI element
             for (int i = 0; i < AbilityList.Count; i++)
             {
-                GameObject.Find("PlayerUIManager").GetComponent<PlayerUIManager>().MakeDeactiveAbility(AbilityList[i].tag);
+                GameObject.Find("PlayerUIManager").GetComponent<PlayerUIManager>().MakeDeactiveAbility(AbilityList[i]);
                 Debug.Log(AbilityList[i].tag);
             }
 

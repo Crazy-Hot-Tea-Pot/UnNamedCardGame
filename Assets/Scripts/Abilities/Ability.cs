@@ -18,7 +18,6 @@ public class Ability : ScriptableObject
     /// Cost to do ability
     /// </summary>
     public int energyCost;
-
     
     /// <summary>
     /// Activate Ability
