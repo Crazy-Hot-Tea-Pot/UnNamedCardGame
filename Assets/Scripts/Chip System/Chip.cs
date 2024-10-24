@@ -110,7 +110,7 @@ public class Chip : MonoBehaviour
         try
         {
             //Check if player turn to play play card
-            if (CombatController.CanIMakeAction(Player))
+            if (!CombatController.PlayerUsedChip)
             {
 
                 // Check if there is a target available
@@ -122,7 +122,7 @@ public class Chip : MonoBehaviour
                 //Check if player is jammed
                 if (Player.GetComponent<PlayerController>().IsJammed)
                 {
-                    CombatController.TurnUsed(Player);
+                    //CombatController.TurnUsed(Player);
                     return;
                 }
 
@@ -152,7 +152,10 @@ public class Chip : MonoBehaviour
                                 newChip.OnChipPlayed(Player.GetComponent<PlayerController>(), CombatController.Target.GetComponent<Enemy>());
                             }
                         }
-                        CombatController.TurnUsed(Player);
+
+                        //Player made chip move
+                        CombatController.PlayerUsedChip = true;
+
                         //Remove effect after it has been used.
                         Player.GetComponent<PlayerController>().RemoveEffect(Effects.Effect.Motivation);
                     }
@@ -173,7 +176,8 @@ public class Chip : MonoBehaviour
                                 newChip.OnChipPlayed(Player.GetComponent<PlayerController>(), CombatController.Target.GetComponent<Enemy>());
                         }
 
-                        CombatController.TurnUsed(Player);
+                        //Player made chip move
+                        CombatController.PlayerUsedChip = true;
                     }
                     GameManager.Instance.KillChip(this.gameObject);
                     Destroy(this.gameObject);

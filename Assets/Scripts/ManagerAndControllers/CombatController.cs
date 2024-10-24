@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 public class Combadant
 {
     public GameObject combadant;
@@ -21,6 +22,41 @@ public class CombatController : MonoBehaviour
 
     [SerializeField]
     private GameObject target;
+
+    [Header("Player")]
+    [SerializeField]
+    private GameObject player;
+    [SerializeField]
+    private bool playerUsedChip;
+    [SerializeField]
+    private bool playerUsedAbility;
+
+    //If player has used a chip this turn.
+    public bool PlayerUsedChip
+    {
+        get
+        {
+            return playerUsedChip;
+        }
+        set
+        {
+            playerUsedChip = value;
+        }
+    }
+
+    //If player has used Ability This turn
+    public bool PlayerUsedAbility
+    {
+        get
+        {
+            return playerUsedAbility;
+        }
+        set
+        {
+            playerUsedAbility = value;
+        }
+    }
+    private GameObject endTurnButton;
 
     private int currentCombatantIndex;
     private int currentTargetIndex;
@@ -71,6 +107,18 @@ public class CombatController : MonoBehaviour
         private set
         {
             currentCombatant = value;
+
+            if(currentCombatant == "Player")
+            {
+                //Activate Button so player can end turn
+                endTurnButton.SetActive(true);
+            }
+            else
+            {
+                endTurnButton.SetActive(false);
+                PlayerUsedAbility = false;
+                PlayerUsedChip = false;
+            }
         }
     }
 
@@ -110,11 +158,18 @@ public class CombatController : MonoBehaviour
     {
         // assign player Input class
         playerInputActions = new PlayerInputActions();
+        
     }
 
     // Start is called before the first frame update
     void Start()
-    {
+    {        
+
+        player = GameObject.FindGameObjectWithTag("Player");
+
+        endTurnButton = GameObject.Find("BtnEndTurn");
+        endTurnButton.GetComponent<Button>().onClick.AddListener(() => TurnUsed(player));
+
         CurrentCombatantIndex = 0;
         CurrentCombatant = "No Combat Yet";
     }
@@ -152,6 +207,7 @@ public class CombatController : MonoBehaviour
     /// </summary>
     public void StartCombat()
     {
+        GameManager.Instance.StartCombat();
         RoundCounter = 1;
 
         //this is a test add to the list.
@@ -159,6 +215,7 @@ public class CombatController : MonoBehaviour
         playertest.combadant = GameObject.FindGameObjectWithTag("Player");
         playertest.attacked = false;
         Combadants.Add(playertest);
+        
 
         //Set enemies to combat mode in combat zone
         foreach (GameObject combatEnemy in GameManager.Instance.enemyList)
@@ -169,7 +226,8 @@ public class CombatController : MonoBehaviour
             Combadants.Add(test);
 
             combatEnemy.GetComponent<Enemy>().InCombat = true;
-        }        
+        }
+        CurrentCombatantIndex = 0;
     }
     /// <summary>
     /// When used an action or attack and change status in combat.
@@ -177,11 +235,13 @@ public class CombatController : MonoBehaviour
     /// <param name="gameObject"></param>
     public void TurnUsed(GameObject gameObject)
     {
+
         foreach (var combadent in Combadants)
         {
             if(combadent.combadant.name == gameObject.name)
             {
                 combadent.attacked = true;
+                CurrentCombatantIndex++;
             }
         }
     }
@@ -245,8 +305,12 @@ public class CombatController : MonoBehaviour
         {
             combadant.attacked = false;
             if (combadant.combadant.tag == "Player")
+            {
                 combadant.combadant.GetComponent<PlayerController>().RoundEnd();
-            else if(combadant.combadant.tag=="Enemy")
+                PlayerUsedAbility = false;
+                PlayerUsedChip = false;
+            }
+            else if (combadant.combadant.tag == "Enemy")
                 combadant.combadant.GetComponent<Enemy>().RoundEnd();
         }
 

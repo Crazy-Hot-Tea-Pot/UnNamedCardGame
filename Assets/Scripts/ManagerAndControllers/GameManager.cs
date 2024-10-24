@@ -288,7 +288,8 @@ public class GameManager : MonoBehaviour
         }
 
         //Had to put this here cause this is after all enemies are added @_@
-        GameObject.FindGameObjectWithTag("CombatController").GetComponent<CombatController>().StartCombat();
+        //No longer needed
+        //GameObject.FindGameObjectWithTag("CombatController").GetComponent<CombatController>().StartCombat();
     }
 
     /// <summary>

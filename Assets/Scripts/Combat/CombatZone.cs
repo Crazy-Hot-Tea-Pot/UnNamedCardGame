@@ -23,7 +23,7 @@ public class CombatZone : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            managerClass.StartCombat();
+            //managerClass.StartCombat();
             this.GetComponent<BoxCollider>().enabled = false;
             for(int i = 0; i < tempList.Count; i++)
             {
@@ -33,6 +33,8 @@ public class CombatZone : MonoBehaviour
             {
                 tempList.RemoveAt(0);
             }
+            GameObject.FindGameObjectWithTag("CombatController").GetComponent<CombatController>().StartCombat();
+            Destroy(this.gameObject);
         }
         if (other.tag == "Enemy")
         {
