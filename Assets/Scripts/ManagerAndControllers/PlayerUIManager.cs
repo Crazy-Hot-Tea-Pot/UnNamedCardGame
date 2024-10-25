@@ -38,6 +38,28 @@ public class PlayerUIManager : MonoBehaviour
     private PlayerUIManager instance;
 
     /// <summary>
+    /// A list for card selection
+    /// </summary>
+    private List<NewChip> selectionList;
+
+    /// <summary>
+    /// A short selection list for the final list of players picking cards
+    /// </summary>
+    private List<NewChip> shortSelection;
+
+    //Options for the player to use when selecting new cards
+    public GameObject panelDropCards;
+    private GameObject optionOne;
+    private GameObject optionTwo;
+    private GameObject optionThree;
+    private Image imageOne;
+    private Image imageTwo;
+    private Image imageThree;
+
+    //Panel for deleting cards
+    public GameObject panelCardDelete;
+
+    /// <summary>
     /// Instance getter and setter
     /// </summary>
     public static PlayerUIManager Instance
@@ -151,6 +173,14 @@ public class PlayerUIManager : MonoBehaviour
 
         //Initalizatoin for fill
         Initialize();
+
+        //Add the card buttons for drops and attach buttons
+        optionOne = GameObject.Find(panelDropCards.transform.FindChild("OptionOne").name);
+        optionOne.AddComponent<Button>().onClick.AddListener(cardOptionOne);
+        optionTwo = GameObject.Find(panelDropCards.transform.FindChild("OptioTwo").name);
+        optionTwo.AddComponent<Button>().onClick.AddListener(cardOptionTwo);
+        optionThree = GameObject.Find(panelDropCards.transform.FindChild("OptionThree").name);
+        optionThree.AddComponent<Button>().onClick.AddListener(cardOptionThree);
     }
 
     // Update is called once per frame
@@ -162,7 +192,7 @@ public class PlayerUIManager : MonoBehaviour
         //On press open the inventroy UI if input is recieved or close if already in combat. WasPressedThisFrame() makes the input not be spammed it waits till the frame ends before recollecting
         if (openInventory.WasPressedThisFrame() && !GameManager.Instance.InCombat)
         {
-            if(uiInventoryCanvas.activeSelf == false)
+            if (uiInventoryCanvas.activeSelf == false)
             {
                 OpenInventroy();
             }
@@ -181,7 +211,7 @@ public class PlayerUIManager : MonoBehaviour
     public void OpenInventroy()
     {
         //If the UI canvas is closed open it otherwise continue on
-        if(uiInventoryCanvas.activeSelf == false)
+        if (uiInventoryCanvas.activeSelf == false)
         {
             //set ui canvas as active
             uiInventoryCanvas.SetActive(true);
@@ -199,10 +229,10 @@ public class PlayerUIManager : MonoBehaviour
     public void CloseInventory()
     {
         //If canvas is open close it
-        if(uiInventoryCanvas.activeInHierarchy == true)
+        if (uiInventoryCanvas.activeInHierarchy == true)
         {
             //If deck panel is open
-            if(panelDeck.activeInHierarchy == true)
+            if (panelDeck.activeInHierarchy == true)
             {
                 //Switch to default screen
                 switchMenuInventory();
@@ -255,7 +285,7 @@ public class PlayerUIManager : MonoBehaviour
 
         for (int i = 0; i < gameManager.playerDeck.Count; i++)
         {
-            GameObject chipTemp = Instantiate(gameManager.ChipPrefab, panelDeck.transform);           
+            GameObject chipTemp = Instantiate(gameManager.ChipPrefab, panelDeck.transform);
             Chip chipComponenet = chipTemp.GetComponent<Chip>();
             chipComponenet.IsInInventoryChip = true;
             chipComponenet.newChip = gameManager.playerDeck[i];
@@ -267,7 +297,7 @@ public class PlayerUIManager : MonoBehaviour
     /// </summary>
     public void AddCardToDeck(NewChip card)
     {
-       Instantiate(card.chipImage, panelDeck.transform);
+        Instantiate(card.chipImage, panelDeck.transform);
         card.GameObject().GetComponent<Chip>().IsInInventoryChip = true;
     }
 
@@ -278,7 +308,7 @@ public class PlayerUIManager : MonoBehaviour
     public void AddToInventory(GameObject item)
     {
         //No duplicated items
-        if(!GameObject.FindGameObjectWithTag(item.tag))
+        if (!GameObject.FindGameObjectWithTag(item.tag))
         {
             Instantiate(item, panelInventory.transform);
         }
@@ -289,7 +319,7 @@ public class PlayerUIManager : MonoBehaviour
     /// </summary>
     public void MakeActiveAbility(GameObject ability)
     {
-        if(!GameObject.FindGameObjectWithTag(ability.tag))
+        if (!GameObject.FindGameObjectWithTag(ability.tag))
         {
             Instantiate(ability, panelAbilty.transform);
         }
@@ -314,18 +344,18 @@ public class PlayerUIManager : MonoBehaviour
     /// <param name="card"></param>
     public void RemoveFromUI(GameObject remObject, string parent)
     {
-        if(parent == "Inventory")
+        if (parent == "Inventory")
         {
             //Destroys the game object from the UI element
             Destroy(GameObject.FindGameObjectWithTag(remObject.tag));
         }
-        else if(parent == "Deck")
+        else if (parent == "Deck")
         {
             //Destroys the game object from the UI element
             Destroy(panelDeck.transform.Find(remObject.name));
         }
 
-        
+
     }
 
     #endregion
@@ -408,6 +438,123 @@ public class PlayerUIManager : MonoBehaviour
     public void StartingPools()
     {
         healthBar.maxValue = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().MaxHealth;
+    }
+    #endregion
+
+    #region CardDropUIandFunction
+    /// <summary>
+    /// This method adds enemies cards to the list
+    /// </summary>
+    public void AddChipChoices(NewChip chip)
+    {
+        selectionList.Add(chip);
+    }
+
+    /// <summary>
+    /// This method allows us to draw cards from enemy and use this to present a list of available cards to the player
+    /// </summary>
+    public void DropCard()
+    {
+        //If our short list isn't too big
+        if (shortSelection.Count < 3)
+        {
+            //Roll a random number of the list length 3 times
+            for (int i = 0; i < 3; i++)
+            {
+                NewChip holder;
+                //Get a random number
+                int roll = GameManager.Instance.Roll(1, selectionList.Count);
+                //Assign holder that random roll
+                holder = selectionList[roll];
+
+                //If there can be no repeats
+                if (selectionList.Count >= 3)
+                {
+                    //Fail out counter
+                    int failOut = 0;
+                    //No repeats
+                    while (shortSelection.Contains(holder))
+                    {
+                        failOut++;
+                        //Redo random number
+                        int reroll = GameManager.Instance.Roll(1, selectionList.Count);
+                        //Replace holder so the loop can exit
+                        holder = selectionList[reroll];
+
+                        //If we have looped 5 times forget it and move on a duplicate is better then an infinite loop. This is most likely to happen if there are too many duplicating cards
+                        //Especially if fighting two of the same enemies
+                        if(failOut == 5)
+                        {
+                            break;
+                        }
+                    }
+                    //Add to the short list
+                    shortSelection.Add(holder);
+                }
+                //If the list is too small then continue from here
+                else if (selectionList.Count < 3)
+                {
+                    //Add to the short list
+                    shortSelection.Add(holder);
+                }
+            }
+        }
+
+        //Update the image sprites
+        imageOne.sprite = shortSelection[0].chipImage;
+        imageTwo.sprite = shortSelection[1].chipImage;
+        imageThree.sprite = shortSelection[3].chipImage;
+
+    }
+
+    /// <summary>
+    /// Card drop UI is opened
+    /// </summary>
+    public void openDropUI()
+    {
+        //Display UI
+        panelDropCards.SetActive(true);
+    }
+
+    /// <summary>
+    /// Adds card option one
+    /// </summary>
+    public void cardOptionOne()
+    {
+        //Add the card to the deck
+        AddCardToDeck(shortSelection[0]);
+        //Empty the storage
+        ClearSelectionList();
+    }
+    /// <summary>
+    /// Adds card option two
+    /// </summary>
+    public void cardOptionTwo()
+    {
+        //Add the card to the deck
+        AddCardToDeck(shortSelection[1]);
+        //Empty the storage
+        ClearSelectionList();
+    }
+
+    /// <summary>
+    /// Adds card option three
+    /// </summary>
+    public void cardOptionThree()
+    {
+        //Add the card to the deck
+        AddCardToDeck(shortSelection[2]);
+        //Empty the storage
+        ClearSelectionList();
+    }
+
+    /// <summary>
+    /// Clears the selection list
+    /// </summary>
+    public void ClearSelectionList()
+    {
+        //Empty the list
+        selectionList.Clear();
     }
     #endregion
 }
