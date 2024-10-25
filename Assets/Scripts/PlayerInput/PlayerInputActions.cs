@@ -62,6 +62,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Enteract"",
+                    ""type"": ""Button"",
+                    ""id"": ""03b42f9d-012a-43ac-883b-5b078e4ebf37"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -106,6 +115,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""DropItem"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""669c8f26-03b4-4870-a280-323348287a81"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Enteract"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -296,6 +316,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_UseTrinket = m_Player.FindAction("Use Trinket", throwIfNotFound: true);
         m_Player_InventoryUI = m_Player.FindAction("InventoryUI", throwIfNotFound: true);
         m_Player_DropItem = m_Player.FindAction("DropItem", throwIfNotFound: true);
+        m_Player_Enteract = m_Player.FindAction("Enteract", throwIfNotFound: true);
         // Camera Controls
         m_CameraControls = asset.FindActionMap("Camera Controls", throwIfNotFound: true);
         m_CameraControls_Look = m_CameraControls.FindAction("Look", throwIfNotFound: true);
@@ -373,6 +394,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_UseTrinket;
     private readonly InputAction m_Player_InventoryUI;
     private readonly InputAction m_Player_DropItem;
+    private readonly InputAction m_Player_Enteract;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -381,6 +403,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @UseTrinket => m_Wrapper.m_Player_UseTrinket;
         public InputAction @InventoryUI => m_Wrapper.m_Player_InventoryUI;
         public InputAction @DropItem => m_Wrapper.m_Player_DropItem;
+        public InputAction @Enteract => m_Wrapper.m_Player_Enteract;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -402,6 +425,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @DropItem.started += instance.OnDropItem;
             @DropItem.performed += instance.OnDropItem;
             @DropItem.canceled += instance.OnDropItem;
+            @Enteract.started += instance.OnEnteract;
+            @Enteract.performed += instance.OnEnteract;
+            @Enteract.canceled += instance.OnEnteract;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -418,6 +444,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @DropItem.started -= instance.OnDropItem;
             @DropItem.performed -= instance.OnDropItem;
             @DropItem.canceled -= instance.OnDropItem;
+            @Enteract.started -= instance.OnEnteract;
+            @Enteract.performed -= instance.OnEnteract;
+            @Enteract.canceled -= instance.OnEnteract;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -581,6 +610,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnUseTrinket(InputAction.CallbackContext context);
         void OnInventoryUI(InputAction.CallbackContext context);
         void OnDropItem(InputAction.CallbackContext context);
+        void OnEnteract(InputAction.CallbackContext context);
     }
     public interface ICameraControlsActions
     {
