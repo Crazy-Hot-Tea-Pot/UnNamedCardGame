@@ -59,7 +59,7 @@ public class Looter : Enemy
         Debug.Log($"{EnemyName} performs Swipe, dealing 4 damage and stealing 5 Scrap.");
         swipeCount++;
 
-        stolenScrap += EnemyTarget.GetComponent<PlayerController>().StealScrap(5);
+        stolenScrap += EnemyTarget.GetComponent<PlayerController>().TakeScrap(5);
 
         // Empower Swipe
         if (PowerStacks > 0)

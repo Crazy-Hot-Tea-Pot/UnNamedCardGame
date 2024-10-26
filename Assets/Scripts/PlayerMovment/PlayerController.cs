@@ -21,6 +21,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private bool inCombat;
 
+    [SerializeField]
+    private bool isInteracting;
+
     // Reference to selected object in the scene that is moveable
     private GameObject MoveableObject;
 
@@ -82,6 +85,17 @@ public class PlayerController : MonoBehaviour
         set
         {
             inCombat = value;
+        }
+    }
+    public bool IsInteracting
+    {
+        get
+        {
+            return isInteracting;
+        }
+        set
+        {
+            isInteracting = value;
         }
     }
     /// <summary>
@@ -154,7 +168,7 @@ public class PlayerController : MonoBehaviour
         {
             return scrap;
         }
-        set
+        private set
         {
             scrap = value;
             if (scrap < 0) 
@@ -446,12 +460,15 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void OnClick(InputAction.CallbackContext context)
     {
-        if (!GameManager.Instance.InCombat)
+        if (!InCombat && !IsInteracting)
         {
             Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
             RaycastHit hit;
 
-            if (Physics.Raycast(ray, out hit))
+            // Create a LayerMask that excludes the "Player" layer
+            int layerMask = ~LayerMask.GetMask("Player");
+
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
             {
 
                 if (MoveableObject != null && hit.collider.CompareTag("Ground"))
@@ -486,6 +503,14 @@ public class PlayerController : MonoBehaviour
     public void FullHeal()
     {
         Health = maxHealth;
+    }
+    /// <summary>
+    /// Changes the max health value
+    /// </summary>
+    /// <param name="amount"></param>
+    public void UpgradeMaxHealth(int amount)
+    {
+        MaxHealth += amount;
     }
     /// <summary>
     /// Give player shield.
@@ -658,11 +683,19 @@ public class PlayerController : MonoBehaviour
         }
     }
     /// <summary>
+    /// Adds scrap
+    /// </summary>
+    /// <param name="amount"></param>
+    public void GainScrap(int amount)
+    {
+        Scrap+=amount;
+    }
+    /// <summary>
     /// Returns the scrap stolen or whats left.
     /// </summary>
     /// <param name="amount">the amount of scrap want to steal</param>
     /// <returns></returns>
-    public int StealScrap(int amount)
+    public int TakeScrap(int amount)
     {
         if (Scrap < amount)
         {
