@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class UpgradeController : MonoBehaviour
 {
-    public GameObject ChipPrefab;
     public UpgradeTerminalUIController UIController;
 
     [Header("Screens In Game World")]
@@ -146,14 +145,14 @@ public class UpgradeController : MonoBehaviour
             other.GetComponent<PlayerController>().IsInteracting = true;
         }
     }
-    private void OnTriggerExit(Collider other)
-    {
-        if(other.tag == "Player")
-        {
-            SwitchToScreen(Screens.Default);           
-            other.GetComponent<PlayerController>().IsInteracting = false;
-        }
-    }
+    //private void OnTriggerExit(Collider other)
+    //{
+    //    if(other.tag == "Player")
+    //    {
+    //        SwitchToScreen(Screens.Default);           
+    //        other.GetComponent<PlayerController>().IsInteracting = false;
+    //    }
+    //}
 
     /// <summary>
     /// Plays default text in loop

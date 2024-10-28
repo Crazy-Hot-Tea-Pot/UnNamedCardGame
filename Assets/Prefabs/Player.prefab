@@ -51,8 +51,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 19.596125, y: 8.3960705, z: 19.9789}
-  m_Center: {x: 0.2749586, y: 3.6980357, z: 5.772135}
+  m_Size: {x: 2.677116, y: 1.7124982, z: 3.2632744}
+  m_Center: {x: -0.112772346, y: 7.0398216, z: 4.9875145}
 --- !u!1 &8836494093751931086
 GameObject:
   m_ObjectHideFlags: 0
@@ -204,6 +204,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   abilityRangedEnemies: []
   inCombat: 0
+  isInteracting: 0
   health: 0
   shield: 0
   energy: 0

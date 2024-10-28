@@ -2,12 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
 {
     private UpgradeController controller;
+    private bool isWaintingForInput = false;
 
 
     [Header("Intro Screen")]
@@ -20,8 +22,17 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
     public TMP_Text HealthConsole;
 
     [Header("Chip Upgrade Screen")]
-    public GameObject ChipPanel;
+    public GameObject ChipPrefab;
+    public GameObject ChipPanel;    
+    public GameObject ChipSelectionPanel;
+    public GameObject ChipHolder;
+
     public TMP_Text ChipConsole;
+    
+    public Vector2 startPosition;    
+    public Vector2 endPosition;
+
+    public float TimeForPanelToGetToCenter=2.0f;
 
     [Header("Error Screen")]
     public GameObject ErrorPanel;
@@ -57,14 +68,14 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
             case UpgradeController.Screens.Intro:
                 HealthPanel.SetActive(false);
                 IntroPanel.SetActive(true);
-                //ChipPanel.SetActive(false);
+                ChipPanel.SetActive(false);
                 StartCoroutine(RevealIntroScreen());
                 break;
             case UpgradeController.Screens.HealthUpgrade:
 
                 IntroPanel.SetActive(false);
                 HealthPanel.SetActive(true);
-                //ChipPanel.SetActive(false);
+                ChipPanel.SetActive(false);
 
                 PlayerController tempPlayer = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
                 
@@ -83,27 +94,26 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
 
                 IntroPanel.SetActive(false);
                 HealthPanel.SetActive(false);
-                //ChipPanel.SetActive(true);
+                ChipPanel.SetActive(true);
+
+                ChipConsole.SetText("...Loading Chips...");
+
+                StartCoroutine(RevealChipScreen());
+                StartCoroutine(BringUpChipSelector());
 
                 break;
             case UpgradeController.Screens.Exit:
 
                 IntroPanel.SetActive(false);
                 HealthPanel.SetActive(false);
-                //ChipPanel.SetActive(false);
+                ChipPanel.SetActive(false);
 
+            break;
+            default:
                 break;
         }
     }
 
-    /// <summary>
-    /// Is called when the text is changed
-    /// </summary>
-    /// <param name="obj"></param>
-    private void OnTextChanged(UnityEngine.Object obj)
-    {
-        hasTextChanged = true;
-    }
 
     /// <summary>
     /// When player clicks one of the links.
@@ -111,20 +121,26 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
     /// <param name="eventData"></param>
     public void OnPointerClick(PointerEventData eventData)
     {
-        foreach (var console in Consoles)
-        {
-            int linkIndex = TMP_TextUtilities.FindIntersectingLink(console, eventData.position, null);
-
-            if (linkIndex != -1) // A link was clicked
+        if(isWaintingForInput)
+            foreach (var console in Consoles)
             {
-                TMP_LinkInfo linkInfo = console.textInfo.linkInfo[linkIndex];
-                string linkID = linkInfo.GetLinkID();
+                int linkIndex = TMP_TextUtilities.FindIntersectingLink(console, eventData.position, null);
 
-                HandleLinkClick(linkID);
-                break; // Exit loop after handling the first clicked link
+                if (linkIndex != -1) // A link was clicked
+                {
+                    TMP_LinkInfo linkInfo = console.textInfo.linkInfo[linkIndex];
+                    string linkID = linkInfo.GetLinkID();
+
+                    HandleLinkClick(linkID);
+                    break; // Exit loop after handling the first clicked link
+                }
             }
-        }
     }
+    
+    /// <summary>
+    /// When UI link is clicked this method is called.
+    /// </summary>
+    /// <param name="linkID"></param>
     private void HandleLinkClick(string linkID)
     {
         switch (linkID)
@@ -156,8 +172,11 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
                     Debug.Log("Not enough scrap to upgrade health."); // Placeholder log
                 }
                 break;
+            case "UpgradeChipScreen":
+                SwitchDisplay(UpgradeController.Screens.ChipUpgrade);
+                controller.SwitchToScreen(UpgradeController.Screens.ChipUpgrade);
+                break;
             case "UpgradeChip":
-
                 break;
             case "Exit":
                 SwitchDisplay(UpgradeController.Screens.Exit);
@@ -166,16 +185,71 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
 
                 controller.SwitchToScreen(UpgradeController.Screens.Exit);
 
-                break;                
+            break;
+            default:
+
+            break;
         }
+    }
+
+    /// <summary>
+    /// Is called when the text is changed
+    /// </summary>
+    /// <param name="obj"></param>
+    private void OnTextChanged(UnityEngine.Object obj)
+    {
+        hasTextChanged = true;
+    }
+
+    /// <summary>
+    /// Populate the panel with chips first and then,
+    /// Bring up window to select Chip.
+    /// </summary>
+    private IEnumerator BringUpChipSelector()
+    {
+        isWaintingForInput = false;
+
+        ChipHolder.SetActive(false);
+
+        foreach(NewChip newChip in GameManager.Instance.playerDeck)
+        {
+            ChipPrefab.GetComponent<Chip>().newChip = newChip;
+
+            ChipPrefab.GetComponent<Chip>().IsInInventoryChip = true;
+
+
+            GameObject UIChip = Instantiate(ChipPrefab, ChipHolder.transform);
+            
+        }
+
+        ChipHolder.SetActive(true);
+
+        float tempTime = 0;
+        RectTransform tempRectTransform = ChipSelectionPanel.GetComponent<RectTransform>();
+
+        while (tempTime < TimeForPanelToGetToCenter)
+        {
+            tempTime += Time.deltaTime;
+
+            float temp = Mathf.Clamp01(tempTime / TimeForPanelToGetToCenter);
+
+            tempRectTransform.anchoredPosition = Vector2.Lerp(startPosition, endPosition, temp);
+
+            yield return null;
+        }
+
+        tempRectTransform.anchoredPosition=endPosition;
+
+        ChipConsole.SetText("");
     }
 
     /// <summary>
     /// Method revealing the text one character at a time for intro screen.
     /// </summary>
     /// <returns></returns>
-    IEnumerator RevealIntroScreen()
-    { 
+    private IEnumerator RevealIntroScreen()
+    {
+        isWaintingForInput = false;
 
         IntroConsole.ForceMeshUpdate();       
 
@@ -202,17 +276,20 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
 
             visibleCount += 1;
 
-            yield return new WaitForSeconds(0.01f);
+            yield return new WaitForSeconds(0.1f);
        }
-    }
 
+        isWaintingForInput = true;
+    }
 
     /// <summary>
     /// Method revealing the text one word at a time.
     /// </summary>
     /// <returns></returns>
-    IEnumerator RevealHealthScreen()
+    private IEnumerator RevealHealthScreen()
     {
+        isWaintingForInput = false;
+
         HealthConsole.ForceMeshUpdate();
 
         int totalWordCount = HealthConsole.textInfo.wordCount;
@@ -234,6 +311,50 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
                 visibleCount = totalVisibleCharacters;
 
             HealthConsole.maxVisibleCharacters = visibleCount; // How many characters should TextMeshPro display?
+
+            // Once the last character has been revealed, wait the set speed and start over.
+            if (visibleCount >= totalVisibleCharacters)
+            {
+                yield return new WaitForSeconds(1.0f);
+            }
+
+            counter += 1;
+
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        isWaintingForInput = true;
+    }
+
+    /// <summary>
+    /// Method revealing text one word in the Chip Console
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator RevealChipScreen()
+    {
+        isWaintingForInput = false;
+
+        ChipConsole.ForceMeshUpdate();
+
+        int totalWordCount = ChipConsole.textInfo.wordCount;
+        int totalVisibleCharacters = ChipConsole.textInfo.characterCount; // Get # of Visible Character in text object
+        int counter = 0;
+        int currentWord = 0;
+        int visibleCount = 0;
+
+        while (visibleCount != totalVisibleCharacters)
+        {
+            currentWord = counter % (totalWordCount + 1);
+
+            // Get last character index for the current word.
+            if (currentWord == 0) // Display no words.
+                visibleCount = 0;
+            else if (currentWord < totalWordCount) // Display all other words with the exception of the last one.
+                visibleCount = ChipConsole.textInfo.wordInfo[currentWord - 1].lastCharacterIndex + 1;
+            else if (currentWord == totalWordCount) // Display last word and all remaining characters.
+                visibleCount = totalVisibleCharacters;
+
+            ChipConsole.maxVisibleCharacters = visibleCount; // How many characters should TextMeshPro display?
 
             // Once the last character has been revealed, wait the set speed and start over.
             if (visibleCount >= totalVisibleCharacters)

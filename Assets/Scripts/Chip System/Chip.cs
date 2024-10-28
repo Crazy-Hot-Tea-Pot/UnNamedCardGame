@@ -82,23 +82,23 @@ public class Chip : MonoBehaviour
         this.gameObject.name = ChipTitle;
 
         // Set image to card
-        GetComponent<Image>().sprite = newChip.chipImage;
+        GetComponent<Image>().sprite = newChip.chipImage;        
 
-        //Assign method to button
-        imageButton = GetComponent<Button>();
-        imageButton.onClick.AddListener(ChipSelected);
-
-
-        CombatController = GameObject.FindGameObjectWithTag("CombatController").GetComponent<CombatController>();
-        Player = GameObject.FindGameObjectWithTag("Player");
-
-        IsActive = true;
-
-        //Turn off click button
         if (IsInInventoryChip)
         {
             GetComponent<Button>().interactable = false;
         }
+        else
+        {
+            //Assign method to button
+            imageButton = GetComponent<Button>();
+            imageButton.onClick.AddListener(ChipSelected);
+
+            CombatController = GameObject.FindGameObjectWithTag("CombatController").GetComponent<CombatController>();
+            Player = GameObject.FindGameObjectWithTag("Player");
+
+            IsActive = true;
+        }        
     }
     /// <summary>
     /// Runs Scriptable Chip
