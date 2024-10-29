@@ -17,6 +17,7 @@ MonoBehaviour:
   description: Deal 7 damage, Apply 1 Drained.
   chipImage: {fileID: 21300000, guid: 8b9789206c386d24590ef97a4eab439c, type: 3}
   canBeUpgraded: 1
+  costToUpgrade: 150
   hitAllTargets: 0
   damage: 7
   upgradedDamageByAmount: 2

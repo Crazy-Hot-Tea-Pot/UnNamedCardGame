@@ -17,6 +17,7 @@ MonoBehaviour:
   description: Gain 7 Shield, Gain 1 "Galvanize".
   chipImage: {fileID: 21300000, guid: b0346f9ac352917489d6b4d25f3e1ada, type: 3}
   canBeUpgraded: 1
+  costToUpgrade: 150
   hitAllTargets: 0
   shieldAmount: 7
   upgradedShieldAmountToApply: 2

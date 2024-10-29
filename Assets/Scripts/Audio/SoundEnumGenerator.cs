@@ -9,9 +9,11 @@ using UnityEngine;
 /// </summary>
 public class SoundEnumGenerator
 {
+#if UNITY_EDITOR
     //[MenuItem("Tools/Generate Sound Enums")]
     public static void GenerateEnums()
     {
+
         // Paths to look for sound clips
         string bgFolder = "Assets/Resources/Sounds/BG";
         string fxFolder = "Assets/Resources/Sounds/FX";
@@ -32,10 +34,10 @@ public class SoundEnumGenerator
         enumBuilder.AppendLine("}");
 
         // Write the generated enums to a C# file in your project
-        string enumFilePath = "Assets/Scripts/SoundEnums.cs";
+        string enumFilePath = "Assets/Scripts/Audio/SoundEnums.cs";
         File.WriteAllText(enumFilePath, enumBuilder.ToString());
 
-       // AssetDatabase.Refresh(); // Refresh to update the new file in Unity Editor
+        AssetDatabase.Refresh(); // Refresh to update the new file in Unity Editor
         Debug.Log("Sound enums generated successfully.");
     }
 
@@ -57,4 +59,5 @@ public class SoundEnumGenerator
             Debug.LogWarning("Folder not found: " + folderPath);
         }
     }
+#endif
 }

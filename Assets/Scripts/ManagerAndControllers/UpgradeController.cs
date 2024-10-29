@@ -3,10 +3,57 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem.XR;
 
 public class UpgradeController : MonoBehaviour
 {
+
+    private bool isInteracting;
+    private NewChip selectedChip;
+
+    // to avoid using getComponent repeatdly
+    private TextMeshPro defaultScreenText;
+    private TextMeshPro introScreenText;
+    private TextMeshPro healthUpgradeScreenText;
+    private TextMeshPro chipUpgradeScreenText;
+
+    /// <summary>
+    /// If player is interacting with terminal
+    /// </summary>
+    public bool IsInteracting
+    {
+        get
+        {
+            return isInteracting;
+        }
+        private set
+        {
+            isInteracting = value;
+            GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().IsInteracting = value;
+        }
+    }  
+
+    /// <summary>
+    /// Chip player has selected
+    /// </summary>
+    public NewChip SelectedChip
+    {
+        get
+        {
+            return selectedChip;
+        }
+        private set
+        {
+            selectedChip = value;
+        }
+    }
+
     public UpgradeTerminalUIController UIController;
+
+    /// <summary>
+    /// Created event for UI.
+    /// </summary>
+    public event Action<Screens> OnScreenChanged;
 
     [Header("Screens In Game World")]
     public GameObject DefaultScreen;
@@ -26,18 +73,13 @@ public class UpgradeController : MonoBehaviour
     //Current Screen Active in game world
     private Screens currentScreen;
 
-    private bool hasTextChanged;
-
-    void OnEnable()
+    void Awake()
     {
-        TMPro_EventManager.TEXT_CHANGED_EVENT.Add(OnTextChanged);
+        defaultScreenText = DefaultScreen.GetComponent<TextMeshPro>();
+        introScreenText = IntroScreen.GetComponent<TextMeshPro>();
+        healthUpgradeScreenText = HealthUpgradeScreen.GetComponent<TextMeshPro>();
+        chipUpgradeScreenText = ChipUpgradeScreen.GetComponent<TextMeshPro>();
     }
-
-    void OnDisable()
-    {
-        TMPro_EventManager.TEXT_CHANGED_EVENT.Remove(OnTextChanged);
-    }
-
     // Start is called before the first frame update
     void Start()
     {
@@ -49,12 +91,15 @@ public class UpgradeController : MonoBehaviour
     {
         
     }
+
     /// <summary>
     /// Switches to the specified screen and deactivates the current screen.
     /// </summary>
     /// <param name="screen">The screen type to switch to.</param>
     public void SwitchToScreen(Screens screen)
     {
+        OnScreenChanged?.Invoke(screen);
+
         StopAllCoroutines();
 
         switch (screen)
@@ -64,11 +109,10 @@ public class UpgradeController : MonoBehaviour
                 IntroScreen.SetActive(false);
                 DefaultScreen.SetActive(true);
                 HealthUpgradeScreen.SetActive(false);
-                //ChipUpgradeScreen.SetActive(false);
+                ChipUpgradeScreen.SetActive(false);                
 
-                StartCoroutine(PlayDefaultScreen());
+                StartCoroutine(RevealText(DefaultScreen, true, 0.01f,true, 1, 3,true,5f));
 
-                UIController.SwitchDisplay(Screens.Exit); ;
                 currentScreen = screen;
                 break;
             case Screens.Intro:
@@ -76,20 +120,19 @@ public class UpgradeController : MonoBehaviour
                 IntroScreen.SetActive(true);
                 DefaultScreen.SetActive(false);
                 HealthUpgradeScreen?.SetActive(false);
-                //ChipUpgradeScreen.SetActive(false);
+                ChipUpgradeScreen.SetActive(false);
 
-                StartCoroutine(PlayIntroScreen());
+                StartCoroutine(RevealText(IntroScreen, false, 0.01f, false, 0, 0,false, 1000f));
 
-                UIController.SwitchDisplay(screen);
 
                 currentScreen = screen;
                 break;
-             case Screens.HealthUpgrade:
+            case Screens.HealthUpgrade:
 
                 IntroScreen.SetActive(false);
                 DefaultScreen.SetActive(false);
                 HealthUpgradeScreen?.SetActive(true);
-                //ChipUpgradeScreen.SetActive(false);
+                ChipUpgradeScreen.SetActive(false);
 
                 PlayerController tempPlayer = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
 
@@ -100,9 +143,9 @@ public class UpgradeController : MonoBehaviour
             "<link=\"Exit\">Exit</b></u></link>",
             tempPlayer.Health, tempPlayer.MaxHealth, tempPlayer.MaxHealth + 10);
 
-                HealthUpgradeScreen.GetComponent<TextMeshPro>().SetText(tempText);
+                healthUpgradeScreenText.SetText(tempText);
 
-                StartCoroutine(PlayHealthScreen());
+                StartCoroutine(RevealText(HealthUpgradeScreen,false,0.01f,false,0,0,false, 10000f));
 
                 currentScreen = screen;
                 break;
@@ -111,62 +154,141 @@ public class UpgradeController : MonoBehaviour
                 IntroScreen.SetActive(false);
                 DefaultScreen.SetActive(false);
                 HealthUpgradeScreen?.SetActive(false);
-                //ChipUpgradeScreen.SetActive(true);
+                ChipUpgradeScreen.SetActive(true);
+
+                if (SelectedChip == null)
+                {
+                    StartCoroutine(RevealText(ChipUpgradeScreen, true, 0.01f, true, 0.1f, 5, false, 100f));
+                }
+                else
+                {
+                   
+                    string tempText2 = string.Format("Chip inserted.\n" +
+                       "...Loading Chip...\n" +
+                       "Chip Info:\n" +
+                       "Chip Rarity - {0}\n" +
+                       "Chip Name - {1}\n" +
+                       "Chip Description - {2}\n" +
+                       "Cost to upgrade - <b>{3}</b> Scrap.\n-----\n" +
+                       "<b><u><link=\"UpgradeSelectedChip\">Upgrade Chip</link></u></b>\n\n" +
+                       "<b><u><link=\"Exit2\">Exit</link></u></b>",
+                       SelectedChip.chipRarity, SelectedChip.chipName, SelectedChip.description, SelectedChip.costToUpgrade);
+
+                    chipUpgradeScreenText.SetText(tempText2);
+
+                    StartCoroutine(RevealText(ChipUpgradeScreen, true, 0.01f, false, 0f, 0, false, 0));                    
+                }
 
                 currentScreen = screen;
 
-                break;
-
+            break;                
             case Screens.Exit:
 
                 IntroScreen.SetActive(false);
                 DefaultScreen.SetActive(true);
                 HealthUpgradeScreen?.SetActive(false);
-                //ChipUpgradeScreen.SetActive(false);
+                ChipUpgradeScreen.SetActive(false);
 
-                StartCoroutine(PlayDefaultScreen());
+                StartCoroutine(RevealText(DefaultScreen, true, 0.01f, true, 1, 3,true, 5f));
 
                 currentScreen = screen;
+
+                ExitTerminal();
                 break;
             default:
                 break;
         }
     }
-    private void OnTextChanged(UnityEngine.Object obj)
+
+    public void ChipSelectToUpgrade(NewChip chip)
     {
-        hasTextChanged = true;
+        selectedChip = chip;
+        SwitchToScreen(Screens.ChipUpgrade);
+    }
+    /// <summary>
+    /// Try to Upgrade chip
+    /// </summary>
+    public void AttemptToUpgradeChip()
+    {
+        //Added scrap for testing.
+        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().GainScrap(500);
+
+        if (GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().Scrap >= SelectedChip.costToUpgrade)
+        {           
+
+            var Bank = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().TakeScrap(SelectedChip.costToUpgrade);
+
+            GameManager.Instance.playerDeck.Find(item => item.chipName == SelectedChip.chipName).IsUpgraded = true;
+
+            // FOr now lets go back to main menu.
+            SwitchToScreen(Screens.Intro);
+        }
+        else
+        {
+            Debug.Log("Not enough scrap to upgrade chip.");
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Player")
+        if (other.tag == "Player" && !IsInteracting)
         {
-            SwitchToScreen(Screens.Intro);            
-            other.GetComponent<PlayerController>().IsInteracting = true;
+            StartCoroutine(EnterTerminal());          
+            IsInteracting = true;
         }
     }
-    //private void OnTriggerExit(Collider other)
-    //{
-    //    if(other.tag == "Player")
-    //    {
-    //        SwitchToScreen(Screens.Default);           
-    //        other.GetComponent<PlayerController>().IsInteracting = false;
-    //    }
-    //}
 
     /// <summary>
-    /// Plays default text in loop
+    /// Plays animation and does other stuff before actually accessing terminal.
     /// </summary>
     /// <returns></returns>
-    IEnumerator PlayDefaultScreen()
+    private IEnumerator EnterTerminal()
     {
+        IsInteracting = true;
+        GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>().SwitchCamera(CameraController.CameraState.FirstPerson);
+        GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>().FirstPersonCamera.LookAt = IntroScreen.transform;
+        yield return new WaitForSeconds(1f);
+        SwitchToScreen(Screens.Intro);
+    }
+    /// <summary>
+    /// Players animation and doe sother stuff so player can exit terminal.
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator ExitTerminal()
+    {
+        GameObject.FindGameObjectWithTag("MainCamera").
+            GetComponent<CameraController>().
+            SwitchCamera(CameraController.CameraState.Default);
+        yield return new WaitForSeconds(1f);
+        IsInteracting = false;
+    }    
 
-        DefaultScreen.GetComponent<TextMeshPro>().ForceMeshUpdate();
+    /// <summary>
+    /// Display Text onto screen based on parameters set.
+    /// </summary>
+    /// <param name="Screen"></param>
+    /// <param name="byLetter"></param>
+    /// <param name="revealSpeed"></param>
+    /// <param name="blinkText"></param>
+    /// <param name="blinkDuration"></param>
+    /// <param name="blinkCount"></param>
+    /// <param name="timeBeforeRestartAnimation"></param>
+    /// <returns></returns>
+    private IEnumerator RevealText(GameObject Screen, bool byLetter, float revealSpeed, bool blinkText, float blinkDuration, int blinkCount,bool loopAnimation, float timeBeforeRestartAnimation)
+    {        
 
-        TMP_TextInfo textInfo = DefaultScreen.GetComponent<TextMeshPro>().textInfo;
+        // Cache the TextMeshPro component
+        TextMeshPro tmpText = Screen.GetComponent<TextMeshPro>();
+        tmpText.ForceMeshUpdate();
 
+        TMP_TextInfo textInfo = tmpText.textInfo;
         int totalVisibleCharacters = textInfo.characterCount;
+        int totalWordCount = textInfo.wordCount;
         int visibleCount = 0;
+
+        bool hasTextChanged = false;
+        int counter = 0;
+        int currentWord = 0;
 
         while (true)
         {
@@ -176,105 +298,73 @@ public class UpgradeController : MonoBehaviour
                 hasTextChanged = false;
             }
 
-            if (visibleCount > totalVisibleCharacters)
+            if (byLetter)
             {
-                //Blinking effect 3 times before resetting
-                for (int i = 0; i < 3; i++)  
+                if (visibleCount > totalVisibleCharacters)
                 {
-                    // Hide text
-                    DefaultScreen.GetComponent<TextMeshPro>().maxVisibleCharacters = 0;
-                    
-                    yield return new WaitForSeconds(1f);
+                    if (blinkText)
+                        yield return StartCoroutine(BlinkText(tmpText, blinkDuration, blinkCount));
 
-                    // Show full text
-                    DefaultScreen.GetComponent<TextMeshPro>().maxVisibleCharacters = totalVisibleCharacters;
-
-                    yield return new WaitForSeconds(1f);
+                    if (loopAnimation)
+                        yield return new WaitForSeconds(timeBeforeRestartAnimation); // Pause before restarting
+                    else
+                        break;
+                    visibleCount = 0;
                 }
 
-                yield return new WaitForSeconds(10.0f);
-                visibleCount = 0;
+                tmpText.maxVisibleCharacters = visibleCount; // Set visible characters
+                visibleCount += 1;
+                yield return new WaitForSeconds(revealSpeed);
             }
+            else
+            {
+                currentWord = counter % (totalWordCount + 1);
 
-            DefaultScreen.GetComponent<TextMeshPro>().maxVisibleCharacters = visibleCount; // How many characters should TextMeshPro display?
+                // Determine visible character count based on the current word
+                if (currentWord == 0)
+                    visibleCount = 0;
+                else if (currentWord < totalWordCount)
+                    visibleCount = textInfo.wordInfo[currentWord - 1].lastCharacterIndex + 1;
+                else if (currentWord == totalWordCount)
+                    visibleCount = totalVisibleCharacters;
 
-            visibleCount += 1;
+                tmpText.maxVisibleCharacters = visibleCount;
 
-            yield return new WaitForSeconds(0.01f);
+                if (visibleCount >= totalVisibleCharacters)
+                {
+                    if (blinkText)
+                        yield return StartCoroutine(BlinkText(tmpText, blinkDuration, blinkCount));
+
+                    if (loopAnimation)
+                        yield return new WaitForSeconds(timeBeforeRestartAnimation);
+                    else
+                        break;
+                }
+
+                counter += 1;
+                yield return new WaitForSeconds(revealSpeed * 10); // Adjust speed for word reveal
+            }
         }
     }
     /// <summary>
-    /// Plays Intro Text in Game World
+    /// Blink text on terminal
     /// </summary>
+    /// <param name="tmpText"></param>
+    /// <param name="blinkDuration"></param>
+    /// <param name="blinkCount"></param>
     /// <returns></returns>
-    IEnumerator PlayIntroScreen()
+    private IEnumerator BlinkText(TextMeshPro tmpText, float blinkDuration, int blinkCount)
     {
-
-        IntroScreen.GetComponent<TextMeshPro>().ForceMeshUpdate();
-
-        TMP_TextInfo textInfo = IntroScreen.GetComponent<TextMeshPro>().textInfo;
-
-        int totalVisibleCharacters = textInfo.characterCount; // Get # of Visible Character in text object
-        int visibleCount = 0;
-
-        while (visibleCount != totalVisibleCharacters)
+        int totalVisibleCharacters = tmpText.textInfo.characterCount;
+        for (int i = 0; i < blinkCount; i++)
         {
-            if (hasTextChanged)
-            {
-                totalVisibleCharacters = textInfo.characterCount; // Update visible character count.
-                hasTextChanged = false;
-            }
+            tmpText.maxVisibleCharacters = 0;
+            yield return new WaitForSeconds(blinkDuration);
 
-            if (visibleCount > totalVisibleCharacters)
-            {
-                yield return new WaitForSeconds(1.0f);
-                visibleCount = 0;
-            }
-
-            IntroScreen.GetComponent<TextMeshPro>().maxVisibleCharacters = visibleCount; // How many characters should TextMeshPro display?
-
-            visibleCount += 1;
-
-            yield return new WaitForSeconds(0.1f);
+            tmpText.maxVisibleCharacters = totalVisibleCharacters;
+            yield return new WaitForSeconds(blinkDuration);
         }
     }
-    /// <summary>
-    /// Method revealing the text one word at a time.
-    /// </summary>
-    /// <returns></returns>
-    IEnumerator PlayHealthScreen()
-    {
-        HealthUpgradeScreen.GetComponent<TextMeshPro>().ForceMeshUpdate();
 
-        int totalWordCount = HealthUpgradeScreen.GetComponent<TextMeshPro>().textInfo.wordCount;
-        int totalVisibleCharacters = HealthUpgradeScreen.GetComponent<TextMeshPro>().textInfo.characterCount; // Get # of Visible Character in text object
-        int counter = 0;
-        int currentWord = 0;
-        int visibleCount = 0;
 
-        while (visibleCount != totalVisibleCharacters)
-        {
-            currentWord = counter % (totalWordCount + 1);
-
-            // Get last character index for the current word.
-            if (currentWord == 0) // Display no words.
-                visibleCount = 0;
-            else if (currentWord < totalWordCount) // Display all other words with the exception of the last one.
-                visibleCount = HealthUpgradeScreen.GetComponent<TextMeshPro>().textInfo.wordInfo[currentWord - 1].lastCharacterIndex + 1;
-            else if (currentWord == totalWordCount) // Display last word and all remaining characters.
-                visibleCount = totalVisibleCharacters;
-
-            HealthUpgradeScreen.GetComponent<TextMeshPro>().maxVisibleCharacters = visibleCount; // How many characters should TextMeshPro display?
-
-            // Once the last character has been revealed, wait the set speed and start over.
-            if (visibleCount >= totalVisibleCharacters)
-            {
-                yield return new WaitForSeconds(1.0f);
-            }
-
-            counter += 1;
-
-            yield return new WaitForSeconds(0.1f);
-        }
-    }
 }

@@ -23,7 +23,8 @@ public class CameraController : MonoBehaviour
         Default,
         Rotation,
         Pan,
-        BorderMovement
+        BorderMovement,
+        FirstPerson
     }
 
     [Header("Cameras")]
@@ -34,6 +35,7 @@ public class CameraController : MonoBehaviour
     public CinemachineFreeLook RotationCamera;
     public CinemachineVirtualCamera PanCamera;
     public CinemachineVirtualCamera BorderCamera;
+    public CinemachineVirtualCamera FirstPersonCamera;
 
 
 
@@ -177,12 +179,13 @@ public class CameraController : MonoBehaviour
     /// Activate the desired camera based on the state
     /// </summary>
     /// <param name="state"></param>
-    private void SwitchCamera(CameraState state)
+    public void SwitchCamera(CameraState state)
     {       
         DefaultCamera.Priority = 0;
         RotationCamera.Priority = 0;
         PanCamera.Priority = 0;
         BorderCamera.Priority = 0;
+        FirstPersonCamera.Priority = 0;
         
         switch (state)
         {
@@ -197,6 +200,9 @@ public class CameraController : MonoBehaviour
                 break;
             case CameraState.BorderMovement:
                 BorderCamera.Priority = 10;
+                break;
+            case CameraState.FirstPerson:
+                FirstPersonCamera.Priority = 10;
                 break;
             default:
                 DefaultCamera.Priority = 10;

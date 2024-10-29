@@ -17,6 +17,7 @@ MonoBehaviour:
   description: Deal 4 Damage Twice.
   chipImage: {fileID: 21300000, guid: 498ca2ab01a9c244d8a82356823a810c, type: 3}
   canBeUpgraded: 1
+  costToUpgrade: 150
   hitAllTargets: 0
   damage: 4
   upgradedDamageByAmount: 2

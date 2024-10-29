@@ -13,13 +13,17 @@ public class Chip : MonoBehaviour
     private int disableCounter;
 
     [SerializeField]
-    private bool isInInventoryChip;
+    private bool isInWorkShop=false;
+
+    [SerializeField] 
+    private bool isInInventoryChip=false;
 
     [SerializeField]
     private bool isActive;
 
     public CombatController CombatController;
     public GameObject Player;
+    public UpgradeController UpgradeController;
 
     /// <summary>
     /// This variable decides if the card is isActive or inactive
@@ -49,6 +53,17 @@ public class Chip : MonoBehaviour
         set
         {
             isInInventoryChip = value;
+        }
+    }
+    public bool IsInWorkShop
+    {
+        get
+        {
+            return isInWorkShop;
+        }
+        set
+        {
+            isInWorkShop = value;
         }
     }
 
@@ -88,6 +103,15 @@ public class Chip : MonoBehaviour
         {
             GetComponent<Button>().interactable = false;
         }
+        else if (IsInWorkShop)
+        {
+            //Assign method to button
+            imageButton = GetComponent<Button>();
+            imageButton.onClick.AddListener(UpgradeChipSelected);
+            imageButton.interactable = true;
+
+            UpgradeController = GameObject.FindGameObjectWithTag("UpgradeController").GetComponent<UpgradeController>();
+        }
         else
         {
             //Assign method to button
@@ -99,6 +123,10 @@ public class Chip : MonoBehaviour
 
             IsActive = true;
         }        
+    }
+    private void UpgradeChipSelected()
+    {
+        UpgradeController.ChipSelectToUpgrade(newChip);
     }
     /// <summary>
     /// Runs Scriptable Chip

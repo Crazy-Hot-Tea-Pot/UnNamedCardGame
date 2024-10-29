@@ -3,7 +3,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Chip", menuName = "Chip System/New Chip")]
 public class NewChip : ScriptableObject
 {
-    protected bool isUpgraded;
+    protected bool isUpgraded = false;
     public enum ChipRarity
     {
         Basic,
@@ -30,6 +30,10 @@ public class NewChip : ScriptableObject
     /// If this card can be upgraded.
     /// </summary>
     public bool canBeUpgraded;
+    /// <summary>
+    /// How much it would cost to upgrade this card
+    /// </summary>
+    public int costToUpgrade;
 
     /// <summary>
     /// If Chip is upgraded.

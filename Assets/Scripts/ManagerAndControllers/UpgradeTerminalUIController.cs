@@ -15,7 +15,6 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
     [Header("Intro Screen")]
     public GameObject IntroPanel;
     public TMP_Text IntroConsole;    
-    private bool hasTextChanged;
 
     [Header("Heal Upgrade Screen")]
     public GameObject HealthPanel;
@@ -38,82 +37,26 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
     public GameObject ErrorPanel;
     public TMP_Text ErrorConsole;
 
+    public List<GameObject> allUIPanels;
     public List<TMP_Text> Consoles = new List<TMP_Text>();
-
+    void Awake()
+    {
+        controller = GameObject.FindGameObjectWithTag("UpgradeController").GetComponent<UpgradeController>();
+    }
     void OnEnable()
     {
-        TMPro_EventManager.TEXT_CHANGED_EVENT.Add(OnTextChanged);
+        controller.OnScreenChanged += UpdateUIScreen;
     }
 
     void OnDisable()
     {
-        TMPro_EventManager.TEXT_CHANGED_EVENT.Remove(OnTextChanged);
+        controller.OnScreenChanged -= UpdateUIScreen;
     }
 
     void Start()
     {
-        controller=GameObject.FindGameObjectWithTag("UpgradeController").GetComponent<UpgradeController>();
-    }
-    /// <summary>
-    /// Switches to the specified UI screen and deactivates all others.
-    /// </summary>
-    /// <param name="screen">The UI screen to activate.</param>
-    public void SwitchDisplay(UpgradeController.Screens screen)
-    {
-        StopAllCoroutines();
-        switch (screen)
-        {
-            case UpgradeController.Screens.Default:
-                break;
-            case UpgradeController.Screens.Intro:
-                HealthPanel.SetActive(false);
-                IntroPanel.SetActive(true);
-                ChipPanel.SetActive(false);
-                StartCoroutine(RevealIntroScreen());
-                break;
-            case UpgradeController.Screens.HealthUpgrade:
-
-                IntroPanel.SetActive(false);
-                HealthPanel.SetActive(true);
-                ChipPanel.SetActive(false);
-
-                PlayerController tempPlayer = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
-                
-                string tempText = string.Format("Getting <#A20000> *Error*</color> Health.\n" +
-            "Current Health is <#A20000>{0}</color> of Max Health <#A20000>{1}</color>.\n" +
-            "Will cost <b>150</b> Scrap to Upgrade to <#A20000>{2}</color>.\n" +
-            "<link=\"UpgradeHealth\"><b><u>Upgrade</link>\n" +
-            "<link=\"Exit\">Exit</b></u></link>",
-            tempPlayer.Health, tempPlayer.MaxHealth, tempPlayer.MaxHealth + 10);
-
-                HealthConsole.SetText(tempText);
-
-                StartCoroutine(RevealHealthScreen());
-                break;
-            case UpgradeController.Screens.ChipUpgrade:
-
-                IntroPanel.SetActive(false);
-                HealthPanel.SetActive(false);
-                ChipPanel.SetActive(true);
-
-                ChipConsole.SetText("...Loading Chips...");
-
-                StartCoroutine(RevealChipScreen());
-                StartCoroutine(BringUpChipSelector());
-
-                break;
-            case UpgradeController.Screens.Exit:
-
-                IntroPanel.SetActive(false);
-                HealthPanel.SetActive(false);
-                ChipPanel.SetActive(false);
-
-            break;
-            default:
-                break;
-        }
-    }
-
+        
+    } 
 
     /// <summary>
     /// When player clicks one of the links.
@@ -124,15 +67,20 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
         if(isWaintingForInput)
             foreach (var console in Consoles)
             {
+                // Skip inactive components
+                if (console == null || !console.gameObject.activeInHierarchy)
+                    continue;
+
                 int linkIndex = TMP_TextUtilities.FindIntersectingLink(console, eventData.position, null);
 
-                if (linkIndex != -1) // A link was clicked
+                if (linkIndex != -1) // If a link was clicked
                 {
                     TMP_LinkInfo linkInfo = console.textInfo.linkInfo[linkIndex];
                     string linkID = linkInfo.GetLinkID();
 
+                    // Handle each link based on its ID
                     HandleLinkClick(linkID);
-                    break; // Exit loop after handling the first clicked link
+                    return; // Exit after handling the first valid link click
                 }
             }
     }
@@ -146,8 +94,6 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
         switch (linkID)
         {
             case"UpgradeHealthScreen":
-
-                SwitchDisplay(UpgradeController.Screens.HealthUpgrade);
 
                 controller.SwitchToScreen(UpgradeController.Screens.HealthUpgrade);
 
@@ -163,26 +109,24 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
                     tempPlayer.UpgradeMaxHealth(10);
 
                     //Display new info
-                    SwitchDisplay(UpgradeController.Screens.HealthUpgrade);
                     controller.SwitchToScreen(UpgradeController.Screens.HealthUpgrade);
                 }
                 else
                 {
                     // TODO: Error Scree stuff
+                    ErrorConsole.SetText("Not enough scrap to upgrade health.");
                     Debug.Log("Not enough scrap to upgrade health."); // Placeholder log
                 }
                 break;
             case "UpgradeChipScreen":
-                SwitchDisplay(UpgradeController.Screens.ChipUpgrade);
                 controller.SwitchToScreen(UpgradeController.Screens.ChipUpgrade);
                 break;
-            case "UpgradeChip":
+            case "UpgradeSelectedChip":               
+                controller.AttemptToUpgradeChip();
                 break;
             case "Exit":
-                SwitchDisplay(UpgradeController.Screens.Exit);
-
-                GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().IsInteracting = false;
-
+            case "Exit1":
+            case "Exit2":
                 controller.SwitchToScreen(UpgradeController.Screens.Exit);
 
             break;
@@ -193,14 +137,116 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
     }
 
     /// <summary>
-    /// Is called when the text is changed
+    /// Switches to the specified UI screen and deactivates all others.
     /// </summary>
-    /// <param name="obj"></param>
-    private void OnTextChanged(UnityEngine.Object obj)
+    /// <param name="screen">The UI screen to activate.</param>
+    private void UpdateUIScreen(UpgradeController.Screens screen)
     {
-        hasTextChanged = true;
+        StopAllCoroutines();
+        switch (screen)
+        {
+            case UpgradeController.Screens.Default:
+                IntroPanel.SetActive(false);
+                HealthPanel.SetActive(false);
+                ChipPanel.SetActive(false);
+                break;
+            case UpgradeController.Screens.Intro:
+
+                SetActiveUIElement(IntroPanel);                
+
+                StartCoroutine(RevealText(IntroConsole, true, 0.01f, false,0f,0,false,0));
+                break;
+            case UpgradeController.Screens.HealthUpgrade:
+
+                SetActiveUIElement(HealthPanel);
+
+                PlayerController tempPlayer = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+                string tempText = string.Format("Getting <#A20000>*Error*</color> Health.\n" +
+                "Current Health is <#A20000>{0}</color> of Max Health <#A20000>{1}</color>.\n" +
+                "Will cost <b>150</b> Scrap to Upgrade to <#A20000>{2}</color>.\n" +
+                "<b><u><link=\"UpgradeHealth\">Upgrade</link></u></b>\n" +
+                "<b><u><link=\"Exit1\">Exit</link></u></b>",
+                tempPlayer.Health, tempPlayer.MaxHealth, tempPlayer.MaxHealth + 10);
+
+
+                HealthConsole.SetText(tempText);
+
+                StartCoroutine(RevealText(HealthConsole, false, 0.01f, false, 0f,0,false,0));
+                break;
+            case UpgradeController.Screens.ChipUpgrade:
+
+                SetActiveUIElement(ChipPanel);
+
+                if (controller.SelectedChip == null)
+                {
+
+                    StartCoroutine(RevealText(ChipConsole, true, 0.01f, true,0.1f,5,false,0));
+                    StartCoroutine(BringUpChipSelector());
+                }
+                else
+                {
+                    ChipConsole.ForceMeshUpdate();
+
+                    ChipSelectionPanel.SetActive(false);
+
+                    ChipConsole.textInfo.Clear();
+
+                    string tempText2 = string.Format("Chip inserted.\n" +
+                        "...Loading Chip...\n" +
+                        "Chip Info:\n" +
+                        "Chip Rarity - {0}\n" +
+                        "Chip Name - {1}\n" +
+                        "Chip Description - {2}\n" +
+                        "Cost to upgrade - <b>{3}</b> Scrap.\n-----\n" +
+                        "<b><u><link=\"UpgradeSelectedChip\">Upgrade Chip</link></u></b>\n\n" +
+                        "<b><u><link=\"Exit2\">Exit</link></u></b>",
+                        controller.SelectedChip.chipRarity, controller.SelectedChip.chipName, controller.SelectedChip.description, controller.SelectedChip.costToUpgrade);
+
+
+
+                    ChipConsole.SetText(tempText2);
+
+                    IntroConsole.ForceMeshUpdate();
+                    HealthConsole.ForceMeshUpdate();
+                    ChipConsole.ForceMeshUpdate();  
+                    ErrorConsole.ForceMeshUpdate();
+
+
+
+                    StartCoroutine(RevealText(ChipConsole, true, 0.01f, false, 0f,0,false,0));
+
+                }
+
+                break;
+            case UpgradeController.Screens.Exit:
+                IntroPanel.SetActive(false);
+                HealthPanel.SetActive(false);
+                ChipPanel.SetActive(false);
+                break;
+            default:
+                IntroPanel.SetActive(false);
+                HealthPanel.SetActive(false);
+                ChipPanel.SetActive(false);
+                break;
+        }
     }
 
+    /// <summary>
+    /// Active Required Panel.
+    /// </summary>
+    /// <param name="element"></param>
+    /// <param name="isActive"></param>
+    private void SetActiveUIElement(GameObject targetPanel)
+    {
+        if(allUIPanels.Count== 0)
+        {
+            Debug.LogError("Panels are empty!");
+        }
+        foreach (var panel in allUIPanels)
+        {
+            panel.SetActive(panel == targetPanel);
+        }
+    }
     /// <summary>
     /// Populate the panel with chips first and then,
     /// Bring up window to select Chip.
@@ -213,12 +259,16 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
 
         foreach(NewChip newChip in GameManager.Instance.playerDeck)
         {
-            ChipPrefab.GetComponent<Chip>().newChip = newChip;
+            if (newChip.canBeUpgraded)
+            {
+                ChipPrefab.GetComponent<Chip>().newChip = newChip;
 
-            ChipPrefab.GetComponent<Chip>().IsInInventoryChip = true;
+
+                ChipPrefab.GetComponent<Chip>().IsInWorkShop = true;
 
 
-            GameObject UIChip = Instantiate(ChipPrefab, ChipHolder.transform);
+                GameObject UIChip = Instantiate(ChipPrefab, ChipHolder.transform);
+            }
             
         }
 
@@ -239,132 +289,103 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
         }
 
         tempRectTransform.anchoredPosition=endPosition;
-
-        ChipConsole.SetText("");
     }
 
     /// <summary>
-    /// Method revealing the text one character at a time for intro screen.
+    /// Reveals text to the UI base on request.
     /// </summary>
+    /// <param name="tmpText"></param>
+    /// <param name="byLetter"></param>
+    /// <param name="revealSpeed">Lower the number faster it appears.</param>
+    /// <param name="timeBeforeRestartAnimation"></param>
     /// <returns></returns>
-    private IEnumerator RevealIntroScreen()
+    private IEnumerator RevealText(TMP_Text tmpText, bool byLetter, float revealSpeed, bool blinkText, float blinkDuration, int blinkCount,bool loopAnimation, float timeBeforeRestartAnimation)
     {
         isWaintingForInput = false;
 
-        IntroConsole.ForceMeshUpdate();       
+        tmpText.ForceMeshUpdate();
 
-        TMP_TextInfo textInfo = IntroConsole.textInfo;
+        TMP_TextInfo textInfo = tmpText.textInfo;
 
-        int totalVisibleCharacters = textInfo.characterCount; // Get # of Visible Character in text object
+
+        int totalVisibleCharacters = textInfo.characterCount;
+        int totalWordCount = textInfo.wordCount;
         int visibleCount = 0;
 
-       while (visibleCount!=totalVisibleCharacters)
-       {
+        bool hasTextChanged = false;
+        int counter = 0;
+        int currentWord = 0;
+
+        while (true)
+        {
             if (hasTextChanged)
             {
-                totalVisibleCharacters = textInfo.characterCount; // Update visible character count.
+                totalVisibleCharacters = textInfo.characterCount;
                 hasTextChanged = false;
             }
 
-            if (visibleCount > totalVisibleCharacters)
+            if (byLetter)
             {
-                yield return new WaitForSeconds(1.0f);
-                visibleCount = 0;
+                if (visibleCount > totalVisibleCharacters)
+                {
+                    isWaintingForInput = true;
+                    if (blinkText)
+                        yield return StartCoroutine(BlinkText(tmpText, blinkDuration, blinkCount));
+
+                    if (loopAnimation)
+                    {
+                        yield return new WaitForSeconds(timeBeforeRestartAnimation); // Pause before restarting
+                        visibleCount = 0;
+                    }
+                    else
+                        break;                    
+                }
+
+                tmpText.maxVisibleCharacters = visibleCount; // Set visible characters
+                visibleCount += 1;
+                yield return new WaitForSeconds(revealSpeed);
             }
+            else
+            {
+                currentWord = counter % (totalWordCount + 1);
 
-            IntroConsole.maxVisibleCharacters = visibleCount; // How many characters should TextMeshPro display?
+                // Determine visible character count based on the current word
+                if (currentWord == 0)
+                    visibleCount = 0;
+                else if (currentWord < totalWordCount)
+                    visibleCount = textInfo.wordInfo[currentWord - 1].lastCharacterIndex + 1;
+                else if (currentWord == totalWordCount)
+                    visibleCount = totalVisibleCharacters;
 
-            visibleCount += 1;
+                tmpText.maxVisibleCharacters = visibleCount;
 
-            yield return new WaitForSeconds(0.1f);
-       }
+                if (visibleCount >= totalVisibleCharacters)
+                {
+                    if (blinkText)
+                        yield return StartCoroutine(BlinkText(tmpText, blinkDuration, blinkCount));
 
-        isWaintingForInput = true;
+                    if (loopAnimation)
+                        yield return new WaitForSeconds(timeBeforeRestartAnimation);
+                    else
+                        break;
+                }
+
+                counter += 1;
+                yield return new WaitForSeconds(revealSpeed * 10); // Adjust speed for word reveal
+            }
+        }        
     }
-
-    /// <summary>
-    /// Method revealing the text one word at a time.
-    /// </summary>
-    /// <returns></returns>
-    private IEnumerator RevealHealthScreen()
+    private IEnumerator BlinkText(TMP_Text tmpText, float blinkDuration, int blinkCount)
     {
-        isWaintingForInput = false;
-
-        HealthConsole.ForceMeshUpdate();
-
-        int totalWordCount = HealthConsole.textInfo.wordCount;
-        int totalVisibleCharacters = HealthConsole.textInfo.characterCount; // Get # of Visible Character in text object
-        int counter = 0;
-        int currentWord = 0;
-        int visibleCount = 0;
-
-        while (visibleCount != totalVisibleCharacters)
+        int totalVisibleCharacters = tmpText.textInfo.characterCount;
+        for (int i = 0; i < blinkCount; i++)
         {
-            currentWord = counter % (totalWordCount + 1);
+            tmpText.maxVisibleCharacters = 0;
+            yield return new WaitForSeconds(blinkDuration);
 
-            // Get last character index for the current word.
-            if (currentWord == 0) // Display no words.
-                visibleCount = 0;
-            else if (currentWord < totalWordCount) // Display all other words with the exception of the last one.
-                visibleCount = HealthConsole.textInfo.wordInfo[currentWord - 1].lastCharacterIndex + 1;
-            else if (currentWord == totalWordCount) // Display last word and all remaining characters.
-                visibleCount = totalVisibleCharacters;
-
-            HealthConsole.maxVisibleCharacters = visibleCount; // How many characters should TextMeshPro display?
-
-            // Once the last character has been revealed, wait the set speed and start over.
-            if (visibleCount >= totalVisibleCharacters)
-            {
-                yield return new WaitForSeconds(1.0f);
-            }
-
-            counter += 1;
-
-            yield return new WaitForSeconds(0.1f);
-        }
-
-        isWaintingForInput = true;
-    }
-
-    /// <summary>
-    /// Method revealing text one word in the Chip Console
-    /// </summary>
-    /// <returns></returns>
-    private IEnumerator RevealChipScreen()
-    {
-        isWaintingForInput = false;
-
-        ChipConsole.ForceMeshUpdate();
-
-        int totalWordCount = ChipConsole.textInfo.wordCount;
-        int totalVisibleCharacters = ChipConsole.textInfo.characterCount; // Get # of Visible Character in text object
-        int counter = 0;
-        int currentWord = 0;
-        int visibleCount = 0;
-
-        while (visibleCount != totalVisibleCharacters)
-        {
-            currentWord = counter % (totalWordCount + 1);
-
-            // Get last character index for the current word.
-            if (currentWord == 0) // Display no words.
-                visibleCount = 0;
-            else if (currentWord < totalWordCount) // Display all other words with the exception of the last one.
-                visibleCount = ChipConsole.textInfo.wordInfo[currentWord - 1].lastCharacterIndex + 1;
-            else if (currentWord == totalWordCount) // Display last word and all remaining characters.
-                visibleCount = totalVisibleCharacters;
-
-            ChipConsole.maxVisibleCharacters = visibleCount; // How many characters should TextMeshPro display?
-
-            // Once the last character has been revealed, wait the set speed and start over.
-            if (visibleCount >= totalVisibleCharacters)
-            {
-                yield return new WaitForSeconds(1.0f);
-            }
-
-            counter += 1;
-
-            yield return new WaitForSeconds(0.1f);
+            tmpText.maxVisibleCharacters = totalVisibleCharacters;
+            yield return new WaitForSeconds(blinkDuration);
         }
     }
+
 }
