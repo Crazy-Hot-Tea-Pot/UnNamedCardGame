@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 686406763574478566}
   - component: {fileID: 8625109140152570308}
   - component: {fileID: 1343624612072298675}
-  - component: {fileID: 2378870274406801148}
+  - component: {fileID: 7678874905915990236}
   m_Layer: 0
   m_Name: cm
   m_TagString: Untagged
@@ -73,7 +73,7 @@ MonoBehaviour:
   m_BiasX: 0
   m_BiasY: 0
   m_CenterOnActivate: 1
---- !u!114 &2378870274406801148
+--- !u!114 &7678874905915990236
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -82,21 +82,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 350216989567367896}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bd6043bde05a7fc4cba197d06915c1e3, type: 3}
+  m_Script: {fileID: 11500000, guid: fa7155796051b734daa718462081dc5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Damping: {x: 0.1, y: 0.1, z: 0.1}
-  ShoulderOffset: {x: 0.5, y: 4.03, z: 0}
-  VerticalArmLength: 0.1
-  CameraSide: 1
-  CameraDistance: 13
-  CameraCollisionFilter:
-    serializedVersion: 2
-    m_Bits: 0
-  IgnoreTag: 
-  CameraRadius: 0.2
-  DampingIntoCollision: 0
-  DampingFromCollision: 2
+  m_BindingMode: 1
+  m_FollowOffset: {x: 0, y: 10, z: -20}
+  m_XDamping: 20
+  m_YDamping: 20
+  m_ZDamping: 20
+  m_AngularDampingMode: 0
+  m_PitchDamping: 0
+  m_YawDamping: 20
+  m_RollDamping: 0
+  m_AngularDamping: 0
 --- !u!1 &2253669275507397927
 GameObject:
   m_ObjectHideFlags: 0
