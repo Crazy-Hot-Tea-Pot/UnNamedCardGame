@@ -4,14 +4,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
-/// <summary>
-/// Bugs:
-/// After Rotating Camera border movement isn't correct direction.
-/// </summary>
 public class CameraController : MonoBehaviour
 {
     private Transform player;
+
+    [SerializeField]
+    private Transform target;
+    public Transform Target
+    {
+        get
+        {
+            return target;
+        }
+        set
+        {
+            target = value;
+        }
+    }
 
     public bool AllowBoarderMovement;
 
@@ -29,7 +38,7 @@ public class CameraController : MonoBehaviour
 
     [Header("Cameras")]
     [SerializeField]
-    private CameraState CurrentCamera;
+    private CameraState currentCamera;
 
     public CinemachineVirtualCamera DefaultCamera;
     public CinemachineFreeLook RotationCamera;
@@ -37,7 +46,30 @@ public class CameraController : MonoBehaviour
     public CinemachineVirtualCamera BorderCamera;
     public CinemachineVirtualCamera FirstPersonCamera;
 
-
+    public CameraState CurrentCamera
+    {
+        get
+        {
+            return currentCamera;  
+        }
+        set
+        {
+            currentCamera = value;
+            switch (value)
+            {
+                case CameraState.Default:
+                    DefaultCamera.Follow = Target;
+                    DefaultCamera.LookAt = Target;
+                    break;
+                case CameraState.Rotation:
+                    RotationCamera.Follow = Target;
+                    RotationCamera.LookAt=Target;
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
 
     [Header("Camera Info")]
     
@@ -89,7 +121,10 @@ public class CameraController : MonoBehaviour
     {
         playerInputActions.CameraControls.Enable();
 
-        playerInputActions.CameraControls.RotateCamera.performed += ctx => SwitchCamera(CameraState.Rotation);       
+        // TODO Change this to when player clicks ground to move just not click anywhere.
+        playerInputActions.CameraControls.Click.performed += ctx => SwitchCamera(CameraState.Default);
+
+        playerInputActions.CameraControls.RotateCamera.performed += ctx => SwitchCamera(CameraState.Rotation);
         playerInputActions.CameraControls.FreeCam.performed += ctx => SwitchCamera(CameraState.Pan);       
         playerInputActions.CameraControls.ResetCamera.performed += ctx => SwitchCamera(CameraState.Default);
 
@@ -102,13 +137,9 @@ public class CameraController : MonoBehaviour
     void Start()
     {
 
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
-        
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();    
 
-        DefaultCamera.Follow = player;
-        DefaultCamera.LookAt = player;
-        RotationCamera.Follow = player;
-        RotationCamera.LookAt = player;
+        Target = player;
 
         SwitchCamera(CameraState.Default);        
 
