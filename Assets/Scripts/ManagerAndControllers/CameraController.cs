@@ -6,6 +6,9 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 public class CameraController : MonoBehaviour
 {
+    [SerializeField] 
+    private LayerMask groundLayer;
+
     private Transform player;
 
     [SerializeField]
@@ -121,8 +124,15 @@ public class CameraController : MonoBehaviour
     {
         playerInputActions.CameraControls.Enable();
 
-        // TODO Change this to when player clicks ground to move just not click anywhere.
-        playerInputActions.CameraControls.Click.performed += ctx => SwitchCamera(CameraState.Default);
+
+        playerInputActions.CameraControls.Click.performed += ctx =>
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+            if(Physics.Raycast(ray,out RaycastHit hit, Mathf.Infinity, groundLayer))
+            {
+                SwitchCamera(CameraState.Default);
+            }            
+        };
 
         playerInputActions.CameraControls.RotateCamera.performed += ctx => SwitchCamera(CameraState.Rotation);
         playerInputActions.CameraControls.FreeCam.performed += ctx => SwitchCamera(CameraState.Pan);       
