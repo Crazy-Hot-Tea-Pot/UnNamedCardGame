@@ -9,8 +9,6 @@ using UnityEngine.UI;
 /// </summary>
 public class Chip : MonoBehaviour
 {
-    //Track how long a card is disabled.
-    private int disableCounter;
 
     [SerializeField]
     private bool isInWorkShop=false;
@@ -18,30 +16,10 @@ public class Chip : MonoBehaviour
     [SerializeField] 
     private bool isInInventoryChip=false;
 
-    [SerializeField]
-    private bool isActive;
-
     public CombatController CombatController;
     public GameObject Player;
     public UpgradeController UpgradeController;
-
-    /// <summary>
-    /// This variable decides if the card is isActive or inactive
-    /// </summary>
-    public bool IsActive
-    {
-        get
-        {
-            return isActive;
-        }
-        set
-        {
-            isActive = value;
-            GetComponent<Button>().interactable = value;
-            if (!isActive)
-                disableCounter = 0;
-        }
-    }
+    
 
     //Make chip know its not an clickable chip
     public bool IsInInventoryChip
@@ -95,6 +73,7 @@ public class Chip : MonoBehaviour
     {
         chipTitle = newChip.chipName + " Chip";
         this.gameObject.name = ChipTitle;
+        newChip.ThisChip = this.gameObject;
 
         // Set image to card
         GetComponent<Image>().sprite = newChip.chipImage;        
@@ -121,7 +100,7 @@ public class Chip : MonoBehaviour
             CombatController = GameObject.FindGameObjectWithTag("CombatController").GetComponent<CombatController>();
             Player = GameObject.FindGameObjectWithTag("Player");
 
-            IsActive = true;
+            newChip.IsActive = true;
         }        
     }
     private void UpgradeChipSelected()
@@ -134,7 +113,7 @@ public class Chip : MonoBehaviour
     public void ChipSelected()
     {
         Debug.Log(ChipTitle + " Chip");
-        isActive = true;
+        newChip.IsActive = true;
         try
         {
             //Check if player turn to play play card
@@ -225,20 +204,5 @@ public class Chip : MonoBehaviour
             // Generic catch for any other exceptions that may occur
             Debug.LogError($"An unexpected error occurred: {ex.Message}");
         }
-    }
-    /// <summary>
-    /// Any action chip needs to do at end of Turn.
-    /// </summary>
-    public void EndRound()
-    {
-        if (!IsActive)
-        {
-            disableCounter++;
-
-            if (disableCounter >= 2)
-            {
-                IsActive = true;
-            }
-        }        
-    }
+    }    
 }

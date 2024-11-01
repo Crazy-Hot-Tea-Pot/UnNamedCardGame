@@ -305,6 +305,9 @@ public class Enemy : MonoBehaviour
         {
             if(CombatController.CanIMakeAction(this.gameObject))
             {
+                //Look at player
+                this.gameObject.transform.LookAt(EnemyTarget.transform);
+
                 //Check if player is in range
                 if (DistanceToPlayer <= AttackRange)
                 {
@@ -312,7 +315,7 @@ public class Enemy : MonoBehaviour
                     PerformIntent();
                 }
                 else
-                {
+                {                    
                     // move to player
                     agent.SetDestination(EnemyTarget.transform.position);
                 }

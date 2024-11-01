@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+[Serializable]
 public class Combadant
 {
     public GameObject combadant;
@@ -22,6 +23,13 @@ public class CombatController : MonoBehaviour
 
     [SerializeField]
     private GameObject target;
+
+    private int currentTargetIndex;
+
+    [Header("Combadents")]
+    public List<Combadant> Combadants;
+    [SerializeField]
+    private int currentCombatantIndex;
 
     [Header("Player")]
     [SerializeField]
@@ -56,12 +64,10 @@ public class CombatController : MonoBehaviour
             playerUsedAbility = value;
         }
     }
+
     private GameObject endTurnButton;
 
-    private int currentCombatantIndex;
-    private int currentTargetIndex;
-
-    public List<Combadant> Combadants = new();
+    
 
 
     /// <summary>
@@ -89,6 +95,10 @@ public class CombatController : MonoBehaviour
         private set
         {
             currentCombatantIndex = value;
+
+            if (currentCombatantIndex >= Combadants.Count)
+                currentCombatantIndex = Combadants.Count - 1;
+
             if(Combadants.Count != 0)
                 CurrentCombatant = Combadants[currentCombatantIndex].combadant.name;
 
@@ -192,15 +202,24 @@ public class CombatController : MonoBehaviour
     /// </summary>
     private void CheckIfAllAttacked()
     {
-        if (Combadants[currentCombatantIndex].attacked)
+        foreach(Combadant combadant in Combadants)
         {
-            currentCombatantIndex++;
-
-            if (currentCombatantIndex >= Combadants.Count)
-            {
-                NextRound();
-            }
+            if (!combadant.attacked)
+                    return;            
         }
+        NextRound();
+        //int tempCurrentCombadant = 0;
+
+        //if (Combadants[tempCurrentCombadant].attacked)
+        //{
+
+        //    tempCurrentCombadant++;
+
+        //    if (tempCurrentCombadant >= (Combadants.Count))
+        //    {
+        //        NextRound();
+        //    }
+        //}
     }
     /// <summary>
     /// Start Combat
@@ -210,23 +229,24 @@ public class CombatController : MonoBehaviour
         GameManager.Instance.StartCombat();
         RoundCounter = 1;
 
-        //this is a test add to the list.
-        Combadant playertest = new();
-        playertest.combadant = GameObject.FindGameObjectWithTag("Player");
-        playertest.attacked = false;
-        Combadants.Add(playertest);
+        //Add player to Combadants
+        Combadant player = new();
+        player.combadant = GameObject.FindGameObjectWithTag("Player");
+        player.attacked = false;
+        Combadants.Add(player);
         
 
         //Set enemies to combat mode in combat zone
         foreach (GameObject combatEnemy in GameManager.Instance.enemyList)
         {
-            Combadant test = new Combadant();
-            test.combadant = combatEnemy;
-            test.attacked = false;
-            Combadants.Add(test);
+            Combadant enemies = new Combadant();
+            enemies.combadant = combatEnemy;
+            enemies.attacked = false;
+            Combadants.Add(enemies);
 
             combatEnemy.GetComponent<Enemy>().InCombat = true;
         }
+
         CurrentCombatantIndex = 0;
     }
     /// <summary>
@@ -253,9 +273,9 @@ public class CombatController : MonoBehaviour
     /// <param name="gameObject"></param>
     public bool CanIMakeAction(GameObject gameObject)
     {        
-        if (Combadants[currentCombatantIndex].combadant == gameObject)
+        if (Combadants[CurrentCombatantIndex].combadant == gameObject)
         {
-            return !Combadants[currentCombatantIndex].attacked;
+            return !Combadants[CurrentCombatantIndex].attacked;
         }
         
         return false;
@@ -298,7 +318,7 @@ public class CombatController : MonoBehaviour
     {
         RoundCounter++;
 
-        currentCombatantIndex = 0;
+        CurrentCombatantIndex = 0;
 
 
         foreach (Combadant combadant in Combadants)
@@ -314,9 +334,9 @@ public class CombatController : MonoBehaviour
                 combadant.combadant.GetComponent<Enemy>().RoundEnd();
         }
 
-        foreach(var chip in GameManager.Instance.playerHand)
+        foreach(NewChip newchip in GameManager.Instance.playerHand)
         {
-            chip.GetComponent<Chip>().EndRound();
+            newchip.EndRound();
         }
     }
     /// <summary>
@@ -329,7 +349,7 @@ public class CombatController : MonoBehaviour
 
         Combadants.Clear();
         roundCounter = 0;
-        currentCombatantIndex = 0;
+        CurrentCombatantIndex = 0;
         CurrentCombatant = "No Combat Yet";
 
         // Notify the GameManager or other systems

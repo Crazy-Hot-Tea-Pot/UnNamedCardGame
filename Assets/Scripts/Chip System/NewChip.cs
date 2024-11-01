@@ -1,14 +1,52 @@
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 [CreateAssetMenu(fileName = "New Chip", menuName = "Chip System/New Chip")]
 public class NewChip : ScriptableObject
 {
     protected bool isUpgraded = false;
+    protected bool isActive;   
+    protected int disableCounter;
+    public GameObject ThisChip;
     public enum ChipRarity
     {
         Basic,
         Common,
         Rare
+    }
+    /// <summary>
+    /// This variable decides if the chip is isActive or inactive
+    /// </summary>
+    public bool IsActive
+    {
+        get
+        {
+            return isActive;
+        }
+        set
+        {
+            isActive = value;
+
+            ThisChip.GetComponent<Button>().interactable = value;
+
+            if (isActive)
+                disableCounter = 0;
+        }
+    }
+    /// <summary>
+    /// Track how long a card is disabled.
+    /// </summary>
+    public int DisableCounter
+    {
+        get
+        {
+            return disableCounter;
+        }
+        set
+        {
+            disableCounter = value;
+        }
     }
     /// <summary>
     /// Rariry of the card.
@@ -67,10 +105,23 @@ public class NewChip : ScriptableObject
 
     public virtual void OnChipPlayed(PlayerController player, Enemy Target)
     {
-        // This will be overridden by specific card types
+        if(!IsActive)
         Debug.Log(chipName + " played.");
-        //GameObject.FindGameObjectWithTag("Player").
-        //    GetComponent<PlayerController>().
-        //    PlayedCardOrAbility(energyCost);
+    }
+
+    /// <summary>
+    /// Any action chip needs to do at end of Turn.
+    /// </summary>
+    public virtual void EndRound()
+    {
+        if (IsActive)
+        {
+            DisableCounter++;
+
+            if (DisableCounter >= 2)
+            {
+                IsActive = true;
+            }
+        }
     }
 }

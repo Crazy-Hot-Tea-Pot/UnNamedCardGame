@@ -467,17 +467,21 @@ public class PlayerController : MonoBehaviour
 
             // Create a LayerMask that excludes the "Player" layer
             int layerMask = ~LayerMask.GetMask("Player");
+            int layerMask2 = ~LayerMask.GetMask("Ignore Raycast");
 
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
             {
-
-                if (MoveableObject != null && hit.collider.CompareTag("Ground"))
+                if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask2))
                 {
-                    NavMeshAgent agent = MoveableObject.GetComponent<NavMeshAgent>();
-                    if (agent != null)
+
+                    if (MoveableObject != null && hit.collider.CompareTag("Ground"))
                     {
-                        agent.SetDestination(hit.point);
-                        this.gameObject.transform.LookAt(hit.point);
+                        NavMeshAgent agent = MoveableObject.GetComponent<NavMeshAgent>();
+                        if (agent != null)
+                        {
+                            agent.SetDestination(hit.point);
+                            this.gameObject.transform.LookAt(hit.point);
+                        }
                     }
                 }
             }
