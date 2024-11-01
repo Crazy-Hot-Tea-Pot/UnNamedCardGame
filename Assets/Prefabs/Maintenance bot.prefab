@@ -171,6 +171,11 @@ MonoBehaviour:
   cameraAlignment: {fileID: 0}
   enemyCanvas: {fileID: 2583829228151378540}
   CombatController: {fileID: 0}
+  dropedCards:
+  - {fileID: 11400000, guid: 27b83e771aa4f0a448abe213e528e05b, type: 2}
+  - {fileID: 11400000, guid: 38b543807d56b5c40a979618f6600269, type: 2}
+  - {fileID: 11400000, guid: 4df75c6f9b56e524cbc5da7624df9c13, type: 2}
+  - {fileID: 11400000, guid: 38b543807d56b5c40a979618f6600269, type: 2}
 --- !u!195 &5926527422571719709
 NavMeshAgent:
   m_ObjectHideFlags: 0
