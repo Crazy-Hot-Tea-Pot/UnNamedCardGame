@@ -8,7 +8,8 @@ public class Enemy : MonoBehaviour
 
     public GameObject enemyTarget;
 
-    public float AttackRange;    
+    public float AttackRange;
+    
     [SerializeField]
     private float distanceToPlayer;
 
