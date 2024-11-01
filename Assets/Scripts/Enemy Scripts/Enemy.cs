@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.AI;
@@ -87,6 +89,11 @@ public class Enemy : MonoBehaviour
     /// Reference to combat controller.
     /// </summary>
     public CombatController CombatController;
+
+    /// <summary>
+    /// This holds the cards we want to have dropped on death
+    /// </summary>
+    public List<NewChip> dropedCards;
 
     /// <summary>
     /// Returns name of enemy
