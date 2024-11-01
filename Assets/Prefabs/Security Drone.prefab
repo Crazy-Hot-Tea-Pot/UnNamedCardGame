@@ -509,6 +509,10 @@ MonoBehaviour:
   cameraAlignment: {fileID: 0}
   enemyCanvas: {fileID: 9052268753380743122}
   CombatController: {fileID: 0}
+  dropedCards:
+  - {fileID: 11400000, guid: af8d67b61375d7a4b9e92b3f514d9917, type: 2}
+  - {fileID: 11400000, guid: 4df75c6f9b56e524cbc5da7624df9c13, type: 2}
+  - {fileID: 11400000, guid: c353938729c23ab4cac6f56427aa75d6, type: 2}
   intentsPerformed: 0
   numberOfAlertDrones: 0
   isAlertDrone: 0

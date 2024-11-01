@@ -577,8 +577,8 @@ public class PlayerUIManager : MonoBehaviour
         RemoveFromUI(deleteableObj, "Deck");
         //Remove item from ui of swap screen
         RemoveFromUI(deleteableObj, "Swap");
-        //Remove item from the actual inventory
-        GameObject.Find("PlayerUIManager").GetComponent<PlayerUIManager>().InventoryList.Remove(deleteableObj);
+        //Remove item from the actual game manager deck
+        GameManager.Instance.playerDeck.Remove(deleteableObj.GetComponent<Chip>().newChip);
 
         CloseSwapPanel();
     }
