@@ -370,22 +370,10 @@ public class Enemy : MonoBehaviour
     public virtual void Die()
     {
         Debug.Log($"{enemyName} has been defeated!");
-        DropItems();
         CombatController.RemoveCombadant(this.gameObject);
         Destroy(this.gameObject);
     }
 
-    /// <summary>
-    /// Is called during enemy death.
-    /// TODO drop items that enemy has.
-    /// </summary>
-    public virtual void DropItems()
-    {
-        //foreach (Drop drop in enemyDrops)
-        //{
-        //    GameObject instantiatedDrop = Instantiate(dropPrefab, Vector3.zero, Quaternion.identity);
-        //}
-    }
     /// <summary>
     /// Called when round ends to apply buffs or debuffs.
     /// </summary>

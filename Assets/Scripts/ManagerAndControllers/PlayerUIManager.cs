@@ -559,7 +559,7 @@ public class PlayerUIManager : MonoBehaviour
             //Creates the chip object in card delete pannel
             GameObject chipTemp = Instantiate(gameManager.ChipPrefab, panelCardDelete.transform);
             //Destroy button component to then replace
-            Destroy(chipTemp.AddComponent<Button>());
+            Destroy(chipTemp.GetComponent<Button>());
             //Adds a listener on a button that on click will use the swap chip variable
             chipTemp.AddComponent<Button>().onClick.AddListener(() => ChipSwap(chipTemp));
             Chip chipComponenet = chipTemp.GetComponent<Chip>();
