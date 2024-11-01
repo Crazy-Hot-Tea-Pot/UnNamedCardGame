@@ -175,12 +175,15 @@ public class PlayerUIManager : MonoBehaviour
         Initialize();
 
         //Add the card buttons for drops and attach buttons
-        optionOne = GameObject.Find(panelDropCards.transform.FindChild("OptionOne").name);
+#pragma warning disable CS0618 // Type or member is obsolete is suppressed because I need this find child
+        GameObject parent = GameObject.Find(panelDropCards.transform.FindChild("CardScreen").name);
+        optionOne = GameObject.Find(parent.transform.FindChild("OptionOne").name);
         optionOne.AddComponent<Button>().onClick.AddListener(cardOptionOne);
-        optionTwo = GameObject.Find(panelDropCards.transform.FindChild("OptioTwo").name);
+        optionTwo = GameObject.Find(parent.transform.FindChild("OptionTwo").name);
         optionTwo.AddComponent<Button>().onClick.AddListener(cardOptionTwo);
-        optionThree = GameObject.Find(panelDropCards.transform.FindChild("OptionThree").name);
+        optionThree = GameObject.Find(parent.transform.FindChild("OptionThree").name);
         optionThree.AddComponent<Button>().onClick.AddListener(cardOptionThree);
+        panelDropCards.SetActive(false);
     }
 
     // Update is called once per frame
@@ -339,7 +342,7 @@ public class PlayerUIManager : MonoBehaviour
     }
 
     /// <summary>
-    /// This function allows items to be removed from the UI it requires a object first and then a parent name deck or inventory as a string
+    /// This function allows items to be removed from the UI it requires a object first and then a parent name Deck, Swap or Inventory as a string
     /// </summary>
     /// <param name="card"></param>
     public void RemoveFromUI(GameObject remObject, string parent)
@@ -353,6 +356,11 @@ public class PlayerUIManager : MonoBehaviour
         {
             //Destroys the game object from the UI element
             Destroy(panelDeck.transform.Find(remObject.name));
+        }
+        else if(parent == "Swap")
+        {
+            //Destroys the game object from UI element
+            Destroy(panelCardDelete.transform.Find(remObject.name));
         }
 
 
@@ -517,6 +525,65 @@ public class PlayerUIManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Card drop UI is closed
+    /// </summary>
+    public void closeDropUI()
+    {
+        panelDropCards.SetActive(false);
+        //Open panel card delete for next section
+        panelCardDelete.SetActive(true);
+    }
+
+    /// <summary>
+    /// Closes the swap panel
+    /// </summary>
+    public void CloseSwapPanel()
+    {
+        panelCardDelete.SetActive(false);
+    }
+
+    /// <summary>
+    /// This works just like the fill deck method except that it fills the panelDropCards with cards
+    /// </summary>
+    public void FillCardSwap()
+    {
+        closeDropUI();
+        //Removes all objects from panelCardDelete to repopulate.
+        foreach (Transform child in panelCardDelete.transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+        for (int i = 0; i < gameManager.playerDeck.Count; i++)
+        {
+            //Creates the chip object in card delete pannel
+            GameObject chipTemp = Instantiate(gameManager.ChipPrefab, panelCardDelete.transform);
+            //Destroy button component to then replace
+            Destroy(chipTemp.AddComponent<Button>());
+            //Adds a listener on a button that on click will use the swap chip variable
+            chipTemp.AddComponent<Button>().onClick.AddListener(() => ChipSwap(chipTemp));
+            Chip chipComponenet = chipTemp.GetComponent<Chip>();
+            chipComponenet.IsInInventoryChip = true;
+            chipComponenet.newChip = gameManager.playerDeck[i];
+        }
+    }
+
+    /// <summary>
+    /// A method to remove a card when clicked
+    /// </summary>
+    public void ChipSwap(GameObject deleteableObj)
+    {
+        //Remove item from the ui of deck
+        RemoveFromUI(deleteableObj, "Deck");
+        //Remove item from ui of swap screen
+        RemoveFromUI(deleteableObj, "Swap");
+        //Remove item from the actual inventory
+        GameObject.Find("PlayerUIManager").GetComponent<PlayerUIManager>().InventoryList.Remove(deleteableObj);
+
+        CloseSwapPanel();
+    }
+
+    /// <summary>
     /// Adds card option one
     /// </summary>
     public void cardOptionOne()
@@ -525,6 +592,9 @@ public class PlayerUIManager : MonoBehaviour
         AddCardToDeck(shortSelection[0]);
         //Empty the storage
         ClearSelectionList();
+
+        //Closes the card drop ui panel and opens a new panel to allow the player to swap a card
+        FillCardSwap();
     }
     /// <summary>
     /// Adds card option two
@@ -535,6 +605,9 @@ public class PlayerUIManager : MonoBehaviour
         AddCardToDeck(shortSelection[1]);
         //Empty the storage
         ClearSelectionList();
+
+        //Closes the card drop ui panel and opens a new panel to allow the player to swap a card
+        FillCardSwap();
     }
 
     /// <summary>
@@ -546,6 +619,9 @@ public class PlayerUIManager : MonoBehaviour
         AddCardToDeck(shortSelection[2]);
         //Empty the storage
         ClearSelectionList();
+
+        //Closes the card drop ui panel and opens a new panel to allow the player to swap a card
+        FillCardSwap();
     }
 
     /// <summary>
