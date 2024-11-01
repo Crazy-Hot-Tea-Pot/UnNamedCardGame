@@ -26,14 +26,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 343919530461682305}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.21745552, y: 0.6388624, z: -0.19521129, w: 0.7116604}
+  m_LocalRotation: {x: 0.21745442, y: 0.6388623, z: -0.19521007, w: 0.71166116}
   m_LocalPosition: {x: -51.392365, y: 11.08, z: 28.480001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3937244892662492869}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 33.982, y: 83.829, z: 0}
 --- !u!114 &7877692602667587670
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -67,7 +67,7 @@ MonoBehaviour:
     m_SensorSize: {x: 1, y: 1}
   m_Transitions:
     m_BlendHint: 0
-    m_InheritPosition: 0
+    m_InheritPosition: 1
     m_OnCameraLive:
       m_PersistentCalls:
         m_Calls: []
