@@ -20,13 +20,13 @@ public class MaintenanceBot : Enemy
     public override void Start()
     {
         EnemyName = "Maintenance Bot";
-        maxHP = 80;
-        CurrentHP = maxHP;
+        StartingHP = 80;
+        CurrentHP = StartingHP;
         base.Start();
     }
     protected override void PerformIntent()
     {
-        if (CurrentHP <= maxHP / 2 && !RepairUsed)
+        if (CurrentHP <= StartingHP / 2 && !RepairUsed)
         {
             Repair();
             RepairUsed = true;
@@ -72,8 +72,8 @@ public class MaintenanceBot : Enemy
     {
         Debug.Log("Maintenance Bot uses Repair!");
 
-        int tempHealAmount = Mathf.RoundToInt(maxHP * 0.3f);
-        CurrentHP = Mathf.Min(CurrentHP + tempHealAmount, maxHP);
+        int tempHealAmount = Mathf.RoundToInt(StartingHP * 0.3f);
+        CurrentHP = Mathf.Min(CurrentHP + tempHealAmount, StartingHP);
         UIEnemyHealth();
     }
 }

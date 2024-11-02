@@ -5,12 +5,23 @@ using UnityEngine;
 public class Looter : Enemy
 {
     [Header("Custom for Enemy type")]
-    // To keep track of stolen scrap
-    [SerializeField]
     private int stolenScrap = 0;
+    /// <summary>
+    /// To keep track of stolen scrap
+    /// </summary>
+    public int StolenScrap
+    {
+        get
+        {
+            return stolenScrap;
+        }
+        private set
+        {
+            stolenScrap = value;
+        }
+    }
 
     // To track the number of Swipes performed
-    [SerializeField]
     private int swipeCount = 0;
 
     private bool shrouded;
@@ -25,9 +36,8 @@ public class Looter : Enemy
     public override void Start()
     {
         EnemyName = "Looter";
-        maxHP = 50;
         swipeCount = 0;
-        stolenScrap = 0;
+        StolenScrap = 0;
 
         base.Start();
     }
@@ -59,7 +69,7 @@ public class Looter : Enemy
         Debug.Log($"{EnemyName} performs Swipe, dealing 4 damage and stealing 5 Scrap.");
         swipeCount++;
 
-        stolenScrap += EnemyTarget.GetComponent<PlayerController>().TakeScrap(5);
+        StolenScrap += EnemyTarget.GetComponent<PlayerController>().TakeScrap(5);
 
         // Empower Swipe
         if (PowerStacks > 0)
@@ -91,7 +101,7 @@ public class Looter : Enemy
 
     private void Escape()
     {
-        Debug.Log($"{EnemyName} performs Escape, exiting the fight with {stolenScrap} Scrap.");
+        Debug.Log($"{EnemyName} performs Escape, exiting the fight with {StolenScrap} Scrap.");
         CombatController.RemoveCombadant(this.gameObject);
         Destroy( this.gameObject );
     }
@@ -106,9 +116,9 @@ public class Looter : Enemy
 
     private void ReturnStolenScrap()
     {
-        Debug.Log($"{EnemyName} returns {stolenScrap} Scrap upon defeat.");
+        Debug.Log($"{EnemyName} returns {StolenScrap} Scrap upon defeat.");
         // Logic to add stolen scrap back to the player's resources or similar
-        stolenScrap = 0;  // Reset stolen scrap after returning
+        StolenScrap = 0;  // Reset stolen scrap after returning
     }
 
     public override void TakeDamage(int damage)

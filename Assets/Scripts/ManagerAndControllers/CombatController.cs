@@ -187,13 +187,7 @@ public class CombatController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (GameManager.Instance.InCombat)
-        {
-            if (AreEnemiesRemaining())
-                CheckIfAllAttacked();
-            else
-                EndCombat();
-        }        
+        
     }
     /// <summary>
     /// Check if the current combatant has attacked.
@@ -208,18 +202,6 @@ public class CombatController : MonoBehaviour
                     return;            
         }
         NextRound();
-        //int tempCurrentCombadant = 0;
-
-        //if (Combadants[tempCurrentCombadant].attacked)
-        //{
-
-        //    tempCurrentCombadant++;
-
-        //    if (tempCurrentCombadant >= (Combadants.Count))
-        //    {
-        //        NextRound();
-        //    }
-        //}
     }
     /// <summary>
     /// Start Combat
@@ -264,6 +246,11 @@ public class CombatController : MonoBehaviour
                 CurrentCombatantIndex++;
             }
         }
+
+        if (AreEnemiesRemaining())
+            CheckIfAllAttacked();
+        else
+            EndCombat();
     }
     /// <summary>
     /// Check if I can make an action in this turn.

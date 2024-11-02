@@ -399,9 +399,9 @@ GameObject:
   - component: {fileID: 484579671727169907}
   - component: {fileID: 244535235828546790}
   - component: {fileID: 1172881644321547558}
-  - component: {fileID: 576772800218337636}
   - component: {fileID: 4526562015437403812}
   - component: {fileID: 88308045590616471}
+  - component: {fileID: 4552804065427658723}
   m_Layer: 0
   m_Name: Security Drone
   m_TagString: Enemy
@@ -489,11 +489,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyName: Secuirty Drone
   enemyTarget: {fileID: 0}
-  AttackRange: 3
+  AttackRange: 10
   distanceToPlayer: 0
   animator: {fileID: 0}
   agent: {fileID: 0}
-  maxHP: 60
+  StartingHP: 0
   currentHp: 0
   shield: 0
   isTargeted: 0
@@ -516,33 +516,6 @@ MonoBehaviour:
   intentsPerformed: 0
   numberOfAlertDrones: 0
   isAlertDrone: 0
---- !u!54 &576772800218337636
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8879099704411737662}
-  serializedVersion: 4
-  m_Mass: 2
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!64 &4526562015437403812
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -575,7 +548,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 1.9129717
-  m_Speed: 3.5
+  m_Speed: 5
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -587,6 +560,33 @@ NavMeshAgent:
   m_BaseOffset: 3
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!54 &4552804065427658723
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8879099704411737662}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &9223046558604698389
 GameObject:
   m_ObjectHideFlags: 0
@@ -644,7 +644,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0

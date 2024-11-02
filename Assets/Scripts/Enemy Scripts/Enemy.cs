@@ -31,9 +31,9 @@ public class Enemy : MonoBehaviour
 
     [Header("Enemy stats")]
     /// <summary>
-    /// Max Hp of Enemy
+    /// Starting Hp of Enemy
     /// </summary>
-    public int maxHP;
+    public int StartingHP;
     [SerializeField]
     private int currentHp;
     [SerializeField]
@@ -325,7 +325,7 @@ public class Enemy : MonoBehaviour
 
     public virtual void Initialize()
     {
-        CurrentHP = maxHP;
+        CurrentHP = StartingHP;
         gameObject.name = EnemyName;
         defaultShader=enemyRenderer.material.shader;
 
@@ -436,7 +436,7 @@ public class Enemy : MonoBehaviour
     //Sets the max health of the slider bar
     public void UIEnemyMaxHealthStart()
     {
-        sliderBar.maxValue = maxHP;
+        sliderBar.maxValue = StartingHP;
     }
 
     /// <summary>

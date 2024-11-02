@@ -15,7 +15,7 @@ public class TicketVendor : Enemy
     public override void Start()
     {
         EnemyName = "Ticket Vendor";
-        maxHP = 90;
+        StartingHP = 90;
         base.Start();
     }
     protected override void PerformIntent()
