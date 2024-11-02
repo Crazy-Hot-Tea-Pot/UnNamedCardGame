@@ -18,10 +18,8 @@ public class PlayerController : MonoBehaviour
     // The Select Action from inputAction class.
     private InputAction select;
 
-    [SerializeField]
     private bool inCombat;
 
-    [SerializeField]
     private bool isInteracting;
 
     // Reference to selected object in the scene that is moveable
@@ -87,6 +85,9 @@ public class PlayerController : MonoBehaviour
             inCombat = value;
         }
     }
+    /// <summary>
+    /// Is player is interacting with object.
+    /// </summary>
     public bool IsInteracting
     {
         get

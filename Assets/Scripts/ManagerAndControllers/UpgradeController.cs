@@ -10,12 +10,14 @@ public class UpgradeController : MonoBehaviour
 
     private bool isInteracting;
     private NewChip selectedChip;
+    private CameraController Camera;
 
     // to avoid using getComponent repeatdly
     private TextMeshPro defaultScreenText;
     private TextMeshPro introScreenText;
     private TextMeshPro healthUpgradeScreenText;
     private TextMeshPro chipUpgradeScreenText;
+    private TextMeshPro errorScreenText;
 
     /// <summary>
     /// If player is interacting with terminal
@@ -55,11 +57,17 @@ public class UpgradeController : MonoBehaviour
     /// </summary>
     public event Action<Screens> OnScreenChanged;
 
+    /// <summary>
+    /// When ever there is an error
+    /// </summary>
+    public event Action<string> OnErrorOccurred;
+
     [Header("Screens In Game World")]
     public GameObject DefaultScreen;
     public GameObject IntroScreen;
     public GameObject HealthUpgradeScreen;
     public GameObject ChipUpgradeScreen;
+    public GameObject ErrorScreen;
 
     public enum Screens
     {
@@ -67,6 +75,7 @@ public class UpgradeController : MonoBehaviour
         Intro,
         HealthUpgrade,
         ChipUpgrade,
+        Error,
         Exit
     }
 
@@ -79,6 +88,8 @@ public class UpgradeController : MonoBehaviour
         introScreenText = IntroScreen.GetComponent<TextMeshPro>();
         healthUpgradeScreenText = HealthUpgradeScreen.GetComponent<TextMeshPro>();
         chipUpgradeScreenText = ChipUpgradeScreen.GetComponent<TextMeshPro>();
+        errorScreenText = ErrorScreen.GetComponent<TextMeshPro>();
+        Camera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>();
     }
     // Start is called before the first frame update
     void Start()
@@ -109,7 +120,8 @@ public class UpgradeController : MonoBehaviour
                 IntroScreen.SetActive(false);
                 DefaultScreen.SetActive(true);
                 HealthUpgradeScreen.SetActive(false);
-                ChipUpgradeScreen.SetActive(false);                
+                ChipUpgradeScreen.SetActive(false);
+                ErrorScreen.SetActive(false);
 
                 StartCoroutine(RevealText(DefaultScreen, true, 0.01f,true, 1, 3,true,5f));
 
@@ -121,6 +133,7 @@ public class UpgradeController : MonoBehaviour
                 DefaultScreen.SetActive(false);
                 HealthUpgradeScreen?.SetActive(false);
                 ChipUpgradeScreen.SetActive(false);
+                ErrorScreen.SetActive(false);
 
                 StartCoroutine(RevealText(IntroScreen, false, 0.01f, false, 0, 0,false, 1000f));
 
@@ -131,17 +144,20 @@ public class UpgradeController : MonoBehaviour
 
                 IntroScreen.SetActive(false);
                 DefaultScreen.SetActive(false);
-                HealthUpgradeScreen?.SetActive(true);
+                HealthUpgradeScreen.SetActive(true);
                 ChipUpgradeScreen.SetActive(false);
+                ErrorScreen.SetActive(false);
 
                 PlayerController tempPlayer = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
 
-                string tempText = string.Format("Getting <#A20000> *Error*</color> Health.\n" +
-            "Current Health is <#A20000>{0}</color> of Max Health <#A20000>{1}</color>.\n" +
-            "Will cost <b>150</b> Scrap to Upgrade to <#A20000>{2}</color>.\n" +
-            "<link=\"UpgradeHealth\"><b><u>Upgrade</link>\n" +
-            "<link=\"Exit\">Exit</b></u></link>",
-            tempPlayer.Health, tempPlayer.MaxHealth, tempPlayer.MaxHealth + 10);
+                string tempText = string.Format("Getting <color=#A20000>*Error*</color> Health.\n" +
+                "Current Health is <color=#A20000>{0}</color> of Max Health <color=#A20000>{1}</color>.\n" +
+                "Will cost <b>150</b> Scrap to Upgrade to <color=#A20000>{2}</color>.\n" +
+                "<b><u><link=\"UpgradeHealth\">Upgrade</link></u></b>\n" +
+                "<b><u><link=\"Exit\">Exit</link></u></b>\n" +
+                "<u><link=\"Back\"><color=#808080>Back</color></link></u>",
+                tempPlayer.Health, tempPlayer.MaxHealth, tempPlayer.MaxHealth + 10);
+
 
                 healthUpgradeScreenText.SetText(tempText);
 
@@ -155,6 +171,7 @@ public class UpgradeController : MonoBehaviour
                 DefaultScreen.SetActive(false);
                 HealthUpgradeScreen?.SetActive(false);
                 ChipUpgradeScreen.SetActive(true);
+                ErrorScreen.SetActive(false);
 
                 if (SelectedChip == null)
                 {
@@ -162,17 +179,18 @@ public class UpgradeController : MonoBehaviour
                 }
                 else
                 {
-                   
+
                     string tempText2 = string.Format("Chip inserted.\n" +
-                       "...Loading Chip...\n" +
-                       "Chip Info:\n" +
-                       "Chip Rarity - {0}\n" +
-                       "Chip Name - {1}\n" +
-                       "Chip Description - {2}\n" +
-                       "Cost to upgrade - <b>{3}</b> Scrap.\n-----\n" +
-                       "<b><u><link=\"UpgradeSelectedChip\">Upgrade Chip</link></u></b>\n\n" +
-                       "<b><u><link=\"Exit2\">Exit</link></u></b>",
-                       SelectedChip.chipRarity, SelectedChip.chipName, SelectedChip.description, SelectedChip.costToUpgrade);
+                        "...Loading Chip...\n" +
+                        "Chip Info:\n" +
+                        "Chip Rarity - {0}\n" +
+                        "Chip Name - {1}\n" +
+                        "Chip Description - {2}\n" +
+                        "Cost to upgrade - <b>{3}</b> Scrap.\n-----\n" +
+                        "<u><b><link=\"UpgradeSelectedChip\">Upgrade Chip</link></b></u>\n\n" +
+                        "<u><b><link=\"Exit2\">Exit</link></b></u>\n" +
+                        "<u><link=\"Back\"><color=#808080>Back</color></link></u>",
+                    SelectedChip.chipRarity, SelectedChip.chipName, SelectedChip.description, SelectedChip.costToUpgrade);
 
                     chipUpgradeScreenText.SetText(tempText2);
 
@@ -181,19 +199,29 @@ public class UpgradeController : MonoBehaviour
 
                 currentScreen = screen;
 
-            break;                
+            break;
+            case Screens.Error:
+                IntroScreen.SetActive(false);
+                DefaultScreen.SetActive(false);
+                HealthUpgradeScreen.SetActive(false);
+                ChipUpgradeScreen.SetActive(false);
+                ErrorScreen.SetActive(true);
+
+                StartCoroutine(RevealText(ErrorScreen, false, 0.001f, false, 0f,0, false, 0f));
+                break;
             case Screens.Exit:
 
                 IntroScreen.SetActive(false);
                 DefaultScreen.SetActive(true);
-                HealthUpgradeScreen?.SetActive(false);
+                HealthUpgradeScreen.SetActive(false);
                 ChipUpgradeScreen.SetActive(false);
+                ErrorScreen.SetActive(false);
 
                 StartCoroutine(RevealText(DefaultScreen, true, 0.01f, true, 1, 3,true, 5f));
 
                 currentScreen = screen;
 
-                ExitTerminal();
+                StartCoroutine(ExitTerminal());
                 break;
             default:
                 break;
@@ -204,6 +232,31 @@ public class UpgradeController : MonoBehaviour
     {
         selectedChip = chip;
         SwitchToScreen(Screens.ChipUpgrade);
+    }
+    /// <summary>
+    /// Try to upgrade player health.
+    /// </summary>
+    public void AttemptToUpgradeHealth()
+    {
+        PlayerController tempPlayer = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+
+        if (tempPlayer.Scrap >= 150)
+        {
+            // made this bank for later.
+            var Bank = tempPlayer.TakeScrap(150);
+
+            tempPlayer.UpgradeMaxHealth(10);
+
+            //Display new info
+            SwitchToScreen(UpgradeController.Screens.HealthUpgrade);
+        }
+        else
+        {
+            DisplayError("<color=#FF0000><size=150%>Error</size></color>\n" +
+                "Not enough <b><size=110%>scrap</size></b> to upgrade health.\n" +
+                "<u><link=\"Exit\"><color=#808080>Exit</color></link></u>\n" +
+                "<u><link=\"Back\"><color=#808080>Back</color></link></u>");
+        }
     }
     /// <summary>
     /// Try to Upgrade chip
@@ -218,15 +271,32 @@ public class UpgradeController : MonoBehaviour
 
             var Bank = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().TakeScrap(SelectedChip.costToUpgrade);
 
-            GameManager.Instance.playerDeck.Find(item => item.chipName == SelectedChip.chipName).IsUpgraded = true;
+            GameManager.Instance.playerDeck.Find(item => item == SelectedChip).IsUpgraded = true;
 
             // FOr now lets go back to main menu.
             SwitchToScreen(Screens.Intro);
         }
         else
         {
-            Debug.Log("Not enough scrap to upgrade chip.");
+            DisplayError("<color=#FF0000><size=150%>Error</size></color>\n" +
+                "Not enough <b><size=110%>scrap</size></b> to upgrade chip.\n" +
+                "<u><link=\"Exit\"><color=#808080>Exit</color></link></u>\n" +
+                "<u><link=\"Back\"><color=#808080>Back</color></link></u>");
         }
+    }
+
+    /// <summary>
+    /// Set error message on both screens.
+    /// </summary>
+    /// <param name="message"></param>
+    public void DisplayError(string message)
+    {
+        errorScreenText.SetText(message);
+
+        // Notify listeners
+        OnErrorOccurred?.Invoke(message);
+
+        SwitchToScreen(Screens.Error);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -234,7 +304,6 @@ public class UpgradeController : MonoBehaviour
         if (other.tag == "Player" && !IsInteracting)
         {
             StartCoroutine(EnterTerminal());          
-            IsInteracting = true;
         }
     }
 
@@ -245,8 +314,8 @@ public class UpgradeController : MonoBehaviour
     private IEnumerator EnterTerminal()
     {
         IsInteracting = true;
-        GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>().SwitchCamera(CameraController.CameraState.FirstPerson);
-        GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>().FirstPersonCamera.LookAt = IntroScreen.transform;
+        Camera.SwitchCamera(CameraController.CameraState.FirstPerson);
+        Camera.FirstPersonCamera.LookAt = IntroScreen.transform;
         yield return new WaitForSeconds(1f);
         SwitchToScreen(Screens.Intro);
     }
@@ -256,9 +325,7 @@ public class UpgradeController : MonoBehaviour
     /// <returns></returns>
     private IEnumerator ExitTerminal()
     {
-        GameObject.FindGameObjectWithTag("MainCamera").
-            GetComponent<CameraController>().
-            SwitchCamera(CameraController.CameraState.Default);
+        Camera.SwitchCamera(CameraController.CameraState.Default);
         yield return new WaitForSeconds(1f);
         IsInteracting = false;
     }    
@@ -346,6 +413,7 @@ public class UpgradeController : MonoBehaviour
             }
         }
     }
+
     /// <summary>
     /// Blink text on terminal
     /// </summary>

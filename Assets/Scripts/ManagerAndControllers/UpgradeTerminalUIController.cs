@@ -46,11 +46,13 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
     void OnEnable()
     {
         controller.OnScreenChanged += UpdateUIScreen;
+        controller.OnErrorOccurred += UpdateErrorScreen;
     }
 
     void OnDisable()
     {
         controller.OnScreenChanged -= UpdateUIScreen;
+        controller.OnErrorOccurred -= UpdateErrorScreen;
     }
 
     void Start()
@@ -99,30 +101,18 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
 
                 break;
             case "UpgradeHealth":
-                PlayerController tempPlayer = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
 
-                if(tempPlayer.Scrap >= 150)
-                {
-                    // made this bank for later.
-                    var Bank = tempPlayer.TakeScrap(150);
+                controller.AttemptToUpgradeHealth();
 
-                    tempPlayer.UpgradeMaxHealth(10);
-
-                    //Display new info
-                    controller.SwitchToScreen(UpgradeController.Screens.HealthUpgrade);
-                }
-                else
-                {
-                    // TODO: Error Scree stuff
-                    ErrorConsole.SetText("Not enough scrap to upgrade health.");
-                    Debug.Log("Not enough scrap to upgrade health."); // Placeholder log
-                }
                 break;
             case "UpgradeChipScreen":
                 controller.SwitchToScreen(UpgradeController.Screens.ChipUpgrade);
                 break;
             case "UpgradeSelectedChip":               
                 controller.AttemptToUpgradeChip();
+                break;
+            case "Back":
+                controller.SwitchToScreen(UpgradeController.Screens.Intro);
                 break;
             case "Exit":
             case "Exit1":
@@ -149,6 +139,7 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
                 IntroPanel.SetActive(false);
                 HealthPanel.SetActive(false);
                 ChipPanel.SetActive(false);
+                ErrorPanel.SetActive(false);
                 break;
             case UpgradeController.Screens.Intro:
 
@@ -161,13 +152,13 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
                 SetActiveUIElement(HealthPanel);
 
                 PlayerController tempPlayer = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
-                string tempText = string.Format("Getting <#A20000>*Error*</color> Health.\n" +
-                "Current Health is <#A20000>{0}</color> of Max Health <#A20000>{1}</color>.\n" +
-                "Will cost <b>150</b> Scrap to Upgrade to <#A20000>{2}</color>.\n" +
-                "<b><u><link=\"UpgradeHealth\">Upgrade</link></u></b>\n" +
-                "<b><u><link=\"Exit1\">Exit</link></u></b>",
+                string tempText = string.Format("Getting <color=#A20000>*Error*</color> Health.\n" +
+                    "Current Health is <color=#A20000>{0}</color> of Max Health <color=#A20000>{1}</color>.\n" +
+                    "Will cost <b>150</b> Scrap to Upgrade to <color=#A20000>{2}</color>.\n" +
+                    "<b><u><link=\"UpgradeHealth\">Upgrade</link></u></b>\n" +
+                    "<b><u><link=\"Exit1\">Exit</link></u></b>\n" +
+                    "<u><link=\"Back\"><color=#808080>Back</color></link></u>",
                 tempPlayer.Health, tempPlayer.MaxHealth, tempPlayer.MaxHealth + 10);
-
 
                 HealthConsole.SetText(tempText);
 
@@ -199,8 +190,9 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
                         "Chip Description - {2}\n" +
                         "Cost to upgrade - <b>{3}</b> Scrap.\n-----\n" +
                         "<b><u><link=\"UpgradeSelectedChip\">Upgrade Chip</link></u></b>\n\n" +
-                        "<b><u><link=\"Exit2\">Exit</link></u></b>",
-                        controller.SelectedChip.chipRarity, controller.SelectedChip.chipName, controller.SelectedChip.description, controller.SelectedChip.costToUpgrade);
+                        "<b><u><link=\"Exit2\">Exit</link></u></b>\n" +
+                        "<u><link=\"Back\"><color=#808080>Back</color></link></u>",
+                    controller.SelectedChip.chipRarity, controller.SelectedChip.chipName, controller.SelectedChip.description, controller.SelectedChip.costToUpgrade);
 
 
 
@@ -218,10 +210,16 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
                 }
 
                 break;
+            case UpgradeController.Screens.Error:
+                SetActiveUIElement(ErrorPanel);
+
+                StartCoroutine(RevealText(ErrorConsole, false, 0.01f, false, 0f, 0, false, 0f));
+                break;
             case UpgradeController.Screens.Exit:
                 IntroPanel.SetActive(false);
                 HealthPanel.SetActive(false);
                 ChipPanel.SetActive(false);
+                ErrorPanel.SetActive(false);
                 break;
             default:
                 IntroPanel.SetActive(false);
@@ -247,6 +245,16 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
             panel.SetActive(panel == targetPanel);
         }
     }
+
+    /// <summary>
+    /// Error Message.
+    /// </summary>
+    /// <param name="message"></param>
+    private void UpdateErrorScreen(string message)
+    {
+        ErrorConsole.SetText(message);
+    }
+
     /// <summary>
     /// Populate the panel with chips first and then,
     /// Bring up window to select Chip.
@@ -327,8 +335,7 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
             if (byLetter)
             {
                 if (visibleCount > totalVisibleCharacters)
-                {
-                    isWaintingForInput = true;
+                {                   
                     if (blinkText)
                         yield return StartCoroutine(BlinkText(tmpText, blinkDuration, blinkCount));
 
@@ -338,7 +345,10 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
                         visibleCount = 0;
                     }
                     else
-                        break;                    
+                    {
+                        isWaintingForInput = true;
+                        break;
+                    }
                 }
 
                 tmpText.maxVisibleCharacters = visibleCount; // Set visible characters
@@ -367,7 +377,10 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
                     if (loopAnimation)
                         yield return new WaitForSeconds(timeBeforeRestartAnimation);
                     else
+                    {
+                        isWaintingForInput = true;
                         break;
+                    }
                 }
 
                 counter += 1;
