@@ -257,6 +257,7 @@ public class PlayerUIManager : MonoBehaviour
         //Disables active chipPanel and activate decks
         panelInventory.SetActive(false);
         panelDeck.SetActive(true);
+        fillDeck();
         //Disable and enable buttons
         buttonDeck.SetActive(false);
         buttonInv.SetActive(true);
@@ -301,7 +302,8 @@ public class PlayerUIManager : MonoBehaviour
     public void AddCardToDeck(NewChip card)
     {
         Instantiate(card.chipImage, panelDeck.transform);
-        //card.GameObject().GetComponent<Chip>().IsInInventoryChip = true;
+        //Add cards to the actual deck
+        GameManager.Instance.playerDeck.Add(card);
     }
 
     /// <summary>
@@ -355,7 +357,13 @@ public class PlayerUIManager : MonoBehaviour
         else if (parent == "Deck")
         {
             //Destroys the game object from the UI element
-            Destroy(panelDeck.transform.Find(remObject.name));
+            foreach(Transform child in panelDeck.transform)
+            {
+                if(child.name == remObject.name)
+                {
+                    Destroy(child);
+                }
+            }
         }
     }
 
@@ -474,20 +482,28 @@ public class PlayerUIManager : MonoBehaviour
                     holder = selectionList[roll];
                     //Fail out counter
                     int failOut = 0;
+                    bool pass = false;
                     //No repeats
-                    while (shortSelection.Contains(holder))
+                    while (!pass)
                     {
-                        failOut++;
-                        //Redo random number
-                        int reroll = GameManager.Instance.Roll(1, selectionList.Count - 1);
-                        //Replace holder so the loop can exit
-                        holder = selectionList[reroll];
-
-                        //If we have looped 5 times forget it and move on a duplicate is better then an infinite loop. This is most likely to happen if there are too many duplicating cards
-                        //Especially if fighting two of the same enemies
-                        if (failOut == 5)
+                        if (shortSelection.Contains(holder))
                         {
-                            break;
+                            failOut++;
+                            //Redo random number
+                            int reroll = GameManager.Instance.Roll(1, selectionList.Count - 1);
+                            //Replace holder so the loop can exit
+                            holder = selectionList[reroll];
+
+                            //If we have looped 5 times forget it and move on a duplicate is better then an infinite loop. This is most likely to happen if there are too many duplicating cards
+                            //Especially if fighting two of the same enemies
+                            if (failOut == 5)
+                            {
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            pass = true;
                         }
                     }
                     //Add to the short list
