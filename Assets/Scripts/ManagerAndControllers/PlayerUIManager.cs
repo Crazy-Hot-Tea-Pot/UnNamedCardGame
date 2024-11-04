@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -166,7 +167,7 @@ public class PlayerUIManager : MonoBehaviour
     void Start()
     {
         //Fills the inventory UI for deck
-        fillDeck();
+        //fillDeck();
 
         //Sets UI maximums for resource pools
         StartingPools();
@@ -257,7 +258,10 @@ public class PlayerUIManager : MonoBehaviour
         //Disables active chipPanel and activate decks
         panelInventory.SetActive(false);
         panelDeck.SetActive(true);
-        fillDeck();
+
+        if(panelDeck.activeInHierarchy)
+            fillDeck();
+
         //Disable and enable buttons
         buttonDeck.SetActive(false);
         buttonInv.SetActive(true);
@@ -286,14 +290,16 @@ public class PlayerUIManager : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
-
         for (int i = 0; i < gameManager.playerDeck.Count; i++)
         {
             GameObject chipTemp = Instantiate(gameManager.ChipPrefab, panelDeck.transform);
             Chip chipComponenet = chipTemp.GetComponent<Chip>();
-            chipComponenet.IsInInventoryChip = true;
+
+            StartCoroutine(chipComponenet.ChipInstantiatedOnInActiveObject());
+            //chipComponenet.SetChipModeTo(Chip.ChipMode.Inventory);
+
             chipComponenet.newChip = gameManager.playerDeck[i];
-        }
+        }    
     }
 
     /// <summary>
@@ -578,7 +584,7 @@ public class PlayerUIManager : MonoBehaviour
             //Adds a listener on a button that on click will use the swap chip variable
             chipTemp.GetComponent<Button>().onClick.AddListener(() => ChipSwap(chipTemp));
             Chip chipComponenet = chipTemp.GetComponent<Chip>();
-            chipComponenet.IsInInventoryChip = false;
+            chipComponenet.SetChipModeTo(Chip.ChipMode.Inventory);            
             chipComponenet.newChip = gameManager.playerDeck[i];
         }
     }
