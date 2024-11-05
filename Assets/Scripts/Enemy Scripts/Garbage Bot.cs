@@ -7,8 +7,8 @@ public class GarbageBot : Enemy
     public override void Start()
     {
         EnemyName = "Garbage Bot";
-        StartingHP = 120;
-        CurrentHP = StartingHP;
+        maxHP = 120;
+        CurrentHP = maxHP;
         base.Start();
     }
     protected override void PerformIntent()

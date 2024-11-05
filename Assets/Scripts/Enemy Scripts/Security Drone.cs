@@ -58,7 +58,7 @@ public class SecurityDrone : Enemy
     public override void Start()
     {
         EnemyName = "Security Drone";
-        StartingHP = 60;
+        maxHP = 60;
 
         base.Start();
     }
@@ -167,7 +167,7 @@ public class SecurityDrone : Enemy
     /// </summary>
     public void IAmAlertDrone()
     {
-        StartingHP = 60;
+        maxHP = 60;
         EnemyName = "Alert Drone";
         IsAlertDrone = true;
         IntentsPerformed = 0;

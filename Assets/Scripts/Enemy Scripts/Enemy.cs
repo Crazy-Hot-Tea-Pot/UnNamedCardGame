@@ -12,7 +12,6 @@ public class Enemy : MonoBehaviour
 
     public float AttackRange;
     
-    [SerializeField]
     private float distanceToPlayer;
 
     public float DistanceToPlayer
@@ -26,19 +25,39 @@ public class Enemy : MonoBehaviour
 
     [Header("Enemy Components")]
     public Animator animator;
-
     public NavMeshAgent agent;
+    /// <summary>
+    /// Enemy Health Bar.
+    /// </summary>
+    public Image healthBar;
+    /// <summary>
+    /// reference to player camera.
+    /// </summary>
+    public Camera playerCamera;
+    /// <summary>
+    /// reference to enemy canvas.
+    /// </summary>
+    public Canvas enemyCanvas;
+    /// <summary>
+    /// reference to effects Panel.
+    /// </summary>
+    public GameObject EffectsPanel;
+    /// <summary>
+    /// Prefabs of Effects enemy will use."Case sensitive"
+    /// </summary>
+    public List<GameObject> effectPrefabs;
+    /// <summary>
+    /// list of active effects.
+    /// </summary>
+    public List<GameObject> activeEffects;
 
     [Header("Enemy stats")]
     /// <summary>
-    /// Starting Hp of Enemy
+    /// Max Hp of Enemy
     /// </summary>
-    public int StartingHP;
-    [SerializeField]
+    public int maxHP;
     private int currentHp;
-    [SerializeField]
     private int shield;
-    [SerializeField]
     private bool isTargeted;
 
     [Header("Status Effects")]
@@ -62,29 +81,6 @@ public class Enemy : MonoBehaviour
     private Shader defaultShader;
     private Renderer enemyRenderer;
 
-    public GameObject EnemyTarget
-    {
-        get { return enemyTarget; }
-        protected set
-        {
-            enemyTarget = value;
-        }
-    }
-
-
-    /// <summary>
-    /// UI Bar
-    /// </summary>
-    public Slider sliderBar;
-    /// <summary>
-    /// Camera Alignment
-    /// </summary>
-    public Camera cameraAlignment;
-    /// <summary>
-    /// Canvas for enemy health
-    /// </summary>
-    public Canvas enemyCanvas;
-
     /// <summary>
     /// Reference to combat controller.
     /// </summary>
@@ -94,6 +90,17 @@ public class Enemy : MonoBehaviour
     /// This holds the cards we want to have dropped on death
     /// </summary>
     public List<NewChip> dropedCards;
+
+    public GameObject EnemyTarget
+    {
+        get { return enemyTarget; }
+        protected set
+        {
+            enemyTarget = value;
+        }
+    }
+
+    
 
     /// <summary>
     /// Returns name of enemy
@@ -119,11 +126,12 @@ public class Enemy : MonoBehaviour
         {
             return currentHp;
         }
-        set
+        protected set
         {
             currentHp = value;
+
             //Update UI for enemy health
-            UIEnemyHealth();
+            UpdateEnemyHealthBar();
 
             if (currentHp <= 0)
             {
@@ -203,6 +211,10 @@ public class Enemy : MonoBehaviour
         private set
         {
             isGalvanized = value;
+
+            // remove Galvanized from panel
+            if (!isGalvanized)
+                RemoveEffectIconFromPanel(Effects.Buff.Galvanize.ToString());
         }
     }
     /// <summary>
@@ -215,6 +227,10 @@ public class Enemy : MonoBehaviour
         private set
         {
             isDrained = value;
+
+            //Remove drained from panel
+            if (!IsDrained)
+                RemoveEffectIconFromPanel(Effects.Debuff.Drained.ToString());
         }
     }
     /// <summary>
@@ -222,7 +238,10 @@ public class Enemy : MonoBehaviour
     /// </summary>
     public int DrainStacks
     {
-        get => drainStacks;
+        get
+        {
+            return drainStacks;
+        }
         protected set
         {
             drainStacks = value;
@@ -273,6 +292,9 @@ public class Enemy : MonoBehaviour
         protected set
         {
             isPowered = value;
+
+            if(!IsPowered)
+                RemoveEffectIconFromPanel(Effects.Buff.Power.ToString());
         }
     }    
 
@@ -280,7 +302,7 @@ public class Enemy : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
-        cameraAlignment = Camera.main;
+        playerCamera = Camera.main;
         enemyRenderer = GetComponent<Renderer>();
     }
 
@@ -288,15 +310,11 @@ public class Enemy : MonoBehaviour
     public virtual void Start()
     {
         Initialize();
-        //Sets the hp maximum for the slider bar
-        UIEnemyMaxHealthStart();
     }
 
     public virtual void FixedUpdate()
     {
-        //Update UI for enemy health
-        //UIEnemyHealth();
-        // Moved it to current health property so its not called repeatedly.
+        
     }
     public virtual void Update()
     {
@@ -323,14 +341,27 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    public virtual void LateUpdate()
+    {
+        //if(playerCamera!= null)
+        //    enemyCanvas.transform.LookAt(playerCamera.transform.position,Vector3.up);
+
+        // trying this way to make it more smoother. only rotates on Y axis.
+        if (playerCamera != null)
+        {
+            Vector3 direction = (playerCamera.transform.position - enemyCanvas.transform.position).normalized;
+            direction.y = 0;  // Lock rotation to the Y-axis
+            enemyCanvas.transform.rotation = Quaternion.LookRotation(-direction);
+        }
+    }
+
     public virtual void Initialize()
     {
-        CurrentHP = StartingHP;
+        CurrentHP = maxHP;
         gameObject.name = EnemyName;
         defaultShader=enemyRenderer.material.shader;
 
-        CombatController = GameObject.FindGameObjectWithTag("CombatController").
-            GetComponent<CombatController>();
+        //CombatController = GameObject.FindGameObjectWithTag("CombatController").GetComponent<CombatController>();
         enemyTarget = GameObject.FindGameObjectWithTag("Player");
     }
    /// <summary>
@@ -388,6 +419,21 @@ public class Enemy : MonoBehaviour
             IsGalvanized = false;
         }
     }
+    //[ContextMenu("Power Effect")]
+    //public void PowerEffect()
+    //{
+    //    ApplyBuff(Effects.Buff.Power, 5);
+    //}
+    //[ContextMenu("Galvanize Effect")]
+    //public void GalvanizeEffect()
+    //{
+    //    ApplyBuff(Effects.Buff.Galvanize, 5);
+    //}
+    //[ContextMenu("Drained Effect")]
+    //public void DrainedEffect()
+    //{
+    //    ApplyDebuff(Effects.Debuff.Drained, 5);
+    //}
     /// <summary>
     /// Apply Debuffs to Enemy
     /// </summary>
@@ -398,7 +444,11 @@ public class Enemy : MonoBehaviour
         switch (debuffToApply)
         {
             case Effects.Debuff.Drained:
-                drainStacks += debuffStacks;
+                DrainStacks += debuffStacks;
+                if (DrainStacks > 0)
+                {
+                    AddEffectIconToPanel(debuffToApply.ToString());
+                }
                 break;
             default:
                 break;
@@ -414,10 +464,18 @@ public class Enemy : MonoBehaviour
         switch (buffToApply)
         {
             case Effects.Buff.Galvanize:
-                GalvanizedStacks+= buffStacks;
+                GalvanizedStacks += buffStacks;
+                if (GalvanizedStacks > 0)
+                {
+                    AddEffectIconToPanel(buffToApply.ToString());
+                }
                 break;
             case Effects.Buff.Power:
                 PowerStacks+= buffStacks;
+                if(PowerStacks>0)
+                {
+                    AddEffectIconToPanel(buffToApply.ToString());
+                }
                 break;
         }
     }
@@ -425,20 +483,72 @@ public class Enemy : MonoBehaviour
     /// <summary>
     /// This method allows us to change the UI in world enemy health bar based on the enemies health
     /// </summary>
-    public void UIEnemyHealth()
+    protected virtual void UpdateEnemyHealthBar()
     {
         //Rotate the ui to match camera angle
-        enemyCanvas.transform.rotation = new Quaternion(enemyCanvas.transform.position.x, cameraAlignment.transform.rotation.y, enemyCanvas.transform.position.z, 0);
+        //enemyCanvas.transform.rotation = new Quaternion(enemyCanvas.transform.position.x, playerCamera.transform.rotation.y, enemyCanvas.transform.position.z, 0);
+
+        // Calculate health as a percentage
+        float healthPercentage = (float)currentHp / maxHP;
+
         //Set the bars value
-        sliderBar.value = CurrentHP;
+        healthBar.fillAmount = healthPercentage;
     }
 
     //Sets the max health of the slider bar
-    public void UIEnemyMaxHealthStart()
+    //protected virtual void UIEnemyMaxHealthStart()
+    //{
+    //    sliderBar.maxValue = maxHP;
+    //}
+
+    /// <summary>
+    /// Check if the effect is already active.
+    /// Method to instantiate and add effect to EffectsPanel.
+    /// Instantiate effect icon and set its parent to EffectsPanel.
+    /// Track active effects.
+    /// </summary>
+    /// <param name="effectPrefab"></param>
+    protected void AddEffectIconToPanel(string effectName)
     {
-        sliderBar.maxValue = StartingHP;
+        if (activeEffects.Exists(effect => effect.name == effectName))
+            return;        
+
+            GameObject effectPrefab = effectPrefabs.Find(prefab => prefab.name == effectName);
+
+            try
+            {
+                GameObject effectInstance = Instantiate(effectPrefab, EffectsPanel.transform);
+                effectInstance.name = effectName;
+                activeEffects.Add(effectInstance);
+            }
+            catch
+            {
+                Debug.LogError("So Somebody fucked up.");
+            }        
     }
 
+    /// <summary>
+    /// Method to remove an effect from EffectsPanel.
+    /// Remove from tracking list.
+    /// Destroy the effect GameObject.
+    /// </summary>
+    /// <param name="effect"></param>
+    protected void RemoveEffectIconFromPanel(string effectName)
+    {        
+        GameObject effectToRemove = activeEffects.Find(effect => effect.name == effectName);
+        try
+        {
+            if (effectToRemove != null)
+            {
+                activeEffects.Remove(effectToRemove);
+                Destroy(effectToRemove);
+            }
+        }
+        catch
+        {
+            Debug.LogError("So Somebody fucked up.");
+        }
+    }
     /// <summary>
     /// Give enemy shield.
     /// </summary>

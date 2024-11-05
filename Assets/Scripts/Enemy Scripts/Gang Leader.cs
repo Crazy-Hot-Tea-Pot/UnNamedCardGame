@@ -11,7 +11,7 @@ public class GangLeader : Enemy
     // Start is called before the first frame update
     public override void Start()
     {
-        StartingHP = 80;
+        maxHP = 80;
         base.Start();
     }
 
