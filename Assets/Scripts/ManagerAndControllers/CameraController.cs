@@ -6,12 +6,10 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 public class CameraController : MonoBehaviour
 {
-    [SerializeField] 
     private LayerMask groundLayer;
 
     private Transform player;
 
-    [SerializeField]
     private Transform target;
     public Transform Target
     {
@@ -25,8 +23,9 @@ public class CameraController : MonoBehaviour
         }
     }
 
+    public GameObject freeLook;
+    private float distanceFromCamera = 10f;
     public bool AllowBoarderMovement;
-
     public float screenWidth;
     public float screenHeight;
     public Vector2 mousePosition;
@@ -34,18 +33,18 @@ public class CameraController : MonoBehaviour
     {
         Default,
         Rotation,
-        Pan,
+        Free,
         BorderMovement,
         FirstPerson
     }
 
     [Header("Cameras")]
-    [SerializeField]
     private CameraState currentCamera;
+    private CameraState previousCamera;
 
     public CinemachineVirtualCamera DefaultCamera;
     public CinemachineFreeLook RotationCamera;
-    public CinemachineVirtualCamera PanCamera;
+    public CinemachineVirtualCamera freeCamera;
     public CinemachineVirtualCamera BorderCamera;
     public CinemachineVirtualCamera FirstPersonCamera;
 
@@ -57,6 +56,7 @@ public class CameraController : MonoBehaviour
         }
         set
         {
+            previousCamera = currentCamera;
             currentCamera = value;
             switch (value)
             {
@@ -66,7 +66,14 @@ public class CameraController : MonoBehaviour
                     break;
                 case CameraState.Rotation:
                     RotationCamera.Follow = Target;
-                    RotationCamera.LookAt=Target;
+
+                    if(previousCamera==CameraState.Free)
+                        RotationCamera.LookAt = freeLook.transform;
+                    else
+                        RotationCamera.LookAt = Target;
+                    break;
+                case CameraState.Free:
+                    freeCamera.LookAt = freeLook.transform;
                     break;
                 default:
                     break;
@@ -77,7 +84,7 @@ public class CameraController : MonoBehaviour
     [Header("Camera Info")]
     
     public float cameraSpeed;
-    public float panningSpeed;
+    public float freeCameraSpeed;
     //5% from edge
     public float borderThreshold = 0.05f;
 
@@ -123,7 +130,7 @@ public class CameraController : MonoBehaviour
     void OnEnable()
     {
         playerInputActions.CameraControls.Enable();
-
+        playerInputActions.CameraControls.MoveCamera.Enable();
 
         playerInputActions.CameraControls.Click.performed += ctx =>
         {
@@ -135,7 +142,7 @@ public class CameraController : MonoBehaviour
         };
 
         playerInputActions.CameraControls.RotateCamera.performed += ctx => SwitchCamera(CameraState.Rotation);
-        playerInputActions.CameraControls.FreeCam.performed += ctx => SwitchCamera(CameraState.Pan);       
+        playerInputActions.CameraControls.FreeCam.performed += ctx => SwitchCamera(CameraState.Free);       
         playerInputActions.CameraControls.ResetCamera.performed += ctx => SwitchCamera(CameraState.Default);
 
         screenWidth = Screen.width;
@@ -166,33 +173,47 @@ public class CameraController : MonoBehaviour
                 HandleBorderMovement();
             }
         }
-        if (PanCamera.Priority == 10)
+        if (freeCamera.Priority == 10)
         {
-            HandlePanCameraMovement();
+            HandleFreeCameraMovement();
 
         }
     }
 
-    private void HandlePanCameraMovement()
+    /// <summary>
+    /// ControlMovement for Free Camera
+    /// </summary>
+    private void HandleFreeCameraMovement()
     {
-        Vector2 mouseDelta = playerInputActions.CameraControls.MoveCamera.ReadValue<Vector2>();
+        // Get the mouse position in screen space
+        Vector3 mouseScreenPosition = Mouse.current.position.ReadValue();
 
-        // Move the camera relative to its local space
-        Vector3 rightMovement = PanCamera.transform.right * mouseDelta.x * cameraSpeed * Time.deltaTime;
-        Vector3 forwardMovement = PanCamera.transform.forward * mouseDelta.y * cameraSpeed * Time.deltaTime;
+        // Convert the screen position to a world position at a specified distance from the camera
+        Vector3 worldPosition = Camera.main.ScreenToWorldPoint(new Vector3(mouseScreenPosition.x, mouseScreenPosition.y, distanceFromCamera));
 
-        // Keep the movement on a flat plane (ignore vertical movement)
-        rightMovement.y = 0;
-        forwardMovement.y = 0;
+        // Move the lookAtTarget to the calculated world position
+        freeLook.transform.position = worldPosition;
 
-        // Apply the movement
-        PanCamera.transform.position += rightMovement + forwardMovement;
+        // Read the input value from the MoveCamera action in Camera Controls map
+        Vector2 moveInput = playerInputActions.CameraControls.MoveCamera.ReadValue<Vector2>();
+
+        // Only apply movement in Free mode
+        if (currentCamera == CameraState.Free)
+        {
+            // Calculate movement direction using WASD input
+            Vector3 moveDirection = new Vector3(moveInput.x, 0, moveInput.y) * freeCameraSpeed * Time.deltaTime;
+
+            // Move freeCamera based on its orientation
+            freeCamera.transform.position += freeCamera.transform.TransformDirection(moveDirection);
+        }
     }
 
     private void HandleBorderMovement()
     {
         // Move the camera based on which border the mouse is at
-        Vector3 movement = Vector3.zero;
+        Vector3 movement = Vector3.zero;        
+
+
         if (IsMouseAtLeftBorder)
         {
             movement += -BorderCamera.transform.right; // Move left
@@ -211,7 +232,7 @@ public class CameraController : MonoBehaviour
         }
 
         // Apply the movement
-        BorderCamera.transform.position += movement * panningSpeed * Time.deltaTime;
+        BorderCamera.transform.position += movement * cameraSpeed * Time.deltaTime;
     }
 
     /// <summary>
@@ -224,7 +245,7 @@ public class CameraController : MonoBehaviour
     {       
         DefaultCamera.Priority = 0;
         RotationCamera.Priority = 0;
-        PanCamera.Priority = 0;
+        freeCamera.Priority = 0;
         BorderCamera.Priority = 0;
         FirstPersonCamera.Priority = 0;
         
@@ -236,8 +257,9 @@ public class CameraController : MonoBehaviour
             case CameraState.Rotation:
                 RotationCamera.Priority = 10;
                 break;
-            case CameraState.Pan:
-                PanCamera.Priority = 10;
+            case CameraState.Free:
+                freeLook.transform.position = player.transform.position;
+                freeCamera.Priority = 10;
                 break;
             case CameraState.BorderMovement:
                 BorderCamera.Priority = 10;
@@ -256,6 +278,7 @@ public class CameraController : MonoBehaviour
     {
 
         playerInputActions.CameraControls.Disable();
+        playerInputActions.CameraControls.MoveCamera.Disable();
 
     }
 }
