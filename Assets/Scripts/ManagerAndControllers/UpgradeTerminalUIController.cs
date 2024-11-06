@@ -269,13 +269,11 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
         {
             if (newChip.canBeUpgraded)
             {
-                ChipPrefab.GetComponent<Chip>().newChip = newChip;
-
-
-                ChipPrefab.GetComponent<Chip>().IsInWorkShop = true;
-
-
                 GameObject UIChip = Instantiate(ChipPrefab, ChipHolder.transform);
+
+                UIChip.GetComponent<Chip>().newChip = newChip;
+
+                UIChip.GetComponent<Chip>().SetChipModeTo(Chip.ChipMode.WorkShop);                                
             }
             
         }

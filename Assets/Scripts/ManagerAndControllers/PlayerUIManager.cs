@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -40,21 +41,21 @@ public class PlayerUIManager : MonoBehaviour
     /// <summary>
     /// A list for card selection
     /// </summary>
-    private List<NewChip> selectionList;
+    public List<NewChip> selectionList;
 
     /// <summary>
     /// A short selection list for the final list of players picking cards
     /// </summary>
-    private List<NewChip> shortSelection;
+    public List<NewChip> shortSelection;
 
     //Options for the player to use when selecting new cards
     public GameObject panelDropCards;
     private GameObject optionOne;
     private GameObject optionTwo;
     private GameObject optionThree;
-    private Image imageOne;
-    private Image imageTwo;
-    private Image imageThree;
+    public Image imageOne;
+    public Image imageTwo;
+    public Image imageThree;
 
     //Panel for deleting cards
     public GameObject panelCardDelete;
@@ -166,7 +167,7 @@ public class PlayerUIManager : MonoBehaviour
     void Start()
     {
         //Fills the inventory UI for deck
-        fillDeck();
+        //fillDeck();
 
         //Sets UI maximums for resource pools
         StartingPools();
@@ -257,6 +258,10 @@ public class PlayerUIManager : MonoBehaviour
         //Disables active chipPanel and activate decks
         panelInventory.SetActive(false);
         panelDeck.SetActive(true);
+
+        if(panelDeck.activeInHierarchy)
+            fillDeck();
+
         //Disable and enable buttons
         buttonDeck.SetActive(false);
         buttonInv.SetActive(true);
@@ -285,14 +290,16 @@ public class PlayerUIManager : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
-
         for (int i = 0; i < gameManager.playerDeck.Count; i++)
         {
             GameObject chipTemp = Instantiate(gameManager.ChipPrefab, panelDeck.transform);
             Chip chipComponenet = chipTemp.GetComponent<Chip>();
-            chipComponenet.IsInInventoryChip = true;
+
+            StartCoroutine(chipComponenet.ChipInstantiatedOnInActiveObject());
+            //chipComponenet.SetChipModeTo(Chip.ChipMode.Inventory);
+
             chipComponenet.newChip = gameManager.playerDeck[i];
-        }
+        }    
     }
 
     /// <summary>
@@ -301,7 +308,8 @@ public class PlayerUIManager : MonoBehaviour
     public void AddCardToDeck(NewChip card)
     {
         Instantiate(card.chipImage, panelDeck.transform);
-        card.GameObject().GetComponent<Chip>().IsInInventoryChip = true;
+        //Add cards to the actual deck
+        GameManager.Instance.playerDeck.Add(card);
     }
 
     /// <summary>
@@ -342,7 +350,7 @@ public class PlayerUIManager : MonoBehaviour
     }
 
     /// <summary>
-    /// This function allows items to be removed from the UI it requires a object first and then a parent name Deck, Swap or Inventory as a string
+    /// This function allows items to be removed from the UI it requires a object first and then a parent name Deck or Inventory as a string
     /// </summary>
     /// <param name="card"></param>
     public void RemoveFromUI(GameObject remObject, string parent)
@@ -355,15 +363,14 @@ public class PlayerUIManager : MonoBehaviour
         else if (parent == "Deck")
         {
             //Destroys the game object from the UI element
-            Destroy(panelDeck.transform.Find(remObject.name));
+            foreach(Transform child in panelDeck.transform)
+            {
+                if(child.name == remObject.name)
+                {
+                    Destroy(child);
+                }
+            }
         }
-        else if(parent == "Swap")
-        {
-            //Destroys the game object from UI element
-            Destroy(panelCardDelete.transform.Find(remObject.name));
-        }
-
-
     }
 
     #endregion
@@ -464,44 +471,54 @@ public class PlayerUIManager : MonoBehaviour
     public void DropCard()
     {
         //If our short list isn't too big
-        if (shortSelection.Count < 3)
+        if (shortSelection.Count < 3 || shortSelection == null)
         {
+            Debug.Log("Got here");
             //Roll a random number of the list length 3 times
             for (int i = 0; i < 3; i++)
             {
                 NewChip holder;
-                //Get a random number
-                int roll = GameManager.Instance.Roll(1, selectionList.Count);
-                //Assign holder that random roll
-                holder = selectionList[roll];
 
                 //If there can be no repeats
-                if (selectionList.Count >= 3)
+                if (selectionList.Count > 3)
                 {
+                    //Get a random number
+                    int roll = GameManager.Instance.Roll(1, selectionList.Count - 1);
+                    //Assign holder that random roll
+                    holder = selectionList[roll];
                     //Fail out counter
                     int failOut = 0;
+                    bool pass = false;
                     //No repeats
-                    while (shortSelection.Contains(holder))
+                    while (!pass)
                     {
-                        failOut++;
-                        //Redo random number
-                        int reroll = GameManager.Instance.Roll(1, selectionList.Count);
-                        //Replace holder so the loop can exit
-                        holder = selectionList[reroll];
-
-                        //If we have looped 5 times forget it and move on a duplicate is better then an infinite loop. This is most likely to happen if there are too many duplicating cards
-                        //Especially if fighting two of the same enemies
-                        if(failOut == 5)
+                        if (shortSelection.Contains(holder))
                         {
-                            break;
+                            failOut++;
+                            //Redo random number
+                            int reroll = GameManager.Instance.Roll(1, selectionList.Count - 1);
+                            //Replace holder so the loop can exit
+                            holder = selectionList[reroll];
+
+                            //If we have looped 5 times forget it and move on a duplicate is better then an infinite loop. This is most likely to happen if there are too many duplicating cards
+                            //Especially if fighting two of the same enemies
+                            if (failOut == 5)
+                            {
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            pass = true;
                         }
                     }
                     //Add to the short list
                     shortSelection.Add(holder);
                 }
-                //If the list is too small then continue from here
-                else if (selectionList.Count < 3)
+                //If the list is too small then continue from here or if the list is sectin 3 then there is no reason to do any math for rerolling it's a waste of time
+                else if (selectionList.Count < 3 || selectionList.Count == 3)
                 {
+                    holder = selectionList[i];
                     //Add to the short list
                     shortSelection.Add(holder);
                 }
@@ -511,7 +528,7 @@ public class PlayerUIManager : MonoBehaviour
         //Update the image sprites
         imageOne.sprite = shortSelection[0].chipImage;
         imageTwo.sprite = shortSelection[1].chipImage;
-        imageThree.sprite = shortSelection[3].chipImage;
+        imageThree.sprite = shortSelection[2].chipImage;
 
     }
 
@@ -522,6 +539,8 @@ public class PlayerUIManager : MonoBehaviour
     {
         //Display UI
         panelDropCards.SetActive(true);
+        //Visually and actually draws the chip for the UI that can be used in the 3 card selection
+        DropCard();
     }
 
     /// <summary>
@@ -558,12 +577,14 @@ public class PlayerUIManager : MonoBehaviour
         {
             //Creates the chip object in card delete pannel
             GameObject chipTemp = Instantiate(gameManager.ChipPrefab, panelCardDelete.transform);
+            //Make it interactable again
+            chipTemp.GetComponent<Button>().interactable = true;
             //Destroy button component to then replace
-            Destroy(chipTemp.GetComponent<Button>());
+            chipTemp.GetComponent<Button>().onClick.RemoveAllListeners();
             //Adds a listener on a button that on click will use the swap chip variable
-            chipTemp.AddComponent<Button>().onClick.AddListener(() => ChipSwap(chipTemp));
+            chipTemp.GetComponent<Button>().onClick.AddListener(() => ChipSwap(chipTemp));
             Chip chipComponenet = chipTemp.GetComponent<Chip>();
-            chipComponenet.IsInInventoryChip = true;
+            chipComponenet.SetChipModeTo(Chip.ChipMode.Inventory);            
             chipComponenet.newChip = gameManager.playerDeck[i];
         }
     }
@@ -575,8 +596,6 @@ public class PlayerUIManager : MonoBehaviour
     {
         //Remove item from the ui of deck
         RemoveFromUI(deleteableObj, "Deck");
-        //Remove item from ui of swap screen
-        RemoveFromUI(deleteableObj, "Swap");
         //Remove item from the actual game manager deck
         GameManager.Instance.playerDeck.Remove(deleteableObj.GetComponent<Chip>().newChip);
 
