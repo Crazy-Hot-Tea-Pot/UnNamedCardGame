@@ -4,46 +4,37 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-/// <summary>
-/// The card class creates the basic properties of the class
-/// </summary>
+
 public class Chip : MonoBehaviour
 {
+    public enum ChipMode
+    {
+        None,
+        Combat,
+        WorkShop,
+        Inventory,
+        Delete
+    }
+    private ChipMode mode;
 
-    [SerializeField]
-    private bool isInWorkShop=false;
-
-    [SerializeField] 
-    private bool isInInventoryChip=false;
+    /// <summary>
+    /// What mode is the chip in.
+    /// </summary>
+    public ChipMode Mode
+    {
+        get
+        {
+            return mode;
+        }
+        set
+        {
+            mode = value;
+        }
+    }
 
     public CombatController CombatController;
     public GameObject Player;
     public UpgradeController UpgradeController;
-    
-
-    //Make chip know its not an clickable chip
-    public bool IsInInventoryChip
-    {
-        get
-        {
-            return isInInventoryChip;
-        }
-        set
-        {
-            isInInventoryChip = value;
-        }
-    }
-    public bool IsInWorkShop
-    {
-        get
-        {
-            return isInWorkShop;
-        }
-        set
-        {
-            isInWorkShop = value;
-        }
-    }
 
     private string chipTitle;    
 
@@ -65,7 +56,7 @@ public class Chip : MonoBehaviour
     /// <summary>
     /// Button Component so player can click on card
     /// </summary>
-    private Button imageButton;  
+    public Button chipButton;  
 
     public NewChip newChip;
 
@@ -75,34 +66,20 @@ public class Chip : MonoBehaviour
         this.gameObject.name = ChipTitle;
         newChip.ThisChip = this.gameObject;
 
-        // Set image to card
-        GetComponent<Image>().sprite = newChip.chipImage;        
+        Player = GameObject.FindGameObjectWithTag("Player");
 
-        if (IsInInventoryChip)
-        {
-            GetComponent<Button>().interactable = false;
-        }
-        else if (IsInWorkShop)
-        {
-            //Assign method to button
-            imageButton = GetComponent<Button>();
-            imageButton.onClick.AddListener(UpgradeChipSelected);
-            imageButton.interactable = true;
+        // Set image to chip
+        GetComponent<Image>().sprite = newChip.chipImage;
 
-            UpgradeController = GameObject.FindGameObjectWithTag("UpgradeController").GetComponent<UpgradeController>();
-        }
-        else
-        {
-            //Assign method to button
-            imageButton = GetComponent<Button>();
-            imageButton.onClick.AddListener(ChipSelected);
+        // Get Button
+        //chipButton = GetComponent<Button>();
 
-            CombatController = GameObject.FindGameObjectWithTag("CombatController").GetComponent<CombatController>();
-            Player = GameObject.FindGameObjectWithTag("Player");
 
-            newChip.IsActive = true;
-        }        
+        StartCoroutine(CheckIfModeSet());
     }
+    /// <summary>
+    /// Tell the Upgrade Controller this is the chip the user selected to ugprade.
+    /// </summary>
     private void UpgradeChipSelected()
     {
         UpgradeController.ChipSelectToUpgrade(newChip);
@@ -111,9 +88,7 @@ public class Chip : MonoBehaviour
     /// Runs Scriptable Chip
     /// </summary>
     public void ChipSelected()
-    {
-        Debug.Log(ChipTitle + " Chip");
-        newChip.IsActive = true;
+    {        
         try
         {
             //Check if player turn to play play card
@@ -129,13 +104,17 @@ public class Chip : MonoBehaviour
                 //Check if player is jammed
                 if (Player.GetComponent<PlayerController>().IsJammed)
                 {
-                    //CombatController.TurnUsed(Player);
                     return;
                 }
 
                 //Check if newChip is assigned
                 if (newChip != null)
                 {
+                    //Plays chip use
+                    SoundManager.PlaySound(SoundFX.ChipPlayed);
+
+                    newChip.IsActive = true;
+
                     if (Player.GetComponent<PlayerController>().NextChipActivatesTwice)
                     {
                         if (newChip is DefenseChip defenseChip)
@@ -205,4 +184,62 @@ public class Chip : MonoBehaviour
             Debug.LogError($"An unexpected error occurred: {ex.Message}");
         }
     }    
+    /// <summary>
+    /// Set chip prefab to different mode so it can be used in multiple different enviroments.
+    /// </summary>
+    /// <param name="modeToBe">Mode the chip to be in.</param>
+    public void SetChipModeTo(ChipMode modeToBe)
+    {
+        Mode = modeToBe;
+
+        switch (modeToBe)
+        {
+            case ChipMode.Combat:
+                CombatController = GameObject.FindGameObjectWithTag("CombatController").GetComponent<CombatController>();
+                chipButton.interactable = true;
+                chipButton.onClick.AddListener(ChipSelected);                
+                newChip.IsActive = true;                
+                break;
+            case ChipMode.WorkShop:
+                UpgradeController = GameObject.FindGameObjectWithTag("UpgradeController").GetComponent<UpgradeController>();
+                chipButton.onClick.AddListener(UpgradeChipSelected);
+                chipButton.interactable = true;                
+                break;
+            case ChipMode.Inventory:
+                chipButton.interactable = false;
+                break;
+            case ChipMode.Delete:
+                chipButton.interactable = true;
+                break;
+            case ChipMode.None:
+            default:
+                break;
+        }
+    }
+    /// <summary>
+    /// Added this cause.....frustration of explaining can't instantiate this gameObject as inActive.
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerator ChipInstantiatedOnInActiveObject(ChipMode chipMode)
+    {
+        yield return new WaitForSeconds(1f);
+        switch (chipMode)
+        {
+            case ChipMode.Combat:
+                SetChipModeTo(Chip.ChipMode.Combat);
+                break;
+            case ChipMode.Inventory:
+                SetChipModeTo(Chip.ChipMode.Inventory);
+                break;
+        }        
+    }
+
+    private IEnumerator CheckIfModeSet()
+    {
+            yield return new WaitForSeconds(10f);
+            if (Mode == ChipMode.None)
+            {
+                Debug.LogError("Chip "+ ChipTitle +" mode isn't set");
+            }
+    }
 }

@@ -227,9 +227,19 @@ public class CombatController : MonoBehaviour
             Combadants.Add(enemies);
 
             combatEnemy.GetComponent<Enemy>().InCombat = true;
+
+            //A loop to grab every card in the combat enemy for dropping cards
+            for(int i = 0; i < combatEnemy.GetComponent<Enemy>().dropedCards.Count; i++)
+            {
+                //Adds the player 
+                PlayerUIManager.Instance.AddChipChoices(combatEnemy.GetComponent<Enemy>().dropedCards[i]);
+            }
         }
 
         CurrentCombatantIndex = 0;
+
+        //Play Start Combat
+        SoundManager.PlaySound(SoundFX.BattleStart);
     }
     /// <summary>
     /// When used an action or attack and change status in combat.

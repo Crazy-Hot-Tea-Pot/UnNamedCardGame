@@ -1,7 +1,7 @@
 ﻿public class SoundSettings
 {
-    private float bgmVolume;
-    private float sfxVolume;
+    private float bgmVolume=100f;
+    private float sfxVolume=100f;
 
     public float BGMVolume
     {
@@ -14,7 +14,7 @@
     {
         get
         {
-            return bgmVolume;
+            return sfxVolume;
         }
     }
 }

@@ -188,7 +188,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Player Deck is Empty");
+            Debug.LogError("Player Deck is Empty, Don't worry Sabastian this is on purpose.");
         }
 
     }
@@ -215,6 +215,7 @@ public class GameManager : MonoBehaviour
             Chip chipComponent = newChipInstance.GetComponent<Chip>();
 
             chipComponent.newChip = newChipInPlayerHand;
+            StartCoroutine(chipComponent.ChipInstantiatedOnInActiveObject(Chip.ChipMode.Combat));
             //Apply name to newChipInPlayerHand.
             if (newChipInPlayerHand.chipName == "" || newChipInPlayerHand.chipName == null)
                 Debug.LogWarning("Scriptable {chipName} is empty on " + newChipInPlayerHand.name + " and this will cause errors.");
@@ -272,20 +273,20 @@ public class GameManager : MonoBehaviour
     public void RememberEnemy(GameObject enemy)
     {
         //A for each loop to chceck if the element exists in the list
-        bool tempCleared = true;
-        foreach (GameObject tempCheck in enemyList)
-        {
-            if (enemy.name == tempCheck.name)
-            {
-                tempCleared = false;
-            }
-        }
+        //bool tempCleared = true;
+        //foreach (GameObject tempCheck in enemyList)
+        //{
+        //    if (enemy.name == tempCheck.name)
+        //    {
+        //        tempCleared = false;
+        //    }
+        //}
         //Adds it to the list if cleared
-        if (tempCleared == true)
-        {
+        //if (tempCleared == true)
+        //{
             //This adds enemies to the enemy list
             enemyList.Add(enemy);
-        }
+        //}
 
         //Had to put this here cause this is after all enemies are added @_@
         //No longer needed
