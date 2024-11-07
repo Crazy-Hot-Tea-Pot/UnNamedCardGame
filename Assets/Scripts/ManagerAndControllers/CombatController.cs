@@ -237,6 +237,9 @@ public class CombatController : MonoBehaviour
         }
 
         CurrentCombatantIndex = 0;
+
+        //Play Start Combat
+        SoundManager.PlaySound(SoundFX.BattleStart);
     }
     /// <summary>
     /// When used an action or attack and change status in combat.

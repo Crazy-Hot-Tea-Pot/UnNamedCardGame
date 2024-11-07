@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.AI;
+using TMPro;
 
 public class Enemy : MonoBehaviour
 {
@@ -25,11 +26,7 @@ public class Enemy : MonoBehaviour
 
     [Header("Enemy Components")]
     public Animator animator;
-    public NavMeshAgent agent;
-    /// <summary>
-    /// Enemy Health Bar.
-    /// </summary>
-    public Image healthBar;
+    public NavMeshAgent agent;    
     /// <summary>
     /// reference to player camera.
     /// </summary>
@@ -38,6 +35,14 @@ public class Enemy : MonoBehaviour
     /// reference to enemy canvas.
     /// </summary>
     public Canvas enemyCanvas;
+    /// <summary>
+    /// Name of Enemy Goes here.
+    /// </summary>
+    public TextMeshProUGUI EnemyNameBox;
+    /// <summary>
+    /// Enemy Health Bar.
+    /// </summary>
+    public Image healthBar;
     /// <summary>
     /// reference to effects Panel.
     /// </summary>
@@ -100,20 +105,25 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    
-
     /// <summary>
     /// Returns name of enemy
     /// </summary>
-    public string EnemyName
+    public virtual string EnemyName
     {
         get
         {
-            return enemyName;
+            if (enemyName == null||enemyName=="")
+            {
+                EnemyName = this.GetComponent<Chip>().name;
+                return enemyName;
+            }
+            else
+                return enemyName;
         }
         protected set
         {
             enemyName = value;
+            EnemyNameBox.SetText(enemyName);
         }
     }    
 
@@ -358,6 +368,7 @@ public class Enemy : MonoBehaviour
     public virtual void Initialize()
     {
         CurrentHP = maxHP;
+        EnemyNameBox.SetText(EnemyName);
         gameObject.name = EnemyName;
         defaultShader=enemyRenderer.material.shader;
 
@@ -370,6 +381,9 @@ public class Enemy : MonoBehaviour
    /// <param name="damage"></param>
     public virtual void TakeDamage(int damage)
     {
+        // Plays sound of taking damage
+        SoundManager.PlaySound(SoundFX.DamageTaken,this.gameObject.transform);
+
         // if has shield
         if (Shield > 0)
         {
@@ -396,13 +410,16 @@ public class Enemy : MonoBehaviour
     /// </summary>
     protected virtual void PerformIntent()
     {
-        CombatController.TurnUsed(this.gameObject);
+        if(this.gameObject != null)
+            CombatController.TurnUsed(this.gameObject);
     }
     /// <summary>
     /// Call when enemy die.
     /// </summary>
     public virtual void Die()
     {
+        SoundManager.PlaySound(SoundFX.EnemyDefeated,this.gameObject.transform);
+
         Debug.Log($"{enemyName} has been defeated!");
         CombatController.RemoveCombadant(this.gameObject);
         Destroy(this.gameObject);
@@ -419,21 +436,7 @@ public class Enemy : MonoBehaviour
             IsGalvanized = false;
         }
     }
-    //[ContextMenu("Power Effect")]
-    //public void PowerEffect()
-    //{
-    //    ApplyBuff(Effects.Buff.Power, 5);
-    //}
-    //[ContextMenu("Galvanize Effect")]
-    //public void GalvanizeEffect()
-    //{
-    //    ApplyBuff(Effects.Buff.Galvanize, 5);
-    //}
-    //[ContextMenu("Drained Effect")]
-    //public void DrainedEffect()
-    //{
-    //    ApplyDebuff(Effects.Debuff.Drained, 5);
-    //}
+    
     /// <summary>
     /// Apply Debuffs to Enemy
     /// </summary>
@@ -441,6 +444,9 @@ public class Enemy : MonoBehaviour
     /// <param name="debuffStacks"></param>
     public virtual void ApplyDebuff(Effects.Debuff debuffToApply, int debuffStacks)
     {
+        //Plays Debuff sound effect
+        SoundManager.PlaySound(SoundFX.Debuff, this.gameObject.transform);
+
         switch (debuffToApply)
         {
             case Effects.Debuff.Drained:
@@ -460,7 +466,7 @@ public class Enemy : MonoBehaviour
     /// <param name="buffToApply"></param>
     /// <param name="buffStacks"></param>
     public virtual void ApplyBuff(Effects.Buff buffToApply, int buffStacks)
-    {
+    {        
         switch (buffToApply)
         {
             case Effects.Buff.Galvanize:
@@ -494,12 +500,6 @@ public class Enemy : MonoBehaviour
         //Set the bars value
         healthBar.fillAmount = healthPercentage;
     }
-
-    //Sets the max health of the slider bar
-    //protected virtual void UIEnemyMaxHealthStart()
-    //{
-    //    sliderBar.maxValue = maxHP;
-    //}
 
     /// <summary>
     /// Check if the effect is already active.

@@ -4,56 +4,92 @@ using UnityEngine;
 
 public static class SoundManager
 {
-    //public enum SoundFX
-    //{
-    //    None
-    //}
-    //public enum BgSound
-    //{
-    //    None
-    //}
-
 
     /// <summary>
-    /// Call after changing sound volume.
+    /// Adjusts the master volume for the background music.
+    /// Call this method after changing sound settings to update volume.
     /// </summary>
     public static void MasterVolumeChanged()
     {
         try
         {
+            // Find the GameObject named "BgSound" and set its volume based on the settings
             GameObject.Find("BgSound").GetComponent<AudioSource>().volume = SettingsManager.Instance.SoundSettings.BGMVolume;
         }
         catch
         {
-            Debug.LogError("BG doesn't Exist");
+            // Display error if the background sound GameObject doesn't exist
+            Debug.LogError("BG doesn't Exist.");
         }
     }
-
+    /// <summary>
+    /// Starts playing background music on a loop.
+    /// Volume can be adjusted using the SoundBGVolume component.
+    /// </summary>
+    /// <param name="bgSound">The background sound to play.</param>
     public static void StartBackground(BgSound bgSound)
     {
+        // Create a new GameObject for background music
         GameObject BackgroundSound = new GameObject("BgSound");
+
+        // Add an AudioSource component to play the audio
         AudioSource audioSource = BackgroundSound.AddComponent<AudioSource>();
+        // Assign background audio clip
         audioSource.clip = GetBGAudio(bgSound);
+        // Set looping for continuous play
         audioSource.loop = true;
+        // Set initial volume
         audioSource.volume = SettingsManager.Instance.SoundSettings.BGMVolume;
         audioSource.Play();
         BackgroundSound.AddComponent<SoundBGVolume>();
     }
     /// <summary>
-    /// Plays audio for one interation.
+    /// Plays a sound effect for a single iteration with a 2D sound effect.
+    /// </summary>
+    /// <param name="sound">The specific sound effect to play.</param>
+    public static void PlaySound(SoundFX sound)
+    {
+        // Create a new GameObject for this sound effect
+        GameObject soundGameObject = new GameObject("SoundFX");
+
+        // Add an AudioSource component to handle playback
+        AudioSource audioSource = soundGameObject.AddComponent<AudioSource>();
+
+        // Set the lifetime of the sound effect so it is destroyed after playback
+        soundGameObject.AddComponent<SoundFXLife>().SoundLength = GetAudio(sound).length;
+
+        // Configure the volume of the sound effect based on settings
+        audioSource.volume = SettingsManager.Instance.SoundSettings.SFXVolume;
+        audioSource.PlayOneShot(GetAudio(sound));                        
+    }
+    /// <summary>
+    /// Same as before but for 3D effect.
     /// </summary>
     /// <param name="sound"></param>
-    public static void PlaySound(SoundFX sound)
+    /// <param name="parent"></param>
+    public static void PlaySound(SoundFX sound, Transform parent)
     {
         GameObject soundGameObject = new GameObject("SoundFX");
         AudioSource audioSource = soundGameObject.AddComponent<AudioSource>();
-
-        audioSource.PlayOneShot(GetAudio(sound));
-        //Set audio to 3D
-        audioSource.spatialBlend = 1.0f;
-        // audioSource.PlayClipAtPoint(GetAudio(sound), transform.TransformPoint(_controller.center));
-        audioSource.volume = SettingsManager.Instance.SoundSettings.SFXVolume;
         soundGameObject.AddComponent<SoundFXLife>().SoundLength = GetAudio(sound).length;
+
+        //Set audio to 3D
+        // Set audio to fully 3D for spatial effects in the scene
+        audioSource.spatialBlend = 1.0f;
+
+        // Configure the volume of the sound effect based on settings
+        audioSource.volume = SettingsManager.Instance.SoundSettings.SFXVolume;
+
+        // Play the sound once using PlayOneShot, so other sounds are not interrupted
+        audioSource.PlayOneShot(GetAudio(sound));
+
+        //Set Parent
+        //soundGameObject.transform.parent = parent;
+        // Reset position relative
+        //soundGameObject.transform.localPosition = Vector3.zero;
+
+        //trying this
+        AudioSource.PlayClipAtPoint(GetAudio(sound),parent.position);                
     }
 
     private static AudioClip GetBGAudio(BgSound sound)

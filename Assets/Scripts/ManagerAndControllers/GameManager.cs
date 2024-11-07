@@ -188,7 +188,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Player Deck is Empty");
+            Debug.LogError("Player Deck is Empty, Don't worry Sabastian this is on purpose.");
         }
 
     }

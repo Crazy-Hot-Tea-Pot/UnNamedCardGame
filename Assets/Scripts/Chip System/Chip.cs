@@ -88,9 +88,7 @@ public class Chip : MonoBehaviour
     /// Runs Scriptable Chip
     /// </summary>
     public void ChipSelected()
-    {
-        Debug.Log(ChipTitle + " Chip");
-        newChip.IsActive = true;
+    {        
         try
         {
             //Check if player turn to play play card
@@ -106,13 +104,17 @@ public class Chip : MonoBehaviour
                 //Check if player is jammed
                 if (Player.GetComponent<PlayerController>().IsJammed)
                 {
-                    //CombatController.TurnUsed(Player);
                     return;
                 }
 
                 //Check if newChip is assigned
                 if (newChip != null)
                 {
+                    //Plays chip use
+                    SoundManager.PlaySound(SoundFX.ChipPlayed);
+
+                    newChip.IsActive = true;
+
                     if (Player.GetComponent<PlayerController>().NextChipActivatesTwice)
                     {
                         if (newChip is DefenseChip defenseChip)

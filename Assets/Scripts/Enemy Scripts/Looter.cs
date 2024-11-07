@@ -35,7 +35,6 @@ public class Looter : Enemy
     // Start is called before the first frame update
     public override void Start()
     {
-        EnemyName = "Looter";
         swipeCount = 0;
         StolenScrap = 0;
 
@@ -44,7 +43,7 @@ public class Looter : Enemy
 
     protected override void PerformIntent()
     {       
-        // Since 100% on first chance soundAssets just made it this way.
+        // Since 100% on first chance just made it this way.
 
         if (swipeCount < 3) // First three turns are Swipe
         {

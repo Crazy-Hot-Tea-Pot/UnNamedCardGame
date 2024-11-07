@@ -49,4 +49,22 @@ MonoBehaviour:
     audioClip: {fileID: 8300000, guid: d4f59aee34b0e6b4e946ce906de7878d, type: 3}
   soundFXClipArray:
   - soundFX: 0
+    audioClip: {fileID: 8300000, guid: 8df8d2e93e560ca4383c7c09a2304223, type: 3}
+  - soundFX: 1
+    audioClip: {fileID: 8300000, guid: b2acf974354b4d246a211f9d5567749e, type: 3}
+  - soundFX: 2
+    audioClip: {fileID: 8300000, guid: 5810cde83775d0040803e6ffadbda25c, type: 3}
+  - soundFX: 3
+    audioClip: {fileID: 8300000, guid: cc83d17ad8444dd45821da2e4bf18f66, type: 3}
+  - soundFX: 4
+    audioClip: {fileID: 8300000, guid: 9787dd783807cc646b2719c48f582872, type: 3}
+  - soundFX: 5
+    audioClip: {fileID: 8300000, guid: 45db9cc29d24c9c42a3f388ba7e5a834, type: 3}
+  - soundFX: 6
+    audioClip: {fileID: 8300000, guid: 6fd5ed9e3870d4642a009ae11ab2ae8e, type: 3}
+  - soundFX: 7
+    audioClip: {fileID: 8300000, guid: 51f64cbf13447304987807ee3f5758f7, type: 3}
+  - soundFX: 8
+    audioClip: {fileID: 8300000, guid: cf31388f0ddf97c4f9d59465dda637d5, type: 3}
+  - soundFX: 9
     audioClip: {fileID: 8300000, guid: 25d3398922c13a94fbf3705b48ae80a0, type: 3}

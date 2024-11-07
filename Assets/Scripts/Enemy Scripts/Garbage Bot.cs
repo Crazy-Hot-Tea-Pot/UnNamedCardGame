@@ -6,8 +6,6 @@ public class GarbageBot : Enemy
 {
     public override void Start()
     {
-        EnemyName = "Garbage Bot";
-        maxHP = 120;
         CurrentHP = maxHP;
         base.Start();
     }

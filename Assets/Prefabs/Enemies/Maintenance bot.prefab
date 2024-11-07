@@ -45,7 +45,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1612628656415722534}
-  m_Mesh: {fileID: -4565683867518447089, guid: d8b42949d4524754d927fc9756a83fa3, type: 3}
+  m_Mesh: {fileID: -4565683867518447089, guid: 6d595df4bdc8b9d498100191f6ad85c3, type: 3}
 --- !u!23 &2476712133872164839
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -105,9 +105,10 @@ MonoBehaviour:
   AttackRange: 10
   animator: {fileID: 0}
   agent: {fileID: 0}
-  healthBar: {fileID: 5113383808397194089}
   playerCamera: {fileID: 0}
   enemyCanvas: {fileID: 1748138426756938305}
+  EnemyNameBox: {fileID: 4468364087278940851}
+  healthBar: {fileID: 5113383808397194089}
   EffectsPanel: {fileID: 4536504553286402562}
   effectPrefabs:
   - {fileID: 32853026164306056, guid: ff016982a5353d04bacce9a244d7f0fa, type: 3}
@@ -138,7 +139,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 1612628656415722534}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 4.216749
+  m_Radius: 5.898656
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
@@ -147,8 +148,8 @@ NavMeshAgent:
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
-  m_Height: 5.2875156
-  m_BaseOffset: 2.6437578
+  m_Height: 6.9525127
+  m_BaseOffset: 3.4762564
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!54 &3355254201735126847
@@ -197,8 +198,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.9479, y: 5.4006796, z: 8.438347}
-  m_Center: {x: -0.05277109, y: -0.056581855, z: -0.0024240017}
+  m_Size: {x: 2.810476, y: 7.792227, z: 11.8077965}
+  m_Center: {x: -0.094334126, y: -0.4198569, z: -0.005242586}
 --- !u!1001 &7905013168461357109
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -301,6 +302,17 @@ Canvas:
   m_CorrespondingSourceObject: {fileID: 8500154223502170740, guid: b845a22ad60f6954ab4cdc7901576242, type: 3}
   m_PrefabInstance: {fileID: 7905013168461357109}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4468364087278940851 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6032271459558298246, guid: b845a22ad60f6954ab4cdc7901576242, type: 3}
+  m_PrefabInstance: {fileID: 7905013168461357109}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4536504553286402562 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5999033585686323767, guid: b845a22ad60f6954ab4cdc7901576242, type: 3}
