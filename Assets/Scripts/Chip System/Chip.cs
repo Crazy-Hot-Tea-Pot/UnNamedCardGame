@@ -12,7 +12,8 @@ public class Chip : MonoBehaviour
         None,
         Combat,
         WorkShop,
-        Inventory
+        Inventory,
+        Delete
     }
     private ChipMode mode;
 
@@ -55,7 +56,7 @@ public class Chip : MonoBehaviour
     /// <summary>
     /// Button Component so player can click on card
     /// </summary>
-    private Button chipButton;  
+    public Button chipButton;  
 
     public NewChip newChip;
 
@@ -71,7 +72,8 @@ public class Chip : MonoBehaviour
         GetComponent<Image>().sprite = newChip.chipImage;
 
         // Get Button
-        chipButton = GetComponent<Button>();
+        //chipButton = GetComponent<Button>();
+
 
         StartCoroutine(CheckIfModeSet());
     }
@@ -204,6 +206,9 @@ public class Chip : MonoBehaviour
             case ChipMode.Inventory:
                 chipButton.interactable = false;
                 break;
+            case ChipMode.Delete:
+                chipButton.interactable = true;
+                break;
             case ChipMode.None:
             default:
                 break;
@@ -213,10 +218,18 @@ public class Chip : MonoBehaviour
     /// Added this cause.....frustration of explaining can't instantiate this gameObject as inActive.
     /// </summary>
     /// <returns></returns>
-    public IEnumerator ChipInstantiatedOnInActiveObject()
+    public IEnumerator ChipInstantiatedOnInActiveObject(ChipMode chipMode)
     {
         yield return new WaitForSeconds(1f);
-        SetChipModeTo(Chip.ChipMode.Inventory);
+        switch (chipMode)
+        {
+            case ChipMode.Combat:
+                SetChipModeTo(Chip.ChipMode.Combat);
+                break;
+            case ChipMode.Inventory:
+                SetChipModeTo(Chip.ChipMode.Inventory);
+                break;
+        }        
     }
 
     private IEnumerator CheckIfModeSet()

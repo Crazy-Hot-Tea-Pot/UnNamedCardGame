@@ -89,11 +89,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8980b81e20ad8314bb44689776086377, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isInWorkShop: 0
-  isInInventoryChip: 0
   CombatController: {fileID: 0}
   Player: {fileID: 0}
   UpgradeController: {fileID: 0}
+  chipButton: {fileID: 8308470880536474269}
   newChip: {fileID: 11400000, guid: 91969f243e8a3e348832cf8db2fe6f61, type: 2}
 --- !u!114 &8308470880536474269
 MonoBehaviour:

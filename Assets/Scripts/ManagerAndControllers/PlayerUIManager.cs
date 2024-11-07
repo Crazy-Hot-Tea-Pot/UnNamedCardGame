@@ -295,7 +295,7 @@ public class PlayerUIManager : MonoBehaviour
             GameObject chipTemp = Instantiate(gameManager.ChipPrefab, panelDeck.transform);
             Chip chipComponenet = chipTemp.GetComponent<Chip>();
 
-            StartCoroutine(chipComponenet.ChipInstantiatedOnInActiveObject());
+            StartCoroutine(chipComponenet.ChipInstantiatedOnInActiveObject(Chip.ChipMode.Inventory));
             //chipComponenet.SetChipModeTo(Chip.ChipMode.Inventory);
 
             chipComponenet.newChip = gameManager.playerDeck[i];
@@ -576,15 +576,15 @@ public class PlayerUIManager : MonoBehaviour
         for (int i = 0; i < gameManager.playerDeck.Count; i++)
         {
             //Creates the chip object in card delete pannel
-            GameObject chipTemp = Instantiate(gameManager.ChipPrefab, panelCardDelete.transform);
-            //Make it interactable again
-            chipTemp.GetComponent<Button>().interactable = true;
+            GameObject chipTemp = Instantiate(gameManager.ChipPrefab, panelCardDelete.transform);            
+            //chipTemp.GetComponent<Button>().interactable = true;
             //Destroy button component to then replace
             chipTemp.GetComponent<Button>().onClick.RemoveAllListeners();
             //Adds a listener on a button that on click will use the swap chip variable
             chipTemp.GetComponent<Button>().onClick.AddListener(() => ChipSwap(chipTemp));
             Chip chipComponenet = chipTemp.GetComponent<Chip>();
-            chipComponenet.SetChipModeTo(Chip.ChipMode.Inventory);            
+            //Make it interactable again
+            chipComponenet.SetChipModeTo(Chip.ChipMode.Delete);            
             chipComponenet.newChip = gameManager.playerDeck[i];
         }
     }

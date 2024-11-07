@@ -361,7 +361,7 @@ public class Enemy : MonoBehaviour
         gameObject.name = EnemyName;
         defaultShader=enemyRenderer.material.shader;
 
-        //CombatController = GameObject.FindGameObjectWithTag("CombatController").GetComponent<CombatController>();
+        CombatController = GameObject.FindGameObjectWithTag("CombatController").GetComponent<CombatController>();
         enemyTarget = GameObject.FindGameObjectWithTag("Player");
     }
    /// <summary>

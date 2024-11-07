@@ -25,7 +25,7 @@ public class Ability : ScriptableObject
     public virtual void Activate()
     {
         //Decrease the players energy by the appropriate amount
-        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().PlayedCardOrAbility(energyCost);
+        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().PlayedCardOrAbility(energyCost);        
     }
 
     /// <summary>
