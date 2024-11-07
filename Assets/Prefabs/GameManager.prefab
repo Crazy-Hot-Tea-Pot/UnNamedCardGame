@@ -64,3 +64,5 @@ MonoBehaviour:
   chipPanel: {fileID: 0}
   uiCanvas: {fileID: 0}
   enemyList: []
+  currentScene: 0
+  previousScene: 0

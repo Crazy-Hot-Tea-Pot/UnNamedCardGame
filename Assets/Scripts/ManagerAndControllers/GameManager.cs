@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
@@ -66,6 +68,35 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public enum Scenes
+    {
+        Title,        
+        Level1,
+        Level2,
+        Level3,
+        Level4,
+        Workshop,
+        Loading,
+        Settings
+    }
+    private Scenes targetScene;
+    /// <summary>
+    /// Scene to load.
+    /// </summary>
+    public Scenes TargetScene
+    {
+        get
+        {
+            return targetScene;
+        }
+        private set
+        {
+            targetScene = value;
+        }
+    }
+    public Scenes currentScene;
+    public Scenes previousScene;
+
     void Awake()
     {
         Instance = this;
@@ -93,19 +124,6 @@ public class GameManager : MonoBehaviour
         // Load all NewChip ScriptableObjects from "Scriptables/Cards/Attack"
         NewChips = new List<NewChip>(Resources.LoadAll<NewChip>("Scriptables/Cards"));
 
-        //Adds basic chips to deck manually add these in inspector instead
-        //foreach (var ch in NewChips)
-        //{
-        //    if (ch.chipRarity == NewChip.ChipRarity.Basic)
-        //        AddChipToDeck(ch);
-        //}
-        // Doing this for testing
-        //AddChipToDeck(NewChips[Random.Range(0, NewChips.Count)]);
-        //AddChipToDeck(NewChips[Random.Range(0, NewChips.Count)]);
-        //AddChipToDeck(NewChips[Random.Range(0, NewChips.Count)]);
-        //AddChipToDeck(NewChips[Random.Range(0, NewChips.Count)]);
-        //AddChipToDeck(NewChips[Random.Range(0, NewChips.Count)]);
-        //AddChipToDeck(NewChips[Random.Range(0, NewChips.Count)]);
     }
 
 
@@ -329,4 +347,14 @@ public class GameManager : MonoBehaviour
         playerHand.Remove(chip.GetComponent<Chip>().newChip);
         DrawChip(DrawsPerTurn);
     }
+
+    /// <summary>
+    /// Initate change level.
+    /// </summary>
+    /// <param name="scene"></param>
+    public void RequestScene(Scenes scene)
+    {
+        TargetScene = scene;
+        SceneManager.LoadScene(Scenes.Loading.ToString());        
+    }    
 }
