@@ -198,14 +198,10 @@ public class PlayerUIManager : MonoBehaviour
         {            
             if (uiInventoryCanvas.activeSelf == false)
             {
-                // Set player to ineracting so only click on UI.
-                GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().IsInteracting = true;
                 OpenInventroy();
             }
             else if (uiInventoryCanvas.activeSelf == true)
             {
-                // Allow player to click on ground to move
-                GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().IsInteracting = false;
                 CloseInventory();
             }
         }
@@ -223,6 +219,8 @@ public class PlayerUIManager : MonoBehaviour
         {
             //set ui canvas as active
             uiInventoryCanvas.SetActive(true);
+            // Set player to ineracting so only click on UI.
+            GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().IsInteracting = true;
         }
 
         //Tell the program the inventory is open
@@ -245,7 +243,10 @@ public class PlayerUIManager : MonoBehaviour
                 //Switch to default screen
                 switchMenuInventory();
             }
+            //Close UI
             uiInventoryCanvas.SetActive(false);
+            // Allow player to click on ground to move
+            GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().IsInteracting = false;
         }
 
         //Tell the program the inventory is closed
@@ -541,6 +542,8 @@ public class PlayerUIManager : MonoBehaviour
     /// </summary>
     public void openDropUI()
     {
+        // Set player to ineracting so only click on UI.
+        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().IsInteracting = true;
         //Display UI
         panelDropCards.SetActive(true);
         //Visually and actually draws the chip for the UI that can be used in the 3 card selection
@@ -555,6 +558,8 @@ public class PlayerUIManager : MonoBehaviour
         panelDropCards.SetActive(false);
         //Open panel card delete for next section
         panelCardDelete.SetActive(true);
+        // Allow player to click on ground to move
+        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().IsInteracting = false;
     }
 
     /// <summary>
