@@ -6,6 +6,7 @@ public enum BgSound
 public enum SoundFX
 {
     BattleStart,
+    Buff,
     Charging_Up,
     ChipPlayed,
     Click,

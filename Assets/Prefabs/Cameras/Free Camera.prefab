@@ -108,7 +108,7 @@ GameObject:
   - component: {fileID: 26591509219354868}
   - component: {fileID: 2156680336827008316}
   m_Layer: 0
-  m_Name: Pan Camera
+  m_Name: Free Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

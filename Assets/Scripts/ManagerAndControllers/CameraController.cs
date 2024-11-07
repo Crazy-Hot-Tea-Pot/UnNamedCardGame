@@ -6,8 +6,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 public class CameraController : MonoBehaviour
 {
-    private LayerMask groundLayer;
-
     private Transform player;
 
     private Transform target;
@@ -25,7 +23,8 @@ public class CameraController : MonoBehaviour
 
     public GameObject freeLook;
     private float distanceFromCamera = 10f;
-    public bool AllowBoarderMovement;
+    //5% from edge
+    public float borderThreshold = 0.05f;
     public float screenWidth;
     public float screenHeight;
     public Vector2 mousePosition;
@@ -47,7 +46,7 @@ public class CameraController : MonoBehaviour
     public CinemachineVirtualCamera freeCamera;
     public CinemachineVirtualCamera BorderCamera;
     public CinemachineVirtualCamera FirstPersonCamera;
-
+       
     public CameraState CurrentCamera
     {
         get
@@ -82,11 +81,14 @@ public class CameraController : MonoBehaviour
     }
 
     [Header("Camera Info")]
+    [Header("Things to make change from camera settings later")]
+    public bool AllowBoarderMovement;
     
-    public float cameraSpeed;
+    public float boarderCameraSpeed;
     public float freeCameraSpeed;
-    //5% from edge
-    public float borderThreshold = 0.05f;
+    // Sensitivity for moving the look target smoothly
+    public float freeCameraLookSensitivity = 0.1f;
+    public float rotationSensitivity = 0.1f;
 
 
     public bool IsMouseAtLeftBorder
@@ -135,9 +137,21 @@ public class CameraController : MonoBehaviour
         playerInputActions.CameraControls.Click.performed += ctx =>
         {
             Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
-            if(Physics.Raycast(ray,out RaycastHit hit, Mathf.Infinity, groundLayer))
+            RaycastHit hit;
+
+            // Create a LayerMask that excludes the "Player" layer
+            int layerMask = ~LayerMask.GetMask("Player");
+            int layerMask2 = ~LayerMask.GetMask("Ignore Raycast");
+
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
             {
-                SwitchCamera(CameraState.Default);
+                if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask2))
+                {
+                    if (hit.collider.CompareTag("Ground"))
+                    {
+                        SwitchCamera(CameraState.Default);
+                    }
+                }
             }            
         };
 
@@ -158,7 +172,10 @@ public class CameraController : MonoBehaviour
 
         Target = player;
 
-        SwitchCamera(CameraState.Default);        
+        SwitchCamera(CameraState.Default);
+
+        RotationCamera.m_XAxis.m_MaxSpeed = rotationSensitivity * 300;
+        RotationCamera.m_YAxis.m_MaxSpeed = rotationSensitivity * 2;
 
     }
 
@@ -192,7 +209,10 @@ public class CameraController : MonoBehaviour
         Vector3 worldPosition = Camera.main.ScreenToWorldPoint(new Vector3(mouseScreenPosition.x, mouseScreenPosition.y, distanceFromCamera));
 
         // Move the lookAtTarget to the calculated world position
-        freeLook.transform.position = worldPosition;
+       // freeLook.transform.position = worldPosition;
+
+        // Smoothly move the lookAtTarget to the calculated world position based on sensitivity
+        freeLook.transform.position = Vector3.Lerp(freeLook.transform.position, worldPosition, freeCameraLookSensitivity * Time.deltaTime);
 
         // Read the input value from the MoveCamera action in Camera Controls map
         Vector2 moveInput = playerInputActions.CameraControls.MoveCamera.ReadValue<Vector2>();
@@ -207,7 +227,9 @@ public class CameraController : MonoBehaviour
             freeCamera.transform.position += freeCamera.transform.TransformDirection(moveDirection);
         }
     }
-
+    /// <summary>
+    /// Handles Boarder Camera Movement.
+    /// </summary>
     private void HandleBorderMovement()
     {
         // Move the camera based on which border the mouse is at
@@ -232,7 +254,7 @@ public class CameraController : MonoBehaviour
         }
 
         // Apply the movement
-        BorderCamera.transform.position += movement * cameraSpeed * Time.deltaTime;
+        BorderCamera.transform.position += movement * boarderCameraSpeed * Time.deltaTime;
     }
 
     /// <summary>

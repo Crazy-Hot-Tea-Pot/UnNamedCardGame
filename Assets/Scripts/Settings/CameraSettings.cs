@@ -38,7 +38,7 @@ public class CameraSettings
     //How fast the camera moves.
     public float CameraSpeed { 
         get => cameraSpeed; 
-        //set => cameraSpeed = value; 
+        //set => boarderCameraSpeed = value; 
     }
     /// <summary>
     /// Adjust rotationSpeed:

@@ -601,6 +601,9 @@ public class PlayerController : MonoBehaviour
                 }
             }
             Health = Health - damage;
+
+            //Play Sound
+            SoundManager.PlaySound(SoundFX.DamageTaken, this.transform);
         }
     }
     /// <summary>
@@ -620,6 +623,7 @@ public class PlayerController : MonoBehaviour
             default:
                 break;
         }
+
     }
     /// <summary>
     /// Apply Buff to Player
@@ -628,6 +632,9 @@ public class PlayerController : MonoBehaviour
     /// <param name="buffStacks"></param>
     public void ApplyEffect(Effects.Buff buffToApply, int buffStacks)
     {
+        //Play buff sound
+        SoundManager.PlaySound(SoundFX.Buff);
+
         switch (buffToApply)
         {
             case Effects.Buff.Galvanize:
@@ -645,6 +652,9 @@ public class PlayerController : MonoBehaviour
     /// <param name="deBuffStacks"></param>
     public void ApplyEffect(Effects.Debuff deBuffToApply, int deBuffStacks)
     {
+        //Play sound effect
+        SoundManager.PlaySound(SoundFX.Debuff);
+
         switch (deBuffToApply)
         {
             case Effects.Debuff.Gunked:
@@ -762,11 +772,13 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// Spend energy for card or ability
+    /// Spend energy for ability
     /// </summary>
     /// <param name="loss"></param>
     public void PlayedCardOrAbility(int loss)
     {
+        SoundManager.PlaySound(SoundFX.Charging_Up, this.transform);
+
         //If energy - loss is greater then 0 or equal to 0 then continue
         if(Energy - loss >= 0)
         {

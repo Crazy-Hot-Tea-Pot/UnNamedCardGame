@@ -106,23 +106,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cd5f1ad8ec53d640819eb752cde7b0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 128
-  target: {fileID: 0}
-  AllowBoarderMovement: 0
+  freeLook: {fileID: 0}
+  borderThreshold: 0.05
   screenWidth: 0
   screenHeight: 0
   mousePosition: {x: 0, y: 0}
-  currentCamera: 0
   DefaultCamera: {fileID: 0}
   RotationCamera: {fileID: 0}
-  PanCamera: {fileID: 0}
+  freeCamera: {fileID: 0}
   BorderCamera: {fileID: 0}
   FirstPersonCamera: {fileID: 0}
-  cameraSpeed: 1
-  panningSpeed: 10
-  borderThreshold: 0.05
+  AllowBoarderMovement: 0
+  boarderCameraSpeed: 0
+  freeCameraSpeed: 5
+  freeCameraLookSensitivity: 1
+  rotationSensitivity: 1
 --- !u!114 &3725951058795707144
 MonoBehaviour:
   m_ObjectHideFlags: 0
