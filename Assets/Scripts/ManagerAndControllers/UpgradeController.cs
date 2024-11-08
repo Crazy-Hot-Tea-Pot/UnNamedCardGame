@@ -7,6 +7,9 @@ using UnityEngine.InputSystem.XR;
 
 public class UpgradeController : MonoBehaviour
 {
+    public GameObject temp1;
+    public GameObject temp2;
+    public GameObject temp3;
 
     private bool isInteracting;
     private NewChip selectedChip;
@@ -318,6 +321,13 @@ public class UpgradeController : MonoBehaviour
         Camera.FirstPersonCamera.LookAt = IntroScreen.transform;
         yield return new WaitForSeconds(1f);
         SwitchToScreen(Screens.Intro);
+
+        temp1.SetActive(false);
+        temp2.SetActive(false);
+        temp3.SetActive(false);
+
+        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().GainScrap(500);
+
     }
     /// <summary>
     /// Players animation and doe sother stuff so player can exit terminal.
@@ -328,6 +338,9 @@ public class UpgradeController : MonoBehaviour
         Camera.SwitchCamera(CameraController.CameraState.Default);
         yield return new WaitForSeconds(1f);
         IsInteracting = false;
+
+        temp1.SetActive(true);
+        
     }    
 
     /// <summary>

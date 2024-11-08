@@ -437,7 +437,7 @@ public class PlayerController : MonoBehaviour
         Health=maxHealth;
         Energy = 50;
         maxEnergy = 50;
-        Scrap = 100;
+        Scrap = 150;
 
         //loads abilities from folder
         //abilities.AddRange(Resources.LoadAll<Ability>("Abilities"));
