@@ -148,19 +148,19 @@ public class PlayerUIManager : MonoBehaviour
         openInventory.Enable();
 
         #region donotdistroy
-        //Checks if the instance is null
-        if (Instance == null)
-        {
-            //Makes the object and instance
-            Instance = this;
-            //Makes the instance do not distroy
-            DontDestroyOnLoad(this.gameObject);
-        }
-        //Deletes doublicates if there are any
-        else
-        {
-            Destroy(this.gameObject);
-        }
+        ////Checks if the instance is null
+        //if (Instance == null)
+        //{
+        //    //Makes the object and instance
+        //    Instance = this;
+        //    //Makes the instance do not distroy
+        //    DontDestroyOnLoad(this.gameObject);
+        //}
+        ////Deletes doublicates if there are any
+        //else
+        //{
+        //    Destroy(this.gameObject);
+        //}
         #endregion
     }
     // Start is called before the first frame update
@@ -388,6 +388,7 @@ public class PlayerUIManager : MonoBehaviour
     public void UpdateHealth()
     {
         //Change value of health bar
+        healthBar.maxValue = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().MaxHealth;
         healthBar.value = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().Health;
     }
 

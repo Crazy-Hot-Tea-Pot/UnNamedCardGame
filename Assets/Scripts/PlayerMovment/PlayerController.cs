@@ -433,11 +433,23 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     void Initialize()
     {
-        maxHealth = 50;
-        Health=maxHealth;
-        Energy = 50;
-        maxEnergy = 50;
-        Scrap = 150;
+        // Check if PlayerPrefs exist.
+        if (PlayerPrefs.HasKey("Health"))
+        {
+            MaxHealth = PlayerPrefs.GetInt("Max Health");
+            Health= PlayerPrefs.GetInt("Health");
+            Energy= PlayerPrefs.GetInt("Energy");
+            MaxEnergy= PlayerPrefs.GetInt("Max Energy");
+            Scrap= PlayerPrefs.GetInt("Scrap");
+        }
+        else //if not set defaults
+        {
+            maxHealth = 50;
+            Health = maxHealth;
+            Energy = 50;
+            maxEnergy = 50;
+            Scrap = 150;
+        }
 
         //loads abilities from folder
         //abilities.AddRange(Resources.LoadAll<Ability>("Abilities"));
@@ -673,6 +685,12 @@ public class PlayerController : MonoBehaviour
                 break;
         }
     }
+    /// <summary>
+    /// Remove Debuffs on player.
+    /// </summary>
+    /// <param name="deBuffToRemove"></param>
+    /// <param name="amount"></param>
+    /// <param name="removeAll"></param>
     public void RemoveEffect(Effects.Debuff deBuffToRemove, int amount,bool removeAll)
     {
         switch (deBuffToRemove)
@@ -790,6 +808,25 @@ public class PlayerController : MonoBehaviour
             Energy = 0;
         }
     }
+
+    /// <summary>
+    /// Save player data to Prefs to load in next scene
+    /// </summary>
+    private void SavePlayerData()
+    {        
+
+        PlayerPrefs.SetInt("Health", Health);
+        PlayerPrefs.SetInt("Max Health", MaxHealth);
+        PlayerPrefs.SetInt("Energy", Energy);
+        PlayerPrefs.SetInt("Max Energy", MaxEnergy);
+        PlayerPrefs.SetInt("Scrap", Scrap);
+        PlayerPrefs.Save();
+    }
+    private void OnDestroy()
+    {
+        SavePlayerData();
+    }
+
 
     #region rangesForAbilites
     private void OnTriggerEnter(Collider other)

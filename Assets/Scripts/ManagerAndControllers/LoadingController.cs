@@ -28,19 +28,28 @@ public class LoadingController : MonoBehaviour
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
         asyncLoad.allowSceneActivation = false; // Prevents auto-activation
 
-        // Display of progress goes here.
-        ProgressBar.fillAmount = Mathf.Clamp01(asyncLoad.progress / 1f);
+        float elapsedTime = 0f;
+        float FillDuration = 5f;
+        while(elapsedTime < FillDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            ProgressBar.fillAmount = Mathf.Lerp(0,1,elapsedTime/FillDuration);
+            yield return null;
+        }
 
         // Wait until the scene is fully loaded (progress reaches 90%)
         while (!asyncLoad.isDone)
         {
-            if (asyncLoad.progress >= 1f)
+            // Display of progress goes here.
+            //ProgressBar.fillAmount = Mathf.Clamp01(asyncLoad.progress / 0.9f);
+
+            if (asyncLoad.progress >= 0.9f)
             {
                 // Scene is almost ready
                 // add a delay or later we can add delay :D
                 // or wait for user input to continue
                 // Short delay for smoother transition
-                yield return new WaitForSeconds(10f);
+                yield return new WaitForSeconds(1f);
 
                 // Activate the scene
                 asyncLoad.allowSceneActivation = true;
