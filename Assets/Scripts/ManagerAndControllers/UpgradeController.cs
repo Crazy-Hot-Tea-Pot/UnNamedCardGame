@@ -7,9 +7,7 @@ using UnityEngine.InputSystem.XR;
 
 public class UpgradeController : MonoBehaviour
 {
-    public GameObject temp1;
-    public GameObject temp2;
-    public GameObject temp3;
+    public GameObject PlayerCanvas;
 
     private bool isInteracting;
     private NewChip selectedChip;
@@ -97,6 +95,7 @@ public class UpgradeController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        PlayerCanvas = GameObject.FindGameObjectWithTag("PlayerCanvas");
         SwitchToScreen(Screens.Default);
     }
 
@@ -248,7 +247,11 @@ public class UpgradeController : MonoBehaviour
             // made this bank for later.
             var Bank = tempPlayer.TakeScrap(150);
 
+            //Updade max health
             tempPlayer.UpgradeMaxHealth(10);
+
+            //heal by same amount
+            tempPlayer.Heal(10);
 
             //Display new info
             SwitchToScreen(UpgradeController.Screens.HealthUpgrade);
@@ -301,12 +304,12 @@ public class UpgradeController : MonoBehaviour
 
         SwitchToScreen(Screens.Error);
     }
-
-    private void OnTriggerEnter(Collider other)
+    
+    private void OnTriggerStay(Collider other)
     {
         if (other.tag == "Player" && !IsInteracting)
         {
-            StartCoroutine(EnterTerminal());          
+            StartCoroutine(EnterTerminal());
         }
     }
 
@@ -322,9 +325,8 @@ public class UpgradeController : MonoBehaviour
         yield return new WaitForSeconds(1f);
         SwitchToScreen(Screens.Intro);
 
-        temp1.SetActive(false);
-        temp2.SetActive(false);
-        temp3.SetActive(false);
+        //Turn off bad Ui
+        PlayerCanvas.SetActive(false);
 
         GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().GainScrap(500);
 
@@ -339,7 +341,8 @@ public class UpgradeController : MonoBehaviour
         yield return new WaitForSeconds(1f);
         IsInteracting = false;
 
-        temp1.SetActive(true);
+        // reactive bad Ui
+        PlayerCanvas.SetActive(true);
         
     }    
 

@@ -767,8 +767,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1.9791455, z: 1.8561096}
-  m_Center: {x: 0, y: 0.49, z: -1.9926968}
+  m_Size: {x: 1, y: 1.9791455, z: 1.2202835}
+  m_Center: {x: 0, y: 0.49, z: -1.6747837}
 --- !u!114 &1766289161021364399
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -781,6 +781,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d590a072d2f425a40b899c16af3b2be5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  temp1: {fileID: 0}
+  temp2: {fileID: 0}
+  temp3: {fileID: 0}
   UIController: {fileID: 0}
   DefaultScreen: {fileID: 5574748035061414842}
   IntroScreen: {fileID: 2917759372585944903}
