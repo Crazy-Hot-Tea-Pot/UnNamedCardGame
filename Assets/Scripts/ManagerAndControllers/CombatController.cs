@@ -15,55 +15,22 @@ public class Combadant
 public class CombatController : MonoBehaviour
 {
 
-    [SerializeField]
     private int roundCounter;
 
-    [SerializeField]
     private string currentCombatant;
 
-    [SerializeField]
     private GameObject target;
 
     private int currentTargetIndex;
 
     [Header("Combadents")]
     public List<Combadant> Combadants;
-    [SerializeField]
     private int currentCombatantIndex;
 
     [Header("Player")]
     [SerializeField]
-    private GameObject player;
-    [SerializeField]
-    private bool playerUsedChip;
-    [SerializeField]
-    private bool playerUsedAbility;
-
-    //If player has used a chip this turn.
-    public bool PlayerUsedChip
-    {
-        get
-        {
-            return playerUsedChip;
-        }
-        set
-        {
-            playerUsedChip = value;
-        }
-    }
-
-    //If player has used Ability This turn
-    public bool PlayerUsedAbility
-    {
-        get
-        {
-            return playerUsedAbility;
-        }
-        set
-        {
-            playerUsedAbility = value;
-        }
-    }
+    private GameObject player;    
+    
 
     private GameObject endTurnButton;
 
@@ -121,13 +88,14 @@ public class CombatController : MonoBehaviour
             if(currentCombatant == "Player")
             {
                 //Activate Button so player can end turn
-                endTurnButton.SetActive(true);
+                endTurnButton.GetComponent<Button>().interactable =true;
+
+                // let player know its their turn
+                player.GetComponent<PlayerController>().StartTurn();
             }
             else
             {
-                endTurnButton.SetActive(false);
-                PlayerUsedAbility = false;
-                PlayerUsedChip = false;
+                endTurnButton.GetComponent<Button>().interactable = false;
             }
         }
     }
@@ -189,6 +157,7 @@ public class CombatController : MonoBehaviour
     {
         
     }
+
     /// <summary>
     /// Check if the current combatant has attacked.
     /// Move to the next combatant.
@@ -203,6 +172,7 @@ public class CombatController : MonoBehaviour
         }
         NextRound();
     }
+
     /// <summary>
     /// Start Combat
     /// </summary>
@@ -232,7 +202,8 @@ public class CombatController : MonoBehaviour
             for(int i = 0; i < combatEnemy.GetComponent<Enemy>().dropedCards.Count; i++)
             {
                 //Adds the player 
-                PlayerUIManager.Instance.AddChipChoices(combatEnemy.GetComponent<Enemy>().dropedCards[i]);
+                //PlayerUIManager.Instance.AddChipChoices(combatEnemy.GetComponent<Enemy>().dropedCards[i]);
+                GameObject.Find("PlayerUIManager").GetComponent<PlayerUIManager>().AddChipChoices(combatEnemy.GetComponent<Enemy>().dropedCards[i]);
             }
         }
 
@@ -241,16 +212,23 @@ public class CombatController : MonoBehaviour
         //Play Start Combat
         SoundManager.PlaySound(SoundFX.BattleStart);
     }
+
     /// <summary>
     /// When used an action or attack and change status in combat.
     /// </summary>
     /// <param name="gameObject"></param>
     public void TurnUsed(GameObject gameObject)
     {
+        //Call End turn on objected
+        if (gameObject.tag == "Enemy")
+            gameObject.GetComponent<Enemy>().EndTurn();
+        else
+            gameObject.GetComponent<PlayerController>().EndTurn();
 
         foreach (var combadent in Combadants)
         {
-            if(combadent.combadant.name == gameObject.name)
+            //Check if gameobject matches
+            if(combadent.combadant == gameObject)
             {
                 combadent.attacked = true;
                 CurrentCombatantIndex++;
@@ -262,6 +240,7 @@ public class CombatController : MonoBehaviour
         else
             EndCombat();
     }
+
     /// <summary>
     /// Check if I can make an action in this turn.
     /// Check if it's the current combatant's turn in the list
@@ -277,6 +256,7 @@ public class CombatController : MonoBehaviour
         
         return false;
     }
+
     /// <summary>
     /// Check if enemies are still in combat zone.
     /// </summary>
@@ -292,6 +272,7 @@ public class CombatController : MonoBehaviour
         }
         return false;
     }
+
     /// <summary>
     /// Call this after enemy death to remove enemy from list of combadants"
     /// </summary>
@@ -305,6 +286,7 @@ public class CombatController : MonoBehaviour
             Debug.Log($"{combadant.name} has been removed from combat.");
         }
     }
+
     /// <summary>
     /// Move to next round.
     /// Increase round counter
@@ -324,8 +306,6 @@ public class CombatController : MonoBehaviour
             if (combadant.combadant.tag == "Player")
             {
                 combadant.combadant.GetComponent<PlayerController>().RoundEnd();
-                PlayerUsedAbility = false;
-                PlayerUsedChip = false;
             }
             else if (combadant.combadant.tag == "Enemy")
                 combadant.combadant.GetComponent<Enemy>().RoundEnd();
@@ -336,6 +316,7 @@ public class CombatController : MonoBehaviour
             newchip.EndRound();
         }
     }
+
     /// <summary>
     /// End combat.
     /// leanup and reset

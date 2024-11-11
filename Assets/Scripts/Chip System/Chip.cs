@@ -71,8 +71,6 @@ public class Chip : MonoBehaviour
         // Set image to chip
         GetComponent<Image>().sprite = newChip.chipImage;
 
-        // Get Button
-        //chipButton = GetComponent<Button>();
 
 
         StartCoroutine(CheckIfModeSet());
@@ -91,9 +89,6 @@ public class Chip : MonoBehaviour
     {        
         try
         {
-            //Check if player turn to play play card
-            if (!CombatController.PlayerUsedChip)
-            {
 
                 // Check if there is a target available
                 if (CombatController.Target == null)
@@ -110,7 +105,7 @@ public class Chip : MonoBehaviour
                 //Check if newChip is assigned
                 if (newChip != null)
                 {
-                    //Plays chip use
+                    //Plays chip use sound
                     SoundManager.PlaySound(SoundFX.ChipPlayed);
 
                     newChip.IsActive = true;
@@ -139,8 +134,6 @@ public class Chip : MonoBehaviour
                             }
                         }
 
-                        //Player made chip move
-                        CombatController.PlayerUsedChip = true;
 
                         //Remove effect after it has been used.
                         Player.GetComponent<PlayerController>().RemoveEffect(Effects.Effect.Motivation);
@@ -162,8 +155,6 @@ public class Chip : MonoBehaviour
                                 newChip.OnChipPlayed(Player.GetComponent<PlayerController>(), CombatController.Target.GetComponent<Enemy>());
                         }
 
-                        //Player made chip move
-                        CombatController.PlayerUsedChip = true;
                     }
                     GameManager.Instance.KillChip(this.gameObject);
                     Destroy(this.gameObject);
@@ -171,8 +162,7 @@ public class Chip : MonoBehaviour
                 else
                 {
                     throw new NullReferenceException("No chip script attached.");
-                }
-            }
+                }           
         }
         catch (NullReferenceException ex)
         {

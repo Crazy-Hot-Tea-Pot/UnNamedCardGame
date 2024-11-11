@@ -77,10 +77,10 @@ public class Looter : Enemy
             PowerStacks = 0;
         }
         // Drained Swipe
-        else if (DrainStacks>0)
+        else if (DrainedStacks>0)
         {
             GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().TakeDamage(Mathf.FloorToInt(6 - 0.8f));
-            DrainStacks--;
+            DrainedStacks--;
         }
         // Default Swipe
         else

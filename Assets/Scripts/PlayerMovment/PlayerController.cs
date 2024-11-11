@@ -80,6 +80,7 @@ public class PlayerController : MonoBehaviour
             inCombat = value;
         }
     }
+
     /// <summary>
     /// Is player is interacting with object.
     /// Stops playing from being to move.
@@ -95,6 +96,7 @@ public class PlayerController : MonoBehaviour
             isInteracting = value;
         }
     }
+
     /// <summary>
     /// Returns PLayer Health
     /// </summary>
@@ -109,6 +111,7 @@ public class PlayerController : MonoBehaviour
                 health = 0;
         }
     }
+
     /// <summary>
     /// Player Shield amount
     /// </summary>
@@ -123,6 +126,7 @@ public class PlayerController : MonoBehaviour
             shield = value;
         }
     }
+
     /// <summary>
     /// Returns PlayerEnergy
     /// </summary>
@@ -134,6 +138,7 @@ public class PlayerController : MonoBehaviour
             energy = value;
         }
     }
+
     /// <summary>
     /// Returns max energy
     /// </summary>
@@ -145,6 +150,7 @@ public class PlayerController : MonoBehaviour
             maxEnergy = value;
         }
     }
+
     /// <summary>
     /// Returns max health
     /// </summary>
@@ -172,6 +178,7 @@ public class PlayerController : MonoBehaviour
                 scrap = 0;
         }
     }
+
     /// <summary>
     /// Returns if player is Galvanized.
     /// </summary>
@@ -186,6 +193,7 @@ public class PlayerController : MonoBehaviour
             isGalvanized = value;
         }
     }
+
     /// <summary>
     /// Returns how many stacks of Galvanized the player has.
     /// </summary>
@@ -204,6 +212,7 @@ public class PlayerController : MonoBehaviour
                 IsGalvanized = true;
         }
     }
+
     /// <summary>
     /// Returns if player is Powered.
     /// </summary>
@@ -211,6 +220,7 @@ public class PlayerController : MonoBehaviour
         get => isPowered; 
         private set => isPowered = value; 
     }
+
     /// <summary>
     /// Returns how many stacks of power the player has.
     /// </summary>
@@ -229,6 +239,7 @@ public class PlayerController : MonoBehaviour
                 IsPowered = true;
         }
     }
+
     /// <summary>
     /// Returns if player is gunked.
     /// </summary>
@@ -238,6 +249,7 @@ public class PlayerController : MonoBehaviour
          isGunked = value;
         }
     }
+
     /// <summary>
     /// Returns how many stacks of gunk the player has.
     /// </summary>
@@ -271,6 +283,7 @@ public class PlayerController : MonoBehaviour
                 IsGunked = false;
         }
     }
+
     /// <summary>
     /// Returns how many stacks of drained the player has.
     /// </summary>
@@ -292,6 +305,7 @@ public class PlayerController : MonoBehaviour
                 IsDrained = true;
         }
     }
+
     /// <summary>
     /// Returns if the player is drained.
     /// </summary>
@@ -305,6 +319,7 @@ public class PlayerController : MonoBehaviour
             isDrained = value;
         }
     }
+
     /// <summary>
     /// Returns if the player is in worndown state.
     /// </summary>
@@ -312,6 +327,7 @@ public class PlayerController : MonoBehaviour
         get => isWornDown;
         private set => isWornDown = value; 
     }
+
     /// <summary>
     /// Returns how many stacks of worn down the player has.
     /// </summary>
@@ -333,6 +349,7 @@ public class PlayerController : MonoBehaviour
                 IsWornDown = true;
         }
     }
+
     /// <summary>
     /// Returns if player is Jammed.
     /// </summary>
@@ -340,6 +357,7 @@ public class PlayerController : MonoBehaviour
         get => isJammed;
         private set => isJammed = value; 
     }           
+
     /// <summary>
     /// Returns how many stacks of jammed the palyer has.
     /// </summary>
@@ -361,6 +379,7 @@ public class PlayerController : MonoBehaviour
                 IsJammed = true;
         }
     }   
+
     /// <summary>
     /// Used to apply effect of activing a chip twice.
     /// </summary>
@@ -375,6 +394,7 @@ public class PlayerController : MonoBehaviour
             nextChipActivatesTwice = value;
         }
     }
+
     /// <summary>
     /// Used to apply effect to not take damage.
     /// </summary>
@@ -402,6 +422,7 @@ public class PlayerController : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
 
     }
+
     void Start()
     {
        
@@ -415,6 +436,7 @@ public class PlayerController : MonoBehaviour
     {
         TargetAbilityRangedVisual();
     }
+
     /// <summary>
     /// We will do animations in Late Update.
     /// </summary>
@@ -428,6 +450,7 @@ public class PlayerController : MonoBehaviour
         animator.SetBool("IsWalking", isWalking);
         animator.SetBool("IsRunning", isRunning);
     }
+
     /// <summary>
     /// Initialize Player
     /// </summary>
@@ -454,6 +477,7 @@ public class PlayerController : MonoBehaviour
         //loads abilities from folder
         //abilities.AddRange(Resources.LoadAll<Ability>("Abilities"));
     }
+
     /// <summary>
     /// Enables
     /// </summary>
@@ -463,6 +487,7 @@ public class PlayerController : MonoBehaviour
         select.Enable();
         select.performed += OnClick;
     }
+
     /// <summary>
     /// Disables
     /// </summary>
@@ -525,6 +550,7 @@ public class PlayerController : MonoBehaviour
             lastClickTime = currentTime;
         }
     }
+
     /// <summary>
     /// heal player by amount
     /// </summary>
@@ -539,6 +565,7 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Health Restored: " + health);
         
     }
+
     /// <summary>
     /// Heal to max hp.
     /// </summary>
@@ -554,6 +581,7 @@ public class PlayerController : MonoBehaviour
     {
         MaxHealth += amount;
     }
+
     /// <summary>
     /// Give player shield.
     /// </summary>
@@ -565,6 +593,7 @@ public class PlayerController : MonoBehaviour
 
         Debug.Log("Shield Restored: " + shield);
     }
+
     /// <summary>
     /// Give player energy.
     /// </summary>
@@ -576,6 +605,7 @@ public class PlayerController : MonoBehaviour
 
         Debug.Log("Energy Restored: " + energy);
     }
+
     /// <summary>
     /// Recover energy to max.
     /// </summary>
@@ -583,6 +613,7 @@ public class PlayerController : MonoBehaviour
     {
         Energy = maxEnergy;
     }
+
     /// <summary>
     /// Deal Damage to player.
     /// </summary>
@@ -618,6 +649,7 @@ public class PlayerController : MonoBehaviour
             SoundManager.PlaySound(SoundFX.DamageTaken, this.transform);
         }
     }
+
     /// <summary>
     /// Apply Skill Effect
     /// </summary>
@@ -637,6 +669,7 @@ public class PlayerController : MonoBehaviour
         }
 
     }
+
     /// <summary>
     /// Apply Buff to Player
     /// </summary>
@@ -657,6 +690,7 @@ public class PlayerController : MonoBehaviour
                 break;
         }
     }
+
     /// <summary>
     /// Apply Debuff to player.
     /// </summary>
@@ -685,6 +719,7 @@ public class PlayerController : MonoBehaviour
                 break;
         }
     }
+
     /// <summary>
     /// Remove Debuffs on player.
     /// </summary>
@@ -724,6 +759,7 @@ public class PlayerController : MonoBehaviour
                 break;
         }
     }
+
     /// <summary>
     /// Remove an special affect from being isActive.
     /// </summary>
@@ -740,6 +776,7 @@ public class PlayerController : MonoBehaviour
                 break;
         }
     }
+
     /// <summary>
     /// Adds scrap
     /// </summary>
@@ -748,6 +785,7 @@ public class PlayerController : MonoBehaviour
     {
         Scrap+=amount;
     }
+
     /// <summary>
     /// Returns the scrap stolen or whats left.
     /// </summary>
@@ -767,6 +805,34 @@ public class PlayerController : MonoBehaviour
             return amount;
         }
     }
+
+    /// <summary>
+    /// Stuff to do at start of players turn.
+    /// </summary>
+    public void StartTurn()
+    {
+        //Remove shield
+        if (Shield > 0)        
+            Shield = 0;
+
+        //Remove buffs by 1
+        GalvanizedStack--;
+        PoweredStacks--;
+    }
+    /// <summary>
+    /// Called player ends their turn
+    /// </summary>
+    public void EndTurn()
+    {
+        //Restore energy to full
+        RecoverFullEnergy();
+
+        //Remove debuffs by 1
+        GunkStacks--;
+        DrainedStacks--;
+        WornDownStacks--;
+        JammedStacks--;
+    }
     /// <summary>
     /// Called when round ends to apply buffs or debuffs.
     /// Buffs Stack don't go away.
@@ -781,12 +847,7 @@ public class PlayerController : MonoBehaviour
         if (isGunked)
         {
             AmountOfTurnsGunkedLeft--;
-        }
-        drainedStacks--;
-        gunkStacks--;
-        jammedStacks--;
-        wornDownStacks--;
-
+        }                
     }
 
     /// <summary>
@@ -822,11 +883,11 @@ public class PlayerController : MonoBehaviour
         PlayerPrefs.SetInt("Scrap", Scrap);
         PlayerPrefs.Save();
     }
+
     private void OnDestroy()
     {
         SavePlayerData();
     }
-
 
     #region rangesForAbilites
     private void OnTriggerEnter(Collider other)

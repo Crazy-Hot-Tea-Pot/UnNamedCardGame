@@ -856,11 +856,34 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "<color=#80ff80>....Booting System.....</color>\r\n\r\nDetecting customer.\r\n\r\nHello
-    User <color=#A20000>*Error*</color>.\r\n\r\nThank you for choosing <color=#A20000>Chip
-    Sect</color> company.\r\n\r\n<color=#80ff80>....Loading Options...</color>\r\n\r\n<color=#FF0000><u><link=\"UpgradeHealthScreen\">Upgrade
-    Health.</link></u></color>\r\n\r\n<color=#414146><u><link=\"UpgradeChipScreen\">Upgrade
-    Chips.</link></u></color>\r\n\r\n<u><link=\"Exit\">Exit.</link></u>\r"
+  m_text: '<#80ff80>....Booting System.....</color>
+
+
+    Detecting customer.
+
+
+    Hello
+    User <#A20000> *Error*</color>.
+
+
+    Thankyou for choosing <#A20000> Chip Sect</color>
+    company.
+
+
+    <#80ff80>....Loading Options...</color>
+
+
+    <color=#0000FF><link="UpgradeHealthScreen"><u>Upgrade
+    Health</u></link></color>
+
+
+
+    <color=#0000FF><link="UpgradeChipScreen"><u>Upgrade
+    Chips</u></link></color>
+
+
+
+    <color=#0000FF><link="Exit"><u>Exit</u></link></color>'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

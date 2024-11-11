@@ -36,12 +36,12 @@ public class NewAbility : MonoBehaviour
 
     private void OnAbilityAcitve()
     {
-        //Check if player turn to play play card
-        if (!GameObject.Find("CombatController").GetComponent<CombatController>().PlayerUsedAbility)
-        {
-            GameObject.Find("CombatController").GetComponent<CombatController>().PlayerUsedAbility = true;
+        ////Check if player turn to play play card
+        //if (!GameObject.Find("CombatController").GetComponent<CombatController>().PlayerUsedAbility)
+        //{
+        //    GameObject.Find("CombatController").GetComponent<CombatController>().PlayerUsedAbility = true;
             //Allows for abilites activated on press to function
             abilityButton.Activate();
-        }
+       // }
     }
 }

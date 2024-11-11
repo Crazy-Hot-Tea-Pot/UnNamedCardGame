@@ -211,7 +211,9 @@ public class GameManager : MonoBehaviour
 
     }
 
-    ///<summary>>Generates a random number</summary
+    ///<summary>>
+    ///Generates a random number
+    ///</summary
     public int Roll(int max, int min)
     {
         int random = Random.Range(min, max);

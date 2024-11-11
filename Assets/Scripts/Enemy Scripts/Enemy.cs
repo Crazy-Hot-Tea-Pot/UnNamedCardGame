@@ -166,6 +166,7 @@ public class Enemy : MonoBehaviour
             //animator.SetBool("inCombat", value);
         }
     }
+
     /// <summary>
     /// Enemy Shield Amount.
     /// </summary>
@@ -184,6 +185,7 @@ public class Enemy : MonoBehaviour
             }
         }
     }
+
     /// <summary>
     /// Is enemy being targeted by player
     /// </summary>
@@ -208,6 +210,7 @@ public class Enemy : MonoBehaviour
             }
         }
     }
+
     /// <summary>
     /// Is enemy GalvanizedStacks.
     /// Added for animation or effect later.
@@ -246,7 +249,7 @@ public class Enemy : MonoBehaviour
     /// <summary>
     /// Amount of stacks of Drained the enemy have.
     /// </summary>
-    public int DrainStacks
+    public int DrainedStacks
     {
         get
         {
@@ -333,20 +336,7 @@ public class Enemy : MonoBehaviour
         {
             if(CombatController.CanIMakeAction(this.gameObject))
             {
-                //Look at player
-                this.gameObject.transform.LookAt(EnemyTarget.transform);
-
-                //Check if player is in range
-                if (DistanceToPlayer <= AttackRange)
-                {
-                    agent.ResetPath();
-                    PerformIntent();
-                }
-                else
-                {                    
-                    // move to player
-                    agent.SetDestination(EnemyTarget.transform.position);
-                }
+                StartTurn();                
             }
         }
     }
@@ -413,6 +403,35 @@ public class Enemy : MonoBehaviour
         if(this.gameObject != null)
             CombatController.TurnUsed(this.gameObject);
     }
+
+    /// <summary>
+    /// Start Combat turn
+    /// </summary>
+    protected virtual void StartTurn()
+    {
+        //Remove Shield if there is shield
+        if (Shield > 0)        
+            Shield = 0;
+
+        //Remove Buffs
+        PowerStacks--;
+        GalvanizedStacks--;
+
+        //Look at player
+        this.gameObject.transform.LookAt(EnemyTarget.transform);
+
+        //Check if player is in range
+        if (DistanceToPlayer <= AttackRange)
+        {
+            agent.ResetPath();
+            PerformIntent();
+        }
+        else
+        {
+            // move to player
+            agent.SetDestination(EnemyTarget.transform.position);
+        }
+    }
     /// <summary>
     /// Call when enemy die.
     /// </summary>
@@ -426,7 +445,16 @@ public class Enemy : MonoBehaviour
     }
 
     /// <summary>
-    /// Called when round ends to apply buffs or debuffs.
+    /// Call at end of enemyies turn.
+    /// </summary>
+    public virtual void EndTurn()
+    {
+        //Remove debuffs by 1
+        DrainedStacks--;
+    }
+
+    /// <summary>
+    /// Called when round ends
     /// </summary>
     public virtual void RoundEnd()
     {
@@ -450,8 +478,8 @@ public class Enemy : MonoBehaviour
         switch (debuffToApply)
         {
             case Effects.Debuff.Drained:
-                DrainStacks += debuffStacks;
-                if (DrainStacks > 0)
+                DrainedStacks += debuffStacks;
+                if (DrainedStacks > 0)
                 {
                     AddEffectIconToPanel(debuffToApply.ToString());
                 }

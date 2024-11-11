@@ -19,6 +19,7 @@ TagManager:
   - itemArmour
   - abilityBasicPunch
   - UpgradeController
+  - PlayerCanvas
   layers:
   - Default
   - TransparentFX

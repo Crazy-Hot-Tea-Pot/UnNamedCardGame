@@ -399,7 +399,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  - {fileID: 2140032, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -458,27 +458,29 @@ MonoBehaviour:
     <#80ff80>....Loading Options...</color>
 
 
-    <link="UpgradeHealthScreen"><u></color>
-    Upgrade <#FF0000>Health</color>.</u></link>
+    <color=#0000FF><link="UpgradeHealthScreen"><u>Upgrade
+    Health</u></link></color>
 
+    
 
-    <link="UpgradeChipScreen">
-    <u></color> Upgrade <#414146>Chips</color>.</u></link>
+    <color=#0000FF><link="UpgradeChipScreen"><u>Upgrade
+    Chips</u></link></color>
 
+    
 
-    <link="Exit"><u>
-    </color> Exit .</u></link>
+    <color=#0000FF><link="Exit"><u>Exit</u></link></color>
+
 
 '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2140032, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 4278377216
   m_fontColor: {r: 0, g: 0.85882354, b: 0.007843138, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -496,7 +498,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 0.45
+  m_fontSize: 0.35
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -538,7 +540,7 @@ MonoBehaviour:
   _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
-  m_hasFontAssetChanged: 1
+  m_hasFontAssetChanged: 0
   m_renderer: {fileID: 3785158049000709016}
   m_maskType: 0
 --- !u!1 &3261016784744153359
@@ -781,9 +783,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d590a072d2f425a40b899c16af3b2be5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  temp1: {fileID: 0}
-  temp2: {fileID: 0}
-  temp3: {fileID: 0}
+  PlayerCanvas: {fileID: 0}
   UIController: {fileID: 0}
   DefaultScreen: {fileID: 5574748035061414842}
   IntroScreen: {fileID: 2917759372585944903}
