@@ -917,37 +917,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 112651614981193900, guid: cfbd80ae571d42d43a53c68c995e54ac, type: 3}
-      propertyPath: m_text
-      value: '<#80ff80>....Booting System.....</color>
-
-
-        Detecting customer.
-
-
-        Hello
-        User <#A20000> *Error*</color>.
-
-
-        Thankyou for choosing <#A20000>
-        Chip Sect</color> company.
-
-
-        <#80ff80>....Loading Options...</color>
-
-
-        <color=#0000FF><link="UpgradeHealthScreen"><u>Upgrade
-        Health</u></link></color>
-
-
-
-        <color=#0000FF><link="UpgradeChipScreen"><u>Upgrade
-        Chips</u></link></color>
-
-
-
-        <color=#0000FF><link="Exit"><u>Exit</u></link></color>'
-      objectReference: {fileID: 0}
     - target: {fileID: 6349382813320215569, guid: cfbd80ae571d42d43a53c68c995e54ac, type: 3}
       propertyPath: m_Name
       value: WorhShopCanvas
@@ -1867,21 +1836,37 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1814477234781881809, guid: c93664bf6208c7942962caae2af2a749, type: 3}
+      propertyPath: m_Center.z
+      value: -1.09
+      objectReference: {fileID: 0}
     - target: {fileID: 3394045560713610535, guid: c93664bf6208c7942962caae2af2a749, type: 3}
       propertyPath: m_Name
       value: Upgrade Computer
       objectReference: {fileID: 0}
     - target: {fileID: 6883745671306307171, guid: c93664bf6208c7942962caae2af2a749, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6883745671306307171, guid: c93664bf6208c7942962caae2af2a749, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6883745671306307171, guid: c93664bf6208c7942962caae2af2a749, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6883745671306307171, guid: c93664bf6208c7942962caae2af2a749, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 34.43
+      value: 34.49
       objectReference: {fileID: 0}
     - target: {fileID: 6883745671306307171, guid: c93664bf6208c7942962caae2af2a749, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.42
+      value: 1.5100001
       objectReference: {fileID: 0}
     - target: {fileID: 6883745671306307171, guid: c93664bf6208c7942962caae2af2a749, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 3.4326146
+      value: 1.85
       objectReference: {fileID: 0}
     - target: {fileID: 6883745671306307171, guid: c93664bf6208c7942962caae2af2a749, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1910,6 +1895,10 @@ PrefabInstance:
     - target: {fileID: 6883745671306307171, guid: c93664bf6208c7942962caae2af2a749, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6883745671306307171, guid: c93664bf6208c7942962caae2af2a749, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
