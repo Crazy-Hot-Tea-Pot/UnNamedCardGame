@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Neclace of transferance
   itemDescription: The wearer exchanges energy for health
+  destroyme: 0
   AbilityList:
-  - {fileID: 3522524307814480900, guid: d57a3f4d4c2fe6a4ea7558df5072522a, type: 3}
+  - {fileID: 11400000, guid: e598b6a5f3570dd44824ea394dbe6ec9, type: 2}

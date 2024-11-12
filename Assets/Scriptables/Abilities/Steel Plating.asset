@@ -15,4 +15,6 @@ MonoBehaviour:
   abilityName: Steel Plating
   abilityDescription: Spend 5 energy, Gain 2 Shield
   energyCost: 5
+  abilityType: 2
+  uiImage: {fileID: 21300000, guid: d9bc3337081eab347b70d1d60022f710, type: 3}
   shield: 2

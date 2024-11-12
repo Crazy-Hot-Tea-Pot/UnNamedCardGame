@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 694434016486562259}
   - component: {fileID: 4986942985864643601}
-  m_Layer: 6
+  m_Layer: 2
   m_Name: HitBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -51,8 +51,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.677116, y: 1.7124982, z: 3.2632744}
-  m_Center: {x: -0.112772346, y: 7.0398216, z: 4.9875145}
+  m_Size: {x: 26.692999, y: 5.4435177, z: 11.15076}
+  m_Center: {x: -4.3325996, y: 8.905331, z: 8.931259}
 --- !u!1 &8836494093751931086
 GameObject:
   m_ObjectHideFlags: 0
