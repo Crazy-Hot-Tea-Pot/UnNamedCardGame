@@ -60,6 +60,14 @@ public class PlayerUIManager : MonoBehaviour
     //Panel for deleting cards
     public GameObject panelCardDelete;
 
+    //Ability ui images
+    public Image attackUIImage;
+    public Image utilityUIImage;
+    public Image shieldUIImage;
+    private Sprite blankAttackUIImage;
+    private Sprite blankUtilityUIImage;
+    private Sprite blankShieldUiImage;
+
     /// <summary>
     /// Instance getter and setter
     /// </summary>
@@ -168,6 +176,11 @@ public class PlayerUIManager : MonoBehaviour
     {
         //Fills the inventory UI for deck
         //fillDeck();
+
+        //Fill blank UI Sprites
+        blankAttackUIImage = attackUIImage.sprite;
+        blankShieldUiImage = shieldUIImage.sprite;
+        blankUtilityUIImage = utilityUIImage.sprite;
 
         //Sets UI maximums for resource pools
         StartingPools();
@@ -331,25 +344,125 @@ public class PlayerUIManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Instantiates abilites as UI objects so that they might be added into the game
+    /// Creates the UI ability on screen
     /// </summary>
-    public void MakeActiveAbility(GameObject ability)
+    public void MakeActiveAbility(Ability ability)
     {
-        if (!GameObject.FindGameObjectWithTag(ability.tag))
+        //We have to renable the player canvas to add to it
+        uiPlayerCanvas.SetActive(true);
+        //Ability is an attack ability
+        if (ability.abilityType == 1)
         {
-            Instantiate(ability, panelAbilty.transform);
+            //Add the sprite image
+            attackUIImage.sprite = ability.uiImage;
+            //If we don't have a button attached
+            if(attackUIImage.GetComponent<Button>() == null)
+            {
+                //Attach one
+                attackUIImage.AddComponent<Button>();
+            }
+            //If we don't have the script attached attach one and give it the ability variable
+            if(attackUIImage.GetComponent<NewAbility>() == null)
+            {
+                //Attach one
+                attackUIImage.AddComponent<NewAbility>().abilityButton = ability;
+            }
+            //If we have the script attached for example from equiping and unequiping but unequiping glitched
+            else if(attackUIImage.GetComponent<NewAbility>() != null)
+            {
+                //Just change the variable
+                attackUIImage.GetComponent<NewAbility>().abilityButton = ability;
+            }
+            
         }
+        //Ability is a shield ability
+        else if(ability.abilityType == 2)
+        {
+            //Add the sprite image
+            shieldUIImage.sprite = ability.uiImage;
+            //If we don't have a button attached
+            if (shieldUIImage.GetComponent<Button>() == null)
+            {
+                //Attach one
+                shieldUIImage.AddComponent<Button>();
+            }
+            //If we don't have the script attached attach one and give it the ability variable
+            if (shieldUIImage.GetComponent<NewAbility>() == null)
+            {
+                //Attach one
+                shieldUIImage.AddComponent<NewAbility>().abilityButton = ability;
+            }
+            //If we have the script attached for example from equiping and unequiping but unequiping glitched
+            else if (shieldUIImage.GetComponent<NewAbility>() != null)
+            {
+                //Just change the variable
+                shieldUIImage.GetComponent<NewAbility>().abilityButton = ability;
+            }
+        }
+        //Ability is a utility
+        else if(ability.abilityType == 3)
+        {
+            //Add the sprite image
+            utilityUIImage.sprite = ability.uiImage;
+            //If we don't have a button attached
+            if (utilityUIImage.GetComponent<Button>() == null)
+            {
+                //Attach one
+                utilityUIImage.AddComponent<Button>();
+            }
+            //If we don't have the script attached attach one and give it the ability variable
+            if (utilityUIImage.GetComponent<NewAbility>() == null)
+            {
+                //Attach one
+                utilityUIImage.AddComponent<NewAbility>().abilityButton = ability;
+            }
+            //If we have the script attached for example from equiping and unequiping but unequiping glitched
+            else if (utilityUIImage.GetComponent<NewAbility>() != null)
+            {
+                //Just change the variable
+                utilityUIImage.GetComponent<NewAbility>().abilityButton = ability;
+            }
+        }
+        else
+        {
+            Debug.LogError("This is not an ability type");
+        }
+        //Close player UI
+        uiPlayerCanvas.SetActive(false);
     }
 
     /// <summary>
-    /// Destroys the ability from the UI
+    /// Resets the UI ability to blank
     /// </summary>
     /// <param name="ability"></param>
-    public void MakeDeactiveAbility(GameObject ability)
+    public void MakeDeactiveAbility(Ability ability)
     {
         //We have to renable the player canvas to delete from it
         uiPlayerCanvas.SetActive(true);
-        Destroy(GameObject.FindGameObjectWithTag(ability.tag));
+        //Attack ability
+        if(ability.abilityType == 1)
+        {
+            //Destroy the script
+            Destroy(attackUIImage.GetComponent<NewAbility>());
+            //Empty the image source
+            attackUIImage.sprite = blankAttackUIImage;
+        }
+        //Shield
+        else if(ability.abilityType == 2)
+        {
+            //Destroy the script
+            Destroy(shieldUIImage.GetComponent<NewAbility>());
+            //Empty the image source
+            shieldUIImage.sprite = blankShieldUiImage;
+        }
+        //Utility
+        else if(ability.abilityType == 3)
+        {
+            //Destroy the script
+            Destroy(utilityUIImage.GetComponent<NewAbility>());
+            //Empty the image source
+            utilityUIImage.sprite = blankUtilityUIImage;
+        }
         //Hide it quick enough the player doesn't see
         uiPlayerCanvas.SetActive(false);
     }

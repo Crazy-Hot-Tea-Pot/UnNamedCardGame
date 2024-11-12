@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Armour
   itemDescription: Grains the wearer Steel Plating
+  destroyme: 0
   AbilityList:
-  - {fileID: 6997298212168128428, guid: e9e587936e29f664fbc782f24c918817, type: 3}
+  - {fileID: 11400000, guid: 842a679b5d7709243bac398b40d0540f, type: 2}

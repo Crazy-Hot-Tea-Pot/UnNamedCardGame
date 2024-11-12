@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Equipment", menuName = "Equipment/Gear")]
 public class Gear : Equipment
 {
-    public List<GameObject> AbilityList;
+    public List<Ability> AbilityList;
     private bool isEquipted = false;
     public override void ActivateEquipmnet()
     {
@@ -33,7 +33,6 @@ public class Gear : Equipment
             for (int i = 0; i < AbilityList.Count; i++)
             {
                 GameObject.Find("PlayerUIManager").GetComponent<PlayerUIManager>().MakeDeactiveAbility(AbilityList[i]);
-                Debug.Log(AbilityList[i].tag);
             }
 
             //Tell me it shoud be unequipted

@@ -15,4 +15,6 @@ MonoBehaviour:
   abilityName: Pierce
   abilityDescription: You impale your weapon into the enemy as hard as possible.
   energyCost: 0
+  abilityType: 1
+  uiImage: {fileID: 21300000, guid: 4b51f29e0778b184d960930b5afa547b, type: 3}
   damage: 0

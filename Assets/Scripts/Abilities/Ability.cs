@@ -18,6 +18,17 @@ public class Ability : ScriptableObject
     /// Cost to do ability
     /// </summary>
     public int energyCost;
+
+    /// <summary>
+    /// 1 = attack, 2 = shield, 3 = utility
+    /// </summary>
+    [Tooltip("1 = attack, 2 = shield, 3 = utility")]
+    public int abilityType;
+
+    /// <summary>
+    /// An image for the UI Element
+    /// </summary>
+    public Sprite uiImage;
     
     /// <summary>
     /// Activate Ability

@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: 
   itemDescription: 
+  destroyme: 0
   AbilityList:
-  - {fileID: 9178745675451368154, guid: a8a2b595bdd58824888058ca1125fccc, type: 3}
-  - {fileID: 6997298212168128428, guid: e9e587936e29f664fbc782f24c918817, type: 3}
+  - {fileID: 11400000, guid: abf7935e70334564786ef7cc5c5e4709, type: 2}
+  - {fileID: 11400000, guid: 1d229ff9f94548c4c8c1dc6be6d07c99, type: 2}
