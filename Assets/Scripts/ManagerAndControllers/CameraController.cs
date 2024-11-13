@@ -22,6 +22,8 @@ public class CameraController : MonoBehaviour
     }
 
     public GameObject freeLook;
+    public GameObject CameraUIObject;
+    public CameraModeIndicatorController CameraUI;
     private float distanceFromCamera = 10f;
     //5% from edge
     public float borderThreshold = 0.05f;
@@ -55,8 +57,20 @@ public class CameraController : MonoBehaviour
         }
         set
         {
-            previousCamera = currentCamera;
+            previousCamera = currentCamera;           
+
             currentCamera = value;
+
+            //Call Camera indicator if camera changes
+            if (currentCamera != previousCamera)
+            {
+                //Activate UI Obejct
+                CameraUIObject.SetActive(true);
+
+                //Indicate to player what camera mode they changed to.
+                CameraUI.SwitchIndicatorTo(value);
+            }
+
             switch (value)
             {
                 case CameraState.Default:
@@ -168,7 +182,10 @@ public class CameraController : MonoBehaviour
     void Start()
     {
 
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();    
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
+        CameraUIObject = GameObject.FindGameObjectWithTag("CameraModeIndicator");
+        CameraUI = CameraUIObject.GetComponent<CameraModeIndicatorController>();
+        CameraUIObject.SetActive(false);
 
         Target = player;
 
