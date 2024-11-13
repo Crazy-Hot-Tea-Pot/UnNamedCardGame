@@ -153,11 +153,11 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
 
                 PlayerController tempPlayer = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
                 string tempText = string.Format("Getting <color=#A20000>*Error*</color> Health.\n" +
-                    "Current Health is <color=#A20000>{0}</color> of Max Health <color=#A20000>{1}</color>.\n" +
-                    "Will cost <b>150</b> Scrap to Upgrade to <color=#A20000>{2}</color>.\n" +
-                    "<color=#0000FF><b><u><link=\"UpgradeHealth\">Upgrade</color</link></u></b>\n" +
-                    "<color=#0000FF><b><u><link=\"Exit1\">Exit</color</link></u></b>\n" +
-                    "<color=#0000FF><u><link=\"Back\">Back</color></link></u>",
+                "Current Health is <color=#A20000>{0}</color> of Max Health <color=#A20000>{1}</color>.\n" +
+                "Will cost <b>150</b> Scrap to Upgrade to <color=#A20000>{2}</color>.\n" +
+                "<color=#0000FF><b><u><link=\"UpgradeHealth\">Upgrade</link></u></b></color>\n" +
+                "<color=#0000FF><b><u><link=\"Exit\">Exit</link></u></b></color>\n" +
+                "<color=#0000FF><u><link=\"Back\">Back</link></u></color>",
                 tempPlayer.Health, tempPlayer.MaxHealth, tempPlayer.MaxHealth + 10);
 
                 HealthConsole.SetText(tempText);
@@ -189,7 +189,7 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
                         "Chip Name - {1}\n" +
                         "Chip Description - {2}\n" +
                         "Cost to upgrade - <b>{3}</b> Scrap.\n-----\n" +
-                        "<color=#0000FF><b><u><link=\"UpgradeSelectedChip\">Upgrade Chip</color></link></u></b>\n\n" +
+                        "<color=#0000FF><b><u><link=\"UpgradeSelectedChip\">Upgrade Chip</color></link></u></b>\n" +
                         "<color=#0000FF><b><u><link=\"Exit2\">Exit</color></link></u></b>\n" +
                         "<color=#0000FF><u><link=\"Back\">Back</color></link></u>",
                     controller.SelectedChip.chipRarity, controller.SelectedChip.chipName, controller.SelectedChip.description, controller.SelectedChip.costToUpgrade);

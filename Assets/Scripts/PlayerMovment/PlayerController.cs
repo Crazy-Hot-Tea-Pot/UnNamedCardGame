@@ -538,6 +538,12 @@ public class PlayerController : MonoBehaviour
 
                         if (agent != null)
                         {
+                            // UNCOMMENT BELOW IS STILL MOONWALKING
+                            //// Clears the current path, stops the agent
+                            //agent.ResetPath();
+                            //// Resets any existing velocity
+                            //agent.velocity = Vector3.zero;
+
                             // Set destination and make player face the destination
                             agent.SetDestination(hit.point);
                             this.gameObject.transform.LookAt(hit.point);

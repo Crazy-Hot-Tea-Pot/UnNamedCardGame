@@ -134,7 +134,7 @@ MonoBehaviour:
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 2
-  m_VerticalAlignment: 1024
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -461,12 +461,12 @@ MonoBehaviour:
     <color=#0000FF><link="UpgradeHealthScreen"><u>Upgrade
     Health</u></link></color>
 
-    
+
 
     <color=#0000FF><link="UpgradeChipScreen"><u>Upgrade
     Chips</u></link></color>
 
-    
+
 
     <color=#0000FF><link="Exit"><u>Exit</u></link></color>
 
@@ -506,7 +506,7 @@ MonoBehaviour:
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 2
-  m_VerticalAlignment: 1024
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -742,8 +742,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.5, y: 0.5, z: 12.280001}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 3.01, y: 3.01, z: 3.01}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 449919749323986856}
   - {fileID: 1765571318799111799}

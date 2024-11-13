@@ -155,9 +155,9 @@ public class UpgradeController : MonoBehaviour
                 string tempText = string.Format("Getting <color=#A20000>*Error*</color> Health.\n" +
                 "Current Health is <color=#A20000>{0}</color> of Max Health <color=#A20000>{1}</color>.\n" +
                 "Will cost <b>150</b> Scrap to Upgrade to <color=#A20000>{2}</color>.\n" +
-                "<color=#0000FF><b><u><link=\"UpgradeHealth\">Upgrade</color></link></u></b>\n" +
-                "<color=#0000FF><b><u><link=\"Exit\">Exit</color></link></u></b>\n" +
-                "<color=#0000FF><u><link=\"Back\">Back</color></link></u>",
+                "<color=#0000FF><b><u><link=\"UpgradeHealth\">Upgrade</link></u></b></color>\n" +
+                "<color=#0000FF><b><u><link=\"Exit\">Exit</link></u></b></color>\n" +
+                "<color=#0000FF><u><link=\"Back\">Back</link></u></color>",
                 tempPlayer.Health, tempPlayer.MaxHealth, tempPlayer.MaxHealth + 10);
 
 
@@ -189,7 +189,7 @@ public class UpgradeController : MonoBehaviour
                         "Chip Name - {1}\n" +
                         "Chip Description - {2}\n" +
                         "Cost to upgrade - <b>{3}</b> Scrap.\n-----\n" +
-                        "<color=#0000FF><u><b><link=\"UpgradeSelectedChip\">Upgrade Chip</color></link></b></u>\n\n" +
+                        "<color=#0000FF><u><b><link=\"UpgradeSelectedChip\">Upgrade Chip</color></link></b></u>\n" +
                         "<color=#0000FF><u><b><link=\"Exit2\">Exit</color></link></b></u>\n" +
                         "<color=#0000FF><u><link=\"Back\">>Back</color></link></u>",
                     SelectedChip.chipRarity, SelectedChip.chipName, SelectedChip.description, SelectedChip.costToUpgrade);
