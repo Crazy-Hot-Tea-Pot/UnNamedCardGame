@@ -106,7 +106,7 @@ public class Chip : MonoBehaviour
                 if (newChip != null)
                 {
                     //Plays chip use sound
-                    SoundManager.PlaySound(SoundFX.ChipPlayed);
+                    SoundManager.PlayFXSound(SoundFX.ChipPlayed);
 
                     newChip.IsActive = true;
 

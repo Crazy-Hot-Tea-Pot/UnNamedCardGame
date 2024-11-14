@@ -210,7 +210,7 @@ public class CombatController : MonoBehaviour
         CurrentCombatantIndex = 0;
 
         //Play Start Combat
-        SoundManager.PlaySound(SoundFX.BattleStart);
+        SoundManager.PlayFXSound(SoundFX.BattleStart);
     }
 
     /// <summary>

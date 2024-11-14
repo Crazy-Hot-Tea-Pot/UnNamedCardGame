@@ -109,7 +109,7 @@ public class GameManager : MonoBehaviour
         //DrawChip(DrawsPerTurn);
 
         //test
-       SoundManager.StartBackground(BgSound.Background);
+       SoundManager.StartBackgroundSound(BgSound.Background);
 
     }
 

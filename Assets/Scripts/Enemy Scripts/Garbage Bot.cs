@@ -50,7 +50,9 @@ public class GarbageBot : Enemy
     /// </summary>
     private void Shred()
     {
-        Debug.Log("Garbage Bot uses Shred!");        
+        //Play Sound
+        SoundManager.PlayFXSound(SoundFX.ShredGarbageBot,this.gameObject.transform);
+
         ApplyShield(7);
         EnemyTarget.GetComponent<PlayerController>().TakeDamage(7);
     }

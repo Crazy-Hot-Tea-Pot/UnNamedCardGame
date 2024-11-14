@@ -652,7 +652,7 @@ public class PlayerController : MonoBehaviour
             Health = Health - damage;
 
             //Play Sound
-            SoundManager.PlaySound(SoundFX.DamageTaken, this.transform);
+            SoundManager.PlayFXSound(SoundFX.DamageTaken, this.transform);
         }
     }
 
@@ -684,7 +684,7 @@ public class PlayerController : MonoBehaviour
     public void ApplyEffect(Effects.Buff buffToApply, int buffStacks)
     {
         //Play buff sound
-        SoundManager.PlaySound(SoundFX.Buff);
+        SoundManager.PlayFXSound(SoundFX.Buff);
 
         switch (buffToApply)
         {
@@ -705,7 +705,7 @@ public class PlayerController : MonoBehaviour
     public void ApplyEffect(Effects.Debuff deBuffToApply, int deBuffStacks)
     {
         //Play sound effect
-        SoundManager.PlaySound(SoundFX.Debuff);
+        SoundManager.PlayFXSound(SoundFX.Debuff);
 
         switch (deBuffToApply)
         {
@@ -862,7 +862,7 @@ public class PlayerController : MonoBehaviour
     /// <param name="loss"></param>
     public void PlayedCardOrAbility(int loss)
     {
-        SoundManager.PlaySound(SoundFX.Charging_Up, this.transform);
+        SoundManager.PlayFXSound(SoundFX.Charging_Up, this.transform);
 
         //If energy - loss is greater then 0 or equal to 0 then continue
         if(Energy - loss >= 0)

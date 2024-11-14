@@ -208,7 +208,10 @@ public class PlayerUIManager : MonoBehaviour
         UpdateHealth();
         //On press open the inventroy UI if input is recieved or close if already in combat. WasPressedThisFrame() makes the input not be spammed it waits till the frame ends before recollecting
         if (openInventory.WasPressedThisFrame() && !GameManager.Instance.InCombat)
-        {            
+        {
+            //Play sound for menu
+            SoundManager.PlayFXSound(SoundFX.MenuSelection);
+
             if (uiInventoryCanvas.activeSelf == false)
             {
                 OpenInventroy();

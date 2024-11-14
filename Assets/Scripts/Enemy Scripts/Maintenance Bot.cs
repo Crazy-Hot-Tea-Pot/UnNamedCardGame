@@ -61,7 +61,8 @@ public class MaintenanceBot : Enemy
     /// </summary>
     private void Galvanize()
     {
-        Debug.Log("Maintenance Bot uses Galvanize!");
+        //PlaySound
+        SoundManager.PlayFXSound(SoundFX.GalvanizeMainenanceBot, this.gameObject.transform);
 
         ApplyBuff(Effects.Buff.Galvanize, 4);
     }
@@ -69,8 +70,9 @@ public class MaintenanceBot : Enemy
     /// heals 30% of its Max Hp
     /// </summary>
     private void Repair()
-    {
-        Debug.Log("Maintenance Bot uses Repair!");
+    {        
+        //Play sound
+        SoundManager.PlayFXSound(SoundFX.RepairMaintenaceBot, this.gameObject.transform);
 
         int tempHealAmount = Mathf.RoundToInt(maxHP * 0.3f);
         CurrentHP = Mathf.Min(CurrentHP + tempHealAmount, maxHP);        
