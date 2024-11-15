@@ -5,6 +5,7 @@ using System.IO;
 [CustomEditor(typeof(SoundAsset))]
 public class SoundAssetEditor : Editor
 {
+
     void OnEnable()
     {
         // Automatically regenerate enums
@@ -15,19 +16,12 @@ public class SoundAssetEditor : Editor
         //Automatically Populate
         PopulateSoundArrays(soundAsset);
     }
-    //public override void OnInspectorGUI()
-    //{
-    //    DrawDefaultInspector(); // Draw the default inspector
 
-    //    SoundAsset soundAsset = (SoundAsset)target;
-
-    //    //Button to populate sounds
-    //    if (GUILayout.Button("Populate Sounds from Resources"))
-    //    {
-    //        PopulateSoundArrays(soundAsset);
-    //    }
-    //}
-
+    /// <summary>
+    /// Gets sounds from resource folders and generates a script with enums.
+    /// This is for the SoundManager to use.
+    /// </summary>
+    /// <param name="soundAsset"></param>
     private void PopulateSoundArrays(SoundAsset soundAsset)
     {
         // Load Background Sounds from Resources/Sounds/BG

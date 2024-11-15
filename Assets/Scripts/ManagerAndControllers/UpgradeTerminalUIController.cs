@@ -231,6 +231,7 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
 
     /// <summary>
     /// Active Required Panel.
+    /// Since dont have multiple canvases and use panels just one line of code to active one panel.
     /// </summary>
     /// <param name="element"></param>
     /// <param name="isActive"></param>

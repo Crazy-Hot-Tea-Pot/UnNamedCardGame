@@ -1,11 +1,12 @@
 public enum BgSound
 {
     Background,
-    Test,
 }
 
 public enum SoundFX
 {
+    AlertSecurityDrone,
+    AlertSecurityDroneVariantSound,
     BattleStart,
     Buff,
     Charging_Up,
@@ -13,8 +14,14 @@ public enum SoundFX
     Click,
     DamageTaken,
     Debuff,
+    DisassembleMaintenanceBot,
     DrawingOutTheDeck,
     EnemyDefeated,
+    GalvanizeMainenanceBot,
+    MenuSelection,
+    NeutralizeSecurityDrone,
+    NeutralizeSecurityDroneAlternative,
     Punch,
-    Test,
+    RepairMaintenaceBot,
+    ShredGarbageBot,
 }

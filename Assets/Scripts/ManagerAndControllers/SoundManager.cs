@@ -27,7 +27,7 @@ public static class SoundManager
     /// Volume can be adjusted using the SoundBGVolume component.
     /// </summary>
     /// <param name="bgSound">The background sound to play.</param>
-    public static void StartBackground(BgSound bgSound)
+    public static void StartBackgroundSound(BgSound bgSound)
     {
         // Create a new GameObject for background music
         GameObject BackgroundSound = new GameObject("BgSound");
@@ -47,7 +47,7 @@ public static class SoundManager
     /// Plays a sound effect for a single iteration with a 2D sound effect.
     /// </summary>
     /// <param name="sound">The specific sound effect to play.</param>
-    public static void PlaySound(SoundFX sound)
+    public static void PlayFXSound(SoundFX sound)
     {
         // Create a new GameObject for this sound effect
         GameObject soundGameObject = new GameObject("SoundFX");
@@ -63,11 +63,11 @@ public static class SoundManager
         audioSource.PlayOneShot(GetAudio(sound));                        
     }
     /// <summary>
-    /// Same as before but for 3D effect.
+    /// Same as regular play FX Sound but for 3D effect.
     /// </summary>
     /// <param name="sound"></param>
     /// <param name="parent"></param>
-    public static void PlaySound(SoundFX sound, Transform parent)
+    public static void PlayFXSound(SoundFX sound, Transform parent)
     {
         GameObject soundGameObject = new GameObject("SoundFX");
         AudioSource audioSource = soundGameObject.AddComponent<AudioSource>();

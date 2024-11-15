@@ -372,7 +372,7 @@ public class Enemy : MonoBehaviour
     public virtual void TakeDamage(int damage)
     {
         // Plays sound of taking damage
-        SoundManager.PlaySound(SoundFX.DamageTaken,this.gameObject.transform);
+        SoundManager.PlayFXSound(SoundFX.DamageTaken,this.gameObject.transform);
 
         // if has shield
         if (Shield > 0)
@@ -437,7 +437,7 @@ public class Enemy : MonoBehaviour
     /// </summary>
     public virtual void Die()
     {
-        SoundManager.PlaySound(SoundFX.EnemyDefeated,this.gameObject.transform);
+        SoundManager.PlayFXSound(SoundFX.EnemyDefeated,this.gameObject.transform);
 
         Debug.Log($"{enemyName} has been defeated!");
         CombatController.RemoveCombadant(this.gameObject);
@@ -473,7 +473,7 @@ public class Enemy : MonoBehaviour
     public virtual void ApplyDebuff(Effects.Debuff debuffToApply, int debuffStacks)
     {
         //Plays Debuff sound effect
-        SoundManager.PlaySound(SoundFX.Debuff, this.gameObject.transform);
+        SoundManager.PlayFXSound(SoundFX.Debuff, this.gameObject.transform);
 
         switch (debuffToApply)
         {
@@ -488,6 +488,7 @@ public class Enemy : MonoBehaviour
                 break;
         }
     }
+
     /// <summary>
     /// Apply Buff to Enemy
     /// </summary>
@@ -577,6 +578,7 @@ public class Enemy : MonoBehaviour
             Debug.LogError("So Somebody fucked up.");
         }
     }
+
     /// <summary>
     /// Give enemy shield.
     /// </summary>

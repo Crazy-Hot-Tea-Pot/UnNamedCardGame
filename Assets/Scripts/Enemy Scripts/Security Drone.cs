@@ -98,6 +98,9 @@ public class SecurityDrone : Enemy
     /// </summary>
     private void Neutralize()
     {
+        // Play Sound
+        SoundManager.PlayFXSound(SoundFX.NeutralizeSecurityDrone);
+
         EnemyTarget.GetComponent<PlayerController>().TakeDamage(7);
         EnemyTarget.GetComponent<PlayerController>().ApplyEffect(Effects.Debuff.Drained, 1);
     }
@@ -107,6 +110,7 @@ public class SecurityDrone : Enemy
     /// </summary>
     private void Alert()
     {
+        
         if (CombatController != null)
         {
             // Loop to find a clear position for the new drone
@@ -138,10 +142,13 @@ public class SecurityDrone : Enemy
                 AdditionalSecurityDrone.GetComponent<SecurityDrone>().IAmAlertDrone();
 
                 CombatController.AddEnemyToCombat(AdditionalSecurityDrone);
+
+                //Play Sound
+                SoundManager.PlayFXSound(SoundFX.AlertSecurityDrone);
             }
             else
             {
-                Debug.LogWarning("Failed to find valid spawn position Jayce -_- fix ya code.");
+                Debug.LogWarning("Failed to find valid spawn position Jayce -_- fix ya code.\n This is complicated I know but thats what testing is for.");
             }
         }
     }
