@@ -488,6 +488,7 @@ public class Enemy : MonoBehaviour
                 break;
         }
     }
+
     /// <summary>
     /// Apply Buff to Enemy
     /// </summary>
@@ -577,6 +578,7 @@ public class Enemy : MonoBehaviour
             Debug.LogError("So Somebody fucked up.");
         }
     }
+
     /// <summary>
     /// Give enemy shield.
     /// </summary>

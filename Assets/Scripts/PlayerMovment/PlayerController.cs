@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -105,10 +106,13 @@ public class PlayerController : MonoBehaviour
         get { return health; }
         private set { 
             health = value;
-            if(health > maxHealth)
+            if (health > maxHealth)
                 health = maxHealth;
-            else if(health<=0)
+            else if (health <= 0)
+            {
                 health = 0;
+                PlayerDie();
+            }
         }
     }
 
@@ -455,7 +459,8 @@ public class PlayerController : MonoBehaviour
     /// Initialize Player
     /// </summary>
     void Initialize()
-    {
+    {        
+
         // Check if PlayerPrefs exist.
         if (PlayerPrefs.HasKey("Health"))
         {
@@ -825,6 +830,7 @@ public class PlayerController : MonoBehaviour
         GalvanizedStack--;
         PoweredStacks--;
     }
+
     /// <summary>
     /// Called player ends their turn
     /// </summary>
@@ -839,6 +845,7 @@ public class PlayerController : MonoBehaviour
         WornDownStacks--;
         JammedStacks--;
     }
+
     /// <summary>
     /// Called when round ends to apply buffs or debuffs.
     /// Buffs Stack don't go away.
@@ -888,6 +895,27 @@ public class PlayerController : MonoBehaviour
         PlayerPrefs.SetInt("Max Energy", MaxEnergy);
         PlayerPrefs.SetInt("Scrap", Scrap);
         PlayerPrefs.Save();
+    }
+
+    /// <summary>
+    /// Call when player is dead.
+    /// Does stuff for game over.
+    /// </summary>
+    /// <exception cref="NotImplementedException"></exception>
+    private void PlayerDie()
+    {
+        Debug.Log("Player died, game over.");
+
+        //Reset health, energy and other stuff for now.
+        Health = maxHealth;
+        Energy = maxEnergy;
+        GainScrap(200);
+
+        //Save player data
+        SavePlayerData();
+
+        // for now just restart the scene.
+        GameManager.Instance.RequestScene(GameManager.Scenes.Level1);
     }
 
     private void OnDestroy()
