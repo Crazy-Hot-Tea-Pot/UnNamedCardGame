@@ -295,6 +295,8 @@ public class CombatController : MonoBehaviour
     /// </summary>
     private void NextRound()
     {
+        //Draws a card based on draws per turn
+        GameManager.Instance.DrawChip(GameManager.Instance.drawsPerTurn);
         RoundCounter++;
 
         CurrentCombatantIndex = 0;

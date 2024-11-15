@@ -345,9 +345,10 @@ public class GameManager : MonoBehaviour
     /// <param name="chip"></param>
     public void KillChip(GameObject chip)
     {
+        //Add the used chips to the list of used chips so they aren't deleted and go back to the deck and of game
         usedChips.Add(chip.GetComponent<Chip>().newChip);
+        //Remove chip from player hand
         playerHand.Remove(chip.GetComponent<Chip>().newChip);
-        DrawChip(DrawsPerTurn);
     }
 
     /// <summary>
