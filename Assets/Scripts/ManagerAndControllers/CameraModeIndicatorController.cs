@@ -11,7 +11,7 @@ public class CameraModeIndicatorController : MonoBehaviour
     public Sprite BoarderCameraImage;
     public Sprite FirstPersonCameraImage;
 
-    private Image ImageComponent;
+    public Image ImageComponent;
 
     [Header("Indicator Settings")]
 
