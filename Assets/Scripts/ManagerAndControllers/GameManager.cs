@@ -281,8 +281,9 @@ public class GameManager : MonoBehaviour
 
         ShufflePlayerDeck();
 
-        //Call fill deck to repopulate inventory.
-        PlayerUIManager.Instance.fillDeck();
+        //Call fill deck to repopulate deck.
+        //PlayerUIManager.Instance.fillDeck();
+        GameObject.Find("PlayerUIManager").GetComponent<PlayerUIManager>().fillDeck();
 
 
     }

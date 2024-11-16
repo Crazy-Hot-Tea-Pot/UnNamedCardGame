@@ -339,7 +339,8 @@ public class CombatController : MonoBehaviour
         GameManager.Instance.EndCombat();
 
         //Card Pickups at combat end
-        PlayerUIManager.Instance.openDropUI();
+        //PlayerUIManager.Instance.openDropUI();
+        GameObject.Find("PlayerUIManager").GetComponent<PlayerUIManager>().openDropUI();
     }
 
     // Method to select target by clicking on an enemy
