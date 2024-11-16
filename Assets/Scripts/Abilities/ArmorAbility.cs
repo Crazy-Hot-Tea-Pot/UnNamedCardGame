@@ -22,7 +22,7 @@ public class ArmorAbility : Ability
             //Apply shield to the player
             GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().ApplyShield(shield);
             //Cost energy
-            GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().PlayedCardOrAbility(energyCost);
+            GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().PlayedAbility(energyCost);
             Debug.Log(GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().Shield + "Current shield " + shield + " Restored and cost " + energyCost + " Making energy " + GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().Energy);
         }
         else

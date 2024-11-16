@@ -67,7 +67,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: afbe9a8b6d589e440a57115fa57f0128, type: 2}
+  - {fileID: 2100000, guid: b485f7a312602554ca0dbb4f82814663, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -114,6 +114,8 @@ MonoBehaviour:
   effectPrefabs: []
   activeEffects: []
   maxHP: 50
+  SelectedTarget: {r: 1, g: 0, b: 0, a: 0}
+  InAbilityRange: {r: 1, g: 1, b: 0, a: 0}
   inCombat: 0
   galvanizedStacks: 0
   isGalvanized: 0
@@ -123,7 +125,11 @@ MonoBehaviour:
   isDrained: 0
   outlineShader: {fileID: 4800000, guid: d9ef6ae6b5e3b6548bb49be4036cd675, type: 3}
   CombatController: {fileID: 0}
-  dropedCards: []
+  dropedCards:
+  - {fileID: 11400000, guid: af8d67b61375d7a4b9e92b3f514d9917, type: 2}
+  - {fileID: 11400000, guid: 38b543807d56b5c40a979618f6600269, type: 2}
+  - {fileID: 11400000, guid: 27b83e771aa4f0a448abe213e528e05b, type: 2}
+  - {fileID: 11400000, guid: 1f04b1f225942644bbf7c1f01ca2418e, type: 2}
 --- !u!95 &3054278753978853693
 Animator:
   serializedVersion: 5

@@ -359,5 +359,15 @@ public class GameManager : MonoBehaviour
     {
         TargetScene = scene;
         SceneManager.LoadScene(Scenes.Loading.ToString());        
-    }    
+    }
+    /// <summary>
+    /// This is for debugging purposes.
+    /// DO NOT CALL VIA CODE
+    /// </summary>
+    [ContextMenu("Reset Health")]
+    public void Reset()
+    {
+        PlayerPrefs.DeleteAll();
+        RequestScene(Scenes.Level1);
+    }
 }

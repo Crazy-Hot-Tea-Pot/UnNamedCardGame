@@ -128,6 +128,8 @@ MonoBehaviour:
   abilityRangedEnemies: []
   agent: {fileID: 2181696517448560852}
   animator: {fileID: 6250989096840451974}
+  RipplePrefab: {fileID: 8841478494395001973, guid: 839c72b8383e95e4eb6ad82977d126f0, type: 3}
+  RippleRunPrefab: {fileID: 8841478494395001973, guid: 07b8dbdcdf4367d47b76789d7411ff8c, type: 3}
   walkSpeed: 3.5
   runSpeed: 7
   runThreshold: 5

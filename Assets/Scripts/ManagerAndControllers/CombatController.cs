@@ -294,9 +294,7 @@ public class CombatController : MonoBehaviour
     /// reset all objects in scene so they can attack.
     /// </summary>
     private void NextRound()
-    {
-        //Draws a card based on draws per turn
-        GameManager.Instance.DrawChip(GameManager.Instance.drawsPerTurn);
+    {        
         RoundCounter++;
 
         CurrentCombatantIndex = 0;
@@ -317,6 +315,9 @@ public class CombatController : MonoBehaviour
         {
             newchip.EndRound();
         }
+
+        //Draws a card based on draws per turn
+        GameManager.Instance.DrawChip(GameManager.Instance.drawsPerTurn);
     }
 
     /// <summary>
@@ -331,6 +332,8 @@ public class CombatController : MonoBehaviour
         roundCounter = 0;
         CurrentCombatantIndex = 0;
         CurrentCombatant = "No Combat Yet";
+
+        endTurnButton.SetActive(false);
 
         // Notify the GameManager or other systems
         GameManager.Instance.EndCombat();
@@ -395,7 +398,7 @@ public class CombatController : MonoBehaviour
             Enemy previousEnemy = target.GetComponent<Enemy>();
             if (previousEnemy != null)
             {
-                previousEnemy.IsTargeted = false;
+                previousEnemy.SetTarget(TargetingType.CombatController, false);
             }
         }
 
@@ -404,7 +407,7 @@ public class CombatController : MonoBehaviour
         Enemy newEnemy = target.GetComponent<Enemy>();
         if (newEnemy != null)
         {
-            newEnemy.IsTargeted = true;
+            newEnemy.SetTarget(TargetingType.CombatController, true);
         }
     }
     /// <summary>

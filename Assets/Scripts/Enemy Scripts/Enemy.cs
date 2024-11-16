@@ -4,7 +4,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.AI;
 using TMPro;
-
+public enum TargetingType
+{
+    CombatController,
+    Ability
+}
 public class Enemy : MonoBehaviour
 {
     public string enemyName;
@@ -64,6 +68,11 @@ public class Enemy : MonoBehaviour
     private int currentHp;
     private int shield;
     private bool isTargeted;
+
+    [Header("Boarder Effects")]    
+    private List<TargetingType> activeTargetingTypes = new List<TargetingType>();
+    private Color SelectedTarget = Color.red;
+    private Color InAbilityRange = Color.yellow;
 
     [Header("Status Effects")]
     [SerializeField]
@@ -187,7 +196,8 @@ public class Enemy : MonoBehaviour
     }
 
     /// <summary>
-    /// Is enemy being targeted by player
+    /// Is enemy being targeted by player.
+    /// When enemy is targeted by CombatController to change boarder.
     /// </summary>
     public bool IsTargeted
     {
@@ -195,19 +205,9 @@ public class Enemy : MonoBehaviour
         {
             return isTargeted;
         }
-        set
+        protected set
         {
-            isTargeted = value;
-            if (value)
-            {
-                enemyRenderer.material.shader = outlineShader;
-                enemyRenderer.material.SetColor("_OutlineColor", Color.red);
-                enemyRenderer.material.SetFloat("_OutlineWidth", 0.1f);
-            }
-            else
-            {
-                enemyRenderer.material.shader = defaultShader;
-            }
+            isTargeted = value;            
         }
     }
 
@@ -364,6 +364,8 @@ public class Enemy : MonoBehaviour
 
         CombatController = GameObject.FindGameObjectWithTag("CombatController").GetComponent<CombatController>();
         enemyTarget = GameObject.FindGameObjectWithTag("Player");
+
+        UpdateBorderColor();
     }
    /// <summary>
    /// Is called when enemy is attacked by player.
@@ -590,4 +592,74 @@ public class Enemy : MonoBehaviour
 
         Debug.Log("Shield Restored: " + shield);
     }
+    /// <summary>
+    /// Updates the targeting state of the enemy based on the specified targeting type and its active status.
+    /// Adds the targeting type to the active list if it starts targeting, or removes it if it stops targeting.
+    /// </summary>
+    /// <param name="targetingType">The type of targeting to set (e.g., CombatController, Ability).</param>
+    /// <param name="isTargeted">Indicates whether the specified targeting type is active (true) or inactive (false).</param>
+    public void SetTarget(TargetingType targetingType, bool isTargeted)
+    {
+        if (isTargeted)
+        {
+            if (!activeTargetingTypes.Contains(targetingType))
+            {
+                // Add the targeting type.
+                activeTargetingTypes.Add(targetingType);
+            }
+        }
+        else
+        {
+            // Remove the targeting type.
+            activeTargetingTypes.Remove(targetingType);
+        }
+
+        // Determine if CombatController is active and update IsTargeted.
+        IsTargeted = activeTargetingTypes.Contains(TargetingType.CombatController);
+
+        UpdateBorderColor();
+    }
+    /// <summary>
+    /// Updates the enemy's border color and shader properties based on the currently active targeting types.
+    /// The color and outline properties are determined by the highest-priority active targeting type.
+    /// </summary>
+    private void UpdateBorderColor()
+    { 
+        if (activeTargetingTypes.Count == 0)
+        {
+            if (enemyRenderer.material.shader != defaultShader)
+            {
+                enemyRenderer.material.shader = defaultShader;
+            }
+
+            // No CombatController targeting.
+            IsTargeted = false;
+            return;
+        }
+
+        // Check for the highest-priority targeting type.
+        TargetingType highestPriorityType = activeTargetingTypes[activeTargetingTypes.Count - 1];
+
+        // Set shader only if it has changed.
+        if (enemyRenderer.material.shader != outlineShader)
+        {
+            enemyRenderer.material.shader = outlineShader;
+        }
+
+        // Assign the color based on the targeting type.
+        switch (highestPriorityType)
+        {
+            case TargetingType.CombatController:
+                enemyRenderer.material.SetColor("_OutlineColor", SelectedTarget);
+                //IsTargeted = true;
+                break;
+            case TargetingType.Ability:
+                enemyRenderer.material.SetColor("_OutlineColor", InAbilityRange);
+                break;
+        }
+
+        // Set the outline width.
+        enemyRenderer.material.SetFloat("_OutlineWidth", 0.1f);
+    }
+
 }
