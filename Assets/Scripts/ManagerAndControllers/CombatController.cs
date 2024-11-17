@@ -27,8 +27,6 @@ public class CombatController : MonoBehaviour
     public List<Combadant> Combadants;
     private int currentCombatantIndex;
 
-    [Header("Player")]
-    [SerializeField]
     private GameObject player;    
     
 
