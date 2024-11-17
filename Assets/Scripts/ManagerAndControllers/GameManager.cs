@@ -5,6 +5,24 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+// Extension method for recursive search
+public static class TransformExtensions
+{
+    public static Transform FindRecursive(this Transform parent, string name)
+    {
+        if (parent.name == name)
+            return parent;
+
+        foreach (Transform child in parent)
+        {
+            Transform result = child.FindRecursive(name);
+            if (result != null)
+                return result;
+        }
+
+        return null;
+    }
+}
 public class GameManager : MonoBehaviour
 {
 
@@ -236,7 +254,7 @@ public class GameManager : MonoBehaviour
     {
         // THIS HAS TO BE REMOVE ITS TEMPORARY AS GAMEMANAGER SHOULND'T BE DOING ANYTHING WITH UI.
         if (chipPanel == null)
-            chipPanel = GameObject.Find("Panel");
+            chipPanel = FindGameObjectByName("Panel");
 
         foreach (Transform child in chipPanel.transform)
         {
@@ -266,7 +284,8 @@ public class GameManager : MonoBehaviour
     public void StartCombat()
     {
         //This is temporary this UI stuff can't be in GameManager
-        uiCanvas = GameObject.Find("Canvas");
+        uiCanvas = FindGameObjectByName("Canvas");
+        
 
         //Enables combat UI
         uiCanvas.SetActive(true);
@@ -274,6 +293,25 @@ public class GameManager : MonoBehaviour
         UpdateUI();
         GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().InCombat = true;
     }
+    /// <summary>
+    /// Added this because of bad UI canvas system.
+    /// </summary>
+    /// <param name="name"></param>
+    /// <returns></returns>
+        public GameObject FindGameObjectByName(string name)
+        {
+            Scene activeScene = SceneManager.GetActiveScene();
+            GameObject[] rootObjects = activeScene.GetRootGameObjects();
+
+            foreach (GameObject rootObject in rootObjects)
+            {
+                Transform result = rootObject.transform.FindRecursive(name);
+                if (result != null)
+                    return result.gameObject;
+            }
+
+            return null;
+        }   
 
     /// <summary>
     /// A method to transition out of combat
