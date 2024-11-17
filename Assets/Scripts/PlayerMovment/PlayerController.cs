@@ -112,7 +112,7 @@ public class PlayerController : MonoBehaviour
             {
                 health = 0;
                 PlayerDie();
-            }
+            }            
         }
     }
 
@@ -459,18 +459,15 @@ public class PlayerController : MonoBehaviour
     /// Initialize Player
     /// </summary>
     void Initialize()
-    {        
-
-        // Check if PlayerPrefs exist.
-        if (PlayerPrefs.HasKey("Health"))
+    {
+        //Load player data is not new game.
+        if (DataManager.Instance.SaveFileFound)
         {
-            MaxHealth = PlayerPrefs.GetInt("Max Health");
-            Health= PlayerPrefs.GetInt("Health");
-            Energy= PlayerPrefs.GetInt("Energy");
-            MaxEnergy= PlayerPrefs.GetInt("Max Energy");
-            Scrap= PlayerPrefs.GetInt("Scrap");
+            health = DataManager.Instance.GameData.health;
+            MaxHealth = DataManager.Instance.GameData.maxHealth;
+            Scrap = DataManager.Instance.GameData.scrap;
         }
-        else //if not set defaults
+        else // Do Default player data
         {
             maxHealth = 50;
             Health = maxHealth;
@@ -478,9 +475,6 @@ public class PlayerController : MonoBehaviour
             maxEnergy = 50;
             Scrap = 150;
         }
-
-        //loads abilities from folder
-        //abilities.AddRange(Resources.LoadAll<Ability>("Abilities"));
     }
 
     /// <summary>
@@ -901,20 +895,6 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// Save player data to Prefs to load in next scene
-    /// </summary>
-    private void SavePlayerData()
-    {        
-
-        PlayerPrefs.SetInt("Health", Health);
-        PlayerPrefs.SetInt("Max Health", MaxHealth);
-        PlayerPrefs.SetInt("Energy", Energy);
-        PlayerPrefs.SetInt("Max Energy", MaxEnergy);
-        PlayerPrefs.SetInt("Scrap", Scrap);
-        PlayerPrefs.Save();
-    }
-
-    /// <summary>
     /// Call when player is dead.
     /// Does stuff for game over.
     /// </summary>
@@ -928,16 +908,8 @@ public class PlayerController : MonoBehaviour
         Energy = maxEnergy;
         GainScrap(200);
 
-        //Save player data
-        SavePlayerData();
-
         // for now just restart the scene.
         GameManager.Instance.RequestScene(GameManager.Scenes.Level1);
-    }
-
-    private void OnDestroy()
-    {
-        //SavePlayerData();
     }
 
     #region rangesForAbilites

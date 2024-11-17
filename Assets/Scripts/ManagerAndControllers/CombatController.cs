@@ -146,6 +146,8 @@ public class CombatController : MonoBehaviour
         endTurnButton = GameObject.Find("BtnEndTurn");
         endTurnButton.GetComponent<Button>().onClick.AddListener(() => TurnUsed(player));
 
+        endTurnButton.SetActive(false);
+
         CurrentCombatantIndex = 0;
         CurrentCombatant = "No Combat Yet";
     }
@@ -209,6 +211,8 @@ public class CombatController : MonoBehaviour
 
         //Play Start Combat
         SoundManager.PlayFXSound(SoundFX.BattleStart);
+
+        endTurnButton.SetActive(true);
     }
 
     /// <summary>

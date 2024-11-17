@@ -155,24 +155,6 @@ public class GameManager : MonoBehaviour
 
     }
 
-
-    ///<summary>Change turn is a method that allows the turn to change whenever it's needed. It assumes true is our player and false is the enemy</summary>
-    bool ChangeTurn(bool turn)
-    {
-        //Switch to enmy turn
-        if (turn == true)
-        {
-            turn = false;
-        }
-        //Switch to player turn
-        else if (turn == false)
-        {
-            turn = true;
-            //Draw one newChipInPlayerHand
-            DrawChip(DrawsPerTurn);
-        }
-        return turn;
-    }
     /// <summary>
     /// Adds chips to player deck.
     /// </summary>
@@ -414,17 +396,28 @@ public class GameManager : MonoBehaviour
     /// <param name="scene"></param>
     public void RequestScene(Scenes scene)
     {
+        //Get Player
+        PlayerController player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+
+        //Send Data to DataManager
+        DataManager.Instance.GameData.health = player.Health;
+        DataManager.Instance.GameData.maxHealth = player.MaxHealth;
+        DataManager.Instance.GameData.scrap = player.Scrap;
+
+        //clear chipNames
+        DataManager.Instance.GameData.chipNames.Clear();
+
+        //Send Chips to DataManager
+        foreach (var chip in playerDeck)
+        {
+            // Save chip names
+            DataManager.Instance.GameData.chipNames.Add(chip.chipName);
+        }
+
+        //Save
+        DataManager.Instance.Save();
+
         TargetScene = scene;
         SceneManager.LoadScene(Scenes.Loading.ToString());        
-    }
-    /// <summary>
-    /// This is for debugging purposes.
-    /// DO NOT CALL VIA CODE
-    /// </summary>
-    [ContextMenu("Reset Health")]
-    public void Reset()
-    {
-        PlayerPrefs.DeleteAll();
-        RequestScene(Scenes.Level1);
     }
 }
