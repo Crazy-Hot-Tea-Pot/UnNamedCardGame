@@ -21,6 +21,7 @@ TagManager:
   - UpgradeController
   - PlayerCanvas
   - CameraModeIndicator
+  - DataManager
   layers:
   - Default
   - TransparentFX
