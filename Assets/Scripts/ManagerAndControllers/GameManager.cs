@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour
     // Default newChipInPlayerHand
     public GameObject ChipPrefab;
 
+    //THIS HAS TO BE REMOVED WILL MAKE TEMPORARY FIX
     [Header("UI Veriables")]
     //UIVeriables
     public GameObject chipPanel;
@@ -233,6 +234,10 @@ public class GameManager : MonoBehaviour
     //A method for updating the newChipInPlayerHand ui elements
     void UpdateUI()
     {
+        // THIS HAS TO BE REMOVE ITS TEMPORARY AS GAMEMANAGER SHOULND'T BE DOING ANYTHING WITH UI.
+        if (chipPanel == null)
+            chipPanel = GameObject.Find("Panel");
+
         foreach (Transform child in chipPanel.transform)
         {
             Destroy(child.gameObject);
@@ -260,6 +265,9 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void StartCombat()
     {
+        //This is temporary this UI stuff can't be in GameManager
+        uiCanvas = GameObject.Find("Canvas");
+
         //Enables combat UI
         uiCanvas.SetActive(true);
         DrawChip(drawsPerTurn);
