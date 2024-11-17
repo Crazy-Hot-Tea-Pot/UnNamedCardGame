@@ -14,11 +14,6 @@ public class PlayerUIManager : MonoBehaviour
     public GameObject uiPlayerCanvas;
 
     /// <summary>
-    /// This variable holds the game manager a different script and allows us to pull and pass variables and methods between them.
-    /// </summary>
-    public GameManager gameManager;
-
-    /// <summary>
     /// This variable holds the input actions for the player to allow for user input
     /// </summary>
     public PlayerInputActions inputActions;
@@ -33,10 +28,6 @@ public class PlayerUIManager : MonoBehaviour
     /// </summary>
     private InputAction dropItem;
 
-    /// <summary>
-    /// Instance variable for creating instances 
-    /// </summary>
-    private PlayerUIManager instance;
 
     /// <summary>
     /// A list for card selection
@@ -68,14 +59,6 @@ public class PlayerUIManager : MonoBehaviour
     private Sprite blankUtilityUIImage;
     private Sprite blankShieldUiImage;
 
-    /// <summary>
-    /// Instance getter and setter
-    /// </summary>
-    public static PlayerUIManager Instance
-    {
-        get;
-        private set;
-    }
 
     #region InventoryUIVariables
     /// <summary>
@@ -154,22 +137,6 @@ public class PlayerUIManager : MonoBehaviour
         dropItem = inputActions.Player.DropItem;
         //Enables the UI
         openInventory.Enable();
-
-        #region donotdistroy
-        ////Checks if the instance is null
-        //if (Instance == null)
-        //{
-        //    //Makes the object and instance
-        //    Instance = this;
-        //    //Makes the instance do not distroy
-        //    DontDestroyOnLoad(this.gameObject);
-        //}
-        ////Deletes doublicates if there are any
-        //else
-        //{
-        //    Destroy(this.gameObject);
-        //}
-        #endregion
     }
     // Start is called before the first frame update
     void Start()
@@ -311,15 +278,15 @@ public class PlayerUIManager : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
-        for (int i = 0; i < gameManager.playerDeck.Count; i++)
+        for (int i = 0; i < GameManager.Instance.playerDeck.Count; i++)
         {
-            GameObject chipTemp = Instantiate(gameManager.ChipPrefab, panelDeck.transform);
+            GameObject chipTemp = Instantiate(GameManager.Instance.ChipPrefab, panelDeck.transform);
             Chip chipComponenet = chipTemp.GetComponent<Chip>();
 
             StartCoroutine(chipComponenet.ChipInstantiatedOnInActiveObject(Chip.ChipMode.Inventory));
             //chipComponenet.SetChipModeTo(Chip.ChipMode.Inventory);
 
-            chipComponenet.newChip = gameManager.playerDeck[i];
+            chipComponenet.newChip = GameManager.Instance.playerDeck[i];
         }    
     }
 
@@ -699,10 +666,10 @@ public class PlayerUIManager : MonoBehaviour
             Destroy(child.gameObject);
         }
 
-        for (int i = 0; i < gameManager.playerDeck.Count; i++)
+        for (int i = 0; i < GameManager.Instance.playerDeck.Count; i++)
         {
             //Creates the chip object in card delete pannel
-            GameObject chipTemp = Instantiate(gameManager.ChipPrefab, panelCardDelete.transform);            
+            GameObject chipTemp = Instantiate(GameManager.Instance.ChipPrefab, panelCardDelete.transform);            
             //chipTemp.GetComponent<Button>().interactable = true;
             //Destroy button component to then replace
             chipTemp.GetComponent<Button>().onClick.RemoveAllListeners();
@@ -711,7 +678,7 @@ public class PlayerUIManager : MonoBehaviour
             Chip chipComponenet = chipTemp.GetComponent<Chip>();
             //Make it interactable again
             chipComponenet.SetChipModeTo(Chip.ChipMode.Delete);            
-            chipComponenet.newChip = gameManager.playerDeck[i];
+            chipComponenet.newChip = GameManager.Instance.playerDeck[i];
         }
     }
 
