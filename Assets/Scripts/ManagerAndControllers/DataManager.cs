@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class DataManager : MonoBehaviour
 {
-    private DataManager dataManager;
 
-    public DataManager instance
+    public static DataManager instance
     {
-        get
-        {
-            return dataManager;
-        }
-
+        get;
+        private set;
+    }
+    void Awake()
+    {
+        
     }
     // Start is called before the first frame update
     void Start()

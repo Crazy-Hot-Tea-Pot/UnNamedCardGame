@@ -7,7 +7,6 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    private GameManager gameManager;
 
     public PlayerUIManager uiManager;
 
@@ -101,7 +100,16 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        Instance = this;
+        // Check if another instance of the GameManager exists
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);  // Keep this object between scenes
+        }
+        else
+        {
+            Destroy(gameObject);  // Destroy duplicates
+        }
     }
     // Start is called before the first frame update
     void Start()
