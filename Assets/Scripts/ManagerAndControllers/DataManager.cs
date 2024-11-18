@@ -2,23 +2,28 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [System.Serializable]
 public class GameData
 {
-    public string saveName;
+    //Name of Save
+    public string saveName="Default";
     //Level the player is on
-    public string Level;
-    public int health;
-    public int maxHealth;
-    public int scrap;
+    public string Level="Title";
+    //Player Health
+    public int health=50;
+    //Player MaxHealth;
+    public int maxHealth=50;
+    //PlayerScrap
+    public int scrap=200;
     // Save chips by their names
     public List<string> chipNames = new List<string>();
     // Save Abilities by their name
     public List<string> abilityNames = new List<string>();
     //time of save
-    public string timeStamp;
+    public string timeStamp=DateTime.Now.ToString();
 }
 public class DataManager : MonoBehaviour
 {
@@ -65,17 +70,14 @@ public class DataManager : MonoBehaviour
             if (!Directory.Exists(saveDirectory))
             {
                 Directory.CreateDirectory(saveDirectory);
-            }
-
-            gameData = new GameData();
-
-            //Try to load data first.
-            LoadData("AutoSave");
+            }          
         }
         else
         {
             Destroy(gameObject);  // Destroy duplicates
-        }       
+        }    
+        
+        gameData = new GameData();
     }
     /// <summary>
     /// Saves all Data

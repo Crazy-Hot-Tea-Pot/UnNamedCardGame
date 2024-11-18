@@ -27,6 +27,10 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
     public GameObject ChipHolder;
 
     public TMP_Text ChipConsole;
+
+    [Header("Data Screen")]
+    public GameObject DataPanel;
+    public TMP_Text DataConsole;
     
     public Vector2 startPosition;    
     public Vector2 endPosition;
@@ -54,11 +58,6 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
         controller.OnScreenChanged -= UpdateUIScreen;
         controller.OnErrorOccurred -= UpdateErrorScreen;
     }
-
-    void Start()
-    {
-        
-    } 
 
     /// <summary>
     /// When player clicks one of the links.
@@ -111,6 +110,24 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
             case "UpgradeSelectedChip":               
                 controller.AttemptToUpgradeChip();
                 break;
+            case "DataServer":
+                controller.SwitchToScreen(UpgradeController.Screens.Data);
+                break;
+            case "View":
+                controller.currentDataMode=UpgradeController.DataMode.View;
+
+                controller.SwitchToScreen(UpgradeController.Screens.Data);
+                break;
+            case "Save":
+                controller.currentDataMode = UpgradeController.DataMode.Save;
+
+                controller.SwitchToScreen(UpgradeController.Screens.Data);
+                break;
+            case "Load":
+                controller.currentDataMode = UpgradeController.DataMode.Load;
+
+                controller.SwitchToScreen(UpgradeController.Screens.Data);
+                break;
             case "Back":
                 controller.SwitchToScreen(UpgradeController.Screens.Intro);
                 break;
@@ -136,9 +153,11 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
         switch (screen)
         {
             case UpgradeController.Screens.Default:
+            case UpgradeController.Screens.Exit:
                 IntroPanel.SetActive(false);
                 HealthPanel.SetActive(false);
                 ChipPanel.SetActive(false);
+                DataPanel.SetActive(false);
                 ErrorPanel.SetActive(false);
                 break;
             case UpgradeController.Screens.Intro:
@@ -210,21 +229,39 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
                 }
 
                 break;
+            case UpgradeController.Screens.Data:
+
+                SetActiveUIElement(DataPanel);
+
+                string tempDataText="";
+
+                switch (controller.currentDataMode)
+                {
+                    case UpgradeController.DataMode.Title:
+                        tempDataText = string.Format("");
+                        break;
+                    case UpgradeController.DataMode.View:
+                        tempDataText = string.Format("");
+                        break;
+                    case UpgradeController.DataMode.Save:
+                        tempDataText = string.Format("");
+                        break;
+                    case UpgradeController.DataMode.Load:
+                        tempDataText = string.Format("");
+                        break;
+                }
+
+                DataConsole.SetText(tempDataText);
+
+                StartCoroutine(RevealText(DataConsole,false,0.01f,false,0f,0,false,0f));
+                break;
             case UpgradeController.Screens.Error:
                 SetActiveUIElement(ErrorPanel);
 
                 StartCoroutine(RevealText(ErrorConsole, false, 0.01f, false, 0f, 0, false, 0f));
-                break;
-            case UpgradeController.Screens.Exit:
-                IntroPanel.SetActive(false);
-                HealthPanel.SetActive(false);
-                ChipPanel.SetActive(false);
-                ErrorPanel.SetActive(false);
-                break;
+                break;                            
             default:
-                IntroPanel.SetActive(false);
-                HealthPanel.SetActive(false);
-                ChipPanel.SetActive(false);
+                Debug.LogWarning("There should always be an option here.");
                 break;
         }
     }

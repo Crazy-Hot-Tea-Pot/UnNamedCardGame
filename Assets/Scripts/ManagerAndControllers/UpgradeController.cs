@@ -18,6 +18,7 @@ public class UpgradeController : MonoBehaviour
     private TextMeshPro introScreenText;
     private TextMeshPro healthUpgradeScreenText;
     private TextMeshPro chipUpgradeScreenText;
+    private TextMeshPro dataScreenText;
     private TextMeshPro errorScreenText;
 
     /// <summary>
@@ -51,6 +52,17 @@ public class UpgradeController : MonoBehaviour
         }
     }
 
+    public enum DataMode
+    {
+        Title,
+        View,
+        Save,        
+        Load
+    }
+
+    //Current Data mode the terminal is at.
+    public DataMode currentDataMode;
+
     public UpgradeTerminalUIController UIController;
 
     /// <summary>
@@ -64,10 +76,12 @@ public class UpgradeController : MonoBehaviour
     public event Action<string> OnErrorOccurred;
 
     [Header("Screens In Game World")]
+    public List<GameObject> AllScreens;
     public GameObject DefaultScreen;
     public GameObject IntroScreen;
     public GameObject HealthUpgradeScreen;
     public GameObject ChipUpgradeScreen;
+    public GameObject DataScreen;
     public GameObject ErrorScreen;
 
     public enum Screens
@@ -76,6 +90,7 @@ public class UpgradeController : MonoBehaviour
         Intro,
         HealthUpgrade,
         ChipUpgrade,
+        Data,
         Error,
         Exit
     }
@@ -89,6 +104,7 @@ public class UpgradeController : MonoBehaviour
         introScreenText = IntroScreen.GetComponent<TextMeshPro>();
         healthUpgradeScreenText = HealthUpgradeScreen.GetComponent<TextMeshPro>();
         chipUpgradeScreenText = ChipUpgradeScreen.GetComponent<TextMeshPro>();
+        dataScreenText = DataScreen.GetComponent<TextMeshPro>();
         errorScreenText = ErrorScreen.GetComponent<TextMeshPro>();
         Camera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>();
     }
@@ -97,12 +113,6 @@ public class UpgradeController : MonoBehaviour
     {
         PlayerCanvas = GameObject.FindGameObjectWithTag("PlayerCanvas");
         SwitchToScreen(Screens.Default);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     /// <summary>
@@ -117,38 +127,27 @@ public class UpgradeController : MonoBehaviour
 
         switch (screen)
         {
-            case Screens.Default:                              
-
-                IntroScreen.SetActive(false);
-                DefaultScreen.SetActive(true);
-                HealthUpgradeScreen.SetActive(false);
-                ChipUpgradeScreen.SetActive(false);
-                ErrorScreen.SetActive(false);
+            case Screens.Default:
+                SetActiveScreen(DefaultScreen);                
 
                 StartCoroutine(RevealText(DefaultScreen, true, 0.01f,true, 1, 3,true,5f));
 
                 currentScreen = screen;
                 break;
             case Screens.Intro:
-
-                IntroScreen.SetActive(true);
-                DefaultScreen.SetActive(false);
-                HealthUpgradeScreen?.SetActive(false);
-                ChipUpgradeScreen.SetActive(false);
-                ErrorScreen.SetActive(false);
+                SetActiveScreen(IntroScreen);
+                
 
                 StartCoroutine(RevealText(IntroScreen, false, 0.01f, false, 0, 0,false, 1000f));
 
 
                 currentScreen = screen;
+                currentDataMode = DataMode.Title;
+
                 break;
             case Screens.HealthUpgrade:
-
-                IntroScreen.SetActive(false);
-                DefaultScreen.SetActive(false);
-                HealthUpgradeScreen.SetActive(true);
-                ChipUpgradeScreen.SetActive(false);
-                ErrorScreen.SetActive(false);
+                SetActiveScreen(HealthUpgradeScreen);
+                
 
                 PlayerController tempPlayer = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
 
@@ -167,13 +166,46 @@ public class UpgradeController : MonoBehaviour
 
                 currentScreen = screen;
                 break;
+            case Screens.Data:
+                SetActiveScreen(DataScreen);
+                //TODO
+                //If save then ask for name of save before saving game.
+                //If load then load data and show all of them
+                //Get all Data and display on screen
+                string tempDataText = string.Format("Data");
+
+                switch (currentDataMode)
+                {
+                    case UpgradeController.DataMode.Title:
+                        tempDataText = string.Format("<#80ff80>....Connecting To Data Servers.....</color>\r\n\r\nUser <#A20000> *Error*</color> backup data have been found.\r\n\r\n<#80ff80>....Loading Options...</color>\r\n\r\n<color=#0000FF><link=\"View\"><u>View all backups</u></link></color>\r\n\r\n<color=#0000FF><link=\"Save\"><u>Create new backup</u></link></color>\r\n\r\n<color=#0000FF><link=\"Exit\"><u>Exit</u></link></color>");
+                        break;
+                    case UpgradeController.DataMode.View:
+
+                        List<GameData> saves = DataManager.Instance.GetAllSaves();
+                        foreach (var save in saves)
+                        {
+                            Debug.Log($"Save Name: {save.saveName} | Time: {save.timeStamp}");
+                        }
+                        //TODO display this in a table or some way.
+                        tempDataText = string.Format("");
+                        break;
+                    case UpgradeController.DataMode.Save:
+                        tempDataText = string.Format("");
+                        break;
+                    case UpgradeController.DataMode.Load:
+                        tempDataText = string.Format("");
+                        break;
+                }
+
+                dataScreenText.SetText(tempDataText);
+
+                StartCoroutine(RevealText(DataScreen, false, 0.01f, false, 0, 0, false, 0));
+
+                currentScreen = screen;
+                break;
             case Screens.ChipUpgrade:
 
-                IntroScreen.SetActive(false);
-                DefaultScreen.SetActive(false);
-                HealthUpgradeScreen?.SetActive(false);
-                ChipUpgradeScreen.SetActive(true);
-                ErrorScreen.SetActive(false);
+                SetActiveScreen(ChipUpgradeScreen);
 
                 if (SelectedChip == null)
                 {
@@ -203,21 +235,15 @@ public class UpgradeController : MonoBehaviour
 
             break;
             case Screens.Error:
-                IntroScreen.SetActive(false);
-                DefaultScreen.SetActive(false);
-                HealthUpgradeScreen.SetActive(false);
-                ChipUpgradeScreen.SetActive(false);
-                ErrorScreen.SetActive(true);
+
+                SetActiveScreen(ErrorScreen);
 
                 StartCoroutine(RevealText(ErrorScreen, false, 0.001f, false, 0f,0, false, 0f));
                 break;
             case Screens.Exit:
 
-                IntroScreen.SetActive(false);
-                DefaultScreen.SetActive(true);
-                HealthUpgradeScreen.SetActive(false);
-                ChipUpgradeScreen.SetActive(false);
-                ErrorScreen.SetActive(false);
+                SetActiveScreen(DefaultScreen);
+                
 
                 StartCoroutine(RevealText(DefaultScreen, true, 0.01f, true, 1, 3,true, 5f));
 
@@ -230,11 +256,32 @@ public class UpgradeController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Method for switching screens
+    /// </summary>
+    /// <param name="targetScreen"></param>
+    private void SetActiveScreen(GameObject targetScreen)
+    {
+        if (AllScreens.Count == 0)
+        {
+            Debug.LogError("Screens are empty!");
+        }
+        foreach (var screen in AllScreens)
+        {
+            screen.SetActive(screen == targetScreen);
+        }
+    }
+
+    /// <summary>
+    /// umm chip selected?
+    /// </summary>
+    /// <param name="chip"></param>
     public void ChipSelectToUpgrade(NewChip chip)
     {
         selectedChip = chip;
         SwitchToScreen(Screens.ChipUpgrade);
     }
+
     /// <summary>
     /// Try to upgrade player health.
     /// </summary>
@@ -264,6 +311,7 @@ public class UpgradeController : MonoBehaviour
                 "<u><link=\"Back\"><color=#808080>Back</color></link></u>");
         }
     }
+
     /// <summary>
     /// Try to Upgrade chip
     /// </summary>
@@ -305,6 +353,22 @@ public class UpgradeController : MonoBehaviour
         SwitchToScreen(Screens.Error);
     }
 
+    /// <summary>
+    /// Call DataManager to create save.
+    /// </summary>
+    /// <param name="SaveName">string name of save</param>
+    public void CreateSave(string SaveName)
+    {
+        try
+        {
+            DataManager.Instance.Save(SaveName);
+        }
+        catch
+        {
+            DisplayError("Failed to create backup.");
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Player" && !IsInteracting)
@@ -331,6 +395,7 @@ public class UpgradeController : MonoBehaviour
         GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().GainScrap(500);
 
     }
+
     /// <summary>
     /// Players animation and doe sother stuff so player can exit terminal.
     /// </summary>
