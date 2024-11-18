@@ -461,7 +461,7 @@ public class PlayerController : MonoBehaviour
     void Initialize()
     {
         //Load player data is not new game.
-        if (DataManager.Instance.SaveFileFound)
+        if (DataManager.Instance.GameData != null)
         {
             health = DataManager.Instance.GameData.health;
             MaxHealth = DataManager.Instance.GameData.maxHealth;

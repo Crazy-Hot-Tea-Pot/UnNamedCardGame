@@ -414,8 +414,11 @@ public class GameManager : MonoBehaviour
             DataManager.Instance.GameData.chipNames.Add(chip.chipName);
         }
 
+        //Send Abilities to DataManager
+        //TODO
+
         //Save
-        DataManager.Instance.Save();
+        DataManager.Instance.Save("AutoSave");
 
         TargetScene = scene;
         SceneManager.LoadScene(Scenes.Loading.ToString());        

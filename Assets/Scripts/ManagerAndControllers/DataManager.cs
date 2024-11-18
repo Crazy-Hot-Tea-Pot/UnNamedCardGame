@@ -7,6 +7,9 @@ using UnityEngine;
 [System.Serializable]
 public class GameData
 {
+    public string saveName;
+    //Level the player is on
+    public string Level;
     public int health;
     public int maxHealth;
     public int scrap;
@@ -14,6 +17,8 @@ public class GameData
     public List<string> chipNames = new List<string>();
     // Save Abilities by their name
     public List<string> abilityNames = new List<string>();
+    //time of save
+    public string timeStamp;
 }
 public class DataManager : MonoBehaviour
 {
@@ -36,24 +41,8 @@ public class DataManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// If Found game data.
-    /// </summary>
-    public bool SaveFileFound
-    {
-        get
-        {
-            return saveFileFound;
-        }
-        private set
-        {
-            saveFileFound = value;
-        }
-    }
+    private string saveDirectory;
 
-    private string saveFilePath;
-
-    private bool saveFileFound;
 
     [SerializeField]
     private GameData gameData;
@@ -70,13 +59,18 @@ public class DataManager : MonoBehaviour
             // Keep this object between scenes
             DontDestroyOnLoad(gameObject);
 
-            // Set the save file path, for some reason we doing different than industry standard.
-            saveFilePath = Path.Combine(Application.dataPath, "GameData.json");
+            //Save Directory
+            saveDirectory = Path.Combine(Application.persistentDataPath, "PlayerSaveData");
+
+            if (!Directory.Exists(saveDirectory))
+            {
+                Directory.CreateDirectory(saveDirectory);
+            }
 
             gameData = new GameData();
 
             //Try to load data first.
-            LoadData();
+            LoadData("AutoSave");
         }
         else
         {
@@ -86,7 +80,7 @@ public class DataManager : MonoBehaviour
     /// <summary>
     /// Saves all Data
     /// </summary>
-    public void Save()
+    public void Save(string saveName)
     {
         if (GameManager.Instance.InCombat)
         {
@@ -96,21 +90,33 @@ public class DataManager : MonoBehaviour
         else
         {
 
-            string json = JsonUtility.ToJson(GameData, true);
+            string saveFilePath = Path.Combine(saveDirectory, $"{saveName}.json");
+            gameData.saveName = saveName;
+            gameData.timeStamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            
+            string json = JsonUtility.ToJson(gameData, true);
             File.WriteAllText(saveFilePath, json);
-            Debug.Log("Game saved successfully to: " + saveFilePath);
+            Debug.Log($"Game saved successfully: {saveFilePath}");
         }
     }
-    public void LoadData()
+    public void Save(string saveName, GameData gameData)
     {
+        string saveFilePath = Path.Combine(saveDirectory, $"{saveName}.json");
+        gameData.saveName = saveName;
+        gameData.timeStamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+        string json = JsonUtility.ToJson(gameData, true);
+        File.WriteAllText(saveFilePath, json);
+        Debug.Log($"Game saved successfully: {saveFilePath}");
+    }
+    public void LoadData(string saveName)
+    {
+        string saveFilePath = Path.Combine(saveDirectory, $"{saveName}.json");
+
         if (!File.Exists(saveFilePath))
         {
-            SaveFileFound = false;
-            Debug.LogWarning("Save file not found.");
+            Debug.LogWarning($"Save file not found: {saveName}");
             return;
         }
-
-        SaveFileFound = true;
 
         string json = File.ReadAllText(saveFilePath);
         GameData saveData = JsonUtility.FromJson<GameData>(json);
@@ -137,6 +143,47 @@ public class DataManager : MonoBehaviour
             }
         }
 
+        // load Abilities
+        //TODO
+
         Debug.Log("Game loaded successfully.");
+    }
+
+    public GameData RetrieveGameData(string saveName)
+    {
+        string saveFilePath = Path.Combine(saveDirectory, $"{saveName}.json");
+        if (!File.Exists(saveFilePath))
+        {
+            Debug.LogWarning($"Save file not found: {saveName}");
+            return null;
+        }
+
+        string json = File.ReadAllText(saveFilePath);
+        GameData gameData = JsonUtility.FromJson<GameData>(json);
+        Debug.Log($"Game loaded successfully: {saveFilePath}");
+        return gameData;
+    }
+
+    /// <summary>
+    /// Gets all the saves the player has made.
+    /// </summary>
+    /// <returns></returns>
+    public List<GameData> GetAllSaves()
+    {
+        List<GameData> saves = new List<GameData>();
+
+        if (!Directory.Exists(saveDirectory)) 
+            return saves;
+
+        string[] saveFiles = Directory.GetFiles(saveDirectory, "*.json");
+
+        foreach (string filePath in saveFiles)
+        {
+            string json = File.ReadAllText(filePath);
+            GameData gameData = JsonUtility.FromJson<GameData>(json);
+            saves.Add(gameData);
+        }
+
+        return saves;
     }
 }
