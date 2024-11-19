@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 189603f79c685cb4197e0e073f20c64a, type: 3}
   m_Name: Charge Up
   m_EditorClassIdentifier: 
+  ThisChip: {fileID: 0}
   chipRarity: 1
   chipName: Charge Up
   description: Activates "Power" and reduces "Drained" effects
-  chipImage: {fileID: 21300000, guid: ba9bf0dc1110d4649832450f5e108129, type: 3}
+  chipImage: {fileID: 21300000, guid: 9cdac9d93fb80024ca066d3ec761dfb7, type: 3}
   canBeUpgraded: 1
   costToUpgrade: 150
   hitAllTargets: 0

@@ -53,7 +53,7 @@ MonoBehaviour:
   - soundFX: 1
     audioClip: {fileID: 8300000, guid: 6d26ce0006078be47b37e392bee2a249, type: 3}
   - soundFX: 2
-    audioClip: {fileID: 8300000, guid: 8df8d2e93e560ca4383c7c09a2304223, type: 3}
+    audioClip: {fileID: 8300000, guid: 6a481853ed949b7478092ead5edadb37, type: 3}
   - soundFX: 3
     audioClip: {fileID: 8300000, guid: 0c83efc6d7f64ad41a0bbb2a9ed858d5, type: 3}
   - soundFX: 4
