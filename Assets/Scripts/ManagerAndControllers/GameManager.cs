@@ -462,8 +462,6 @@ public class GameManager : MonoBehaviour
 
                             if (loadedChip.canBeUpgraded)
                                 loadedChip.IsUpgraded = chipSave.IsUpgraded;
-                            else
-                                loadedChip.IsUpgraded = false;
 
                             loadedChip.DisableCounter = chipSave.DisableCounter;
                             playerDeck.Add(loadedChip);

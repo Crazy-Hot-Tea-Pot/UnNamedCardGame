@@ -156,10 +156,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 961947440}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1113, y: -357.5}
-  m_SizeDelta: {x: 256, y: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 1113, y: 0}
+  m_SizeDelta: {x: 256, y: 197.91264}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &260782423
 MonoBehaviour:
@@ -291,10 +291,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 961947440}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 501, y: -357.5}
-  m_SizeDelta: {x: 256, y: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 501, y: 0}
+  m_SizeDelta: {x: 256, y: 197.91264}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &336086411
 MonoBehaviour:
@@ -470,10 +470,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 961947440}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 807, y: -357.5}
-  m_SizeDelta: {x: 256, y: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 807, y: 0}
+  m_SizeDelta: {x: 256, y: 197.91264}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &769196847
 MonoBehaviour:
@@ -852,10 +852,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 961947440}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1419, y: -357.5}
-  m_SizeDelta: {x: 256, y: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 1419, y: 0}
+  m_SizeDelta: {x: 256, y: 197.91264}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &971960981
 MonoBehaviour:
@@ -1177,6 +1177,7 @@ MonoBehaviour:
     Scraps: 0
     Chips: []
     Abilities: []
+    TimeStampString: 
 --- !u!4 &1829154760
 Transform:
   m_ObjectHideFlags: 0
@@ -1561,6 +1562,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 005c9e15bb85ad044a5b0505bcdd253e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cameraSettings:
+    cameraSpeed: 3
+    boarderMouseMovement: 0
+  soundSettings:
+    BGMVolume: 100
+    SFXVolume: 100
+  dataSettings:
+    MaxAutoSave: 5
+  videoSettings:
+    Resolution: {x: 0, y: 0}
+    FullscreenMode: 0
+    VSyncEnabled: 0
+    GraphicsQuality: 0
+    TargetFrameRate: 0
+    AntiAliasingLevel: 0
+    ShadowQuality: 0
+    TextureQuality: 0
+    BloomEnabled: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

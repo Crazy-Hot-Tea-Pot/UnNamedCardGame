@@ -1,9 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.InputSystem.XR;
 
 public class UpgradeController : MonoBehaviour
 {
@@ -171,35 +172,35 @@ public class UpgradeController : MonoBehaviour
                 //TODO
                 //If save then ask for name of save before saving game.
                 //If load then load data and show all of them
-                //Get all Data and display on screen
                 string tempDataText = string.Format("Data");
 
                 switch (currentDataMode)
                 {
                     case UpgradeController.DataMode.Title:
-                        tempDataText = string.Format("<#80ff80>....Connecting To Data Servers.....</color>\r\n\r\nUser <#A20000> *Error*</color> backup data have been found.\r\n\r\n<#80ff80>....Loading Options...</color>\r\n\r\n<color=#0000FF><link=\"View\"><u>View all backups</u></link></color>\r\n\r\n<color=#0000FF><link=\"Save\"><u>Create new backup</u></link></color>\r\n\r\n<color=#0000FF><link=\"Exit\"><u>Exit</u></link></color>");
+                        tempDataText = string.Format("<#80ff80>....Connecting To Data Servers.....</color>\n\n" +
+                            "User <#A20000> *Error*</color> backup data have been found.\n\n" +
+                            "<#80ff80>....Loading Options...</color>\n\n" +
+                            "<color=#0000FF><link=\"View\"><u>View all backups</u></link></color>\n\n" +
+                            "<color=#0000FF><link=\"Save\"><u>Create new backup</u></link></color>\n\n" +
+                            "<color=#0000FF><link=\"Exit\"><u>Exit</u></link></color>");
+
+                        dataScreenText.SetText(tempDataText);
+
+                        StartCoroutine(RevealText(DataScreen, false, 0.01f, false, 0, 0, false, 0));
                         break;
                     case UpgradeController.DataMode.View:
+                        tempDataText = string.Format("...Retrieving Data...");
+                        
+                        dataScreenText.SetText(tempDataText);
 
-                        List<GameData> saves = DataManager.Instance.GetAllSaves();
-                        foreach (var save in saves)
-                        {
-                            Debug.Log($"Save Name: {save.SaveName} | Time: {save.TimeStamp}");
-                        }
-                        //TODO display this in a table or some way.
-                        tempDataText = string.Format("");
-                        break;
-                    case UpgradeController.DataMode.Save:
-                        tempDataText = string.Format("");
-                        break;
-                    case UpgradeController.DataMode.Load:
-                        tempDataText = string.Format("");
-                        break;
-                }
+                        StartCoroutine(RevealText(DataScreen, true, 0.01f, true, 0.1f, 5, false, 0));
 
-                dataScreenText.SetText(tempDataText);
-
-                StartCoroutine(RevealText(DataScreen, false, 0.01f, false, 0, 0, false, 0));
+                        break;
+                    case UpgradeController.DataMode.Save:                        
+                        break;
+                    case UpgradeController.DataMode.Load:                        
+                        break;
+                }                
 
                 currentScreen = screen;
                 break;
@@ -280,6 +281,22 @@ public class UpgradeController : MonoBehaviour
     {
         selectedChip = chip;
         SwitchToScreen(Screens.ChipUpgrade);
+    }
+
+    public void LoadGame(string saveName)
+    {
+        DataManager.Instance.LoadData(saveName);
+        Debug.Log($"Loaded save: {saveName}");
+
+        GameManager.Instance.RequestScene(DataManager.Instance.CurrentGameData.Level);
+    }
+
+    public void AttemptToDeleteSave(string saveName)
+    {
+        if (DataManager.Instance.DeleteSave(saveName))
+            UIController.FillData();
+        else
+            DisplayError("Failed to Delete Save");
     }
 
     /// <summary>

@@ -33,6 +33,7 @@ public class GameData
     public List<ChipData> Chips = new List<ChipData>();
     // Save Abilities
     public List<AbilityData> Abilities = new List<AbilityData>();
+    public string TimeStampString;
     //time of save
     public DateTime TimeStamp;
 
@@ -41,5 +42,17 @@ public class GameData
     {
         Chips = new List<ChipData>();
         Abilities= new List<AbilityData>();
+    }
+
+    // Synchronize TimeStamp with its string representation
+    public void UpdateTimeStamp()
+    {
+        TimeStampString = TimeStamp.ToString("o"); // Use "o" for ISO 8601 format
+    }
+
+    public void ParseTimeStamp()
+    {
+        if (!string.IsNullOrEmpty(TimeStampString))
+            TimeStamp = DateTime.Parse(TimeStampString);
     }
 }

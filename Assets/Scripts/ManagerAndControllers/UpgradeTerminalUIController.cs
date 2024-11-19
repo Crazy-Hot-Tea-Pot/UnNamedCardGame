@@ -5,6 +5,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
 {
@@ -29,8 +30,11 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
     public TMP_Text ChipConsole;
 
     [Header("Data Screen")]
+    public GameObject DataPrefab;
     public GameObject DataPanel;
     public TMP_Text DataConsole;
+    public GameObject ViewDataPanel;
+    public GameObject DataHolder;
     
     public Vector2 startPosition;    
     public Vector2 endPosition;
@@ -84,6 +88,30 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
                     return; // Exit after handling the first valid link click
                 }
             }
+    }
+
+    /// <summary>
+    /// Fill screen with all save data.
+    /// </summary>
+    public void FillData()
+    {
+        isWaintingForInput = false;
+
+        DataHolder.SetActive(false);
+
+        List<GameData> saves = DataManager.Instance.GetAllSaves();
+        foreach (var save in saves)
+        {
+            GameObject UIData = Instantiate(DataPrefab, DataHolder.transform);
+
+            UIData.transform.Find("Name").GetComponent<TMP_Text>().SetText(save.SaveName);
+            UIData.transform.Find("Level").GetComponent<TMP_Text>().SetText(save.Level.ToString());
+            UIData.transform.Find("Time").GetComponent<TMP_Text>().SetText(save.TimeStamp.ToString());
+
+            // Assign button actions
+            UIData.transform.Find("LoadButton").GetComponent<Button>().onClick.AddListener(() => controller.LoadGame(save.SaveName));
+            UIData.transform.Find("DeleteButton").GetComponent<Button>().onClick.AddListener(() => controller.AttemptToDeleteSave(save.SaveName));
+        }
     }
     
     /// <summary>
@@ -238,10 +266,26 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
                 switch (controller.currentDataMode)
                 {
                     case UpgradeController.DataMode.Title:
-                        tempDataText = string.Format("");
+                        tempDataText = string.Format("<#80ff80>....Connecting To Data Servers.....</color>\n\n" +
+                            "User <#A20000> *Error*</color> backup data have been found.\n\n" +
+                            "<#80ff80>....Loading Options...</color>\n\n" +
+                            "<color=#0000FF><link=\"View\"><u>View all backups</u></link></color>\n\n" +
+                            "<color=#0000FF><link=\"Save\"><u>Create new backup</u></link></color>\n\n" +
+                            "<color=#0000FF><link=\"Exit\"><u>Exit</u></link></color>");
+
+                        DataConsole.SetText(tempDataText);
+
+                        StartCoroutine(RevealText(DataConsole, false, 0.01f, false, 0, 0, false, 0));
                         break;
                     case UpgradeController.DataMode.View:
-                        tempDataText = string.Format("");
+                        tempDataText = string.Format("...Retrieving Data...");
+
+                        DataConsole.SetText(tempDataText);
+
+                        StartCoroutine(RevealText(DataConsole, true, 0.01f, true, 0.1f, 5, false, 0));
+
+                        FillData();
+                        StartCoroutine(BringUpDataScreen());
                         break;
                     case UpgradeController.DataMode.Save:
                         tempDataText = string.Format("");
@@ -250,10 +294,7 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
                         tempDataText = string.Format("");
                         break;
                 }
-
-                DataConsole.SetText(tempDataText);
-
-                StartCoroutine(RevealText(DataConsole,false,0.01f,false,0f,0,false,0f));
+                
                 break;
             case UpgradeController.Screens.Error:
                 SetActiveUIElement(ErrorPanel);
@@ -333,6 +374,27 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
         }
 
         tempRectTransform.anchoredPosition=endPosition;
+    }
+    private IEnumerator BringUpDataScreen()
+    {       
+
+        DataHolder.SetActive(true);
+
+        float tempTime = 0;
+        RectTransform tempRectTransform = ViewDataPanel.GetComponent<RectTransform>();
+
+        while (tempTime < TimeForPanelToGetToCenter)
+        {
+            tempTime += Time.deltaTime;
+
+            float temp = Mathf.Clamp01(tempTime / TimeForPanelToGetToCenter);
+
+            tempRectTransform.anchoredPosition = Vector2.Lerp(startPosition, endPosition, temp);
+
+            yield return null;
+        }
+
+        tempRectTransform.anchoredPosition = endPosition;
     }
 
     /// <summary>

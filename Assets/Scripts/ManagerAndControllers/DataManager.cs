@@ -1,10 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using Unity.VisualScripting;
+using System.Linq;
 using UnityEngine;
-using static GameData;
 public class DataManager : MonoBehaviour
 {    
     public static DataManager Instance
@@ -71,7 +69,8 @@ public class DataManager : MonoBehaviour
         string saveFilePath = Path.Combine(saveDirectory, $"{saveName}.json");
 
         CurrentGameData.SaveName = saveName;
-        CurrentGameData.TimeStamp = DateTime.Now;     
+        CurrentGameData.TimeStamp = DateTime.Now;
+        CurrentGameData.UpdateTimeStamp();
 
         string json = JsonUtility.ToJson(CurrentGameData, true);
         File.WriteAllText(saveFilePath, json);
@@ -88,16 +87,18 @@ public class DataManager : MonoBehaviour
     /// Construct the save name.
     /// </summary>
     public void AutoSave()
-    {        
+    {
         List<GameData> allSaves = GetAllSaves();
-        
         List<GameData> autoSaves = allSaves.FindAll(save => save.SaveName.StartsWith("AutoSave"));
 
         // Handle the auto-save limit
         HandleAutoSaveLimit(autoSaves);
 
-        int nextAutoSaveNumber = autoSaves.Count + 1;
-        
+        // Get the next auto-save number after sorting
+        int nextAutoSaveNumber = autoSaves.Count > 0
+            ? autoSaves.Max(save => int.Parse(save.SaveName.Replace("AutoSave", ""))) + 1
+            : 1;
+
         string saveName = $"AutoSave{nextAutoSaveNumber}";
 
         // Save the data
@@ -124,10 +125,15 @@ public class DataManager : MonoBehaviour
         string json = File.ReadAllText(saveFilePath);
         GameData saveData = JsonUtility.FromJson<GameData>(json);
 
+        // Parse the string back into a DateTime object
+        saveData.ParseTimeStamp();
+        CurrentGameData = saveData;
+
         //Load player stats
         CurrentGameData.Health = saveData.Health;
         CurrentGameData.MaxHealth = saveData.MaxHealth;
         CurrentGameData.Scraps = saveData.Scraps;
+
 
         // Reconstruct the player's deck
         GameManager.Instance.playerDeck.Clear();
@@ -194,6 +200,25 @@ public class DataManager : MonoBehaviour
         }
 
         return saves;
+    }
+
+    /// <summary>
+    /// Delete Save Data.
+    /// </summary>
+    /// <param name="saveName">Must be exact name of the Save</param>
+    /// <returns></returns>
+    public bool DeleteSave(string saveName)
+    {
+        string savePath = Path.Combine(saveDirectory, $"{saveName}.json");
+        if (File.Exists(savePath))
+        {
+            File.Delete(savePath);
+            
+            Debug.Log($"Deleted save: {saveName}");
+
+            return true;
+        }
+        return false;
     }
 
     /// <summary>

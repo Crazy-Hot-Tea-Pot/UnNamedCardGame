@@ -92,6 +92,7 @@ public class SettingsManager : MonoBehaviour
         cameraSettings = new CameraSettings();
         soundSettings = new SoundSettings();
         dataSettings = new DataSettings();
+        videoSettings = new VideoSettings();
     }
 
     /// <summary>
