@@ -5,24 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-// Extension method for recursive search
-public static class TransformExtensions
-{
-    public static Transform FindRecursive(this Transform parent, string name)
-    {
-        if (parent.name == name)
-            return parent;
 
-        foreach (Transform child in parent)
-        {
-            Transform result = child.FindRecursive(name);
-            if (result != null)
-                return result;
-        }
-
-        return null;
-    }
-}
 public class GameManager : MonoBehaviour
 {
 
@@ -46,11 +29,10 @@ public class GameManager : MonoBehaviour
     // Default newChipInPlayerHand
     public GameObject ChipPrefab;
 
-    //THIS HAS TO BE REMOVED WILL MAKE TEMPORARY FIX
-    [Header("UI Veriables")]
     //UIVeriables
     public GameObject chipPanel;
     public GameObject uiCanvas;
+    public GameObject uiContainer;
 
     [Header("Enemy Variables")]
     public List<GameObject> enemyList;
@@ -133,6 +115,11 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //Fill variables
+        uiContainer = GameObject.Find("BadCanvasSystem");
+        uiCanvas = uiContainer.transform.FindChild("Canvas").gameObject;
+        chipPanel = uiCanvas.transform.FindChild("Panel").gameObject;
+
         Initialize();
         ShufflePlayerDeck();
         //DrawChip(DrawsPerTurn);
@@ -252,10 +239,6 @@ public class GameManager : MonoBehaviour
     //A method for updating the newChipInPlayerHand ui elements
     void UpdateUI()
     {
-        // THIS HAS TO BE REMOVE ITS TEMPORARY AS GAMEMANAGER SHOULND'T BE DOING ANYTHING WITH UI.
-        if (chipPanel == null)
-            chipPanel = FindGameObjectByName("Panel");
-
         foreach (Transform child in chipPanel.transform)
         {
             Destroy(child.gameObject);
@@ -268,13 +251,13 @@ public class GameManager : MonoBehaviour
             Chip chipComponent = newChipInstance.GetComponent<Chip>();
 
             chipComponent.newChip = newChipInPlayerHand;
-            StartCoroutine(chipComponent.ChipInstantiatedOnInActiveObject(Chip.ChipMode.Combat));
+            chipComponent.SetChipModeTo(Chip.ChipMode.Combat);
             //Apply name to newChipInPlayerHand.
             if (newChipInPlayerHand.chipName == "" || newChipInPlayerHand.chipName == null)
                 Debug.LogWarning("Scriptable {chipName} is empty on " + newChipInPlayerHand.name + " and this will cause errors.");
             else
                 newChipInstance.name = newChipInPlayerHand.chipName;
-        }      
+        }
     }
 
 
@@ -283,9 +266,10 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void StartCombat()
     {
-        //This is temporary this UI stuff can't be in GameManager
-        uiCanvas = FindGameObjectByName("Canvas");
-        
+        //Fill variables Make Method
+        uiContainer = GameObject.Find("BadCanvasSystem");
+        uiCanvas = uiContainer.transform.FindChild("Canvas").gameObject;
+        chipPanel = uiCanvas.transform.FindChild("Panel").gameObject;
 
         //Enables combat UI
         uiCanvas.SetActive(true);
@@ -293,25 +277,6 @@ public class GameManager : MonoBehaviour
         UpdateUI();
         GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().InCombat = true;
     }
-    /// <summary>
-    /// Added this because of bad UI canvas system.
-    /// </summary>
-    /// <param name="name"></param>
-    /// <returns></returns>
-        public GameObject FindGameObjectByName(string name)
-        {
-            Scene activeScene = SceneManager.GetActiveScene();
-            GameObject[] rootObjects = activeScene.GetRootGameObjects();
-
-            foreach (GameObject rootObject in rootObjects)
-            {
-                Transform result = rootObject.transform.FindRecursive(name);
-                if (result != null)
-                    return result.gameObject;
-            }
-
-            return null;
-        }   
 
     /// <summary>
     /// A method to transition out of combat

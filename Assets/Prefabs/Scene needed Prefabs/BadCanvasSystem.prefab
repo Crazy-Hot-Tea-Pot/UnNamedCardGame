@@ -3768,7 +3768,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uiPlayerCanvas: {fileID: 533751725226020783}
-  gameManager: {fileID: 0}
   selectionList: []
   shortSelection: []
   panelDropCards: {fileID: 5310055286125829888}

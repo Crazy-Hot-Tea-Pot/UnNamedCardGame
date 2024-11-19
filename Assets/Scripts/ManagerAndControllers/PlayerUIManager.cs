@@ -281,12 +281,12 @@ public class PlayerUIManager : MonoBehaviour
         for (int i = 0; i < GameManager.Instance.playerDeck.Count; i++)
         {
             GameObject chipTemp = Instantiate(GameManager.Instance.ChipPrefab, panelDeck.transform);
-            Chip chipComponenet = chipTemp.GetComponent<Chip>();
+            Chip chipComponent = chipTemp.GetComponent<Chip>();
+            chipComponent.SetChipModeTo(Chip.ChipMode.Inventory);
 
-            StartCoroutine(chipComponenet.ChipInstantiatedOnInActiveObject(Chip.ChipMode.Inventory));
             //chipComponenet.SetChipModeTo(Chip.ChipMode.Inventory);
 
-            chipComponenet.newChip = GameManager.Instance.playerDeck[i];
+            chipComponent.newChip = GameManager.Instance.playerDeck[i];
         }    
     }
 

@@ -70,10 +70,6 @@ public class Chip : MonoBehaviour
 
         // Set image to chip
         GetComponent<Image>().sprite = newChip.chipImage;
-
-
-
-        StartCoroutine(CheckIfModeSet());
     }
     /// <summary>
     /// Tell the Upgrade Controller this is the chip the user selected to ugprade.
@@ -206,30 +202,5 @@ public class Chip : MonoBehaviour
                 break;
         }
     }
-    /// <summary>
-    /// Added this cause.....frustration of explaining can't instantiate this gameObject as inActive.
-    /// </summary>
-    /// <returns></returns>
-    public IEnumerator ChipInstantiatedOnInActiveObject(ChipMode chipMode)
-    {
-        yield return new WaitForSeconds(1f);
-        switch (chipMode)
-        {
-            case ChipMode.Combat:
-                SetChipModeTo(Chip.ChipMode.Combat);
-                break;
-            case ChipMode.Inventory:
-                SetChipModeTo(Chip.ChipMode.Inventory);
-                break;
-        }        
-    }
 
-    private IEnumerator CheckIfModeSet()
-    {
-            yield return new WaitForSeconds(10f);
-            if (Mode == ChipMode.None)
-            {
-                Debug.LogError("Chip "+ ChipTitle +" mode isn't set");
-            }
-    }
 }
