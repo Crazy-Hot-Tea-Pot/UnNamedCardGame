@@ -187,7 +187,8 @@ public class CombatController : MonoBehaviour
 
 
         //Set enemies to combat mode in combat zone
-        foreach (GameObject combatEnemy in GameManager.Instance.enemyList)
+        //foreach (GameObject combatEnemy in GameManager.Instance.enemyList)
+        foreach(GameObject combatEnemy in GameObject.Find("GameManager").GetComponent<GameManager>().enemyList)
         {
             Combadant enemies = new Combadant();
             enemies.combadant = combatEnemy;
@@ -333,7 +334,7 @@ public class CombatController : MonoBehaviour
 
         endTurnButton.SetActive(false);
 
-        //Clear enemy list
+        //Clear enemy list, selection list in ui and short selection list
         GameManager.Instance.enemyList.Clear();
         // Notify the GameManager or other systems
         GameManager.Instance.EndCombat();

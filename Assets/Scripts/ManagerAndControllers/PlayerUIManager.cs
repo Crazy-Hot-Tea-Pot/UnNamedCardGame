@@ -569,7 +569,7 @@ public class PlayerUIManager : MonoBehaviour
                 NewChip holder;
 
                 //If there can be no repeats
-                if (selectionList.Count > 3)
+                if (selectionList.Count > 3 && selectionList != null)
                 {
                     //Get a random number
                     int roll = GameManager.Instance.Roll(1, selectionList.Count - 1);
@@ -605,11 +605,15 @@ public class PlayerUIManager : MonoBehaviour
                     shortSelection.Add(holder);
                 }
                 //If the list is too small then continue from here or if the list is sectin 3 then there is no reason to do any math for rerolling it's a waste of time
-                else if (selectionList.Count < 3 || selectionList.Count == 3)
+                else if (selectionList.Count < 3 && selectionList != null || selectionList.Count == 3 && selectionList != null)
                 {
                     holder = selectionList[i];
                     //Add to the short list
                     shortSelection.Add(holder);
+                }
+                else if (selectionList == null)
+                {
+                    Debug.Log("No selection");
                 }
             }
         }
@@ -680,6 +684,7 @@ public class PlayerUIManager : MonoBehaviour
             chipComponenet.SetChipModeTo(Chip.ChipMode.Delete);            
             chipComponenet.newChip = GameManager.Instance.playerDeck[i];
         }
+        ClearSelectionList();
     }
 
     /// <summary>
@@ -702,8 +707,6 @@ public class PlayerUIManager : MonoBehaviour
     {
         //Add the card to the deck
         AddCardToDeck(shortSelection[0]);
-        //Empty the storage
-        ClearSelectionList();
 
         //Closes the card drop ui panel and opens a new panel to allow the player to swap a card
         FillCardSwap();
@@ -715,8 +718,6 @@ public class PlayerUIManager : MonoBehaviour
     {
         //Add the card to the deck
         AddCardToDeck(shortSelection[1]);
-        //Empty the storage
-        ClearSelectionList();
 
         //Closes the card drop ui panel and opens a new panel to allow the player to swap a card
         FillCardSwap();
@@ -729,8 +730,6 @@ public class PlayerUIManager : MonoBehaviour
     {
         //Add the card to the deck
         AddCardToDeck(shortSelection[2]);
-        //Empty the storage
-        ClearSelectionList();
 
         //Closes the card drop ui panel and opens a new panel to allow the player to swap a card
         FillCardSwap();
@@ -743,6 +742,7 @@ public class PlayerUIManager : MonoBehaviour
     {
         //Empty the list
         selectionList.Clear();
+        shortSelection.Clear();
     }
     #endregion
 }
