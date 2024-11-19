@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -114,9 +115,15 @@ public class PlayerUIManager : MonoBehaviour
 
     #region UIResourcePools
     /// <summary>
-    /// Health bar UI element
+    /// Health bar UI element.
     /// </summary>
-    public Slider healthBar;
+    public Image healthBar;
+
+    /// <summary>
+    /// Shield bar Ui Element.
+    /// </summary>
+    public Image ShieldBar;
+    public GameObject ShieldBarContainer;
 
     [Header("Energy Stuff")]
 
@@ -173,6 +180,7 @@ public class PlayerUIManager : MonoBehaviour
         //Update resource pool ui elements
         UpdateEnergy(GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().Energy, GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().MaxEnergy);
         UpdateHealth();
+        UpdateShield();
         //On press open the inventroy UI if input is recieved or close if already in combat. WasPressedThisFrame() makes the input not be spammed it waits till the frame ends before recollecting
         if (openInventory.WasPressedThisFrame() && !GameManager.Instance.InCombat)
         {
@@ -471,8 +479,29 @@ public class PlayerUIManager : MonoBehaviour
     public void UpdateHealth()
     {
         //Change value of Health bar
-        healthBar.maxValue = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().MaxHealth;
-        healthBar.value = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().Health;
+        //healthBar.maxValue = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().MaxHealth;
+        //healthBar.value = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().Health;
+
+        // Calculate Health as a percentage
+        float healthPercentage = (float)GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().Health / GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().MaxHealth;
+
+        //Set the bars value
+        healthBar.fillAmount = healthPercentage;
+    }
+    public void UpdateShield()
+    {
+        if (GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().Shield == 0)
+        {
+            ShieldBarContainer.SetActive(false);
+        }
+        else
+        {
+            ShieldBarContainer.SetActive(true);
+
+            float ShieldPrecentage = (float)GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().Shield / GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().MaxShield;
+
+            ShieldBar.fillAmount=ShieldPrecentage;
+        }
     }
 
     //Sets variables to initalize fill speed
@@ -541,7 +570,9 @@ public class PlayerUIManager : MonoBehaviour
     /// </summary>
     public void StartingPools()
     {
-        healthBar.maxValue = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().MaxHealth;
+        //healthBar.maxValue = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().MaxHealth;
+        UpdateHealth();
+        UpdateShield();
     }
     #endregion
 

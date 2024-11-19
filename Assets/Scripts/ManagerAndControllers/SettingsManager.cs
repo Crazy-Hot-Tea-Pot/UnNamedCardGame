@@ -1,34 +1,49 @@
 ﻿using UnityEngine;
+using UnityEngine.Rendering;
 
 /// <summary>
 /// The whole game setting will be stored here to access across the game.
 /// </summary>
 public class SettingsManager : MonoBehaviour
 {
+    [Header("Settings")]
+    [SerializeField]
     private CameraSettings cameraSettings;
 
+    [SerializeField]
     private SoundSettings soundSettings;
 
+    [SerializeField]
     private DataSettings dataSettings;
+
+    [SerializeField]
+    private VideoSettings videoSettings;
 
     public static SettingsManager Instance {
         get; 
         private set; }
-
-    //[Header("Settings")]
+    
     public CameraSettings CameraSettings
     {
         get
         {
             return cameraSettings;
         }
-        //private set;
+        private set
+        {
+            cameraSettings = value;
+        }
     }
+
     public SoundSettings SoundSettings
     {
         get
         {
             return soundSettings;
+        }
+        set
+        {
+            soundSettings = value;
         }
     }
 
@@ -37,6 +52,21 @@ public class SettingsManager : MonoBehaviour
         get
         {
             return dataSettings;
+        }
+        set
+        {
+            dataSettings = value;
+        }
+    }
+    public VideoSettings VideoSettings
+    {
+        get
+        {
+            return videoSettings;
+        }
+        private set
+        {
+            videoSettings = value;
         }
     }
 

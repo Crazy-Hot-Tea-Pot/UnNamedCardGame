@@ -33,7 +33,8 @@ public class PlayerController : MonoBehaviour
     
     private int health;
     private int maxHealth;    
-    private int shield;    
+    private int shield;
+    private int maxShield=0;
     private int energy;
     //Just hard coded this since it never changes.
     private int maxEnergy=50;    
@@ -129,6 +130,26 @@ public class PlayerController : MonoBehaviour
         private set
         {
             shield = value;
+
+            if (shield > maxShield)
+                maxShield = value;
+
+            if (shield <= 0)
+            {
+                shield = 0;
+                maxShield = 0;
+            }
+        }
+    }
+    public int MaxShield
+    {
+        get
+        {
+            return maxShield;
+        }
+        set
+        {
+            maxShield = value;
         }
     }
 
