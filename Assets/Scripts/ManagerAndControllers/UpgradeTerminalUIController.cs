@@ -294,7 +294,7 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
     }
 
     /// <summary>
-    /// Populate the panel with chips first and then,
+    /// Populate the panel with Chips first and then,
     /// Bring up window to select Chip.
     /// </summary>
     private IEnumerator BringUpChipSelector()

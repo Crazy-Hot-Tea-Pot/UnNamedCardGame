@@ -4,7 +4,7 @@
 public class TrinketScrapVarient : Ability
 {
     /// <summary>
-    /// How much scrap will be gained
+    /// How much Scraps will be gained
     /// </summary>
     public int gainedScrap;
 
@@ -45,7 +45,7 @@ public class TrinketScrapVarient : Ability
                     Debug.Log(GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().Scrap + "At start");
                     //Costs the player energy
                     GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().PlayedAbility(energyCost);
-                    //Give the player scrap
+                    //Give the player Scraps
                     GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().GainScrap(gainedScrap);
                     //Stop waiting
                     isWaiting = false;

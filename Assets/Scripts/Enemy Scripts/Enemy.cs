@@ -149,7 +149,7 @@ public class Enemy : MonoBehaviour
         {
             currentHp = value;
 
-            //Update UI for enemy health
+            //Update UI for enemy Health
             UpdateEnemyHealthBar();
 
             if (currentHp <= 0)
@@ -518,14 +518,14 @@ public class Enemy : MonoBehaviour
     }
 
     /// <summary>
-    /// This method allows us to change the UI in world enemy health bar based on the enemies health
+    /// This method allows us to change the UI in world enemy Health bar based on the enemies Health
     /// </summary>
     protected virtual void UpdateEnemyHealthBar()
     {
         //Rotate the ui to match camera angle
         //enemyCanvas.transform.rotation = new Quaternion(enemyCanvas.transform.position.x, playerCamera.transform.rotation.y, enemyCanvas.transform.position.z, 0);
 
-        // Calculate health as a percentage
+        // Calculate Health as a percentage
         float healthPercentage = (float)currentHp / maxHP;
 
         //Set the bars value

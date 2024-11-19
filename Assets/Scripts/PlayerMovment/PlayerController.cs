@@ -35,7 +35,8 @@ public class PlayerController : MonoBehaviour
     private int maxHealth;    
     private int shield;    
     private int energy;
-    private int maxEnergy;    
+    //Just hard coded this since it never changes.
+    private int maxEnergy=50;    
     private int scrap;
 
     [Header("Player Speed")]
@@ -156,7 +157,7 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// Returns max health
+    /// Returns max Health
     /// </summary>
     public int MaxHealth
     {
@@ -460,21 +461,10 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     void Initialize()
     {
-        //Load player data is not new game.
-        if (DataManager.Instance.GameData != null)
-        {
-            health = DataManager.Instance.GameData.health;
-            MaxHealth = DataManager.Instance.GameData.maxHealth;
-            Scrap = DataManager.Instance.GameData.scrap;
-        }
-        else // Do Default player data
-        {
-            maxHealth = 50;
-            Health = maxHealth;
-            Energy = 50;
-            maxEnergy = 50;
-            Scrap = 150;
-        }
+        health = DataManager.Instance.CurrentGameData.Health;
+        MaxHealth = DataManager.Instance.CurrentGameData.MaxHealth;
+        Scrap = DataManager.Instance.CurrentGameData.Scraps;
+        Energy = MaxEnergy;
     }
 
     /// <summary>
@@ -596,7 +586,7 @@ public class PlayerController : MonoBehaviour
         Health = maxHealth;
     }
     /// <summary>
-    /// Changes the max health value
+    /// Changes the max Health value
     /// </summary>
     /// <param name="amount"></param>
     public void UpgradeMaxHealth(int amount)
@@ -800,7 +790,7 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// Adds scrap
+    /// Adds Scraps
     /// </summary>
     /// <param name="amount"></param>
     public void GainScrap(int amount)
@@ -809,9 +799,9 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// Returns the scrap stolen or whats left.
+    /// Returns the Scraps stolen or whats left.
     /// </summary>
-    /// <param name="amount">the amount of scrap want to steal</param>
+    /// <param name="amount">the amount of Scraps want to steal</param>
     /// <returns></returns>
     public int TakeScrap(int amount)
     {
@@ -903,13 +893,13 @@ public class PlayerController : MonoBehaviour
     {
         Debug.Log("Player died, game over.");
 
-        //Reset health, energy and other stuff for now.
+        //Reset Health, energy and other stuff for now.
         Health = maxHealth;
         Energy = maxEnergy;
         GainScrap(200);
 
         // for now just restart the scene.
-        GameManager.Instance.RequestScene(GameManager.Scenes.Level1);
+        GameManager.Instance.RequestScene(Levels.Level1);
     }
 
     #region rangesForAbilites

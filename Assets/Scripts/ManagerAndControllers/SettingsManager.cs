@@ -5,10 +5,11 @@
 /// </summary>
 public class SettingsManager : MonoBehaviour
 {
-    [SerializeField]
     private CameraSettings cameraSettings;
 
     private SoundSettings soundSettings;
+
+    private DataSettings dataSettings;
 
     public static SettingsManager Instance {
         get; 
@@ -28,6 +29,14 @@ public class SettingsManager : MonoBehaviour
         get
         {
             return soundSettings;
+        }
+    }
+
+    public DataSettings DataSettings
+    {
+        get
+        {
+            return dataSettings;
         }
     }
 
@@ -52,7 +61,7 @@ public class SettingsManager : MonoBehaviour
     {
         cameraSettings = new CameraSettings();
         soundSettings = new SoundSettings();
-        // Initialize other settings like AudioSettings, GameplaySettings, etc.
+        dataSettings = new DataSettings();
     }
 
     /// <summary>

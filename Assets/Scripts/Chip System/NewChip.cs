@@ -5,6 +5,8 @@ using UnityEngine.UI;
 [CreateAssetMenu(fileName = "New Chip", menuName = "Chip System/New Chip")]
 public class NewChip : ScriptableObject
 {
+    
+
     protected bool isUpgraded = false;
     protected bool isActive;   
     protected int disableCounter;
@@ -124,4 +126,5 @@ public class NewChip : ScriptableObject
             }
         }
     }
+
 }

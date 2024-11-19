@@ -184,7 +184,7 @@ public class UpgradeController : MonoBehaviour
                         List<GameData> saves = DataManager.Instance.GetAllSaves();
                         foreach (var save in saves)
                         {
-                            Debug.Log($"Save Name: {save.saveName} | Time: {save.timeStamp}");
+                            Debug.Log($"Save Name: {save.SaveName} | Time: {save.TimeStamp}");
                         }
                         //TODO display this in a table or some way.
                         tempDataText = string.Format("");
@@ -283,7 +283,7 @@ public class UpgradeController : MonoBehaviour
     }
 
     /// <summary>
-    /// Try to upgrade player health.
+    /// Try to upgrade player Health.
     /// </summary>
     public void AttemptToUpgradeHealth()
     {
@@ -294,7 +294,7 @@ public class UpgradeController : MonoBehaviour
             // made this bank for later.
             var Bank = tempPlayer.TakeScrap(150);
 
-            //Updade max health
+            //Updade max Health
             tempPlayer.UpgradeMaxHealth(10);
 
             //heal by same amount
@@ -317,7 +317,7 @@ public class UpgradeController : MonoBehaviour
     /// </summary>
     public void AttemptToUpgradeChip()
     {
-        //Added scrap for testing.
+        //Added Scraps for testing.
         GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().GainScrap(500);
 
         if (GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().Scrap >= SelectedChip.costToUpgrade)

@@ -10,7 +10,7 @@ public class Consumable : Equipment
     /// </summary>
     public GameObject UIObject;
     /// <summary>
-    /// How much health this consumable restores
+    /// How much Health this consumable restores
     /// </summary>
     public int restoreHP;
     /// <summary>
@@ -27,7 +27,7 @@ public class Consumable : Equipment
         //Does the method base first
         base.ActivateEquipmnet();
 
-        //Find the player controller and in order add shield, add health and add energy based on our variables above
+        //Find the player controller and in order add shield, add Health and add energy based on our variables above
         GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().ApplyShield(restoreShield);
         GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().Heal(restoreHP);
         GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().RecoverEnergy(restoreEnergy);

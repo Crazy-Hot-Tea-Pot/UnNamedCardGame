@@ -4,53 +4,36 @@ using System.Collections.Generic;
 using System.IO;
 using Unity.VisualScripting;
 using UnityEngine;
-
-[System.Serializable]
-public class GameData
-{
-    //Name of Save
-    public string saveName="Default";
-    //Level the player is on
-    public string Level="Title";
-    //Player Health
-    public int health=50;
-    //Player MaxHealth;
-    public int maxHealth=50;
-    //PlayerScrap
-    public int scrap=200;
-    // Save chips by their names
-    public List<string> chipNames = new List<string>();
-    // Save Abilities by their name
-    public List<string> abilityNames = new List<string>();
-    //time of save
-    public string timeStamp=DateTime.Now.ToString();
-}
+using static GameData;
 public class DataManager : MonoBehaviour
-{
-
+{    
     public static DataManager Instance
     {
         get;
         private set;
     }
 
-    public GameData GameData
+    /// <summary>
+    /// currentGameData for current game session.
+    /// </summary>
+    public GameData CurrentGameData
     {
         get
         {
-            return gameData;
+            return currentGameData;
         }
         set
         {
-            gameData = value;
+            currentGameData = value;
         }
     }
 
+    [SerializeField]
     private string saveDirectory;
 
 
     [SerializeField]
-    private GameData gameData;
+    private GameData currentGameData;
 
 
 
@@ -65,7 +48,7 @@ public class DataManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
 
             //Save Directory
-            saveDirectory = Path.Combine(Application.persistentDataPath, "PlayerSaveData");
+            saveDirectory = Path.Combine(Application.dataPath, "GameData");
 
             if (!Directory.Exists(saveDirectory))
             {
@@ -77,39 +60,57 @@ public class DataManager : MonoBehaviour
             Destroy(gameObject);  // Destroy duplicates
         }    
         
-        gameData = new GameData();
+        CurrentGameData = new GameData();
     }
     /// <summary>
-    /// Saves all Data
+    /// Saves all CurrentGameData.
+    /// Make sure to update the CurrentGameData first.
     /// </summary>
     public void Save(string saveName)
     {
-        if (GameManager.Instance.InCombat)
-        {
-            Debug.LogWarning("Can not save while in combat");
-            return;
-        }
-        else
-        {
-
-            string saveFilePath = Path.Combine(saveDirectory, $"{saveName}.json");
-            gameData.saveName = saveName;
-            gameData.timeStamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            
-            string json = JsonUtility.ToJson(gameData, true);
-            File.WriteAllText(saveFilePath, json);
-            Debug.Log($"Game saved successfully: {saveFilePath}");
-        }
-    }
-    public void Save(string saveName, GameData gameData)
-    {
         string saveFilePath = Path.Combine(saveDirectory, $"{saveName}.json");
-        gameData.saveName = saveName;
-        gameData.timeStamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-        string json = JsonUtility.ToJson(gameData, true);
+
+        CurrentGameData.SaveName = saveName;
+        CurrentGameData.TimeStamp = DateTime.Now;     
+
+        string json = JsonUtility.ToJson(CurrentGameData, true);
         File.WriteAllText(saveFilePath, json);
+
         Debug.Log($"Game saved successfully: {saveFilePath}");
+
     }
+
+    /// <summary>
+    /// AutoSave.
+    /// Get all current auto-saves.
+    /// Filter to only auto-saves.
+    /// Determine the next auto-save number.
+    /// Construct the save name.
+    /// </summary>
+    public void AutoSave()
+    {        
+        List<GameData> allSaves = GetAllSaves();
+        
+        List<GameData> autoSaves = allSaves.FindAll(save => save.SaveName.StartsWith("AutoSave"));
+
+        // Handle the auto-save limit
+        HandleAutoSaveLimit(autoSaves);
+
+        int nextAutoSaveNumber = autoSaves.Count + 1;
+        
+        string saveName = $"AutoSave{nextAutoSaveNumber}";
+
+        // Save the data
+        Save(saveName);
+
+    }
+
+    /// <summary>
+    /// Load Player stats
+    /// Re-link Chips by loading from Resources
+    /// Re-link Abilities(havn't been done yet)
+    /// </summary>
+    /// <param name="saveName"></param>
     public void LoadData(string saveName)
     {
         string saveFilePath = Path.Combine(saveDirectory, $"{saveName}.json");
@@ -124,24 +125,30 @@ public class DataManager : MonoBehaviour
         GameData saveData = JsonUtility.FromJson<GameData>(json);
 
         //Load player stats
-        GameData.health = saveData.health;
-        GameData.maxHealth = saveData.maxHealth;
-        GameData.scrap = saveData.scrap;
+        CurrentGameData.Health = saveData.Health;
+        CurrentGameData.MaxHealth = saveData.MaxHealth;
+        CurrentGameData.Scraps = saveData.Scraps;
 
-        // Load chips
+        // Reconstruct the player's deck
         GameManager.Instance.playerDeck.Clear();
-        foreach (var chipName in saveData.chipNames)
+        foreach (var chipSave in saveData.Chips)
         {
-            NewChip chip = Resources.Load<NewChip>($"Scriptables/Chips/{chipName}");
-            if (chip != null)
+            NewChip baseChip = Resources.Load<NewChip>($"Scriptables/Chips/{chipSave.Name}");
+            if (baseChip != null)
             {
-                GameData.chipNames.Add(chipName);
-                GameManager.Instance.playerDeck.Add(chip);
-                Debug.Log($"Loaded chip: {chip.chipName}");
+                // Create a copy and apply the saved state
+                NewChip loadedChip = Instantiate(baseChip);
+                if(loadedChip.canBeUpgraded)
+                    loadedChip.IsUpgraded = chipSave.IsUpgraded;
+                else
+                    loadedChip.IsUpgraded = false;
+
+                loadedChip.DisableCounter = chipSave.DisableCounter;
+                GameManager.Instance.playerDeck.Add(loadedChip);
             }
             else
             {
-                Debug.LogWarning($"Chip {chipName} not found in Resources/Scriptables/Chips.");
+                Debug.LogWarning($"Chip {chipSave.Name} not found in Resources.");
             }
         }
 
@@ -187,5 +194,31 @@ public class DataManager : MonoBehaviour
         }
 
         return saves;
+    }
+
+    /// <summary>
+    /// Delete any old AutoSaves
+    /// </summary>
+    private void HandleAutoSaveLimit(List<GameData> autoSaves)
+    {
+        // Sort auto-saves by timestamp (oldest first)
+        autoSaves.Sort((a, b) => a.TimeStamp.CompareTo(b.TimeStamp));
+
+        // Check if the number of auto-saves exceeds the limit
+        while (autoSaves.Count >= SettingsManager.Instance.DataSettings.MaxAutoSave)
+        {
+            // Delete the oldest save
+            GameData oldestSave = autoSaves[0];
+            string oldestFilePath = Path.Combine(saveDirectory, $"{oldestSave.SaveName}.json");
+
+            if (File.Exists(oldestFilePath))
+            {
+                File.Delete(oldestFilePath);
+                Debug.Log($"Deleted old auto-save: {oldestSave.SaveName}");
+            }
+
+            // Remove the oldest save from the list
+            autoSaves.RemoveAt(0);
+        }
     }
 }

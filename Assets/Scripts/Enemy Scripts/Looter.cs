@@ -7,7 +7,7 @@ public class Looter : Enemy
     [Header("Custom for Enemy type")]
     private int stolenScrap = 0;
     /// <summary>
-    /// To keep track of stolen scrap
+    /// To keep track of stolen Scraps
     /// </summary>
     public int StolenScrap
     {
@@ -105,7 +105,7 @@ public class Looter : Enemy
         Destroy( this.gameObject );
     }
     /// <summary>
-    /// Return all stolen scrap upon killing
+    /// Return all stolen Scraps upon killing
     /// </summary>
     public override void Die()
     {        
@@ -116,8 +116,8 @@ public class Looter : Enemy
     private void ReturnStolenScrap()
     {
         Debug.Log($"{EnemyName} returns {StolenScrap} Scrap upon defeat.");
-        // Logic to add stolen scrap back to the player's resources or similar
-        StolenScrap = 0;  // Reset stolen scrap after returning
+        // Logic to add stolen Scraps back to the player's resources or similar
+        StolenScrap = 0;  // Reset stolen Scraps after returning
     }
 
     public override void TakeDamage(int damage)

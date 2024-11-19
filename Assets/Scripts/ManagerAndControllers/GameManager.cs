@@ -2,8 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using static GameData;
 
 // Extension method for recursive search
 public static class TransformExtensions
@@ -25,7 +27,6 @@ public static class TransformExtensions
 }
 public class GameManager : MonoBehaviour
 {
-
     public PlayerUIManager uiManager;
 
 
@@ -39,9 +40,9 @@ public class GameManager : MonoBehaviour
     public int drawsPerTurn;
 
     public List<NewChip> playerHand;
-    public List<NewChip> playerDeck;
+    public List<NewChip> playerDeck = new List<NewChip>();
     public List<NewChip> usedChips;
-    //will get the chips from resources
+    //will get the Chips from resources
     public List<NewChip> NewChips;
     // Default newChipInPlayerHand
     public GameObject ChipPrefab;
@@ -86,24 +87,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public enum Scenes
-    {
-        Title,        
-        Level1,
-        Level2,
-        Level3,
-        Level4,
-        Level5,
-        Level6,
-        Workshop,
-        Loading,
-        Settings
-    }
-    private Scenes targetScene;
+    private Levels targetScene;
     /// <summary>
     /// Scene to load.
     /// </summary>
-    public Scenes TargetScene
+    public Levels TargetScene
     {
         get
         {
@@ -114,8 +102,17 @@ public class GameManager : MonoBehaviour
             targetScene = value;
         }
     }
-    public Scenes currentScene;
-    public Scenes previousScene;
+
+    public Levels CurrentLevel
+    {
+        get;
+        private set;
+    }
+    public Levels PreviousScene
+    {
+        get;
+        private set;
+    }
 
     void Awake()
     {
@@ -124,6 +121,9 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);  // Keep this object between scenes
+
+            // Subscribe to the sceneLoaded event
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
         else
         {
@@ -142,12 +142,6 @@ public class GameManager : MonoBehaviour
 
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     private void Initialize()
     {
         // Load all NewChip ScriptableObjects from "Scriptables/Cards/Attack"
@@ -156,7 +150,7 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Adds chips to player deck.
+    /// Adds Chips to player deck.
     /// </summary>
     /// <param name="newChipToAdd"></param>
     public void AddChipToDeck(NewChip newChipToAdd)
@@ -305,7 +299,7 @@ public class GameManager : MonoBehaviour
         //Disables combat
         GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().InCombat = false;
 
-        // Add unused chips to playerdeck.
+        // Add unused Chips to playerdeck.
         foreach(var usedChips in usedChips)
         {
             playerDeck.Add(usedChips);
@@ -384,7 +378,7 @@ public class GameManager : MonoBehaviour
     /// <param name="chip"></param>
     public void KillChip(GameObject chip)
     {
-        //Add the used chips to the list of used chips so they aren't deleted and go back to the deck and of game
+        //Add the used Chips to the list of used Chips so they aren't deleted and go back to the deck and of game
         usedChips.Add(chip.GetComponent<Chip>().newChip);
         //Remove chip from player hand
         playerHand.Remove(chip.GetComponent<Chip>().newChip);
@@ -393,34 +387,95 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Initate change level.
     /// </summary>
-    /// <param name="scene"></param>
-    public void RequestScene(Scenes scene)
+    /// <param name="level"></param>
+    public void RequestScene(Levels level)
     {
-        //Get Player
-        PlayerController player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
-
-        //Send Data to DataManager
-        DataManager.Instance.GameData.health = player.Health;
-        DataManager.Instance.GameData.maxHealth = player.MaxHealth;
-        DataManager.Instance.GameData.scrap = player.Scrap;
-
-        //clear chipNames
-        DataManager.Instance.GameData.chipNames.Clear();
-
-        //Send Chips to DataManager
-        foreach (var chip in playerDeck)
+        switch (CurrentLevel)
         {
-            // Save chip names
-            DataManager.Instance.GameData.chipNames.Add(chip.chipName);
+            case Levels.Title:
+                break;
+            default:
+                DataManager.Instance.CurrentGameData.Level = CurrentLevel;
+                //Get Player
+                PlayerController player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+
+                //Send Data to DataManager
+                DataManager.Instance.CurrentGameData.Health = player.Health;
+                DataManager.Instance.CurrentGameData.MaxHealth = player.MaxHealth;
+                DataManager.Instance.CurrentGameData.Scraps = player.Scrap;
+
+                //clear chipNames
+                DataManager.Instance.CurrentGameData.Chips.Clear();
+
+                //Save Chips
+                foreach (var chip in playerDeck)
+                {
+                    ChipData chipSave = new ChipData
+                    {
+                        Name = chip.chipName,
+                        IsUpgraded = chip.IsUpgraded,
+                        DisableCounter = chip.DisableCounter
+                    };
+                    DataManager.Instance.CurrentGameData.Chips.Add(chipSave);
+                }
+
+                //TODO  Abilities
+
+                break;
         }
 
-        //Send Abilities to DataManager
-        //TODO
+        //Do a Auto Save
+        DataManager.Instance.AutoSave();
 
-        //Save
-        DataManager.Instance.Save("AutoSave");
+        TargetScene = level;
+        SceneManager.LoadScene(Levels.Loading.ToString());        
+    }
 
-        TargetScene = scene;
-        SceneManager.LoadScene(Scenes.Loading.ToString());        
+    /// <summary>
+    /// Load Data after level loads
+    /// </summary>
+    /// <param name="scene"></param>
+    /// <param name="mode"></param>
+    private void OnSceneLoaded(Scene scene,LoadSceneMode mode)
+    {
+        // Update the CurrentLevel based on the loaded level
+        if (System.Enum.TryParse(scene.name, out Levels loadedScene))
+        {
+            // Track the previous level
+            PreviousScene = CurrentLevel;
+
+            CurrentLevel = loadedScene;
+
+            switch (CurrentLevel)
+            {
+
+                default:
+                    playerDeck.Clear();
+
+                    foreach (var chipSave in DataManager.Instance.CurrentGameData.Chips)
+                    {
+                        NewChip baseChip = Resources.Load<NewChip>($"Scriptables/Chips/{chipSave.Name}");
+                        if (baseChip != null)
+                        {
+                            // Create a copy of the base chip and apply saved state
+                            NewChip loadedChip = Instantiate(baseChip);
+
+                            if (loadedChip.canBeUpgraded)
+                                loadedChip.IsUpgraded = chipSave.IsUpgraded;
+                            else
+                                loadedChip.IsUpgraded = false;
+
+                            loadedChip.DisableCounter = chipSave.DisableCounter;
+                            playerDeck.Add(loadedChip);
+                        }
+                        else
+                        {
+                            Debug.LogWarning($"Chip {chipSave.Name} not found in Resources.");
+                        }
+                    }
+
+                    break;
+            }
+        }
     }
 }

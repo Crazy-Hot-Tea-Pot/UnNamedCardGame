@@ -8,7 +8,7 @@ public class SceneChange : MonoBehaviour
     /// <summary>
     /// Stores the level name as a string
     /// </summary>
-    public GameManager.Scenes nextLevel;
+    public Levels nextLevel;
 
 
     private void OnTriggerEnter(Collider other)

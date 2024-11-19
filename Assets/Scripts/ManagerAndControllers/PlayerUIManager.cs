@@ -9,7 +9,7 @@ using UnityEngine.UI;
 public class PlayerUIManager : MonoBehaviour
 {
     /// <summary>
-    /// Holds the ui for player screen like health bars
+    /// Holds the ui for player screen like Health bars
     /// </summary>
     public GameObject uiPlayerCanvas;
 
@@ -466,11 +466,11 @@ public class PlayerUIManager : MonoBehaviour
     #region Resource Pool Methods
 
     /// <summary>
-    /// Updates the UI for player health
+    /// Updates the UI for player Health
     /// </summary>
     public void UpdateHealth()
     {
-        //Change value of health bar
+        //Change value of Health bar
         healthBar.maxValue = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().MaxHealth;
         healthBar.value = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().Health;
     }
