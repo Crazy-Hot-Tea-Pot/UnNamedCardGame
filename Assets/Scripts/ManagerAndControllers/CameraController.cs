@@ -170,8 +170,8 @@ public class CameraController : MonoBehaviour
         };
 
         playerInputActions.CameraControls.RotateCamera.performed += ctx => SwitchCamera(CameraState.Rotation);
-        playerInputActions.CameraControls.FreeCam.performed += ctx => SwitchCamera(CameraState.Free);       
-        playerInputActions.CameraControls.ResetCamera.performed += ctx => SwitchCamera(CameraState.Default);
+        playerInputActions.CameraControls.FreeCam.performed += ctx => SwitchCamera(CameraState.Free);
+        playerInputActions.CameraControls.ResetCamera.performed += OnResetCamera;
 
         screenWidth = Screen.width;
         screenHeight = Screen.height;
@@ -275,6 +275,23 @@ public class CameraController : MonoBehaviour
     }
 
     /// <summary>
+    /// Added this as we use R to reset camera and it could mess up some stuff.
+    /// </summary>
+    /// <param name="ctx"></param>
+    private void OnResetCamera(InputAction.CallbackContext ctx)
+    {
+        // Prevent the Reset action if in FirstPerson mode
+        if (CurrentCamera == CameraState.FirstPerson)
+        {
+            Debug.Log("Reset Camera action ignored in FirstPerson mode.");
+            return;
+        }
+
+        // Switch to Default camera if not in FirstPerson
+        SwitchCamera(CameraState.Default);
+    }
+
+    /// <summary>
     /// Switch the active camera based on the enum state
     /// Reset all cameras to lower priority
     /// Activate the desired camera based on the state
@@ -318,6 +335,8 @@ public class CameraController : MonoBehaviour
 
         playerInputActions.CameraControls.Disable();
         playerInputActions.CameraControls.MoveCamera.Disable();
+
+        playerInputActions.CameraControls.ResetCamera.performed -= OnResetCamera;
 
     }
 }

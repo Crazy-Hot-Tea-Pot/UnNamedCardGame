@@ -82,29 +82,49 @@ public class DataManager : MonoBehaviour
     /// <summary>
     /// AutoSave.
     /// Get all current auto-saves.
-    /// Filter to only auto-saves.
-    /// Determine the next auto-save number.
-    /// Construct the save name.
+    /// Sort auto-saves by number (not timestamp).
+    /// Find the next auto-save number (fill gaps or cycle).
+    /// Get all used auto-save numbers.
+    /// Find the lowest unused number, or cycle to the oldest save.
+    /// Delete the oldest save to maintain the limit.
+    /// then finally save the data.
     /// </summary>
     public void AutoSave()
     {
         List<GameData> allSaves = GetAllSaves();
         List<GameData> autoSaves = allSaves.FindAll(save => save.SaveName.StartsWith("AutoSave"));
 
-        // Handle the auto-save limit
-        HandleAutoSaveLimit(autoSaves);
+        autoSaves.Sort((a, b) =>
+            int.Parse(a.SaveName.Replace("AutoSave", "")) - int.Parse(b.SaveName.Replace("AutoSave", ""))
+        );
 
-        // Get the next auto-save number after sorting
-        int nextAutoSaveNumber = autoSaves.Count > 0
-            ? autoSaves.Max(save => int.Parse(save.SaveName.Replace("AutoSave", ""))) + 1
-            : 1;
+        int maxAutoSaves = SettingsManager.Instance.DataSettings.MaxAutoSave;
+
+        // Start with 1 by default
+        int nextAutoSaveNumber = 1;
+        if (autoSaves.Count > 0)
+        {
+            var usedNumbers = autoSaves.Select(save => int.Parse(save.SaveName.Replace("AutoSave", ""))).ToList();
+
+            if (usedNumbers.Count < maxAutoSaves)
+            {
+                nextAutoSaveNumber = Enumerable.Range(1, maxAutoSaves).Except(usedNumbers).First();
+            }
+            else
+            {
+                nextAutoSaveNumber = int.Parse(autoSaves[0].SaveName.Replace("AutoSave", ""));
+                DeleteSave(autoSaves[0].SaveName);
+                autoSaves.RemoveAt(0);
+            }
+        }
 
         string saveName = $"AutoSave{nextAutoSaveNumber}";
 
         // Save the data
         Save(saveName);
-
     }
+
+
 
     /// <summary>
     /// Load Player stats
@@ -213,37 +233,10 @@ public class DataManager : MonoBehaviour
         if (File.Exists(savePath))
         {
             File.Delete(savePath);
-            
             Debug.Log($"Deleted save: {saveName}");
-
             return true;
         }
+        Debug.LogWarning($"Attempted to delete a save that does not exist: {saveName}");
         return false;
-    }
-
-    /// <summary>
-    /// Delete any old AutoSaves
-    /// </summary>
-    private void HandleAutoSaveLimit(List<GameData> autoSaves)
-    {
-        // Sort auto-saves by timestamp (oldest first)
-        autoSaves.Sort((a, b) => a.TimeStamp.CompareTo(b.TimeStamp));
-
-        // Check if the number of auto-saves exceeds the limit
-        while (autoSaves.Count >= SettingsManager.Instance.DataSettings.MaxAutoSave)
-        {
-            // Delete the oldest save
-            GameData oldestSave = autoSaves[0];
-            string oldestFilePath = Path.Combine(saveDirectory, $"{oldestSave.SaveName}.json");
-
-            if (File.Exists(oldestFilePath))
-            {
-                File.Delete(oldestFilePath);
-                Debug.Log($"Deleted old auto-save: {oldestSave.SaveName}");
-            }
-
-            // Remove the oldest save from the list
-            autoSaves.RemoveAt(0);
-        }
     }
 }

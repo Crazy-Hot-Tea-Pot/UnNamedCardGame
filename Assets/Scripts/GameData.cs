@@ -21,6 +21,8 @@ public class GameData
     }
     //Name of Save
     public string SaveName;
+    //time of save
+    public DateTime TimeStamp;
     //Level the player is on
     public Levels Level;
     //Player Health
@@ -34,8 +36,6 @@ public class GameData
     // Save Abilities
     public List<AbilityData> Abilities = new List<AbilityData>();
     public string TimeStampString;
-    //time of save
-    public DateTime TimeStamp;
 
     //Default Constructor
     public GameData()
@@ -47,7 +47,7 @@ public class GameData
     // Synchronize TimeStamp with its string representation
     public void UpdateTimeStamp()
     {
-        TimeStampString = TimeStamp.ToString("o"); // Use "o" for ISO 8601 format
+        TimeStampString = TimeStamp.ToString("yyyy-MM-dd HH:mm");
     }
 
     public void ParseTimeStamp()

@@ -57,8 +57,7 @@ public class UpgradeController : MonoBehaviour
     {
         Title,
         View,
-        Save,        
-        Load
+        Save
     }
 
     //Current Data mode the terminal is at.
@@ -169,9 +168,6 @@ public class UpgradeController : MonoBehaviour
                 break;
             case Screens.Data:
                 SetActiveScreen(DataScreen);
-                //TODO
-                //If save then ask for name of save before saving game.
-                //If load then load data and show all of them
                 string tempDataText = string.Format("Data");
 
                 switch (currentDataMode)
@@ -189,17 +185,23 @@ public class UpgradeController : MonoBehaviour
                         StartCoroutine(RevealText(DataScreen, false, 0.01f, false, 0, 0, false, 0));
                         break;
                     case UpgradeController.DataMode.View:
-                        tempDataText = string.Format("...Retrieving Data...");
+                        tempDataText = string.Format("<#80ff80>...Pinging Chip Tech Servers...</color>\n" +
+                            "Sending Data Request\n" +
+                            "...Retrieving Data...");
                         
                         dataScreenText.SetText(tempDataText);
 
                         StartCoroutine(RevealText(DataScreen, true, 0.01f, true, 0.1f, 5, false, 0));
 
                         break;
-                    case UpgradeController.DataMode.Save:                        
-                        break;
-                    case UpgradeController.DataMode.Load:                        
-                        break;
+                    case UpgradeController.DataMode.Save:
+                        tempDataText = string.Format("<#80ff80>...Pinging Chip Tech Servers...</color>\n" +
+                            "Preparing to send copy of memory Ciruits.");
+
+                        dataScreenText.SetText(tempDataText);
+
+                        StartCoroutine(RevealText(DataScreen, true, 0.01f, true, 0.1f, 5, false, 0));
+                        break;                    
                 }                
 
                 currentScreen = screen;
@@ -290,13 +292,30 @@ public class UpgradeController : MonoBehaviour
 
         GameManager.Instance.RequestScene(DataManager.Instance.CurrentGameData.Level);
     }
+    /// <summary>
+    /// Call DataManager to create save.
+    /// </summary>
+    public void AttemptToSave()
+    {
+        try
+        {
+            DataManager.Instance.Save(UIController.UserInput.GetComponent<TMP_InputField>().text);
+
+            //For now lets exit the terminal all together
+            SwitchToScreen(Screens.Exit);
+        }
+        catch
+        {
+            DisplayError("Failed to Upload Copy");
+        }
+    }
 
     public void AttemptToDeleteSave(string saveName)
     {
         if (DataManager.Instance.DeleteSave(saveName))
             UIController.FillData();
         else
-            DisplayError("Failed to Delete Save");
+            DisplayError("Failed to Delete Copy.");
     }
 
     /// <summary>
@@ -368,22 +387,6 @@ public class UpgradeController : MonoBehaviour
         OnErrorOccurred?.Invoke(message);
 
         SwitchToScreen(Screens.Error);
-    }
-
-    /// <summary>
-    /// Call DataManager to create save.
-    /// </summary>
-    /// <param name="SaveName">string name of save</param>
-    public void CreateSave(string SaveName)
-    {
-        try
-        {
-            DataManager.Instance.Save(SaveName);
-        }
-        catch
-        {
-            DisplayError("Failed to create backup.");
-        }
     }
 
     private void OnTriggerEnter(Collider other)

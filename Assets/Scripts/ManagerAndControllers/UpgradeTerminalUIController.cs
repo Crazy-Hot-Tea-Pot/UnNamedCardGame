@@ -32,9 +32,15 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
     [Header("Data Screen")]
     public GameObject DataPrefab;
     public GameObject DataPanel;
+    public GameObject DataConsolePanel;
     public TMP_Text DataConsole;
     public GameObject ViewDataPanel;
     public GameObject DataHolder;
+    public GameObject SaveDataPanel;
+    public TMP_Text SaveDataConsole;
+    public GameObject UserInput;
+    public GameObject UploadButton;
+    public GameObject ExitButton;
     
     public Vector2 startPosition;    
     public Vector2 endPosition;
@@ -104,13 +110,11 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
         {
             GameObject UIData = Instantiate(DataPrefab, DataHolder.transform);
 
-            UIData.transform.Find("Name").GetComponent<TMP_Text>().SetText(save.SaveName);
-            UIData.transform.Find("Level").GetComponent<TMP_Text>().SetText(save.Level.ToString());
-            UIData.transform.Find("Time").GetComponent<TMP_Text>().SetText(save.TimeStamp.ToString());
-
-            // Assign button actions
-            UIData.transform.Find("LoadButton").GetComponent<Button>().onClick.AddListener(() => controller.LoadGame(save.SaveName));
-            UIData.transform.Find("DeleteButton").GetComponent<Button>().onClick.AddListener(() => controller.AttemptToDeleteSave(save.SaveName));
+            UIData.GetComponent<DataPrefabController>().UpgradeController = controller;
+            UIData.GetComponent<DataPrefabController>().Name = save.SaveName;
+            UIData.GetComponent<DataPrefabController>().Level=save.Level.ToString();
+            UIData.GetComponent<DataPrefabController>().Time = save.TimeStampString;
+            
         }
     }
     
@@ -150,12 +154,7 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
                 controller.currentDataMode = UpgradeController.DataMode.Save;
 
                 controller.SwitchToScreen(UpgradeController.Screens.Data);
-                break;
-            case "Load":
-                controller.currentDataMode = UpgradeController.DataMode.Load;
-
-                controller.SwitchToScreen(UpgradeController.Screens.Data);
-                break;
+                break;            
             case "Back":
                 controller.SwitchToScreen(UpgradeController.Screens.Intro);
                 break;
@@ -163,8 +162,10 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
             case "Exit1":
             case "Exit2":
                 controller.SwitchToScreen(UpgradeController.Screens.Exit);
-
-            break;
+                ExitButton.GetComponent<Button>().onClick.RemoveAllListeners();
+                UserInput.SetActive(false);
+                ExitButton.SetActive(false);
+                break;
             default:
 
             break;
@@ -273,6 +274,8 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
                             "<color=#0000FF><link=\"Save\"><u>Create new backup</u></link></color>\n\n" +
                             "<color=#0000FF><link=\"Exit\"><u>Exit</u></link></color>");
 
+                        DataConsolePanel.SetActive(true);
+                        SaveDataPanel.SetActive(false);
                         DataConsole.SetText(tempDataText);
 
                         StartCoroutine(RevealText(DataConsole, false, 0.01f, false, 0, 0, false, 0));
@@ -280,19 +283,41 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
                     case UpgradeController.DataMode.View:
                         tempDataText = string.Format("...Retrieving Data...");
 
+                        DataConsolePanel.SetActive(true);
+                        SaveDataPanel.SetActive(false);
+
                         DataConsole.SetText(tempDataText);
 
                         StartCoroutine(RevealText(DataConsole, true, 0.01f, true, 0.1f, 5, false, 0));
+                       
 
                         FillData();
                         StartCoroutine(BringUpDataScreen());
                         break;
                     case UpgradeController.DataMode.Save:
-                        tempDataText = string.Format("");
-                        break;
-                    case UpgradeController.DataMode.Load:
-                        tempDataText = string.Format("");
-                        break;
+                        tempDataText = string.Format("<#80ff80>...Pinging Chip Tech Servers...</color>\r\n\r\n" +
+                            "Preparing to send copy of memory Ciruits.\r\n" +
+                            "                    _____________\r\n" +
+                            "Enter Name of Copy: |_____________|");
+
+                        DataConsolePanel.SetActive(false);
+                        SaveDataPanel.SetActive(true);
+
+                        SaveDataConsole.SetText(tempDataText);
+
+                        StartCoroutine(RevealText(SaveDataConsole, false, 0.01f, false, 0, 0, false, 0f));
+
+                        // Start RevealText coroutine and pass a callback for activation
+                        StartCoroutine(RevealTextWithCallback(SaveDataConsole, false, 0.01f, false, 0, 0, false, 0f, () =>
+                        {
+                            // Activate UserInput and ExitButton after the text is fully revealed
+                            UserInput.SetActive(true);
+                            ExitButton.SetActive(true);
+                            ExitButton.GetComponent<Button>().onClick.AddListener(() => controller.SwitchToScreen(UpgradeController.Screens.Exit));
+                            UploadButton.GetComponent<Button>().onClick.AddListener(() => controller.AttemptToSave());
+                        }));
+
+                        break;                    
                 }
                 
                 break;
@@ -376,9 +401,9 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
         tempRectTransform.anchoredPosition=endPosition;
     }
     private IEnumerator BringUpDataScreen()
-    {       
-
-        DataHolder.SetActive(true);
+    {
+        ViewDataPanel.SetActive(true);
+        DataHolder.SetActive(true);        
 
         float tempTime = 0;
         RectTransform tempRectTransform = ViewDataPanel.GetComponent<RectTransform>();
@@ -486,6 +511,49 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
             }
         }        
     }
+    /// <summary>
+    /// This is for when you want something to be done after the Text is revealed
+    /// </summary>
+    /// <param name="tmpText"></param>
+    /// <param name="byLetter"></param>
+    /// <param name="revealSpeed"></param>
+    /// <param name="blinkText"></param>
+    /// <param name="blinkDuration"></param>
+    /// <param name="blinkCount"></param>
+    /// <param name="loopAnimation"></param>
+    /// <param name="timeBeforeRestartAnimation"></param>
+    /// <param name="onComplete"></param>
+    /// <returns></returns>
+    private IEnumerator RevealTextWithCallback(TMP_Text tmpText, bool byLetter, float revealSpeed, bool blinkText, float blinkDuration, int blinkCount, bool loopAnimation, float timeBeforeRestartAnimation, Action onComplete)
+    {
+        isWaintingForInput = false;
+
+        tmpText.ForceMeshUpdate();
+
+        TMP_TextInfo textInfo = tmpText.textInfo;
+        int totalVisibleCharacters = textInfo.characterCount;
+        int visibleCount = 0;
+
+        while (visibleCount <= totalVisibleCharacters)
+        {
+            tmpText.maxVisibleCharacters = visibleCount;
+            visibleCount++;
+
+            yield return new WaitForSeconds(revealSpeed);
+        }
+
+        // Perform any blinking if needed
+        if (blinkText)
+        {
+            yield return StartCoroutine(BlinkText(tmpText, blinkDuration, blinkCount));
+        }
+
+        yield return new WaitForSeconds(1f);
+
+        // Execute the callback after revealing the text
+        onComplete?.Invoke();
+    }
+
     private IEnumerator BlinkText(TMP_Text tmpText, float blinkDuration, int blinkCount)
     {
         int totalVisibleCharacters = tmpText.textInfo.characterCount;
@@ -498,5 +566,6 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
             yield return new WaitForSeconds(blinkDuration);
         }
     }
+
 
 }
