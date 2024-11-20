@@ -12,10 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 537e8ace226ea7a4eb72b09b510bb7c1, type: 3}
   m_Name: Kickstart
   m_EditorClassIdentifier: 
+  ThisChip: {fileID: 0}
   chipRarity: 0
   chipName: KickStart
   description: Refresh 50% of your MaximumEnergy.
-  chipImage: {fileID: 21300000, guid: 260ad27b046fabe4aa61e36691bebecd, type: 3}
+  chipImage: {fileID: 21300000, guid: 3b1cf6d66c7134f49922c45c119c6ac6, type: 3}
   canBeUpgraded: 0
+  costToUpgrade: 0
   hitAllTargets: 0
   specialEffect: {fileID: 11400000, guid: 1dd312cc89377b04689b11707889cc1a, type: 2}

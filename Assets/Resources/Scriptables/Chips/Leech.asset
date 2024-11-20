@@ -16,7 +16,7 @@ MonoBehaviour:
   chipRarity: 1
   chipName: Leech
   description: Deal 5 Damage,Gain that much Energy.
-  chipImage: {fileID: 21300000, guid: 7a557185dec01fa45b1e8b73f58fdfb3, type: 3}
+  chipImage: {fileID: 21300000, guid: 55daac800570d934d8b157698f517100, type: 3}
   canBeUpgraded: 1
   costToUpgrade: 150
   hitAllTargets: 0

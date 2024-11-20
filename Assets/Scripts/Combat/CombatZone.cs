@@ -32,7 +32,8 @@ public class CombatZone : MonoBehaviour
             
             for(int i = 0; i < tempList.Count; i++)
             {
-                GameManager.Instance.RememberEnemy(tempList[i]);
+                //GameManager.Instance.RememberEnemy(tempList[i]);
+                GameObject.Find("GameManager").GetComponent<GameManager>().RememberEnemy(tempList[i]);
             }
             for (int i = 0; i < tempList.Count; i++)
             {

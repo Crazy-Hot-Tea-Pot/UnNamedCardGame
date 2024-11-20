@@ -12,10 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 537e8ace226ea7a4eb72b09b510bb7c1, type: 3}
   m_Name: Motivation
   m_EditorClassIdentifier: 
+  ThisChip: {fileID: 0}
   chipRarity: 1
   chipName: Motivation
   description: Your next Chip activates twice.
-  chipImage: {fileID: 21300000, guid: 2ea933db27dec5945af6e191f0582ed0, type: 3}
+  chipImage: {fileID: 21300000, guid: 2546e494c27801b42b8bb5e7008d9aed, type: 3}
   canBeUpgraded: 0
+  costToUpgrade: 0
   hitAllTargets: 0
   specialEffect: {fileID: 11400000, guid: c7c46e9b6a649364684f3fdde82ada0d, type: 2}

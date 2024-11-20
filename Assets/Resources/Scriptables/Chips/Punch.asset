@@ -12,11 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6809844b7762fe74eb18f9fe19518433, type: 3}
   m_Name: Punch
   m_EditorClassIdentifier: 
+  ThisChip: {fileID: 0}
   chipRarity: 0
   chipName: Punch
   description: Punch dealing 5 damage.
-  chipImage: {fileID: 21300000, guid: 594e23faeb83d9a47b72cf4ef4111c17, type: 3}
+  chipImage: {fileID: 21300000, guid: 10f72e185d30cd9478704e46af88adc2, type: 3}
   canBeUpgraded: 0
+  costToUpgrade: 0
   hitAllTargets: 0
   damage: 5
   upgradedDamageByAmount: 0

@@ -12,11 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 189603f79c685cb4197e0e073f20c64a, type: 3}
   m_Name: Imprevious
   m_EditorClassIdentifier: 
+  ThisChip: {fileID: 0}
   chipRarity: 2
   chipName: Imprevious
   description: You take no Damage this Turn.
-  chipImage: {fileID: 21300000, guid: d16ab4773c701384b9892b98145d218a, type: 3}
+  chipImage: {fileID: 21300000, guid: 0117bf35552d50945bba2890db39e28e, type: 3}
   canBeUpgraded: 0
+  costToUpgrade: 0
   hitAllTargets: 0
   shieldAmount: 0
   upgradedShieldAmountToApply: 0

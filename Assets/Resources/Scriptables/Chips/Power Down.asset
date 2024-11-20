@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6809844b7762fe74eb18f9fe19518433, type: 3}
   m_Name: Power Down
   m_EditorClassIdentifier: 
+  ThisChip: {fileID: 0}
   chipRarity: 1
   chipName: Power Down
   description: Deal 7 damage, Apply 1 Drained.
-  chipImage: {fileID: 21300000, guid: 8b9789206c386d24590ef97a4eab439c, type: 3}
+  chipImage: {fileID: 21300000, guid: c297b4f1f1c84f84a93e8603e4d76f18, type: 3}
   canBeUpgraded: 1
   costToUpgrade: 150
   hitAllTargets: 0

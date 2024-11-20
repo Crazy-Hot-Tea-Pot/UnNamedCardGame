@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6809844b7762fe74eb18f9fe19518433, type: 3}
   m_Name: Rocket Punch
   m_EditorClassIdentifier: 
+  ThisChip: {fileID: 0}
   chipRarity: 2
   chipName: Rocket Punch
   description: Deal 6 Damage to all Enemies
-  chipImage: {fileID: 21300000, guid: be3a5a87f8c5c774384233a080537c2b, type: 3}
+  chipImage: {fileID: 21300000, guid: 24f5fda0b34b1b44e9961e87dcbf8dd3, type: 3}
   canBeUpgraded: 1
   costToUpgrade: 150
   hitAllTargets: 1
