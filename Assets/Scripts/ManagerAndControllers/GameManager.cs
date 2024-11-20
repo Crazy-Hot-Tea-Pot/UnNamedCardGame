@@ -395,7 +395,7 @@ public class GameManager : MonoBehaviour
             case Levels.Title:
                 break;
             default:
-                DataManager.Instance.CurrentGameData.Level = CurrentLevel;
+                DataManager.Instance.CurrentGameData.Level = level;
                 //Get Player
                 PlayerController player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
 
