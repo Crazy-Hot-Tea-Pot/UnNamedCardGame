@@ -11,6 +11,9 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
 {
     private UpgradeController controller;
     private bool isWaintingForInput = false;
+    private Coroutine activeRevealCoroutine;
+    private Coroutine activePanelCoroutine;
+
 
 
     [Header("Intro Screen")]
@@ -36,6 +39,7 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
     public TMP_Text DataConsole;
     public GameObject ViewDataPanel;
     public GameObject DataHolder;
+    public GameObject ViewDataExitButton;
     public GameObject SaveDataPanel;
     public TMP_Text SaveDataConsole;
     public GameObject UserInput;
@@ -103,7 +107,12 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
     {
         isWaintingForInput = false;
 
-        DataHolder.SetActive(false);
+        // Remove all existing child objects from DataHolder
+        foreach (Transform child in DataHolder.transform)
+        {
+            if(child != null)
+                Destroy(child.gameObject);
+        }
 
         List<GameData> saves = DataManager.Instance.GetAllSaves();
         foreach (var save in saves)
@@ -116,6 +125,7 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
             UIData.GetComponent<DataPrefabController>().Time = save.TimeStampString;
             
         }
+
     }
     
     /// <summary>
@@ -149,6 +159,7 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
                 controller.currentDataMode=UpgradeController.DataMode.View;
 
                 controller.SwitchToScreen(UpgradeController.Screens.Data);
+               
                 break;
             case "Save":
                 controller.currentDataMode = UpgradeController.DataMode.Save;
@@ -163,8 +174,9 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
             case "Exit2":
                 controller.SwitchToScreen(UpgradeController.Screens.Exit);
                 ExitButton.GetComponent<Button>().onClick.RemoveAllListeners();
+                ViewDataExitButton.GetComponent<Button>().onClick.RemoveAllListeners();
                 UserInput.SetActive(false);
-                ExitButton.SetActive(false);
+                ExitButton.SetActive(false);                
                 break;
             default:
 
@@ -178,7 +190,9 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
     /// <param name="screen">The UI screen to activate.</param>
     private void UpdateUIScreen(UpgradeController.Screens screen)
     {
-        StopAllCoroutines();
+        StopAndClearCoroutine(ref activePanelCoroutine);
+        StopAndClearCoroutine(ref activeRevealCoroutine);
+
         switch (screen)
         {
             case UpgradeController.Screens.Default:
@@ -191,9 +205,9 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
                 break;
             case UpgradeController.Screens.Intro:
 
-                SetActiveUIElement(IntroPanel);                
+                SetActiveUIElement(IntroPanel);
 
-                StartCoroutine(RevealText(IntroConsole, true, 0.01f, false,0f,0,false,0));
+                activeRevealCoroutine = StartCoroutine(RevealText(IntroConsole, true, 0.01f, false,0f,0,false,0));
                 break;
             case UpgradeController.Screens.HealthUpgrade:
 
@@ -210,7 +224,7 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
 
                 HealthConsole.SetText(tempText);
 
-                StartCoroutine(RevealText(HealthConsole, false, 0.01f, false, 0f,0,false,0));
+                activeRevealCoroutine = StartCoroutine(RevealText(HealthConsole, false, 0.01f, false, 0f,0,false,0));
                 break;
             case UpgradeController.Screens.ChipUpgrade:
 
@@ -281,7 +295,9 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
                         StartCoroutine(RevealText(DataConsole, false, 0.01f, false, 0, 0, false, 0));
                         break;
                     case UpgradeController.DataMode.View:
-                        tempDataText = string.Format("...Retrieving Data...");
+                        tempDataText = string.Format("<#80ff80>...Pinging Chip Tech Servers...</color>\n" +
+                            "Sending Data Request\n" +
+                            "...Retrieving Data...");
 
                         DataConsolePanel.SetActive(true);
                         SaveDataPanel.SetActive(false);
@@ -293,6 +309,8 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
 
                         FillData();
                         StartCoroutine(BringUpDataScreen());
+
+                        ViewDataExitButton.GetComponent<Button>().onClick.AddListener(() => controller.SwitchToScreen(UpgradeController.Screens.Exit));
                         break;
                     case UpgradeController.DataMode.Save:
                         tempDataText = string.Format("<#80ff80>...Pinging Chip Tech Servers...</color>\r\n\r\n" +
@@ -400,6 +418,10 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
 
         tempRectTransform.anchoredPosition=endPosition;
     }
+    /// <summary>
+    /// Bring Up window to select Data
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator BringUpDataScreen()
     {
         ViewDataPanel.SetActive(true);
@@ -567,5 +589,12 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
         }
     }
 
-
+    private void StopAndClearCoroutine(ref Coroutine coroutine)
+    {
+        if (coroutine != null)
+        {
+            StopCoroutine(coroutine);
+            coroutine = null;
+        }
+    }
 }

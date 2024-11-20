@@ -1485,6 +1485,7 @@ MonoBehaviour:
   ChipPrefab: {fileID: 7436777728557001682, guid: d9849c1ec37ff6e499ec76c0fe76af67, type: 3}
   chipPanel: {fileID: 0}
   uiCanvas: {fileID: 0}
+  uiContainer: {fileID: 0}
   enemyList: []
 --- !u!1 &5651628340804771635
 GameObject:

@@ -987,15 +987,5 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-    #endregion
-    [ContextMenu("Shield")]
-    public void testaddshield()
-    {
-        ApplyShield(10);
-    }
-    [ContextMenu("TakeDamage")]
-    public void testtakeDamage()
-    {
-        TakeDamage(10);
-    }
+    #endregion    
 }

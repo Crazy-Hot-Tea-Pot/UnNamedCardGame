@@ -116,9 +116,9 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         //Fill variables
-        uiContainer = GameObject.Find("BadCanvasSystem");
-        uiCanvas = uiContainer.transform.FindChild("Canvas").gameObject;
-        chipPanel = uiCanvas.transform.FindChild("Panel").gameObject;
+        //uiContainer = GameObject.Find("BadCanvasSystem");
+        //uiCanvas = uiContainer.transform.FindChild("Canvas").gameObject;
+        //chipPanel = uiCanvas.transform.FindChild("Panel").gameObject;
 
         Initialize();
         ShufflePlayerDeck();

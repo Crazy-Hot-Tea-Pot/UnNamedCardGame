@@ -8,6 +8,9 @@ using UnityEngine;
 
 public class UpgradeController : MonoBehaviour
 {
+    private Coroutine activeScreenCoroutine;
+    private Coroutine activeTextRevealCoroutine;
+
     public GameObject PlayerCanvas;
 
     private bool isInteracting;
@@ -121,24 +124,27 @@ public class UpgradeController : MonoBehaviour
     /// <param name="screen">The screen type to switch to.</param>
     public void SwitchToScreen(Screens screen)
     {
-        OnScreenChanged?.Invoke(screen);
+        // Stop specific coroutines before starting new ones
+        StopAndClearCoroutine(ref activeScreenCoroutine);
+        StopAndClearCoroutine(ref activeTextRevealCoroutine);
 
-        StopAllCoroutines();
+        OnScreenChanged?.Invoke(screen);
+        
 
         switch (screen)
         {
             case Screens.Default:
-                SetActiveScreen(DefaultScreen);                
+                SetActiveScreen(DefaultScreen);
 
-                StartCoroutine(RevealText(DefaultScreen, true, 0.01f,true, 1, 3,true,5f));
+                activeTextRevealCoroutine = StartCoroutine(RevealText(DefaultScreen, true, 0.01f,true, 1, 3,true,5f));
 
                 currentScreen = screen;
                 break;
             case Screens.Intro:
                 SetActiveScreen(IntroScreen);
-                
 
-                StartCoroutine(RevealText(IntroScreen, false, 0.01f, false, 0, 0,false, 1000f));
+
+                activeTextRevealCoroutine = StartCoroutine(RevealText(IntroScreen, false, 0.01f, false, 0, 0,false, 1000f));
 
 
                 currentScreen = screen;
@@ -162,7 +168,7 @@ public class UpgradeController : MonoBehaviour
 
                 healthUpgradeScreenText.SetText(tempText);
 
-                StartCoroutine(RevealText(HealthUpgradeScreen,false,0.01f,false,0,0,false, 10000f));
+                activeTextRevealCoroutine = StartCoroutine(RevealText(HealthUpgradeScreen,false,0.01f,false,0,0,false, 10000f));
 
                 currentScreen = screen;
                 break;
@@ -535,5 +541,12 @@ public class UpgradeController : MonoBehaviour
         }
     }
 
-
+    private void StopAndClearCoroutine(ref Coroutine coroutine)
+    {
+        if (coroutine != null)
+        {
+            StopCoroutine(coroutine);
+            coroutine = null;
+        }
+    }
 }
