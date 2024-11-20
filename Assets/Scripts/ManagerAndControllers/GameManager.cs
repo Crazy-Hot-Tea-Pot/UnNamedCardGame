@@ -251,7 +251,7 @@ public class GameManager : MonoBehaviour
             Chip chipComponent = newChipInstance.GetComponent<Chip>();
 
             chipComponent.newChip = newChipInPlayerHand;
-            chipComponent.SetChipModeTo(Chip.ChipMode.Combat);
+            chipComponent.Mode = Chip.ChipMode.Combat;
             //Apply name to newChipInPlayerHand.
             if (newChipInPlayerHand.chipName == "" || newChipInPlayerHand.chipName == null)
                 Debug.LogWarning("Scriptable {chipName} is empty on " + newChipInPlayerHand.name + " and this will cause errors.");

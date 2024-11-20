@@ -70,6 +70,12 @@ public class Chip : MonoBehaviour
 
         // Set image to chip
         GetComponent<Image>().sprite = newChip.chipImage;
+
+        //When the chip is active start method will run and set it's mode
+        if(Mode != null)
+        {
+            SetChipModeTo(Mode);
+        }
     }
     /// <summary>
     /// Tell the Upgrade Controller this is the chip the user selected to ugprade.

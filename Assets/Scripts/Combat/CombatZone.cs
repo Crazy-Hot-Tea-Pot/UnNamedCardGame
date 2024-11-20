@@ -10,12 +10,13 @@ public class CombatZone : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     private void OnTriggerEnter(Collider other)
@@ -23,6 +24,7 @@ public class CombatZone : MonoBehaviour
         if (other.tag == "Enemy")
         {
             tempList.Add(other.gameObject);
+            Debug.Log("I am enemy: " + other.name);
         }
 
         if (other.tag == "Player")
@@ -62,5 +64,5 @@ public class CombatZone : MonoBehaviour
         //}
     }
 
-   
+
 }
