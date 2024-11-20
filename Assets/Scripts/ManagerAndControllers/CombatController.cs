@@ -187,8 +187,7 @@ public class CombatController : MonoBehaviour
 
 
         //Set enemies to combat mode in combat zone
-        //foreach (GameObject combatEnemy in GameManager.Instance.enemyList)
-        foreach(GameObject combatEnemy in GameObject.Find("GameManager").GetComponent<GameManager>().enemyList)
+        foreach (GameObject combatEnemy in GameManager.Instance.enemyList)
         {
             Combadant enemies = new Combadant();
             enemies.combadant = combatEnemy;
