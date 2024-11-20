@@ -108,6 +108,10 @@ public class PlayerController : MonoBehaviour
         get { return health; }
         private set { 
             health = value;
+
+            GameObject.FindGameObjectWithTag("PlayerCanvas").
+                GetComponent<PlayerUIManager>().UpdateHealth();
+
             if (health > maxHealth)
                 health = maxHealth;
             else if (health <= 0)
@@ -129,7 +133,7 @@ public class PlayerController : MonoBehaviour
         }
         private set
         {
-            shield = value;
+            shield = value;           
 
             if (shield > maxShield)
                 maxShield = value;
@@ -139,6 +143,9 @@ public class PlayerController : MonoBehaviour
                 shield = 0;
                 maxShield = 0;
             }
+
+            GameObject.FindGameObjectWithTag("PlayerCanvas").
+               GetComponent<PlayerUIManager>().UpdateShield();
         }
     }
     public int MaxShield
@@ -162,6 +169,13 @@ public class PlayerController : MonoBehaviour
         private set
         {
             energy = value;
+
+            if(energy > maxEnergy)
+                energy = value;
+            else if(energy <= 0)
+                energy = 0;
+
+            GameObject.FindGameObjectWithTag("PlayerCanvas").GetComponent<PlayerUIManager>().UpdateEnergy(Energy,MaxEnergy);
         }
     }
 
@@ -624,7 +638,6 @@ public class PlayerController : MonoBehaviour
         //Restore Shield
         Shield += shieldAmount;
 
-        Debug.Log("Shield Restored: " + shield);
     }
 
     /// <summary>
@@ -663,7 +676,7 @@ public class PlayerController : MonoBehaviour
             if (Shield > 0)
             {
                 if (damage >= Shield)
-                {
+                {                    
                     damage -= Shield;
                     Shield = 0;
                     Debug.Log(name + "Shield destroyed.");
@@ -672,11 +685,13 @@ public class PlayerController : MonoBehaviour
                 {
                     // Reduce the shield by the damage amount
                     Shield -= damage;
+                    Debug.Log("Shield "+Shield+ " Took Damage"+damage);
                     // No remaining damage to apply to HP
                     damage = 0;
                 }
             }
             Health = Health - damage;
+            
 
             //Play Sound
             SoundManager.PlayFXSound(SoundFX.DamageTaken, this.transform);
@@ -973,4 +988,14 @@ public class PlayerController : MonoBehaviour
         }
     }
     #endregion
+    [ContextMenu("Shield")]
+    public void testaddshield()
+    {
+        ApplyShield(10);
+    }
+    [ContextMenu("TakeDamage")]
+    public void testtakeDamage()
+    {
+        TakeDamage(10);
+    }
 }

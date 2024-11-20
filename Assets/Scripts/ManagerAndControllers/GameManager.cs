@@ -451,6 +451,7 @@ public class GameManager : MonoBehaviour
 
                 default:
                     playerDeck.Clear();
+                    enemyList.Clear();
 
                     foreach (var chipSave in DataManager.Instance.CurrentGameData.Chips)
                     {

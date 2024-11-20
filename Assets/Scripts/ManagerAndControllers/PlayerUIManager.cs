@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -123,6 +122,7 @@ public class PlayerUIManager : MonoBehaviour
     /// Shield bar Ui Element.
     /// </summary>
     public Image ShieldBar;
+
     public GameObject ShieldBarContainer;
 
     [Header("Energy Stuff")]
@@ -176,11 +176,7 @@ public class PlayerUIManager : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
-        //Update resource pool ui elements
-        UpdateEnergy(GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().Energy, GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().MaxEnergy);
-        UpdateHealth();
-        UpdateShield();
+    {       
         //On press open the inventroy UI if input is recieved or close if already in combat. WasPressedThisFrame() makes the input not be spammed it waits till the frame ends before recollecting
         if (openInventory.WasPressedThisFrame() && !GameManager.Instance.InCombat)
         {
@@ -477,20 +473,39 @@ public class PlayerUIManager : MonoBehaviour
     /// Updates the UI for player Health
     /// </summary>
     public void UpdateHealth()
-    {
-        //Change value of Health bar
-        //healthBar.maxValue = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().MaxHealth;
-        //healthBar.value = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().Health;
+    {        
+        float currentHealth = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().Health;
+        float maxHealth = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().MaxHealth;
 
-        // Calculate Health as a percentage
-        float healthPercentage = (float)GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().Health / GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().MaxHealth;
+        float targetHealthPercentage = currentHealth / maxHealth;
+                
 
-        //Set the bars value
-        healthBar.fillAmount = healthPercentage;
+        // Start the coroutine to smoothly update the health bar
+        StartCoroutine(UpdateHealthOverTime(targetHealthPercentage));
     }
-    public void UpdateShield()
+    private IEnumerator UpdateHealthOverTime(float targetFillAmount)
     {
-        if (GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().Shield == 0)
+        // While the bar is not at the target fill amount, update it
+        while(Mathf.Abs(healthBar.fillAmount - targetFillAmount) > 0.001f)
+        {
+            // Lerp between current fill and target fill by the fill speed
+            healthBar.fillAmount = Mathf.Lerp(healthBar.fillAmount, targetFillAmount, 1f * Time.deltaTime);
+
+            // Ensure the fill value gradually updates each frame
+            yield return null;
+        }
+
+        // Ensure it snaps to the exact target amount at the end
+        healthBar.fillAmount = targetFillAmount;
+    }
+    /// <summary>
+    /// Updates the UI for player shield
+    /// </summary>
+    public void UpdateShield()
+    {       
+        var playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+
+        if (playerController.Shield == 0 && playerController.MaxShield == 0)
         {
             ShieldBarContainer.SetActive(false);
         }
@@ -498,10 +513,38 @@ public class PlayerUIManager : MonoBehaviour
         {
             ShieldBarContainer.SetActive(true);
 
-            float ShieldPrecentage = (float)GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().Shield / GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().MaxShield;
+            // Reset the ShieldBar fill amount to 0 if it's being activated for the first time
+            if (ShieldBar.fillAmount == 0)
+                    ShieldBar.fillAmount = 0;
 
-            ShieldBar.fillAmount=ShieldPrecentage;
+            // Calculate the target shield percentage
+            float shieldPercentage = (float)playerController.Shield / playerController.MaxShield;
+
+            //ShieldBar.fillAmount = shieldPercentage;
+
+            StopCoroutine(UpdateShieldOverTime(shieldPercentage));
+
+            // Start the coroutine to smoothly update the shield bar
+            StartCoroutine(UpdateShieldOverTime(shieldPercentage));
         }
+    }
+    private IEnumerator UpdateShieldOverTime(float targetFillAmount)
+    {
+        // While the difference between the current fill amount and the target is greater than the threshold
+        while (Mathf.Abs(ShieldBar.fillAmount - targetFillAmount) > 0.001f)
+        {
+            // Lerp between current fill and target fill by the fill speed
+            ShieldBar.fillAmount = Mathf.Lerp(ShieldBar.fillAmount, targetFillAmount, 0.5f * Time.deltaTime);
+
+            // Ensure the fill value gradually updates each frame
+            yield return null;
+        }
+
+        // Ensure it snaps to the exact target amount at the end
+        ShieldBar.fillAmount = targetFillAmount;
+
+        if (ShieldBar.fillAmount <= 0f)
+            ShieldBarContainer.SetActive(false);
     }
 
     //Sets variables to initalize fill speed
@@ -531,7 +574,7 @@ public class PlayerUIManager : MonoBehaviour
             //Clap at 0 and 1 so don't go over
             tempTargetFillAmount = Mathf.Clamp01(tempTargetFillAmount);
 
-            StopAllCoroutines();
+            StopCoroutine(FillEnergyOverTime(tempTargetFillAmount));
 
             StartCoroutine(FillEnergyOverTime(tempTargetFillAmount));
         }
@@ -551,7 +594,7 @@ public class PlayerUIManager : MonoBehaviour
     {
 
         // While the bar is not at the target fill amount, update it
-        while (!Mathf.Approximately(energyBar.fillAmount, targetFillAmount))
+        while (Mathf.Abs(energyBar.fillAmount - targetFillAmount)>0.001f)
         {
             // Lerp between current fill and target fill by the fill speed
             energyBar.fillAmount = Mathf.Lerp(energyBar.fillAmount, targetFillAmount, fillSpeed * Time.deltaTime);
@@ -563,7 +606,7 @@ public class PlayerUIManager : MonoBehaviour
         // Ensure it snaps to the exact target amount at the end
         energyBar.fillAmount = targetFillAmount;
 
-    }
+    }    
 
     /// <summary>
     /// UI starting points that set the sliders to the maximum of the variables
@@ -571,7 +614,6 @@ public class PlayerUIManager : MonoBehaviour
     public void StartingPools()
     {
         //healthBar.maxValue = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().MaxHealth;
-        UpdateHealth();
         UpdateShield();
     }
     #endregion
