@@ -358,6 +358,7 @@ public class GameManager : MonoBehaviour
         switch (CurrentLevel)
         {
             case Levels.Title:
+            case Levels.Loading:
                 break;
             default:
                 DataManager.Instance.CurrentGameData.Level = level;
@@ -386,12 +387,12 @@ public class GameManager : MonoBehaviour
 
                 //TODO  Abilities
 
+                //Do a Auto Save
+                DataManager.Instance.AutoSave();
+
                 break;
         }
-
-        //Do a Auto Save
-        DataManager.Instance.AutoSave();
-
+        
         TargetScene = level;
         SceneManager.LoadScene(Levels.Loading.ToString());        
     }

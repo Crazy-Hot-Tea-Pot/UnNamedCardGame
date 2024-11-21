@@ -47,6 +47,7 @@ public class TitleController : MonoBehaviour
         GameData startData = new GameData();
 
         startData.SaveName = "Beginning";
+        startData.Level = Levels.Level1;
         startData.MaxHealth = 50;
         startData.Health = 50;
         startData.Scraps = 100;
@@ -86,10 +87,10 @@ public class TitleController : MonoBehaviour
 
         if (kickstart != null) 
             startData.Chips.Add(new ChipData { Name = kickstart.chipName });
-
-        startData.Level = Levels.Title;
         
         DataManager.Instance.CurrentGameData=startData;
+
+        DataManager.Instance.Save(startData.SaveName);
 
         GameManager.Instance.RequestScene(Levels.Level1);
 

@@ -15,7 +15,7 @@ public class Chip : MonoBehaviour
         Inventory,
         Delete
     }
-    private ChipMode mode;
+    private ChipMode mode = ChipMode.None;
 
     /// <summary>
     /// What mode is the chip in.
@@ -72,7 +72,7 @@ public class Chip : MonoBehaviour
         GetComponent<Image>().sprite = newChip.chipImage;
 
         //When the chip is active start method will run and set it's mode
-        if(Mode != null)
+        if(Mode != ChipMode.None)
         {
             SetChipModeTo(Mode);
         }

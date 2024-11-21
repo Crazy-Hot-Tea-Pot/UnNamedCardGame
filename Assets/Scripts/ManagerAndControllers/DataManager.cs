@@ -63,6 +63,7 @@ public class DataManager : MonoBehaviour
     /// <summary>
     /// Saves all CurrentGameData.
     /// Make sure to update the CurrentGameData first.
+    /// TODO make overwrite save with same name.
     /// </summary>
     public void Save(string saveName)
     {
@@ -124,8 +125,6 @@ public class DataManager : MonoBehaviour
         Save(saveName);
     }
 
-
-
     /// <summary>
     /// Load Player stats
     /// Re-link Chips by loading from Resources
@@ -184,6 +183,11 @@ public class DataManager : MonoBehaviour
         Debug.Log("Game loaded successfully.");
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="saveName"></param>
+    /// <returns></returns>
     public GameData RetrieveGameData(string saveName)
     {
         string saveFilePath = Path.Combine(saveDirectory, $"{saveName}.json");
