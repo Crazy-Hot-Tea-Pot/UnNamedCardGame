@@ -74,6 +74,10 @@ public class NewChip : ScriptableObject
     /// How much it would cost to upgrade this card
     /// </summary>
     public int costToUpgrade;
+    /// <summary>
+    /// Information to display to player about card.
+    /// </summary>
+    public string toolTip;
 
     /// <summary>
     /// If Chip is upgraded.

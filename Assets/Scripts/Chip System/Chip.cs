@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,6 +16,7 @@ public class Chip : MonoBehaviour
         Inventory,
         Delete
     }
+
     private ChipMode mode = ChipMode.None;
 
     /// <summary>
