@@ -16,5 +16,5 @@ MonoBehaviour:
   abilityDescription: Spend 5 energy, Gain 2 Shield
   energyCost: 5
   abilityType: 2
-  uiImage: {fileID: 21300000, guid: d9bc3337081eab347b70d1d60022f710, type: 3}
+  uiImage: {fileID: 21300000, guid: 9c8af8a2123bb3a4387249d18ebbd01e, type: 3}
   shield: 2

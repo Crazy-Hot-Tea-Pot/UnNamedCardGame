@@ -16,5 +16,5 @@ MonoBehaviour:
   abilityDescription: You impale your weapon into the enemy as hard as possible.
   energyCost: 0
   abilityType: 1
-  uiImage: {fileID: 21300000, guid: 4b51f29e0778b184d960930b5afa547b, type: 3}
+  uiImage: {fileID: 21300000, guid: ac04502e059db3b468d9fdb054f2370e, type: 3}
   damage: 0
