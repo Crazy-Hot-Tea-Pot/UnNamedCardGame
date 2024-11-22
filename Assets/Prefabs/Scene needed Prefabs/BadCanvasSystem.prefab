@@ -2337,11 +2337,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9a25c5301edc51419046b417733cb24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DefaultCameraImage: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  RotationCameraImage: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  FreeCameraImage: {fileID: 21300000, guid: 4b51f29e0778b184d960930b5afa547b, type: 3}
-  BoarderCameraImage: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  FirstPersonCameraImage: {fileID: 21300000, guid: b0412c69968489e4ba83f7c525afac91, type: 3}
+  DefaultCameraImage: {fileID: 21300000, guid: e816f40c77e8b5944a7918b0f4a2cdd1, type: 3}
+  RotationCameraImage: {fileID: 21300000, guid: f1e09a11e9717c54a88a6a6d65d9dd72, type: 3}
+  FreeCameraImage: {fileID: 21300000, guid: d410003c30fbde04283382eaa3c4f312, type: 3}
+  BoarderCameraImage: {fileID: 21300000, guid: 1e930d8f15ce0ac4f966bf2c3a614bae, type: 3}
+  FirstPersonCameraImage: {fileID: 21300000, guid: 98884532103c7bf4384755fe7490bbf0, type: 3}
   ImageComponent: {fileID: 1720003068083569611}
   Blinking: 1
   numberOfBlinks: 5

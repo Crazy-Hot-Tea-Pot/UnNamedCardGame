@@ -269,7 +269,9 @@ public class GameManager : MonoBehaviour
         {
             playerDeck.Add(usedChips);
         }
+        // Clear used chips
         usedChips.Clear();
+
         foreach(var leftOverChip in playerHand)
         {
             playerDeck.Add(leftOverChip);

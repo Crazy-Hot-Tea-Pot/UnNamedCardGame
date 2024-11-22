@@ -934,6 +934,8 @@ public class PlayerController : MonoBehaviour
         Energy = maxEnergy;
         GainScrap(200);
 
+        GameManager.Instance.EndCombat();
+
         // for now just restart the scene.
         GameManager.Instance.RequestScene(Levels.Level1);
     }
