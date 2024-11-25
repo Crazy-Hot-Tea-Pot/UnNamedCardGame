@@ -351,7 +351,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 9fac21542a87bac4c8fd783fc241048b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 4ca8b27e3a23b8840b5d50cac2af85c0, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1321,7 +1321,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 9fac21542a87bac4c8fd783fc241048b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 4ca8b27e3a23b8840b5d50cac2af85c0, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3974,6 +3974,8 @@ MonoBehaviour:
   buttonDeck: {fileID: 6707610372712882714}
   healthBar: {fileID: 1939614110580933192}
   healthText: {fileID: 222770409726943000}
+  fullHealthColor: {r: 0.23, g: 0.37, b: 0.27, a: 1}
+  lowHealthColor: {r: 1, g: 0, b: 0, a: 1}
   ShieldBar: {fileID: 1578717676911353845}
   shiedText: {fileID: 3977538577822811542}
   ShieldBarContainer: {fileID: 795204847350537592}
