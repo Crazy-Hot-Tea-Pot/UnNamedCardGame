@@ -205,6 +205,8 @@ public class CameraController : MonoBehaviour
         //Set Base cameraSpeed;
         baseCameraSpeed = SettingsManager.Instance.CameraSettings.cameraSpeed;
 
+        CurrentCameraSpeed = baseCameraSpeed;
+
     }
 
     void Update()

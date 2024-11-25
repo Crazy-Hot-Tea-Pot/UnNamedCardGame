@@ -19,6 +19,7 @@ public enum SoundFX
     EnemyDefeated,
     GalvanizeMainenanceBot,
     MenuSelection,
+    MenuSelectionSound,
     NeutralizeSecurityDrone,
     NeutralizeSecurityDroneAlternative,
     Punch,
