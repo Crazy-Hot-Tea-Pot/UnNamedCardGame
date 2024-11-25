@@ -93,7 +93,7 @@ MonoBehaviour:
   Player: {fileID: 0}
   UpgradeController: {fileID: 0}
   chipButton: {fileID: 8308470880536474269}
-  newChip: {fileID: 11400000, guid: 91969f243e8a3e348832cf8db2fe6f61, type: 2}
+  newChip: {fileID: 0}
 --- !u!114 &8308470880536474269
 MonoBehaviour:
   m_ObjectHideFlags: 0

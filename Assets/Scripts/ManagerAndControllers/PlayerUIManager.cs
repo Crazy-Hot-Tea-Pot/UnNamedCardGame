@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -117,11 +118,13 @@ public class PlayerUIManager : MonoBehaviour
     /// Health bar UI element.
     /// </summary>
     public Image healthBar;
+    public TextMeshProUGUI healthText;
 
     /// <summary>
     /// Shield bar Ui Element.
     /// </summary>
     public Image ShieldBar;
+    public TextMeshProUGUI shiedText;
 
     public GameObject ShieldBarContainer;
 
@@ -478,7 +481,8 @@ public class PlayerUIManager : MonoBehaviour
         float maxHealth = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().MaxHealth;
 
         float targetHealthPercentage = currentHealth / maxHealth;
-                
+
+        StopCoroutine(UpdateHealthOverTime(targetHealthPercentage));
 
         // Start the coroutine to smoothly update the health bar
         StartCoroutine(UpdateHealthOverTime(targetHealthPercentage));
@@ -491,12 +495,19 @@ public class PlayerUIManager : MonoBehaviour
             // Lerp between current fill and target fill by the fill speed
             healthBar.fillAmount = Mathf.Lerp(healthBar.fillAmount, targetFillAmount, 1f * Time.deltaTime);
 
+            // Display percentage as an integer (0 to 100)
+            int percentage = Mathf.RoundToInt(healthBar.fillAmount * 100);
+            healthText.SetText(percentage + "%");
+
             // Ensure the fill value gradually updates each frame
             yield return null;
         }
 
         // Ensure it snaps to the exact target amount at the end
         healthBar.fillAmount = targetFillAmount;
+        // Display percentage as an integer (0 to 100)
+        int finalPercentage = Mathf.RoundToInt(targetFillAmount * 100);
+        healthText.SetText(finalPercentage + "%");
     }
     /// <summary>
     /// Updates the UI for player shield
@@ -535,6 +546,11 @@ public class PlayerUIManager : MonoBehaviour
         {
             // Lerp between current fill and target fill by the fill speed
             ShieldBar.fillAmount = Mathf.Lerp(ShieldBar.fillAmount, targetFillAmount, 0.5f * Time.deltaTime);
+            
+            // Display percentage as an integer (0 to 100)
+            int percentage = Mathf.RoundToInt(ShieldBar.fillAmount * 100);
+            shiedText.SetText(percentage + "%");
+
 
             // Ensure the fill value gradually updates each frame
             yield return null;
@@ -542,6 +558,11 @@ public class PlayerUIManager : MonoBehaviour
 
         // Ensure it snaps to the exact target amount at the end
         ShieldBar.fillAmount = targetFillAmount;
+
+        // Display percentage as an integer (0 to 100)
+        int finalPercentage = Mathf.RoundToInt(targetFillAmount * 100);
+        shiedText.SetText(finalPercentage + "%");
+
 
         if (ShieldBar.fillAmount <= 0f)
             ShieldBarContainer.SetActive(false);

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -7,19 +8,35 @@ using UnityEngine.UI;
 public class LoadingController : MonoBehaviour
 {
     private string targetScene;
+    private NewChip choosenChip;
+    
 
+    public GameObject ChipDisplay;
+    public TextMeshProUGUI ChipTip;
     public Image ProgressBar;
+
+    [Header("Loading screen settings")]
+    public float rotationSpeed = 30f;
+
     // Start is called before the first frame update
     void Start()
     {
         targetScene = GameManager.Instance.TargetScene.ToString();
         StartCoroutine(LoadSceneAsync(targetScene));
+
+        choosenChip = GameManager.Instance.playerDeck[Random.Range(0, GameManager.Instance.playerDeck.Count)];
+
+        ChipDisplay.GetComponent<Chip>().newChip = choosenChip;
+        ChipTip.SetText(choosenChip.toolTip);
+
+        ChipDisplay.SetActive(true);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        // Gradually rotate the image on the Y-axis
+        ChipDisplay.GetComponent<Transform>().Rotate(0f, rotationSpeed * Time.deltaTime, 0f);
     }
 
     private IEnumerator LoadSceneAsync(string sceneName)

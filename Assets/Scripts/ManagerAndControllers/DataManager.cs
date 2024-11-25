@@ -63,7 +63,6 @@ public class DataManager : MonoBehaviour
     /// <summary>
     /// Saves all CurrentGameData.
     /// Make sure to update the CurrentGameData first.
-    /// TODO make overwrite save with same name.
     /// </summary>
     public void Save(string saveName)
     {

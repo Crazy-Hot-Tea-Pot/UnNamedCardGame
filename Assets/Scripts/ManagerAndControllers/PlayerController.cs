@@ -938,7 +938,7 @@ public class PlayerController : MonoBehaviour
 
         // for now just restart the scene.
         GameManager.Instance.RequestScene(Levels.Level1);
-    }
+    }    
 
     #region rangesForAbilites
     private void OnTriggerEnter(Collider other)
