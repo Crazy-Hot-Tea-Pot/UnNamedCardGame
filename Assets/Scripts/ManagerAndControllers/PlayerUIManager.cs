@@ -114,11 +114,16 @@ public class PlayerUIManager : MonoBehaviour
     #endregion
 
     #region UIResourcePools
+    [Header("Player Stats UI")]
     /// <summary>
     /// Health bar UI element.
     /// </summary>
     public Image healthBar;
     public TextMeshProUGUI healthText;
+
+    // Green (395E44 in RGB normalized)
+    public Color fullHealthColor= new Color(0.23f, 0.37f, 0.27f);
+    public Color lowHealthColor = Color.red;
 
     /// <summary>
     /// Shield bar Ui Element.
@@ -127,8 +132,6 @@ public class PlayerUIManager : MonoBehaviour
     public TextMeshProUGUI shiedText;
 
     public GameObject ShieldBarContainer;
-
-    [Header("Energy Stuff")]
 
     public Image energyBar;
 
@@ -495,6 +498,9 @@ public class PlayerUIManager : MonoBehaviour
             // Lerp between current fill and target fill by the fill speed
             healthBar.fillAmount = Mathf.Lerp(healthBar.fillAmount, targetFillAmount, 1f * Time.deltaTime);
 
+            // Lerp the color based on the health percentage
+            healthBar.color = Color.Lerp(lowHealthColor, fullHealthColor, healthBar.fillAmount);
+
             // Display percentage as an integer (0 to 100)
             int percentage = Mathf.RoundToInt(healthBar.fillAmount * 100);
             healthText.SetText(percentage + "%");
@@ -505,6 +511,8 @@ public class PlayerUIManager : MonoBehaviour
 
         // Ensure it snaps to the exact target amount at the end
         healthBar.fillAmount = targetFillAmount;
+        healthBar.color = Color.Lerp(lowHealthColor, fullHealthColor, healthBar.fillAmount);
+
         // Display percentage as an integer (0 to 100)
         int finalPercentage = Mathf.RoundToInt(targetFillAmount * 100);
         healthText.SetText(finalPercentage + "%");
