@@ -219,6 +219,11 @@ public class CameraController : MonoBehaviour
     /// </summary>
     private void HandleFreeCameraMovement()
     {
+        if (IsPlayerInteracting())
+        {
+            Debug.Log("Camera reset ignored because the player is interacting.");
+            return;
+        }
         // Get the mouse position in screen space
         Vector3 mouseScreenPosition = Mouse.current.position.ReadValue();
 
@@ -249,6 +254,12 @@ public class CameraController : MonoBehaviour
     /// </summary>
     private void HandleBorderMovement()
     {
+        if (IsPlayerInteracting())
+        {
+            Debug.Log("Camera reset ignored because the player is interacting.");
+            return;
+        }
+
         // Move the camera based on which border the mouse is at
         Vector3 movement = Vector3.zero;        
 
@@ -280,10 +291,10 @@ public class CameraController : MonoBehaviour
     /// <param name="ctx"></param>
     private void OnResetCamera(InputAction.CallbackContext ctx)
     {
-        // Prevent the Reset action if in FirstPerson mode
-        if (CurrentCamera == CameraState.FirstPerson)
+        // Prevent the Reset action if player is interacting
+        if (IsPlayerInteracting())
         {
-            Debug.Log("Reset Camera action ignored in FirstPerson mode.");
+            Debug.Log("Camera reset ignored because the player is interacting.");
             return;
         }
 
@@ -298,7 +309,12 @@ public class CameraController : MonoBehaviour
     /// </summary>
     /// <param name="state"></param>
     public void SwitchCamera(CameraState state)
-    {       
+    {
+        if (IsPlayerInteracting())
+        {
+            Debug.Log("Camera reset ignored because the player is interacting.");
+            return;
+        }
         DefaultCamera.Priority = 0;
         RotationCamera.Priority = 0;
         freeCamera.Priority = 0;
@@ -328,6 +344,14 @@ public class CameraController : MonoBehaviour
                 break;
         }
         CurrentCamera = state;
+    }
+    /// <summary>
+    /// Check if player is interacting
+    /// </summary>
+    /// <returns></returns>
+    private bool IsPlayerInteracting()
+    {
+        return GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().IsInteracting;
     }
 
     void OnDisable()

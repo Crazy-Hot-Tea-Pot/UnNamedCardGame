@@ -428,6 +428,10 @@ public class UpgradeController : MonoBehaviour
         IsInteracting = true;
         Camera.SwitchCamera(CameraController.CameraState.FirstPerson);
         Camera.FirstPersonCamera.LookAt = IntroScreen.transform;
+        //Set player to interacting
+        GameObject.FindGameObjectWithTag("Player")
+        .GetComponent<PlayerController>().IsInteracting = true;
+
         yield return new WaitForSeconds(1f);
         SwitchToScreen(Screens.Intro);
 
@@ -451,6 +455,11 @@ public class UpgradeController : MonoBehaviour
     private IEnumerator ExitTerminal()
     {
         Camera.SwitchCamera(CameraController.CameraState.Default);
+
+        //Set player to interacting
+        GameObject.FindGameObjectWithTag("Player")
+        .GetComponent<PlayerController>().IsInteracting = false;
+
         yield return new WaitForSeconds(1f);
         IsInteracting = false;
 
