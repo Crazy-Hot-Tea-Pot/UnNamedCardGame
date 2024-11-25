@@ -14,7 +14,10 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
     private Coroutine activeRevealCoroutine;
     private Coroutine activePanelCoroutine;
 
-
+    [Header("Scrap Display")]
+    public GameObject ScrapPanel;
+    private int currentScrapAmount;
+    public TextMeshProUGUI ScrapTextAmount;
 
     [Header("Intro Screen")]
     public GameObject IntroPanel;
@@ -126,6 +129,14 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
             
         }
 
+    }
+
+    /// <summary>
+    /// Update the display amount of scrap
+    /// </summary>
+    public void UpdateScrapDisplay(int NewScrapAmount)
+    {
+        StartCoroutine(UpdateScrapAmount(NewScrapAmount));
     }
     
     /// <summary>
@@ -587,6 +598,24 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
             tmpText.maxVisibleCharacters = totalVisibleCharacters;
             yield return new WaitForSeconds(blinkDuration);
         }
+    }
+
+    private IEnumerator UpdateScrapAmount(int newScrapAmount)
+    {
+        int startingAmount = Int32.Parse(ScrapTextAmount.text);
+        float elapsed = 0f;
+
+        while (elapsed < 1f)
+        {
+            elapsed += Time.deltaTime;
+            currentScrapAmount = Mathf.RoundToInt(Mathf.Lerp(startingAmount, newScrapAmount, elapsed / 2f));
+            ScrapTextAmount.SetText(currentScrapAmount.ToString());
+            yield return null;
+        }
+
+        // Ensure the final value is set
+        currentScrapAmount = newScrapAmount;
+        ScrapTextAmount.SetText(currentScrapAmount.ToString());
     }
 
     private void StopAndClearCoroutine(ref Coroutine coroutine)

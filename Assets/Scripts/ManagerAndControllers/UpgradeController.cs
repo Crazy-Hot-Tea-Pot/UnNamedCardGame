@@ -116,6 +116,10 @@ public class UpgradeController : MonoBehaviour
     {
         PlayerCanvas = GameObject.FindGameObjectWithTag("PlayerCanvas");
         SwitchToScreen(Screens.Default);
+        UIController.UpdateScrapDisplay(
+            GameObject.FindGameObjectWithTag("Player")
+            .GetComponent<PlayerController>().Scrap
+            );
     }
 
     /// <summary>
@@ -344,6 +348,12 @@ public class UpgradeController : MonoBehaviour
 
             //Display new info
             SwitchToScreen(UpgradeController.Screens.HealthUpgrade);
+
+            //Refresh Scrap Amount
+            UIController.UpdateScrapDisplay(
+            GameObject.FindGameObjectWithTag("Player")
+            .GetComponent<PlayerController>().Scrap
+            );
         }
         else
         {
@@ -371,6 +381,12 @@ public class UpgradeController : MonoBehaviour
 
             // FOr now lets go back to main menu.
             SwitchToScreen(Screens.Intro);
+
+            //Refresh Scrap Amount
+            UIController.UpdateScrapDisplay(
+            GameObject.FindGameObjectWithTag("Player")
+            .GetComponent<PlayerController>().Scrap
+            );
         }
         else
         {
@@ -418,7 +434,13 @@ public class UpgradeController : MonoBehaviour
         //Turn off bad Ui
         PlayerCanvas.SetActive(false);
 
-        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().GainScrap(500);
+        UIController.ScrapPanel.SetActive(true);
+
+        //Refresh Scrap Amount
+        UIController.UpdateScrapDisplay(
+        GameObject.FindGameObjectWithTag("Player")
+        .GetComponent<PlayerController>().Scrap
+        );
 
     }
 
@@ -432,9 +454,12 @@ public class UpgradeController : MonoBehaviour
         yield return new WaitForSeconds(1f);
         IsInteracting = false;
 
+        //deactive Scrap Panel
+        UIController.ScrapPanel.SetActive(false);
+
         // reactive bad Ui
         PlayerCanvas.SetActive(true);
-        
+                
     }    
 
     /// <summary>
@@ -548,5 +573,5 @@ public class UpgradeController : MonoBehaviour
             StopCoroutine(coroutine);
             coroutine = null;
         }
-    }
+    }   
 }
