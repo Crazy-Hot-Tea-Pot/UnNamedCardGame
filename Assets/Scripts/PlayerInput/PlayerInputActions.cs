@@ -197,6 +197,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""IncreaseCameraSpeed"",
+                    ""type"": ""Button"",
+                    ""id"": ""ebb29b81-e264-4108-8383-d59ace9484ed"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -364,6 +373,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""MoveCamera"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""38a74c3a-3230-4251-ab94-19fbbc8ed2a8"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""IncreaseCameraSpeed"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -434,6 +454,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_CameraControls_ZoomCamera = m_CameraControls.FindAction("ZoomCamera", throwIfNotFound: true);
         m_CameraControls_ResetCamera = m_CameraControls.FindAction("ResetCamera", throwIfNotFound: true);
         m_CameraControls_Click = m_CameraControls.FindAction("Click", throwIfNotFound: true);
+        m_CameraControls_IncreaseCameraSpeed = m_CameraControls.FindAction("IncreaseCameraSpeed", throwIfNotFound: true);
         // Player Combat
         m_PlayerCombat = asset.FindActionMap("Player Combat", throwIfNotFound: true);
         m_PlayerCombat_SelectTarget = m_PlayerCombat.FindAction("SelectTarget", throwIfNotFound: true);
@@ -584,6 +605,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_CameraControls_ZoomCamera;
     private readonly InputAction m_CameraControls_ResetCamera;
     private readonly InputAction m_CameraControls_Click;
+    private readonly InputAction m_CameraControls_IncreaseCameraSpeed;
     public struct CameraControlsActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -595,6 +617,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @ZoomCamera => m_Wrapper.m_CameraControls_ZoomCamera;
         public InputAction @ResetCamera => m_Wrapper.m_CameraControls_ResetCamera;
         public InputAction @Click => m_Wrapper.m_CameraControls_Click;
+        public InputAction @IncreaseCameraSpeed => m_Wrapper.m_CameraControls_IncreaseCameraSpeed;
         public InputActionMap Get() { return m_Wrapper.m_CameraControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -625,6 +648,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Click.started += instance.OnClick;
             @Click.performed += instance.OnClick;
             @Click.canceled += instance.OnClick;
+            @IncreaseCameraSpeed.started += instance.OnIncreaseCameraSpeed;
+            @IncreaseCameraSpeed.performed += instance.OnIncreaseCameraSpeed;
+            @IncreaseCameraSpeed.canceled += instance.OnIncreaseCameraSpeed;
         }
 
         private void UnregisterCallbacks(ICameraControlsActions instance)
@@ -650,6 +676,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Click.started -= instance.OnClick;
             @Click.performed -= instance.OnClick;
             @Click.canceled -= instance.OnClick;
+            @IncreaseCameraSpeed.started -= instance.OnIncreaseCameraSpeed;
+            @IncreaseCameraSpeed.performed -= instance.OnIncreaseCameraSpeed;
+            @IncreaseCameraSpeed.canceled -= instance.OnIncreaseCameraSpeed;
         }
 
         public void RemoveCallbacks(ICameraControlsActions instance)
@@ -738,6 +767,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnZoomCamera(InputAction.CallbackContext context);
         void OnResetCamera(InputAction.CallbackContext context);
         void OnClick(InputAction.CallbackContext context);
+        void OnIncreaseCameraSpeed(InputAction.CallbackContext context);
     }
     public interface IPlayerCombatActions
     {

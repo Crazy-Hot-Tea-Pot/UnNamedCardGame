@@ -97,9 +97,15 @@ public class CameraController : MonoBehaviour
     [Header("Camera Info")]
     [Header("Things to make change from camera settings later")]
     public bool AllowBoarderMovement;
+
+    private float baseCameraSpeed;
+
+    public float CurrentCameraSpeed
+    {
+        get;
+        private set;
+    }
     
-    public float boarderCameraSpeed;
-    public float freeCameraSpeed;
     // Sensitivity for moving the look target smoothly
     public float freeCameraLookSensitivity = 0.1f;
     public float rotationSensitivity = 0.1f;
@@ -172,6 +178,8 @@ public class CameraController : MonoBehaviour
         playerInputActions.CameraControls.RotateCamera.performed += ctx => SwitchCamera(CameraState.Rotation);
         playerInputActions.CameraControls.FreeCam.performed += ctx => SwitchCamera(CameraState.Free);
         playerInputActions.CameraControls.ResetCamera.performed += OnResetCamera;
+        playerInputActions.CameraControls.IncreaseCameraSpeed.performed += OnIncreaseCameraSpeed;
+        playerInputActions.CameraControls.IncreaseCameraSpeed.canceled += OnResetCameraSpeed;
 
         screenWidth = Screen.width;
         screenHeight = Screen.height;
@@ -193,6 +201,9 @@ public class CameraController : MonoBehaviour
 
         RotationCamera.m_XAxis.m_MaxSpeed = rotationSensitivity * 300;
         RotationCamera.m_YAxis.m_MaxSpeed = rotationSensitivity * 2;
+
+        //Set Base cameraSpeed;
+        baseCameraSpeed = SettingsManager.Instance.CameraSettings.cameraSpeed;
 
     }
 
@@ -243,7 +254,7 @@ public class CameraController : MonoBehaviour
         if (currentCamera == CameraState.Free)
         {
             // Calculate movement direction using WASD input
-            Vector3 moveDirection = new Vector3(moveInput.x, 0, moveInput.y) * freeCameraSpeed * Time.deltaTime;
+            Vector3 moveDirection = new Vector3(moveInput.x, 0, moveInput.y) * CurrentCameraSpeed * Time.deltaTime;
 
             // Move freeCamera based on its orientation
             freeCamera.transform.position += freeCamera.transform.TransformDirection(moveDirection);
@@ -282,7 +293,7 @@ public class CameraController : MonoBehaviour
         }
 
         // Apply the movement
-        BorderCamera.transform.position += movement * boarderCameraSpeed * Time.deltaTime;
+        BorderCamera.transform.position += movement * CurrentCameraSpeed * Time.deltaTime;
     }
 
     /// <summary>
@@ -354,6 +365,17 @@ public class CameraController : MonoBehaviour
         return GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().IsInteracting;
     }
 
+    private void OnIncreaseCameraSpeed(InputAction.CallbackContext ctx)
+    {
+        CurrentCameraSpeed = baseCameraSpeed * 2;
+    }
+
+    private void OnResetCameraSpeed(InputAction.CallbackContext ctx)
+    {
+        CurrentCameraSpeed = baseCameraSpeed;
+    }
+
+
     void OnDisable()
     {
 
@@ -361,6 +383,8 @@ public class CameraController : MonoBehaviour
         playerInputActions.CameraControls.MoveCamera.Disable();
 
         playerInputActions.CameraControls.ResetCamera.performed -= OnResetCamera;
+        playerInputActions.CameraControls.IncreaseCameraSpeed.performed -= OnIncreaseCameraSpeed;
+        playerInputActions.CameraControls.IncreaseCameraSpeed.canceled -= OnResetCameraSpeed;
 
     }
 }
