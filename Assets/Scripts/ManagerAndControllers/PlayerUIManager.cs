@@ -60,6 +60,9 @@ public class PlayerUIManager : MonoBehaviour
     private Sprite blankUtilityUIImage;
     private Sprite blankShieldUiImage;
 
+    //Inventory starting list
+    public List<Gear> StartingInventory;
+    public Image imageBaseObject;
 
     #region InventoryUIVariables
     /// <summary>
@@ -156,6 +159,12 @@ public class PlayerUIManager : MonoBehaviour
     {
         //Fills the inventory UI for deck
         //fillDeck();
+
+        //Starting Inventory
+        for(int i = 0; i < StartingInventory.Count; i++)
+        {
+            AddToInventory(StartingInventory[i]);
+        }
 
         //Fill blank UI Sprites
         blankAttackUIImage = attackUIImage.sprite;
@@ -314,13 +323,18 @@ public class PlayerUIManager : MonoBehaviour
     /// Adds an item to the inventory UI
     /// </summary>
     /// <param name="item"></param>
-    public void AddToInventory(GameObject item)
+    public void AddToInventory(Gear item)
     {
-        //No duplicated items
-        if (!GameObject.FindGameObjectWithTag(item.tag))
-        {
-            Instantiate(item, panelInventory.transform);
-        }
+        //Create the UI image object
+        Image itemObj = imageBaseObject;
+        //Add the script and make the needed sciptable object get set
+        itemObj.AddComponent<NewEquipment>().equipmentButton = item;
+        //Add a button
+        itemObj.AddComponent<Button>();
+        //Set the ui image to the correct image
+        itemObj.sprite = item.image;
+        //Attach an image to the gear
+        Instantiate(itemObj, panelInventory.transform);
     }
 
     /// <summary>

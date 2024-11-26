@@ -7,6 +7,7 @@ public class Gear : Equipment
 {
     public List<Ability> AbilityList;
     private bool isEquipted = false;
+    public Sprite image;
     public override void ActivateEquipmnet()
     {
         //Does the method base first
