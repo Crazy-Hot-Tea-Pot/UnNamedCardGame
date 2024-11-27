@@ -60,8 +60,6 @@ public class PlayerUIManager : MonoBehaviour
     private Sprite blankUtilityUIImage;
     private Sprite blankShieldUiImage;
 
-    //Inventory starting list
-    public List<Gear> StartingInventory;
     public Image imageBaseObject;
 
     #region InventoryUIVariables
@@ -161,9 +159,9 @@ public class PlayerUIManager : MonoBehaviour
         //fillDeck();
 
         //Starting Inventory
-        for(int i = 0; i < StartingInventory.Count; i++)
+        for(int i = 0; i < GameManager.Instance.Items.Count; i++)
         {
-            AddToInventory(StartingInventory[i]);
+            AddToInventory(GameManager.Instance.Items[i]);
         }
 
         //Fill blank UI Sprites
@@ -335,6 +333,8 @@ public class PlayerUIManager : MonoBehaviour
         itemObj.sprite = item.image;
         //Attach an image to the gear
         Instantiate(itemObj, panelInventory.transform);
+
+        item.EquiptItems();
     }
 
     /// <summary>
@@ -421,8 +421,11 @@ public class PlayerUIManager : MonoBehaviour
         {
             Debug.LogError("This is not an ability type");
         }
-        //Close player UI
-        uiPlayerCanvas.SetActive(false);
+        if (uiInventoryCanvas.activeInHierarchy)
+        {
+            //Close player UI
+            uiPlayerCanvas.SetActive(false);
+        }
     }
 
     /// <summary>

@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using static GameData;
+using static UnityEditor.Progress;
 
 public class TitleController : MonoBehaviour
 {
@@ -16,6 +17,9 @@ public class TitleController : MonoBehaviour
 
     [Header("Game Status Info")]
     public TextMeshProUGUI VersionText;
+
+    [Header("Starter Gear")]
+    public List<Gear> StartingInventory;
 
     private GameData latestSave = null;
     // Start is called before the first frame update
@@ -66,6 +70,27 @@ public class TitleController : MonoBehaviour
         NewChip guard = Resources.Load<NewChip>("Scriptables/Chips/Guard");
         NewChip motivation = Resources.Load<NewChip>("Scriptables/Chips/Motivation");
         NewChip kickstart = Resources.Load<NewChip>("Scriptables/Chips/Kickstart");
+
+        // Adds gear to list.
+        
+            foreach (var gear in StartingInventory)
+            {
+                ItemData itemData = new ItemData();
+                itemData.GearName = gear.itemName;
+            itemData.isEquipped = gear.IsEquipted;
+                itemData.AmountOfAbilities = gear.AbilityList.Count;
+
+                foreach (var ability in gear.AbilityList)
+                {
+                    AbilityData abilityData = new AbilityData();
+                    abilityData.AbilityName = ability.abilityName;
+                    abilityData.IsUpgraded = ability.isUpgraded;
+                    itemData.ListOfAbilities.Add(abilityData);
+                }
+
+                startData.Gears.Add(itemData);
+            }
+
 
         // Check if chips were loaded successfully
         if (punch == null) 

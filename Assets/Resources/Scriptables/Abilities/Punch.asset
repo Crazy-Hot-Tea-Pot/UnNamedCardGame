@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ed957402865a574458fa5dc49a9275b2, type: 3}
-  m_Name: Default Attack
+  m_Name: Punch
   m_EditorClassIdentifier: 
   abilityName: Punch
+  isUpgraded: 0
   abilityDescription: If all else fails we can always punch
   energyCost: 5
   abilityType: 1

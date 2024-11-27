@@ -9,6 +9,8 @@ public class Ability : ScriptableObject
     /// </summary>
     public string abilityName;
 
+    public bool isUpgraded = false;
+
     /// <summary>
     /// Description of Ability;
     /// </summary>

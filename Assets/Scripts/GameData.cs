@@ -15,9 +15,18 @@ public class GameData
         public int DisableCounter;
     }
     [System.Serializable]
+    public class ItemData
+    {
+        public string GearName;
+        public int AmountOfAbilities;
+        public bool isEquipped;
+        public List<AbilityData> ListOfAbilities= new List<AbilityData>();
+    }
+    [System.Serializable]
     public class AbilityData
     {
-
+        public string AbilityName;
+        public bool IsUpgraded;
     }
     //Name of Save
     public string SaveName;
@@ -33,15 +42,15 @@ public class GameData
     public int Scraps;
     // Save Chips
     public List<ChipData> Chips = new List<ChipData>();
-    // Save Abilities
-    public List<AbilityData> Abilities = new List<AbilityData>();
+    // Save Gears
+    public List<ItemData> Gears = new List<ItemData>();
     public string TimeStampString;
 
     //Default Constructor
     public GameData()
     {
         Chips = new List<ChipData>();
-        Abilities= new List<AbilityData>();
+        Gears= new List<ItemData>();
     }
 
     // Synchronize TimeStamp with its string representation

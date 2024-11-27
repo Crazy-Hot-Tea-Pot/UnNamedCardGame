@@ -21,7 +21,7 @@ public class NewEquipment : MonoBehaviour
         //Assign method to button
         buttonVar = GetComponent<Button>();
         //Creates a listener that triggers the onabilityactive method when pressed
-        buttonVar.onClick.AddListener(DisplayAbilities);
+        buttonVar.onClick.AddListener(DisplayAbilities);        
     }
 
     // Update is called once per frame

@@ -6,6 +6,7 @@ using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using static GameData;
+using static UnityEditor.Progress;
 
 
 public class GameManager : MonoBehaviour
@@ -21,6 +22,12 @@ public class GameManager : MonoBehaviour
     public int decklimit;
     ///<summary>Draws per turn</summary>
     public int drawsPerTurn;
+
+    /// <summary>
+    /// list of items player has.
+    /// Move this later!
+    /// </summary>
+    public List<Gear> Items = new List<Gear>();
 
     public List<NewChip> playerHand;
     public List<NewChip> playerDeck = new List<NewChip>();
@@ -387,7 +394,27 @@ public class GameManager : MonoBehaviour
                     DataManager.Instance.CurrentGameData.Chips.Add(chipSave);
                 }
 
-                //TODO  Abilities
+                //Gears
+
+                DataManager.Instance.CurrentGameData.Gears.Clear();
+
+                foreach (var gear in Items)
+                {
+                    ItemData itemData = new ItemData();
+                    itemData.GearName = gear.itemName;
+                    itemData.isEquipped = gear.IsEquipted;
+                    itemData.AmountOfAbilities = gear.AbilityList.Count;
+
+                    foreach (var ability in gear.AbilityList)
+                    {
+                        AbilityData abilityData = new AbilityData();
+                        abilityData.AbilityName = ability.abilityName;
+                        abilityData.IsUpgraded = ability.isUpgraded;
+                        itemData.ListOfAbilities.Add(abilityData);
+                    }
+
+                    DataManager.Instance.CurrentGameData.Gears.Add(itemData);
+                }
 
                 //Do a Auto Save
                 DataManager.Instance.AutoSave();
@@ -416,9 +443,11 @@ public class GameManager : MonoBehaviour
 
             switch (CurrentLevel)
             {
-
+                case Levels.Title:
+                    break;
                 default:
                     playerDeck.Clear();
+                    Items.Clear();
                     enemyList.Clear();
 
                     foreach (var chipSave in DataManager.Instance.CurrentGameData.Chips)
@@ -438,6 +467,28 @@ public class GameManager : MonoBehaviour
                         else
                         {
                             Debug.LogWarning($"Chip {chipSave.Name} not found in Resources.");
+                        }
+                    }
+                    foreach(var gear in DataManager.Instance.CurrentGameData.Gears)
+                    {
+                        Gear newGear = Resources.Load<Gear>($"Scriptables/Equipment/{gear.GearName}");
+
+                        Gear loadedGear = Instantiate(newGear);
+
+                        loadedGear.IsEquipted = gear.isEquipped;
+                        if(loadedGear != null)
+                        {
+                            if (gear.AmountOfAbilities > 0)
+                            {
+                                for (int i = 0; i < gear.AmountOfAbilities; i++)
+                                {
+                                    if (gear.ListOfAbilities[i].AbilityName == loadedGear.AbilityList[i].abilityName)
+                                    {
+                                        loadedGear.AbilityList[i].isUpgraded = gear.ListOfAbilities[i].IsUpgraded;
+                                    }
+                                }
+                            }
+                            Items.Add(loadedGear);
                         }
                     }
 

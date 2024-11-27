@@ -8,16 +8,34 @@ public class Gear : Equipment
     public List<Ability> AbilityList;
     private bool isEquipted = false;
     public Sprite image;
+    public bool IsEquipted
+    {
+        get
+        {
+            return isEquipted;
+        }
+        set
+        {
+            isEquipted = value;
+        }
+    }
+
     public override void ActivateEquipmnet()
     {
         //Does the method base first
         base.ActivateEquipmnet();
-        
+
+        EquiptItems();
+
+    }
+
+    public void EquiptItems()
+    {
         //If being equiped
-        if(isEquipted == false)
+        if (isEquipted == false)
         {
             //Loop through the UI and add abilites
-            for(int i = 0; i < AbilityList.Count; i++)
+            for (int i = 0; i < AbilityList.Count; i++)
             {
                 GameObject.Find("PlayerUIManager").GetComponent<PlayerUIManager>().MakeActiveAbility(AbilityList[i]);
             }
@@ -41,6 +59,5 @@ public class Gear : Equipment
             //Mark as unequipted
             isEquipted = false;
         }
-
     }
 }

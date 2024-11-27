@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9706551dd7293664abb220a6ffbf0387, type: 3}
-  m_Name: necklace
+  m_Name: Sword
   m_EditorClassIdentifier: 
-  itemName: Neclace of transferance
-  itemDescription: The wearer exchanges energy for health
+  itemName: Sword
+  itemDescription: 
   destroyme: 0
   AbilityList:
-  - {fileID: 11400000, guid: e598b6a5f3570dd44824ea394dbe6ec9, type: 2}
-  image: {fileID: 21300000, guid: da14b980ba2a0b041b13dfb30a5823d9, type: 3}
+  - {fileID: 11400000, guid: abf7935e70334564786ef7cc5c5e4709, type: 2}
+  - {fileID: 11400000, guid: 1d229ff9f94548c4c8c1dc6be6d07c99, type: 2}
+  image: {fileID: 21300000, guid: 4b51f29e0778b184d960930b5afa547b, type: 3}

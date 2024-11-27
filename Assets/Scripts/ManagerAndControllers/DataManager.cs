@@ -127,7 +127,7 @@ public class DataManager : MonoBehaviour
     /// <summary>
     /// Load Player stats
     /// Re-link Chips by loading from Resources
-    /// Re-link Abilities(havn't been done yet)
+    /// Re-link Gears(havn't been done yet)
     /// </summary>
     /// <param name="saveName"></param>
     public void LoadData(string saveName)
@@ -176,8 +176,32 @@ public class DataManager : MonoBehaviour
             }
         }
 
-        // load Abilities
-        //TODO
+        // load Gears
+        GameManager.Instance.Items.Clear();
+
+        foreach(var item in saveData.Gears)
+        {
+            Gear gear = Resources.Load<Gear>($"Scriptables/Equipment/{item.GearName}");
+
+            Gear newGear = Instantiate(gear);
+
+            newGear.IsEquipted=item.isEquipped;
+
+
+
+            if (item.AmountOfAbilities > 0)
+            {
+                for (int i = 0; i < item.AmountOfAbilities; i++)
+                {
+                    if(item.ListOfAbilities[i].AbilityName == newGear.AbilityList[i].abilityName)
+                    {
+                        newGear.AbilityList[i].isUpgraded = item.ListOfAbilities[i].IsUpgraded;
+                    }
+                }
+            }
+
+            GameManager.Instance.Items.Add(newGear);
+        }
 
         Debug.Log("Game loaded successfully.");
     }
