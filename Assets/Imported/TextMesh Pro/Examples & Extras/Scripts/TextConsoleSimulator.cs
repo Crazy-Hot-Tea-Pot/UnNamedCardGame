@@ -18,7 +18,7 @@ namespace TMPro.Examples
         void Start()
         {
             StartCoroutine(RevealCharacters(m_TextComponent));
-            //StartCoroutine(PlayHealthScreen(m_TextComponent));
+            //StartCoroutine(RevealWords(m_TextComponent));
         }
 
 

@@ -10,10 +10,20 @@ public enum TargetingType
     Ability
 }
 public class Enemy : MonoBehaviour
-{
-    public string enemyName;
+{   
 
     public GameObject enemyTarget;
+    /// <summary>
+    /// Enemy current Target.
+    /// </summary>
+    public GameObject EnemyTarget
+    {
+        get { return enemyTarget; }
+        protected set
+        {
+            enemyTarget = value;
+        }
+    }
 
     public float AttackRange;
     
@@ -35,85 +45,10 @@ public class Enemy : MonoBehaviour
     /// reference to player camera.
     /// </summary>
     public Camera playerCamera;
-    /// <summary>
-    /// reference to enemy canvas.
-    /// </summary>
-    public Canvas enemyCanvas;
-    /// <summary>
-    /// Name of Enemy Goes here.
-    /// </summary>
-    public TextMeshProUGUI EnemyNameBox;
-    /// <summary>
-    /// Enemy Health Bar.
-    /// </summary>
-    public Image healthBar;
-    /// <summary>
-    /// reference to effects Panel.
-    /// </summary>
-    public GameObject EffectsPanel;
-    /// <summary>
-    /// Prefabs of Effects enemy will use."Case sensitive"
-    /// </summary>
-    public List<GameObject> effectPrefabs;
-    /// <summary>
-    /// list of active effects.
-    /// </summary>
-    public List<GameObject> activeEffects;
 
-    [Header("Enemy stats")]
-    /// <summary>
-    /// Max Hp of Enemy
-    /// </summary>
-    public int maxHP;
-    private int currentHp;
-    private int shield;
-    private bool isTargeted;
-
-    [Header("Boarder Effects")]    
-    private List<TargetingType> activeTargetingTypes = new List<TargetingType>();
-    private Color SelectedTarget = Color.red;
-    private Color InAbilityRange = Color.yellow;
-
-    [Header("Status Effects")]
-    [SerializeField]
-    private bool inCombat;
-    [SerializeField]
-    private int galvanizedStacks;
-    [SerializeField]
-    private bool isGalvanized;
-    [SerializeField]
-    private int powerStacks;
-    [SerializeField]
-    private bool isPowered;
-    [SerializeField]
-    private int drainStacks;
-    [SerializeField]
-    private bool isDrained;
-
-    [Header("Needed Assets")]
-    public Shader outlineShader;
-    private Shader defaultShader;
-    private Renderer enemyRenderer;
-
-    /// <summary>
-    /// Reference to combat controller.
-    /// </summary>
-    public CombatController CombatController;
-
-    /// <summary>
-    /// This holds the cards we want to have dropped on death
-    /// </summary>
-    public List<NewChip> dropedCards;
-
-    public GameObject EnemyTarget
-    {
-        get { return enemyTarget; }
-        protected set
-        {
-            enemyTarget = value;
-        }
-    }
-
+    [Header("Enemy statuss")]
+    #region EnemyStatus
+    private string enemyName;
     /// <summary>
     /// Returns name of enemy
     /// </summary>
@@ -121,10 +56,9 @@ public class Enemy : MonoBehaviour
     {
         get
         {
-            if (enemyName == null||enemyName=="")
+            if (enemyName == null || enemyName == "")
             {
-                EnemyName = this.GetComponent<Chip>().name;
-                return enemyName;
+                return this.gameObject.name;
             }
             else
                 return enemyName;
@@ -132,34 +66,10 @@ public class Enemy : MonoBehaviour
         protected set
         {
             enemyName = value;
-            EnemyNameBox.SetText(enemyName);
-        }
-    }    
-
-    /// <summary>
-    /// Enemy Current Hp
-    /// </summary>
-    public int CurrentHP
-    {
-        get
-        {
-            return currentHp;
-        }
-        protected set
-        {
-            currentHp = value;
-
-            //Update UI for enemy Health
-            UpdateEnemyHealthBar();
-
-            if (currentHp <= 0)
-            {
-                currentHp = 0;
-                Die();
-            }
+            thisEnemyUI.SetEnemyName(EnemyName);
         }
     }
-   
+    private bool inCombat;
     /// <summary>
     /// Is the Enemy in Combat.
     /// </summary>
@@ -177,6 +87,36 @@ public class Enemy : MonoBehaviour
     }
 
     /// <summary>
+    /// Max Hp of Enemy
+    /// </summary>
+    public int maxHP;
+    private int currentHp;
+    /// <summary>
+    /// Enemy Current Hp
+    /// </summary>
+    public int CurrentHP
+    {
+        get
+        {
+            return currentHp;
+        }
+        protected set
+        {
+            currentHp = value;
+
+            //Update UI for enemy Health
+            thisEnemyUI.UpdateHealth(currentHp,maxHP);
+
+            if (currentHp <= 0)
+            {
+                currentHp = 0;
+                Die();
+            }
+        }
+    }
+
+    private int shield;
+    /// <summary>
     /// Enemy Shield Amount.
     /// </summary>
     public int Shield
@@ -188,13 +128,21 @@ public class Enemy : MonoBehaviour
         protected set
         {
             shield = value;
+
+            if (shield > maxShield)
+                maxShield = value;
+
             if (shield <= 0)
             {
                 shield = 0;
+                maxShield = value;
             }
+
+            thisEnemyUI.UpdateShield(shield,maxShield);
         }
     }
-
+    private int maxShield = 0;
+    private bool isTargeted;
     /// <summary>
     /// Is enemy being targeted by player.
     /// When enemy is targeted by CombatController to change boarder.
@@ -207,10 +155,20 @@ public class Enemy : MonoBehaviour
         }
         protected set
         {
-            isTargeted = value;            
+            isTargeted = value;
+            TargetIcon.SetActive(value);
         }
     }
+    #endregion
 
+    [Header("Boarder Effects")]    
+    private List<TargetingType> activeTargetingTypes = new List<TargetingType>();
+    private Color SelectedTarget = Color.red;
+    private Color InAbilityRange = Color.yellow;
+
+    [Header("Status Effects")]
+    #region StatusEffects
+    private int galvanizedStacks;
     /// <summary>
     /// Is enemy GalvanizedStacks.
     /// Added for animation or effect later.
@@ -227,25 +185,61 @@ public class Enemy : MonoBehaviour
 
             // remove Galvanized from panel
             if (!isGalvanized)
-                RemoveEffectIconFromPanel(Effects.Buff.Galvanize.ToString());
+                thisEnemyUI.RemoveEffect(Effects.Buff.Galvanize.ToString());
         }
     }
+    private bool isGalvanized;
     /// <summary>
-    /// Is enemy Drained.
+    /// Amount of stacks of Galvanize the enemy have.
+    /// </summary>
+    public int GalvanizedStacks
+    {
+        get => galvanizedStacks;
+        protected set
+        {
+            galvanizedStacks = value;
+            if (galvanizedStacks <= 0)
+                IsGalvanized = false;
+            else if (galvanizedStacks >= 1)
+                IsGalvanized = true;
+        }
+    }
+    private int powerStacks;
+    /// <summary>
+    /// Amount of stacks of Power the enemy have.
+    /// </summary>
+    public int PowerStacks
+    {
+        get => powerStacks;
+        protected set
+        {
+            powerStacks = value;
+            if (powerStacks <= 0)
+                IsPowered = false;
+            else
+                IsPowered = true;
+        }
+    }
+    private bool isPowered;
+    /// <summary>
+    /// Is enemy powered.
     /// Added for animation or effect later.
     /// </summary>
-    public bool IsDrained
+    public bool IsPowered
     {
-        get => isDrained;
-        private set
+        get
         {
-            isDrained = value;
+            return isPowered;
+        }
+        protected set
+        {
+            isPowered = value;
 
-            //Remove drained from panel
-            if (!IsDrained)
-                RemoveEffectIconFromPanel(Effects.Debuff.Drained.ToString());
+            if (!IsPowered)
+                thisEnemyUI.RemoveEffect(Effects.Buff.Power.ToString());
         }
     }
+    private int drainStacks;
     /// <summary>
     /// Amount of stacks of Drained the enemy have.
     /// </summary>
@@ -264,52 +258,47 @@ public class Enemy : MonoBehaviour
                 IsDrained = true;
         }
     }
+    private bool isDrained;
     /// <summary>
-    /// Amount of stacks of Galvanize the enemy have.
-    /// </summary>
-    public int GalvanizedStacks
-    {
-        get => galvanizedStacks;
-        protected set
-        {
-            galvanizedStacks = value;
-            if (galvanizedStacks <= 0)
-                IsGalvanized = false;
-            else if(galvanizedStacks >= 1)
-                IsGalvanized = true;
-        }
-    }
-    /// <summary>
-    /// Amount of stacks of Power the enemy have.
-    /// </summary>
-    public int PowerStacks { 
-        get => powerStacks;
-        protected set {  
-            powerStacks = value;
-            if (powerStacks <= 0)
-                IsPowered = false;
-            else
-                IsPowered = true;
-        } 
-    }
-    /// <summary>
-    /// Is enemy powered.
+    /// Is enemy Drained.
     /// Added for animation or effect later.
     /// </summary>
-    public bool IsPowered
+    public bool IsDrained
     {
-        get
+        get => isDrained;
+        private set
         {
-            return isPowered;
-        }
-        protected set
-        {
-            isPowered = value;
+            isDrained = value;
 
-            if(!IsPowered)
-                RemoveEffectIconFromPanel(Effects.Buff.Power.ToString());
+            //Remove drained from panel
+            if (!IsDrained)
+                thisEnemyUI.RemoveEffect(Effects.Debuff.Drained.ToString());
         }
-    }    
+    }
+    #endregion
+
+    [Header("Needed Assets")]
+    public Shader outlineShader;
+    private Shader defaultShader;
+    private Renderer enemyRenderer;
+    public GameObject damageTextPrefab;
+
+    /// <summary>
+    /// reference to enemy canvas.
+    /// </summary>
+    public EnemyUI thisEnemyUI;
+
+    /// <summary>
+    /// Reference to combat controller.
+    /// </summary>
+    public CombatController CombatController;
+
+    /// <summary>
+    /// This holds the cards we want to have dropped on death
+    /// </summary>
+    public List<NewChip> dropedCards;
+
+    public GameObject TargetIcon;
 
     void Awake()
     {
@@ -317,6 +306,11 @@ public class Enemy : MonoBehaviour
         animator = GetComponent<Animator>();
         playerCamera = Camera.main;
         enemyRenderer = GetComponent<Renderer>();
+        thisEnemyUI = this.gameObject.GetComponentInChildren<EnemyUI>();
+
+        //Transform enemyCanvasTransform = transform.Find("EnemyCanvas");
+
+        //thisEnemyUI=enemyCanvasTransform.GetComponent<EnemyUI>();
     }
 
     // Start is called before the first frame update
@@ -339,33 +333,18 @@ public class Enemy : MonoBehaviour
                 StartTurn();                
             }
         }
-    }
-
-    public virtual void LateUpdate()
-    {
-        //if(playerCamera!= null)
-        //    enemyCanvas.transform.LookAt(playerCamera.transform.position,Vector3.up);
-
-        // trying this way to make it more smoother. only rotates on Y axis.
-        if (playerCamera != null)
-        {
-            Vector3 direction = (playerCamera.transform.position - enemyCanvas.transform.position).normalized;
-            direction.y = 0;  // Lock rotation to the Y-axis
-            enemyCanvas.transform.rotation = Quaternion.LookRotation(-direction);
-        }
-    }
+    }   
 
     public virtual void Initialize()
     {
-        CurrentHP = maxHP;
-        EnemyNameBox.SetText(EnemyName);
+        CurrentHP = maxHP;        
         gameObject.name = EnemyName;
         defaultShader=enemyRenderer.material.shader;
 
         CombatController = GameObject.FindGameObjectWithTag("CombatController").GetComponent<CombatController>();
         enemyTarget = GameObject.FindGameObjectWithTag("Player");
 
-        UpdateBorderColor();
+        //UpdateBorderColor();
     }
    /// <summary>
    /// Is called when enemy is attacked by player.
@@ -374,14 +353,14 @@ public class Enemy : MonoBehaviour
     public virtual void TakeDamage(int damage)
     {
         // Plays sound of taking damage
-        SoundManager.PlayFXSound(SoundFX.DamageTaken,this.gameObject.transform);
+        SoundManager.PlayFXSound(SoundFX.DamageTaken, this.gameObject.transform);
 
         // if has shield
         if (Shield > 0)
         {
             if (damage >= Shield)
             {
-                damage -= Shield; 
+                damage -= Shield;
                 Shield = 0;
                 Debug.Log("Enemy " + name + "Shield destroyed.");
             }
@@ -394,46 +373,9 @@ public class Enemy : MonoBehaviour
             }
         }
         CurrentHP -= damage;
-        Debug.Log("Enemy " + name + " has taken " + damage + " damage and have " + CurrentHP + " remaining.");
-    }
-    /// <summary>
-    /// Base Perform Intent.
-    /// Make sure the base is run after you perform an action.
-    /// </summary>
-    protected virtual void PerformIntent()
-    {
-        if(this.gameObject != null)
-            CombatController.TurnUsed(this.gameObject);
-    }
 
-    /// <summary>
-    /// Start Combat turn
-    /// </summary>
-    protected virtual void StartTurn()
-    {
-        //Remove Shield if there is shield
-        if (Shield > 0)        
-            Shield = 0;
-
-        //Remove Buffs
-        PowerStacks--;
-        GalvanizedStacks--;
-
-        //Look at player
-        this.gameObject.transform.LookAt(EnemyTarget.transform);
-
-        //Check if player is in range
-        if (DistanceToPlayer <= AttackRange)
-        {
-            agent.ResetPath();
-            PerformIntent();
-        }
-        else
-        {
-            // move to player
-            agent.SetDestination(EnemyTarget.transform.position);
-        }
-    }
+        DisplayDamageTaken(damage);
+    }    
     /// <summary>
     /// Call when enemy die.
     /// </summary>
@@ -480,15 +422,13 @@ public class Enemy : MonoBehaviour
         switch (debuffToApply)
         {
             case Effects.Debuff.Drained:
-                DrainedStacks += debuffStacks;
-                if (DrainedStacks > 0)
-                {
-                    AddEffectIconToPanel(debuffToApply.ToString());
-                }
+                DrainedStacks += debuffStacks;                
                 break;
             default:
                 break;
         }
+
+        thisEnemyUI.AddEffect(debuffToApply.ToString());
     }
 
     /// <summary>
@@ -501,85 +441,14 @@ public class Enemy : MonoBehaviour
         switch (buffToApply)
         {
             case Effects.Buff.Galvanize:
-                GalvanizedStacks += buffStacks;
-                if (GalvanizedStacks > 0)
-                {
-                    AddEffectIconToPanel(buffToApply.ToString());
-                }
+                GalvanizedStacks += buffStacks;                
                 break;
             case Effects.Buff.Power:
-                PowerStacks+= buffStacks;
-                if(PowerStacks>0)
-                {
-                    AddEffectIconToPanel(buffToApply.ToString());
-                }
+                PowerStacks+= buffStacks;                
                 break;
         }
-    }
-
-    /// <summary>
-    /// This method allows us to change the UI in world enemy Health bar based on the enemies Health
-    /// </summary>
-    protected virtual void UpdateEnemyHealthBar()
-    {
-        //Rotate the ui to match camera angle
-        //enemyCanvas.transform.rotation = new Quaternion(enemyCanvas.transform.position.x, playerCamera.transform.rotation.y, enemyCanvas.transform.position.z, 0);
-
-        // Calculate Health as a percentage
-        float healthPercentage = (float)currentHp / maxHP;
-
-        //Set the bars value
-        healthBar.fillAmount = healthPercentage;
-    }
-
-    /// <summary>
-    /// Check if the effect is already active.
-    /// Method to instantiate and add effect to EffectsPanel.
-    /// Instantiate effect icon and set its parent to EffectsPanel.
-    /// Track active effects.
-    /// </summary>
-    /// <param name="effectPrefab"></param>
-    protected void AddEffectIconToPanel(string effectName)
-    {
-        if (activeEffects.Exists(effect => effect.name == effectName))
-            return;        
-
-            GameObject effectPrefab = effectPrefabs.Find(prefab => prefab.name == effectName);
-
-            try
-            {
-                GameObject effectInstance = Instantiate(effectPrefab, EffectsPanel.transform);
-                effectInstance.name = effectName;
-                activeEffects.Add(effectInstance);
-            }
-            catch
-            {
-                Debug.LogError("So Somebody fucked up.");
-            }        
-    }
-
-    /// <summary>
-    /// Method to remove an effect from EffectsPanel.
-    /// Remove from tracking list.
-    /// Destroy the effect GameObject.
-    /// </summary>
-    /// <param name="effect"></param>
-    protected void RemoveEffectIconFromPanel(string effectName)
-    {        
-        GameObject effectToRemove = activeEffects.Find(effect => effect.name == effectName);
-        try
-        {
-            if (effectToRemove != null)
-            {
-                activeEffects.Remove(effectToRemove);
-                Destroy(effectToRemove);
-            }
-        }
-        catch
-        {
-            Debug.LogError("So Somebody fucked up.");
-        }
-    }
+        thisEnemyUI.AddEffect(buffToApply.ToString());
+    }       
 
     /// <summary>
     /// Give enemy shield.
@@ -592,6 +461,7 @@ public class Enemy : MonoBehaviour
 
         Debug.Log("Shield Restored: " + shield);
     }
+
     /// <summary>
     /// Updates the targeting state of the enemy based on the specified targeting type and its active status.
     /// Adds the targeting type to the active list if it starts targeting, or removes it if it stops targeting.
@@ -615,51 +485,104 @@ public class Enemy : MonoBehaviour
         }
 
         // Determine if CombatController is active and update IsTargeted.
-        IsTargeted = activeTargetingTypes.Contains(TargetingType.CombatController);
+        IsTargeted = activeTargetingTypes.Contains(TargetingType.CombatController);        
+    }
+   
+    /// <summary>
+    /// Base Perform Intent.
+    /// Make sure the base is run after you perform an action.
+    /// </summary>
+    protected virtual void PerformIntent()
+    {
+        if (this.gameObject != null)
+            CombatController.TurnUsed(this.gameObject);
+    }
 
-        UpdateBorderColor();
+    /// <summary>
+    /// Start Combat turn
+    /// </summary>
+    protected virtual void StartTurn()
+    {
+        //Remove Shield if there is shield
+        if (Shield > 0)
+            Shield = 0;
+
+        //Remove Buffs
+        PowerStacks--;
+        GalvanizedStacks--;
+
+        //Look at player
+        this.gameObject.transform.LookAt(EnemyTarget.transform);
+
+        //Check if player is in range
+        if (DistanceToPlayer <= AttackRange)
+        {
+            agent.ResetPath();
+            PerformIntent();
+        }
+        else
+        {
+            // move to player
+            agent.SetDestination(EnemyTarget.transform.position);
+        }
+    }
+
+    /// <summary>
+    /// Display damage taken in game.
+    /// </summary>
+    /// <param name="damage"></param>
+    protected virtual void DisplayDamageTaken(int damage)
+    {
+        GameObject damageIndicator = Instantiate(damageTextPrefab, this.gameObject.transform.position, Quaternion.identity);
+        damageIndicator.GetComponent<TextMeshPro>().SetText("-" + damage);
+
+        damageIndicator.transform.LookAt(Camera.main.transform);
+        //to fix backward text
+        damageIndicator.transform.Rotate(0, 180, 0);
+
+        Destroy(damageIndicator, 2f);
     }
     /// <summary>
     /// Updates the enemy's border color and shader properties based on the currently active targeting types.
     /// The color and outline properties are determined by the highest-priority active targeting type.
     /// </summary>
-    private void UpdateBorderColor()
-    { 
-        if (activeTargetingTypes.Count == 0)
-        {
-            if (enemyRenderer.material.shader != defaultShader)
-            {
-                enemyRenderer.material.shader = defaultShader;
-            }
+    //private void UpdateBorderColor()
+    //{ 
+    //    if (activeTargetingTypes.Count == 0)
+    //    {
+    //        if (enemyRenderer.material.shader != defaultShader)
+    //        {
+    //            enemyRenderer.material.shader = defaultShader;
+    //        }
 
-            // No CombatController targeting.
-            IsTargeted = false;
-            return;
-        }
+    //        // No CombatController targeting.
+    //        IsTargeted = false;
+    //        return;
+    //    }
 
-        // Check for the highest-priority targeting type.
-        TargetingType highestPriorityType = activeTargetingTypes[activeTargetingTypes.Count - 1];
+    //    // Check for the highest-priority targeting type.
+    //    TargetingType highestPriorityType = activeTargetingTypes[activeTargetingTypes.Count - 1];
 
-        // Set shader only if it has changed.
-        if (enemyRenderer.material.shader != outlineShader)
-        {
-            enemyRenderer.material.shader = outlineShader;
-        }
+    //    // Set shader only if it has changed.
+    //    if (enemyRenderer.material.shader != outlineShader)
+    //    {
+    //        enemyRenderer.material.shader = outlineShader;
+    //    }
 
-        // Assign the color based on the targeting type.
-        switch (highestPriorityType)
-        {
-            case TargetingType.CombatController:
-                enemyRenderer.material.SetColor("_OutlineColor", SelectedTarget);
-                //IsTargeted = true;
-                break;
-            case TargetingType.Ability:
-                enemyRenderer.material.SetColor("_OutlineColor", InAbilityRange);
-                break;
-        }
+    //    // Assign the color based on the targeting type.
+    //    switch (highestPriorityType)
+    //    {
+    //        case TargetingType.CombatController:
+    //            enemyRenderer.material.SetColor("_OutlineColor", SelectedTarget);
+    //            //IsTargeted = true;
+    //            break;
+    //        case TargetingType.Ability:
+    //            enemyRenderer.material.SetColor("_OutlineColor", InAbilityRange);
+    //            break;
+    //    }
 
-        // Set the outline width.
-        enemyRenderer.material.SetFloat("_OutlineWidth", 0.1f);
-    }
+    //    // Set the outline width.
+    //    enemyRenderer.material.SetFloat("_OutlineWidth", 0.1f);
+    //}
 
 }
