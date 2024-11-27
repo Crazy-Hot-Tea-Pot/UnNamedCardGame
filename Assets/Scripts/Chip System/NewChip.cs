@@ -76,7 +76,7 @@ public class NewChip : ScriptableObject
     /// <summary>
     /// Information to display to player about card.
     /// </summary>
-    public string toolTip;
+    public string ChipTip= "<#A20000>*Error missing from Chip Tech database.*</color>";
 
     /// <summary>
     /// If Chip is upgraded.

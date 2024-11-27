@@ -533,14 +533,21 @@ public class Enemy : MonoBehaviour
     /// <param name="damage"></param>
     protected virtual void DisplayDamageTaken(int damage)
     {
-        GameObject damageIndicator = Instantiate(damageTextPrefab, this.gameObject.transform.position, Quaternion.identity);
-        damageIndicator.GetComponent<TextMeshPro>().SetText("-" + damage);
+        // Instantiate the damage text prefab
+        GameObject damageIndicator = Instantiate(damageTextPrefab, this.gameObject.transform.position + Vector3.up * 2f, Quaternion.identity);
 
+        // Set the text to display the damage amount
+        TextMeshPro textMesh = damageIndicator.GetComponent<TextMeshPro>();
+        textMesh.text = $"-{damage}";
+
+        // Ensure the text faces the camera
         damageIndicator.transform.LookAt(Camera.main.transform);
-        //to fix backward text
-        damageIndicator.transform.Rotate(0, 180, 0);
-
-        Destroy(damageIndicator, 2f);
+        damageIndicator.transform.Rotate(0, 180, 0); // Correct for backward text
+    }
+    [ContextMenu("Test")]
+    public void Test()
+    {
+        DisplayDamageTaken(10);
     }
     /// <summary>
     /// Updates the enemy's border color and shader properties based on the currently active targeting types.

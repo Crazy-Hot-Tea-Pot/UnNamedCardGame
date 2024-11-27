@@ -27,7 +27,7 @@ public class LoadingController : MonoBehaviour
         choosenChip = GameManager.Instance.playerDeck[Random.Range(0, GameManager.Instance.playerDeck.Count)];
 
         ChipDisplay.GetComponent<Chip>().newChip = choosenChip;
-        ChipTip.SetText(choosenChip.toolTip);
+        ChipTip.SetText("Chip Tip: "+choosenChip.ChipTip);
 
         ChipDisplay.SetActive(true);
     }

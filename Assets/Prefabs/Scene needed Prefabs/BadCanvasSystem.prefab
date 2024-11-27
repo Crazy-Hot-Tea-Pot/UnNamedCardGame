@@ -1441,8 +1441,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 65.2496}
-  m_SizeDelta: {x: 0, y: 130.4992}
+  m_AnchoredPosition: {x: 213.91382, y: 135.34143}
+  m_SizeDelta: {x: -427.8278, y: 270.6829}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6991137573291650421
 CanvasRenderer:
@@ -1504,8 +1504,8 @@ MonoBehaviour:
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0
-  m_ChildControlHeight: 0
-  m_ChildScaleWidth: 0
+  m_ChildControlHeight: 1
+  m_ChildScaleWidth: 1
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
 --- !u!1 &4147678817112997820
@@ -3424,10 +3424,6 @@ MonoBehaviour:
   attackUIImage: {fileID: 3436462289899828603}
   utilityUIImage: {fileID: 2517548705452502213}
   shieldUIImage: {fileID: 5699091461724641203}
-  StartingInventory:
-  - {fileID: 11400000, guid: ede30edc6e7345644b2bdf1610bd32ac, type: 2}
-  - {fileID: 11400000, guid: 264ae59f1eff0864a9e3f16eb37dc753, type: 2}
-  - {fileID: 11400000, guid: 40bf29e583ae2ef4ebbe6f077a7bd961, type: 2}
   imageBaseObject: {fileID: 5428266805303895604, guid: 503c8f640ee6d9d4e824a85709145b9b, type: 3}
   InventoryList: []
   uiInventoryCanvas: {fileID: 5399210038367393679}

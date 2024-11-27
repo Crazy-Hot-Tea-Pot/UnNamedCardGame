@@ -19,6 +19,7 @@ MonoBehaviour:
   chipImage: {fileID: 21300000, guid: a81a53a48be403f40831a1024b58e0c9, type: 3}
   canBeUpgraded: 1
   costToUpgrade: 150
+  ChipTip: Try pairing this with Power buffs for some serious damage!
   hitAllTargets: 0
   damage: 4
   upgradedDamageByAmount: 2

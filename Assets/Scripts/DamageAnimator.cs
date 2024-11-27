@@ -1,36 +1,30 @@
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 
 public class DamageAnimator : MonoBehaviour
 {
-    public float fadeDuration = 1f;
-    public float moveUpSpeed = 1f;
-    public float enlargeSpeed = 1f;
-
-    private TextMeshPro textMesh;
-    private Color originalColor;
-
-    void Start()
-    {
-        textMesh = GetComponent<TextMeshPro>();
-        originalColor = textMesh.color;
-    }
+    // Speed of upward motion
+    public float moveUpSpeed = 0.5f;
+    // Speed of enlarging effect
+    public float enlargeSpeed = 0.1f;
+    // How long the text stays visible before disappearing
+    public float lifetime = 2f;
+    // Tracks how long the object has existed
+    private float elapsedTime = 0f;
 
     void Update()
     {
+        elapsedTime += Time.deltaTime;
+
         // Move upward
         transform.position += Vector3.up * moveUpSpeed * Time.deltaTime;
 
         // Enlarge
         transform.localScale += Vector3.one * enlargeSpeed * Time.deltaTime;
 
-        // Fade
-        float fade = Mathf.Clamp01(fadeDuration - Time.time);
-        textMesh.color = new Color(originalColor.r, originalColor.g, originalColor.b, fade);
-
-        if (fade <= 0f) 
+        // Destroy the object after the set lifetime
+        if (elapsedTime >= lifetime)
+        {
             Destroy(gameObject);
+        }
     }
 }

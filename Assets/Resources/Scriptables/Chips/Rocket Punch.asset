@@ -19,6 +19,7 @@ MonoBehaviour:
   chipImage: {fileID: 21300000, guid: 24f5fda0b34b1b44e9961e87dcbf8dd3, type: 3}
   canBeUpgraded: 1
   costToUpgrade: 150
+  ChipTip: A wide range attack that will deal serious damage to all foes on screen.
   hitAllTargets: 1
   damage: 6
   upgradedDamageByAmount: 3
