@@ -19,6 +19,7 @@ MonoBehaviour:
   chipImage: {fileID: 21300000, guid: 10f72e185d30cd9478704e46af88adc2, type: 3}
   canBeUpgraded: 0
   costToUpgrade: 0
+  ChipTip: Use this to punch stuff. The ultimate solution to conflict resolution!
   hitAllTargets: 0
   damage: 5
   upgradedDamageByAmount: 0

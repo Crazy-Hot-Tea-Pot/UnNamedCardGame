@@ -19,5 +19,6 @@ MonoBehaviour:
   chipImage: {fileID: 21300000, guid: 2546e494c27801b42b8bb5e7008d9aed, type: 3}
   canBeUpgraded: 0
   costToUpgrade: 0
+  ChipTip: Get double the use out of your next chip.
   hitAllTargets: 0
   specialEffect: {fileID: 11400000, guid: c7c46e9b6a649364684f3fdde82ada0d, type: 2}
