@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 // Controller for player this class is not the input class that is generated.
@@ -19,7 +20,7 @@ public class PlayerController : MonoBehaviour
 
     private bool inCombat;
 
-    private bool isInteracting;
+    private bool isInteracting=false;
 
     [Header("Needed Stuff")]    
     public PlayerInputActions playerInputActions;
@@ -29,16 +30,130 @@ public class PlayerController : MonoBehaviour
     public GameObject RippleRunPrefab;
 
 
-    [Header("Player stats")] 
-    
+    [Header("Player stats")]
+    #region PlayerStats 
     private int health;
-    private int maxHealth;    
+    /// <summary>
+    /// Returns PLayer Health
+    /// </summary>
+    public int Health
+    {
+        get { return health; }
+        private set
+        {
+            health = value;
+
+            GameObject.FindGameObjectWithTag("PlayerCanvas").
+                GetComponent<PlayerUIManager>().UpdateHealth();
+
+            if (health > maxHealth)
+                health = maxHealth;
+            else if (health <= 0)
+            {
+                health = 0;
+                PlayerDie();
+            }
+        }
+    }
+    private int maxHealth;
+    /// <summary>
+    /// Returns max Health
+    /// </summary>
+    public int MaxHealth
+    {
+        get { return maxHealth; }
+        private set
+        {
+            maxHealth = value;
+        }
+    }
     private int shield;
-    private int maxShield=0;
+    /// <summary>
+    /// Player Shield amount
+    /// </summary>
+    public int Shield
+    {
+        get
+        {
+            return shield;
+        }
+        private set
+        {
+            shield = value;
+
+            if (shield > maxShield)
+                maxShield = value;
+
+            if (shield <= 0)
+            {
+                shield = 0;
+                maxShield = 0;
+            }
+
+            GameObject.FindGameObjectWithTag("PlayerCanvas").
+               GetComponent<PlayerUIManager>().UpdateShield();
+        }
+    }
+    private int maxShield=0;    
+    /// <summary>
+    /// Max amount of Shield currently.
+    /// </summary>
+    public int MaxShield
+    {
+        get
+        {
+            return maxShield;
+        }
+        set
+        {
+            maxShield = value;
+        }
+    }
     private int energy;
-    //Just hard coded this since it never changes.
-    private int maxEnergy=50;    
+    /// <summary>
+    /// Returns PlayerEnergy
+    /// </summary>
+    public int Energy
+    {
+        get { return energy; }
+        private set
+        {
+            energy = value;
+
+            if (energy > maxEnergy)
+                energy = value;
+            else if (energy <= 0)
+                energy = 0;
+
+            GameObject.FindGameObjectWithTag("PlayerCanvas").GetComponent<PlayerUIManager>().UpdateEnergy(Energy, MaxEnergy);
+        }
+    }
+    private readonly int maxEnergy=50;
+    /// <summary>
+    /// Returns max energy
+    /// </summary>
+    public int MaxEnergy
+    {
+        get { return maxEnergy; }
+    }
     private int scrap;
+    /// <summary>
+    /// Player Scrap
+    /// </summary>
+    public int Scrap
+    {
+        get
+        {
+            return scrap;
+        }
+        private set
+        {
+            scrap = value;
+            if (scrap < 0)
+                scrap = 0;
+        }
+    }
+    #endregion
 
     [Header("Player Speed")]
     public float walkSpeed = 3.5f;
@@ -51,26 +166,256 @@ public class PlayerController : MonoBehaviour
 
 
     [Header("Status Effects")]
-    [Header("Buffs")]    
+    [Header("Buffs")]
+    #region Buffs
     private bool isGalvanized;    
-    private int galvanizedStack;    
+    private int galvanizedStack;
+    /// <summary>
+    /// Returns if player is Galvanized.
+    /// </summary>
+    public bool IsGalvanized
+    {
+        get
+        {
+            return isGalvanized;
+        }
+        private set
+        {
+            isGalvanized = value;
+        }
+    }
+    /// <summary>
+    /// Returns how many stacks of Galvanized the player has.
+    /// </summary>
+    public int GalvanizedStack
+    {
+        get => galvanizedStack;
+        private set
+        {
+            galvanizedStack = value;
+            if (galvanizedStack <= 0)
+            {
+                IsGalvanized = false;
+                galvanizedStack = 0;
+            }
+            else
+                IsGalvanized = true;
+        }
+    }
     private bool isPowered;    
     private int poweredStacks;
+    /// <summary>
+    /// Returns if player is Powered.
+    /// </summary>
+    public bool IsPowered
+    {
+        get => isPowered;
+        private set => isPowered = value;
+    }
+    /// <summary>
+    /// Returns how many stacks of power the player has.
+    /// </summary>
+    public int PoweredStacks
+    {
+        get => poweredStacks;
+        private set
+        {
+            poweredStacks = value;
+            if (poweredStacks <= 0)
+            {
+                IsPowered = false;
+                poweredStacks = 0;
+            }
+            else
+                IsPowered = true;
+        }
+    }
+    #endregion
 
-    [Header("DeBuffs")]    
-    private bool isGunked;    
-    private int gunkStacks;    
-    private int amountOfTurnsGunkedLeft;    
-    private bool isDrained;    
-    private int drainedStacks;        
-    private bool isWornDown;    
-    private int wornDownStacks;    
-    private bool isJammed;    
+    [Header("DeBuffs")]
+    #region Debuffs
+    private bool isGunked;
+    /// <summary>
+    /// Returns if player is gunked.
+    /// </summary>
+    public bool IsGunked
+    {
+        get => isGunked;
+        private set
+        {
+            isGunked = value;
+        }
+    }
+    private int gunkStacks;
+    /// <summary>
+    /// Returns how many stacks of gunk the player has.
+    /// </summary>
+    public int GunkStacks
+    {
+        get => gunkStacks;
+        set
+        {
+            gunkStacks = value;
+
+            if (gunkStacks >= 3)
+            {
+                IsGunked = true;
+                gunkStacks = 0;
+                AmountOfTurnsGunkedLeft = 1;
+            }
+            else if (gunkStacks <= 0)
+                gunkStacks = 0;
+        }
+    }
+    private int amountOfTurnsGunkedLeft;
+    /// <summary>
+    /// Use this to prevent player from attacking when gunked.
+    /// </summary>
+    public int AmountOfTurnsGunkedLeft
+    {
+        get => amountOfTurnsGunkedLeft;
+        private set
+        {
+            amountOfTurnsGunkedLeft = value;
+            if (amountOfTurnsGunkedLeft <= 0)
+                IsGunked = false;
+        }
+    }
+    private bool isDrained;
+    /// <summary>
+    /// Returns if the player is drained.
+    /// </summary>
+    public bool IsDrained
+    {
+        get
+        {
+            return isDrained;
+        }
+        private set
+        {
+            isDrained = value;
+        }
+    }
+    private int drainedStacks;
+    /// <summary>
+    /// Returns how many stacks of drained the player has.
+    /// </summary>
+    public int DrainedStacks
+    {
+        get
+        {
+            return drainedStacks;
+        }
+        private set
+        {
+            drainedStacks = value;
+            if (drainedStacks <= 0)
+            {
+                IsDrained = false;
+                drainedStacks = 0;
+            }
+            else
+                IsDrained = true;
+        }
+    }
+    private bool isWornDown;
+    /// <summary>
+    /// Returns if the player is in worndown state.
+    /// </summary>
+    public bool IsWornDown
+    {
+        get => isWornDown;
+        private set => isWornDown = value;
+    }
+    private int wornDownStacks;
+    /// <summary>
+    /// Returns how many stacks of worn down the player has.
+    /// </summary>
+    public int WornDownStacks
+    {
+        get
+        {
+            return wornDownStacks;
+        }
+        private set
+        {
+            wornDownStacks = value;
+            if (wornDownStacks <= 0)
+            {
+                IsWornDown = false;
+                wornDownStacks = 0;
+            }
+            else
+                IsWornDown = true;
+        }
+    }
+    private bool isJammed;
+    /// <summary>
+    /// Returns if player is Jammed.
+    /// </summary>
+    public bool IsJammed
+    {
+        get => isJammed;
+        private set => isJammed = value;
+    }
+
     private int jammedStacks;
+    /// <summary>
+    /// Returns how many stacks of jammed the palyer has.
+    /// </summary>
+    public int JammedStacks
+    {
+        get
+        {
+            return jammedStacks;
+        }
+        private set
+        {
+            jammedStacks = value;
+            if (jammedStacks <= 0)
+            {
+                IsJammed = false;
+                jammedStacks = 0;
+            }
+            else
+                IsJammed = true;
+        }
+    }
+    #endregion
 
-    [Header("Effects")]    
-    private bool nextChipActivatesTwice;    
+    [Header("Effects")]
+    #region Effects
+    private bool nextChipActivatesTwice;
+    /// <summary>
+    /// Used to apply effect of activing a chip twice.
+    /// </summary>
+    public bool NextChipActivatesTwice
+    {
+        get
+        {
+            return nextChipActivatesTwice;
+        }
+        private set
+        {
+            nextChipActivatesTwice = value;
+        }
+    }
     private bool isImpervious;
+    /// <summary>
+    /// Used to apply effect to not take damage.
+    /// </summary>
+    public bool IsImpervious
+    {
+        get
+        {
+            return isImpervious;
+        }
+        private set
+        {
+            isImpervious = value;
+        }
+    }
+    #endregion
 
     /// <summary>
     /// Returns if player is in combat.
@@ -98,357 +443,7 @@ public class PlayerController : MonoBehaviour
         {
             isInteracting = value;
         }
-    }
-
-    /// <summary>
-    /// Returns PLayer Health
-    /// </summary>
-    public int Health
-    {
-        get { return health; }
-        private set { 
-            health = value;
-
-            GameObject.FindGameObjectWithTag("PlayerCanvas").
-                GetComponent<PlayerUIManager>().UpdateHealth();
-
-            if (health > maxHealth)
-                health = maxHealth;
-            else if (health <= 0)
-            {
-                health = 0;
-                PlayerDie();
-            }            
-        }
-    }
-
-    /// <summary>
-    /// Player Shield amount
-    /// </summary>
-    public int Shield
-    {
-        get
-        {
-            return shield;
-        }
-        private set
-        {
-            shield = value;           
-
-            if (shield > maxShield)
-                maxShield = value;
-
-            if (shield <= 0)
-            {
-                shield = 0;
-                maxShield = 0;
-            }
-
-            GameObject.FindGameObjectWithTag("PlayerCanvas").
-               GetComponent<PlayerUIManager>().UpdateShield();
-        }
-    }
-    public int MaxShield
-    {
-        get
-        {
-            return maxShield;
-        }
-        set
-        {
-            maxShield = value;
-        }
-    }
-
-    /// <summary>
-    /// Returns PlayerEnergy
-    /// </summary>
-    public int Energy
-    {
-        get { return energy; }
-        private set
-        {
-            energy = value;
-
-            if(energy > maxEnergy)
-                energy = value;
-            else if(energy <= 0)
-                energy = 0;
-
-            GameObject.FindGameObjectWithTag("PlayerCanvas").GetComponent<PlayerUIManager>().UpdateEnergy(Energy,MaxEnergy);
-        }
-    }
-
-    /// <summary>
-    /// Returns max energy
-    /// </summary>
-    public int MaxEnergy
-    {
-        get { return maxEnergy; }
-        private set
-        {
-            maxEnergy = value;
-        }
-    }
-
-    /// <summary>
-    /// Returns max Health
-    /// </summary>
-    public int MaxHealth
-    {
-        get { return maxHealth; }
-        private set
-        {
-            maxHealth = value;
-        }
-    }
-    /// <summary>
-    /// Player Scrap
-    /// </summary>
-    public int Scrap
-    {
-        get
-        {
-            return scrap;
-        }
-        private set
-        {
-            scrap = value;
-            if (scrap < 0) 
-                scrap = 0;
-        }
-    }
-
-    /// <summary>
-    /// Returns if player is Galvanized.
-    /// </summary>
-    public bool IsGalvanized
-    {
-        get
-        {
-            return isGalvanized;
-        }
-        private set
-        {
-            isGalvanized = value;
-        }
-    }
-
-    /// <summary>
-    /// Returns how many stacks of Galvanized the player has.
-    /// </summary>
-    public int GalvanizedStack
-    {
-        get => galvanizedStack;
-        private set
-        {
-            galvanizedStack = value;
-            if (galvanizedStack <= 0)
-            {
-                IsGalvanized = false;
-                galvanizedStack = 0;
-            }
-            else
-                IsGalvanized = true;
-        }
-    }
-
-    /// <summary>
-    /// Returns if player is Powered.
-    /// </summary>
-    public bool IsPowered { 
-        get => isPowered; 
-        private set => isPowered = value; 
-    }
-
-    /// <summary>
-    /// Returns how many stacks of power the player has.
-    /// </summary>
-    public int PoweredStacks
-    {
-        get => poweredStacks;
-        private set
-        {
-            poweredStacks = value;
-            if (poweredStacks <= 0)
-            {
-                IsPowered = false;
-                poweredStacks = 0;
-            }
-            else
-                IsPowered = true;
-        }
-    }
-
-    /// <summary>
-    /// Returns if player is gunked.
-    /// </summary>
-    public bool IsGunked {
-        get => isGunked;
-        private set {
-         isGunked = value;
-        }
-    }
-
-    /// <summary>
-    /// Returns how many stacks of gunk the player has.
-    /// </summary>
-    public int GunkStacks
-    {
-        get => gunkStacks;
-        set
-        {
-            gunkStacks = value;
-
-            if (gunkStacks >= 3)
-            {
-                IsGunked = true;
-                gunkStacks = 0;
-                AmountOfTurnsGunkedLeft = 1;
-            }
-            else if (gunkStacks <= 0)
-                gunkStacks = 0;
-        }
-    }
-    /// <summary>
-    /// Use this to prevent player from attacking when gunked.
-    /// </summary>
-    public int AmountOfTurnsGunkedLeft
-    {
-        get => amountOfTurnsGunkedLeft;
-        private set
-        {
-            amountOfTurnsGunkedLeft = value;
-            if (amountOfTurnsGunkedLeft <= 0)
-                IsGunked = false;
-        }
-    }
-
-    /// <summary>
-    /// Returns how many stacks of drained the player has.
-    /// </summary>
-    public int DrainedStacks
-    {
-        get
-        {
-            return drainedStacks;
-        }
-        private set
-        {
-            drainedStacks = value;
-            if (drainedStacks <= 0)
-            {
-                IsDrained = false;
-                drainedStacks = 0;
-            }
-            else
-                IsDrained = true;
-        }
-    }
-
-    /// <summary>
-    /// Returns if the player is drained.
-    /// </summary>
-    public bool IsDrained { 
-        get
-        {
-            return isDrained;
-        }
-        private set
-        {
-            isDrained = value;
-        }
-    }
-
-    /// <summary>
-    /// Returns if the player is in worndown state.
-    /// </summary>
-    public bool IsWornDown { 
-        get => isWornDown;
-        private set => isWornDown = value; 
-    }
-
-    /// <summary>
-    /// Returns how many stacks of worn down the player has.
-    /// </summary>
-    public int WornDownStacks
-    {
-        get
-        {
-            return wornDownStacks;
-        }
-        private set
-        {
-            wornDownStacks = value;
-            if (wornDownStacks <= 0)
-            {
-                IsWornDown = false;
-                wornDownStacks = 0;
-            }
-            else
-                IsWornDown = true;
-        }
-    }
-
-    /// <summary>
-    /// Returns if player is Jammed.
-    /// </summary>
-    public bool IsJammed { 
-        get => isJammed;
-        private set => isJammed = value; 
-    }           
-
-    /// <summary>
-    /// Returns how many stacks of jammed the palyer has.
-    /// </summary>
-    public int JammedStacks
-    {
-        get
-        {
-            return jammedStacks;
-        }
-        private set
-        {
-            jammedStacks = value;
-            if (jammedStacks <= 0)
-            {
-                IsJammed = false;
-                jammedStacks = 0;
-            }
-            else
-                IsJammed = true;
-        }
-    }   
-
-    /// <summary>
-    /// Used to apply effect of activing a chip twice.
-    /// </summary>
-    public bool NextChipActivatesTwice
-    {
-        get
-        {
-            return nextChipActivatesTwice;
-        }
-        private set
-        {
-            nextChipActivatesTwice = value;
-        }
-    }
-
-    /// <summary>
-    /// Used to apply effect to not take damage.
-    /// </summary>
-    public bool IsImpervious
-    {
-        get
-        {
-            return isImpervious;
-        }
-        private set
-        {
-            isImpervious = value;
-        }
-    }    
+    }                     
 
     // Awake is called when instance is being loaded
     void Awake()
@@ -530,6 +525,13 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void OnClick(InputAction.CallbackContext context)
     {
+        // Just put this here to cancel everything if clicking over an UI.
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+            return;
+        }
+
+
         if (!InCombat && !IsInteracting)
         {
             //temp to hold which gameobject ripple effect to spawn
@@ -567,13 +569,7 @@ public class PlayerController : MonoBehaviour
                     {
 
                         if (agent != null)
-                        {
-                            // UNCOMMENT BELOW IS STILL MOONWALKING
-                            //// Clears the current path, stops the agent
-                            //agent.ResetPath();
-                            //// Resets any existing velocity
-                            //agent.velocity = Vector3.zero;
-
+                        {                            
                             // Set destination and make player face the destination
 
                             //Spawn Ripple effect at location.
@@ -668,29 +664,36 @@ public class PlayerController : MonoBehaviour
     {
         //if Impervious
         if (IsImpervious)
-        {            
+        {
+            return;
         }
         else
         {
+            int modifiedDamage = damage;
+
+            if (IsWornDown)
+            {
+                modifiedDamage = Mathf.CeilToInt(damage * 1.3f);
+            }
             // if has shield
             if (Shield > 0)
-            {
-                if (damage >= Shield)
-                {                    
-                    damage -= Shield;
+            {                
+                if (modifiedDamage >= Shield)
+                {
+                    modifiedDamage -= Shield;
                     Shield = 0;
                     Debug.Log(name + "Shield destroyed.");
                 }
                 else
                 {
                     // Reduce the shield by the damage amount
-                    Shield -= damage;
-                    Debug.Log("Shield "+Shield+ " Took Damage"+damage);
+                    Shield -= modifiedDamage;
+                    Debug.Log("Shield "+Shield+ " Took Damage"+ modifiedDamage);
                     // No remaining damage to apply to HP
-                    damage = 0;
+                    modifiedDamage = 0;
                 }
             }
-            Health = Health - damage;
+            Health = Health - modifiedDamage;
             
 
             //Play Sound
@@ -751,7 +754,7 @@ public class PlayerController : MonoBehaviour
 
         switch (deBuffToApply)
         {
-            case Effects.Debuff.Gunked:
+            case Effects.Debuff.Stun:
                 GunkStacks += deBuffStacks;
                 break;
             case Effects.Debuff.Drained:
@@ -784,7 +787,7 @@ public class PlayerController : MonoBehaviour
                 else
                     DrainedStacks-= amount;
                 break;
-            case Effects.Debuff.Gunked:
+            case Effects.Debuff.Stun:
                 if (removeAll)
                     GunkStacks = 0;
                 else

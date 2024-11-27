@@ -4,31 +4,51 @@
 public static class Effects
 {
     /// <summary>
-    /// A Buff effect.
+    /// Type of Buffs
     /// </summary>
     public enum Buff
     {
         None,
+        /// <summary>
+        /// Gain shield at the end of yoru turn, equal to your amount of Galvanize stacks.
+        /// </summary>
         Galvanize,
+        /// <summary>
+        /// Power attacks deal additional damage equal to your amount of power stacks.
+        /// </summary>
         Power,
     }
     /// <summary>
-    /// A debuffToApply effect.
+    /// Type of Debuffs
     /// </summary>
     public enum Debuff
     {
         None,
-        Gunked,
+        /// <summary>
+        /// While drained, your attacks do 20% less damage.
+        /// </summary>
         Drained,
-        WornDown,
-        Jam
+        /// <summary>
+        /// Cannot move for a Turn.
+        /// </summary>
+        Stun,        
+        /// <summary>
+        /// While your are Jammed, you may not use Chips.
+        /// </summary>
+        Jam,
+        /// <summary>
+        /// While Worn Down, your Shield provides 30% less shield.
+        /// </summary>
+        WornDown
     }
+    /// <summary>
+    /// Type of Effects
+    /// </summary>
     public enum Effect
     {
         None,
         Impervious,
-        Motivation,
-        Leech
+        Motivation
     }
 
 }

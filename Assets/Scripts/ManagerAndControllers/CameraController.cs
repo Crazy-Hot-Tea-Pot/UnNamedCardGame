@@ -169,7 +169,7 @@ public class CameraController : MonoBehaviour
                 {
                     if (hit.collider.CompareTag("Ground"))
                     {
-                        SwitchCamera(CameraState.Default);
+                        OnResetCamera();
                     }
                 }
             }            
@@ -177,7 +177,7 @@ public class CameraController : MonoBehaviour
 
         playerInputActions.CameraControls.RotateCamera.performed += ctx => SwitchCamera(CameraState.Rotation);
         playerInputActions.CameraControls.FreeCam.performed += ctx => SwitchCamera(CameraState.Free);
-        playerInputActions.CameraControls.ResetCamera.performed += OnResetCamera;
+        playerInputActions.CameraControls.ResetCamera.performed += ctx => OnResetCamera();
         playerInputActions.CameraControls.IncreaseCameraSpeed.performed += OnIncreaseCameraSpeed;
         playerInputActions.CameraControls.IncreaseCameraSpeed.canceled += OnResetCameraSpeed;
 
@@ -301,8 +301,7 @@ public class CameraController : MonoBehaviour
     /// <summary>
     /// Added this as we use R to reset camera and it could mess up some stuff.
     /// </summary>
-    /// <param name="ctx"></param>
-    private void OnResetCamera(InputAction.CallbackContext ctx)
+    private void OnResetCamera()
     {
         // Prevent the Reset action if player is interacting
         if (IsPlayerInteracting())
@@ -310,9 +309,9 @@ public class CameraController : MonoBehaviour
             Debug.Log("Camera reset ignored because the player is interacting.");
             return;
         }
-
-        // Switch to Default camera if not in FirstPerson
-        SwitchCamera(CameraState.Default);
+        if(CurrentCamera != CameraState.Default)
+            // Switch to Default camera if not in FirstPerson
+            SwitchCamera(CameraState.Default);
     }
 
     /// <summary>
@@ -384,7 +383,6 @@ public class CameraController : MonoBehaviour
         playerInputActions.CameraControls.Disable();
         playerInputActions.CameraControls.MoveCamera.Disable();
 
-        playerInputActions.CameraControls.ResetCamera.performed -= OnResetCamera;
         playerInputActions.CameraControls.IncreaseCameraSpeed.performed -= OnIncreaseCameraSpeed;
         playerInputActions.CameraControls.IncreaseCameraSpeed.canceled -= OnResetCameraSpeed;
 

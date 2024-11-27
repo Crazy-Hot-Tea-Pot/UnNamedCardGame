@@ -28,7 +28,7 @@ public class UpgradeController : MonoBehaviour
     /// <summary>
     /// If player is interacting with terminal
     /// </summary>
-    public bool IsInteracting
+    public bool IsInteractingWithMe
     {
         get
         {
@@ -36,8 +36,7 @@ public class UpgradeController : MonoBehaviour
         }
         private set
         {
-            isInteracting = value;
-            GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().IsInteracting = value;
+            isInteracting = value;           
         }
     }  
 
@@ -413,7 +412,7 @@ public class UpgradeController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Player" && !IsInteracting)
+        if (other.tag == "Player" && !IsInteractingWithMe)
         {
             StartCoroutine(EnterTerminal());
         }
@@ -425,15 +424,16 @@ public class UpgradeController : MonoBehaviour
     /// <returns></returns>
     private IEnumerator EnterTerminal()
     {
-        IsInteracting = true;
+        IsInteractingWithMe = true;
         Camera.SwitchCamera(CameraController.CameraState.FirstPerson);
-        Camera.FirstPersonCamera.LookAt = IntroScreen.transform;
-        //Set player to interacting
-        GameObject.FindGameObjectWithTag("Player")
-        .GetComponent<PlayerController>().IsInteracting = true;
+        Camera.FirstPersonCamera.LookAt = IntroScreen.transform;       
 
         yield return new WaitForSeconds(1f);
         SwitchToScreen(Screens.Intro);
+
+        //Set player to interacting
+        GameObject.FindGameObjectWithTag("Player")
+        .GetComponent<PlayerController>().IsInteracting = true;
 
         //Turn off bad Ui
         PlayerCanvas.SetActive(false);
@@ -454,14 +454,14 @@ public class UpgradeController : MonoBehaviour
     /// <returns></returns>
     private IEnumerator ExitTerminal()
     {
-        Camera.SwitchCamera(CameraController.CameraState.Default);
-
         //Set player to interacting
         GameObject.FindGameObjectWithTag("Player")
         .GetComponent<PlayerController>().IsInteracting = false;
 
+        Camera.SwitchCamera(CameraController.CameraState.Default);        
+
         yield return new WaitForSeconds(1f);
-        IsInteracting = false;
+        IsInteractingWithMe = false;
 
         //deactive Scrap Panel
         UIController.ScrapPanel.SetActive(false);

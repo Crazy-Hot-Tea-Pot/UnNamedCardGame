@@ -32,6 +32,7 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
     public GameObject ChipPanel;    
     public GameObject ChipSelectionPanel;
     public GameObject ChipHolder;
+    public GameObject CancelButton;
 
     public TMP_Text ChipConsole;
 
@@ -246,6 +247,9 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
 
                     StartCoroutine(RevealText(ChipConsole, true, 0.01f, true,0.1f,5,false,0));
                     StartCoroutine(BringUpChipSelector());
+
+                    CancelButton.GetComponent<Button>().onClick.RemoveAllListeners();
+                    CancelButton.GetComponent<Button>().onClick.AddListener(() => controller.SwitchToScreen(UpgradeController.Screens.Intro));
                 }
                 else
                 {
@@ -321,6 +325,7 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
                         FillData();
                         StartCoroutine(BringUpDataScreen());
 
+                        ViewDataExitButton.GetComponent<Button>().onClick.RemoveAllListeners();
                         ViewDataExitButton.GetComponent<Button>().onClick.AddListener(() => controller.SwitchToScreen(UpgradeController.Screens.Exit));
                         break;
                     case UpgradeController.DataMode.Save:
@@ -342,6 +347,10 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
                             // Activate UserInput and ExitButton after the text is fully revealed
                             UserInput.SetActive(true);
                             ExitButton.SetActive(true);
+
+                            UserInput.GetComponent<Button>().onClick.RemoveAllListeners();
+                            ExitButton.GetComponent<Button>().onClick.RemoveAllListeners();
+
                             ExitButton.GetComponent<Button>().onClick.AddListener(() => controller.SwitchToScreen(UpgradeController.Screens.Exit));
                             UploadButton.GetComponent<Button>().onClick.AddListener(() => controller.AttemptToSave());
                         }));
@@ -428,6 +437,8 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
         }
 
         tempRectTransform.anchoredPosition=endPosition;
+
+        CancelButton.SetActive(true);
     }
     /// <summary>
     /// Bring Up window to select Data
