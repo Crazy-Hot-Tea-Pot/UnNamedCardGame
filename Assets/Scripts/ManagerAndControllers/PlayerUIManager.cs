@@ -175,16 +175,34 @@ public class PlayerUIManager : MonoBehaviour
         //Initalizatoin for fill
         Initialize();
 
-        //Add the card buttons for drops and attach buttons
+        try
+        {
+            //Add the card buttons for drops and attach buttons
 #pragma warning disable CS0618 // Type or member is obsolete is suppressed because I need this find child
-        GameObject parent = GameObject.Find(panelDropCards.transform.FindChild("CardScreen").name);
-        optionOne = GameObject.Find(parent.transform.FindChild("OptionOne").name);
-        optionOne.AddComponent<Button>().onClick.AddListener(cardOptionOne);
-        optionTwo = GameObject.Find(parent.transform.FindChild("OptionTwo").name);
-        optionTwo.AddComponent<Button>().onClick.AddListener(cardOptionTwo);
-        optionThree = GameObject.Find(parent.transform.FindChild("OptionThree").name);
-        optionThree.AddComponent<Button>().onClick.AddListener(cardOptionThree);
-        panelDropCards.SetActive(false);
+            GameObject parent = GameObject.Find(panelDropCards.transform.FindChild("CardScreen").name);
+            optionOne = GameObject.Find(parent.transform.FindChild("OptionOne").name);
+            optionOne.AddComponent<Button>().onClick.AddListener(cardOptionOne);
+            optionTwo = GameObject.Find(parent.transform.FindChild("OptionTwo").name);
+            optionTwo.AddComponent<Button>().onClick.AddListener(cardOptionTwo);
+            optionThree = GameObject.Find(parent.transform.FindChild("OptionThree").name);
+            optionThree.AddComponent<Button>().onClick.AddListener(cardOptionThree);
+            panelDropCards.SetActive(false);
+        }
+        catch {
+            //Some where in this code its deactivating the canvas so here i reactivate it.
+            // THIS IS TEMP AND NEEDS TO BE RESTRUCTURED
+            Debug.Log("This stuff failed to find because UI is inactive.");
+            uiPlayerCanvas.SetActive(true);
+            GameObject parent = GameObject.Find(panelDropCards.transform.FindChild("CardScreen").name);
+            optionOne = GameObject.Find(parent.transform.FindChild("OptionOne").name);
+            optionOne.AddComponent<Button>().onClick.AddListener(cardOptionOne);
+            optionTwo = GameObject.Find(parent.transform.FindChild("OptionTwo").name);
+            optionTwo.AddComponent<Button>().onClick.AddListener(cardOptionTwo);
+            optionThree = GameObject.Find(parent.transform.FindChild("OptionThree").name);
+            optionThree.AddComponent<Button>().onClick.AddListener(cardOptionThree);
+            GameObject.Find("BtnEndTurn").SetActive(false);
+            panelDropCards.SetActive(false);
+        }
     }
 
     // Update is called once per frame
