@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using static GameData;
-using static UnityEditor.Progress;
+//using static UnityEditor.Progress;
 
 public class TitleController : MonoBehaviour
 {

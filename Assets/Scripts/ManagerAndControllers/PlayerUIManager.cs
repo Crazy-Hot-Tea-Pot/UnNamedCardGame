@@ -179,12 +179,12 @@ public class PlayerUIManager : MonoBehaviour
         {
             //Add the card buttons for drops and attach buttons
 #pragma warning disable CS0618 // Type or member is obsolete is suppressed because I need this find child
-            GameObject parent = GameObject.Find(panelDropCards.transform.FindChild("CardScreen").name);
-            optionOne = GameObject.Find(parent.transform.FindChild("OptionOne").name);
+            GameObject parent = GameObject.Find(panelDropCards.transform.Find("CardScreen").name);
+            optionOne = GameObject.Find(parent.transform.Find("OptionOne").name);
             optionOne.AddComponent<Button>().onClick.AddListener(cardOptionOne);
-            optionTwo = GameObject.Find(parent.transform.FindChild("OptionTwo").name);
+            optionTwo = GameObject.Find(parent.transform.Find("OptionTwo").name);
             optionTwo.AddComponent<Button>().onClick.AddListener(cardOptionTwo);
-            optionThree = GameObject.Find(parent.transform.FindChild("OptionThree").name);
+            optionThree = GameObject.Find(parent.transform.Find("OptionThree").name);
             optionThree.AddComponent<Button>().onClick.AddListener(cardOptionThree);
             panelDropCards.SetActive(false);
         }
@@ -193,12 +193,12 @@ public class PlayerUIManager : MonoBehaviour
             // THIS IS TEMP AND NEEDS TO BE RESTRUCTURED
             Debug.Log("This stuff failed to find because UI is inactive.");
             uiPlayerCanvas.SetActive(true);
-            GameObject parent = GameObject.Find(panelDropCards.transform.FindChild("CardScreen").name);
-            optionOne = GameObject.Find(parent.transform.FindChild("OptionOne").name);
+            GameObject parent = GameObject.Find(panelDropCards.transform.Find("CardScreen").name);
+            optionOne = GameObject.Find(parent.transform.Find("OptionOne").name);
             optionOne.AddComponent<Button>().onClick.AddListener(cardOptionOne);
-            optionTwo = GameObject.Find(parent.transform.FindChild("OptionTwo").name);
+            optionTwo = GameObject.Find(parent.transform.Find("OptionTwo").name);
             optionTwo.AddComponent<Button>().onClick.AddListener(cardOptionTwo);
-            optionThree = GameObject.Find(parent.transform.FindChild("OptionThree").name);
+            optionThree = GameObject.Find(parent.transform.Find("OptionThree").name);
             optionThree.AddComponent<Button>().onClick.AddListener(cardOptionThree);
             if(!GameObject.Find("Combat Controller").activeInHierarchy)
                 GameObject.Find("BtnEndTurn").SetActive(false);

@@ -6,7 +6,7 @@ using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using static GameData;
-using static UnityEditor.Progress;
+//using static UnityEditor.Progress;
 
 
 public class GameManager : MonoBehaviour
@@ -251,8 +251,8 @@ public class GameManager : MonoBehaviour
     {
         //Fill variables Make Method
         uiContainer = GameObject.Find("BadCanvasSystem");
-        uiCanvas = uiContainer.transform.FindChild("Canvas").gameObject;
-        chipPanel = uiCanvas.transform.FindChild("Panel").gameObject;
+        uiCanvas = uiContainer.transform.Find("Canvas").gameObject;
+        chipPanel = uiCanvas.transform.Find("Panel").gameObject;
 
         //Enables combat UI
         uiCanvas.SetActive(true);
