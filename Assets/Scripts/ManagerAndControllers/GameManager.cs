@@ -251,8 +251,9 @@ public class GameManager : MonoBehaviour
     {
         //Fill variables Make Method
         uiContainer = GameObject.Find("BadCanvasSystem");
-        uiCanvas = uiContainer.transform.FindChild("Canvas").gameObject;
-        chipPanel = uiCanvas.transform.FindChild("Panel").gameObject;
+        uiCanvas = uiContainer.transform.Find("Canvas").gameObject;
+        uiCanvas = uiCanvas.transform.Find("CardUI").gameObject;
+        chipPanel = uiCanvas.transform.Find("Panel").gameObject;
 
         //Enables combat UI
         uiCanvas.SetActive(true);
