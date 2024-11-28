@@ -12,20 +12,31 @@ public class WeaponAbility : Ability
 
     public override void Activate()
     {
-        //For each object in the list of targetable objects
-        foreach(GameObject enemy in GameObject.Find("Player").GetComponent<PlayerController>().abilityRangedEnemies)
+        //If there is enough energy for the card
+        if (GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().Energy - energyCost > 0)
         {
-            //Try to deal damage one by one to each enemy
-            try
+            //Cost energy
+            GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().PlayedAbility(energyCost);
+
+            //For each object in the list of targetable objects
+            foreach (GameObject enemy in GameObject.Find("Player").GetComponent<PlayerController>().abilityRangedEnemies)
             {
-                //Does damage to the enemy
-                enemy.GetComponent<Enemy>().TakeDamage(damage);
+                //Try to deal damage one by one to each enemy
+                try
+                {
+                    //Does damage to the enemy
+                    enemy.GetComponent<Enemy>().TakeDamage(damage);
+                }
+                catch
+                {
+                    //Assume we couldn't find the enemy
+                    Debug.LogWarning("We couldn't find the right enemy object it had no enemy script attached");
+                }
             }
-            catch
-            {
-                //Assume we couldn't find the enemy
-                Debug.LogWarning("We couldn't find the right enemy object it had no enemy script attached");
-            }
+        }
+        else
+        {
+            Debug.Log("Too high an energy cost");
         }
 
     }
