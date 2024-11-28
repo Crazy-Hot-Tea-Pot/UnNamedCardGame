@@ -171,7 +171,7 @@ MonoBehaviour:
   m_ChildAlignment: 0
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 100, y: 100}
+  m_CellSize: {x: 300, y: 300}
   m_Spacing: {x: 17.09, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 2
@@ -495,7 +495,7 @@ MonoBehaviour:
   m_ChildAlignment: 0
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 226.7, y: 254.5}
+  m_CellSize: {x: 300, y: 300}
   m_Spacing: {x: 15.1, y: 15.1}
   m_Constraint: 0
   m_ConstraintCount: 2
@@ -1899,7 +1899,7 @@ MonoBehaviour:
   m_ChildAlignment: 0
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 226.7, y: 254.5}
+  m_CellSize: {x: 300, y: 300}
   m_Spacing: {x: 15.1, y: 15.1}
   m_Constraint: 0
   m_ConstraintCount: 2
@@ -3424,7 +3424,7 @@ MonoBehaviour:
   attackUIImage: {fileID: 3436462289899828603}
   utilityUIImage: {fileID: 2517548705452502213}
   shieldUIImage: {fileID: 5699091461724641203}
-  imageBaseObject: {fileID: 5428266805303895604, guid: 503c8f640ee6d9d4e824a85709145b9b, type: 3}
+  imageBaseObject: {fileID: 5428266805303895604, guid: 30eb5d4bfec1f4042aabfa0c4728a936, type: 3}
   InventoryList: []
   uiInventoryCanvas: {fileID: 5399210038367393679}
   panelInventory: {fileID: 4546236535590901377}

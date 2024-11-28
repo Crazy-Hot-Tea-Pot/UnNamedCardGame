@@ -348,7 +348,6 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
                             UserInput.SetActive(true);
                             ExitButton.SetActive(true);
 
-                            UserInput.GetComponent<Button>().onClick.RemoveAllListeners();
                             ExitButton.GetComponent<Button>().onClick.RemoveAllListeners();
 
                             ExitButton.GetComponent<Button>().onClick.AddListener(() => controller.SwitchToScreen(UpgradeController.Screens.Exit));
