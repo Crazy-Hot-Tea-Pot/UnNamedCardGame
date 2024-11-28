@@ -200,7 +200,8 @@ public class PlayerUIManager : MonoBehaviour
             optionTwo.AddComponent<Button>().onClick.AddListener(cardOptionTwo);
             optionThree = GameObject.Find(parent.transform.FindChild("OptionThree").name);
             optionThree.AddComponent<Button>().onClick.AddListener(cardOptionThree);
-            GameObject.Find("BtnEndTurn").SetActive(false);
+            //GameObject.Find("BtnEndTurn").SetActive(false);
+            uiPlayerCanvas.transform.Find("BtnEndTurn").gameObject.SetActive(false);
             panelDropCards.SetActive(false);
         }
     }

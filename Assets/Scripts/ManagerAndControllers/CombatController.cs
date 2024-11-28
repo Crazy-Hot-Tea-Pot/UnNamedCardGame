@@ -143,7 +143,12 @@ public class CombatController : MonoBehaviour
 
         player = GameObject.FindGameObjectWithTag("Player");
 
-        endTurnButton = GameObject.Find("BtnEndTurn");
+        //endTurnButton = GameObject.Find("BtnEndTurn");
+        //Quick fix
+        endTurnButton = GameObject.Find("BadCanvasSystem");
+        endTurnButton = GameObject.Find("PlayerUICanvas");
+        endTurnButton = endTurnButton.transform.Find("BtnEndTurn").gameObject;
+        endTurnButton.SetActive(false);
         endTurnButton.GetComponent<Button>().onClick.AddListener(() => TurnUsed(player));
 
         endTurnButton.SetActive(false);
