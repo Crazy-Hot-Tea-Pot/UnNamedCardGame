@@ -15,7 +15,7 @@ MonoBehaviour:
   ThisChip: {fileID: 0}
   chipRarity: 1
   chipName: Charge Up
-  description: Activates "Power" and reduces "Drained" effects
+  description: Gain 2 Power and 1 Drained.
   chipImage: {fileID: 21300000, guid: 9cdac9d93fb80024ca066d3ec761dfb7, type: 3}
   canBeUpgraded: 1
   costToUpgrade: 150
@@ -28,6 +28,7 @@ MonoBehaviour:
   buffStacks: 2
   upgradedBuffStacksByAmout: 2
   deBuffsToRemove:
-  - debuffType: 2
-    amountToDebuff: 0
+  - debuffType: 1
+    amountToDebuff: 1
+    upgradedAmountToRemoveBy: 1
     removeAll: 1

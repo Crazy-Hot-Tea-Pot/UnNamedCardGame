@@ -25,6 +25,6 @@ MonoBehaviour:
   damage: 7
   upgradedDamageByAmount: 2
   numberOfHits: 1
-  debuffToApply: 2
+  debuffToApply: 1
   debuffStacks: 1
   upgradedDebuffStacksByAmout: 1
