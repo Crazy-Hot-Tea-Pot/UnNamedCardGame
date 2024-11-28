@@ -345,7 +345,14 @@ public class PlayerUIManager : MonoBehaviour
         //Create the UI image object
         Image itemObj = imageBaseObject;
         //Add the script and make the needed sciptable object get set
-        itemObj.AddComponent<NewEquipment>().equipmentButton = item;
+        if(itemObj.GetComponent<NewEquipment>() == null)
+        {
+            itemObj.AddComponent<NewEquipment>().equipmentButton = item;
+        }
+        else
+        {
+            itemObj.GetComponent<NewEquipment>().equipmentButton = item;
+        }
         //Add a button
         itemObj.AddComponent<Button>();
         //Set the ui image to the correct image
