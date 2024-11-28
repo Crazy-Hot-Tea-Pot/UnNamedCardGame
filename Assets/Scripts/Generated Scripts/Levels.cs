@@ -4,7 +4,7 @@
 public enum Levels
 {
     Title,
-    Level1,
+    Tutorial,
     Level2,
     Level3,
     Level4,

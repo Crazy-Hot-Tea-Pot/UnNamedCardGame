@@ -200,7 +200,8 @@ public class PlayerUIManager : MonoBehaviour
             optionTwo.AddComponent<Button>().onClick.AddListener(cardOptionTwo);
             optionThree = GameObject.Find(parent.transform.FindChild("OptionThree").name);
             optionThree.AddComponent<Button>().onClick.AddListener(cardOptionThree);
-            GameObject.Find("BtnEndTurn").SetActive(false);
+            if(!GameObject.Find("Combat Controller").activeInHierarchy)
+                GameObject.Find("BtnEndTurn").SetActive(false);
             panelDropCards.SetActive(false);
         }
     }
@@ -567,10 +568,6 @@ public class PlayerUIManager : MonoBehaviour
         {
             ShieldBarContainer.SetActive(true);
 
-            // Reset the ShieldBar fill amount to 0 if it's being activated for the first time
-            if (ShieldBar.fillAmount == 0)
-                    ShieldBar.fillAmount = 0;
-
             // Calculate the target shield percentage
             float shieldPercentage = (float)playerController.Shield / playerController.MaxShield;
 
@@ -608,7 +605,10 @@ public class PlayerUIManager : MonoBehaviour
 
 
         if (ShieldBar.fillAmount <= 0f)
+        {
             ShieldBarContainer.SetActive(false);
+            ShieldBar.fillAmount = 0;
+        }
     }
 
     //Sets variables to initalize fill speed

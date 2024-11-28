@@ -91,11 +91,7 @@ public class EnemyUI : MonoBehaviour
         }
         else
         {
-            shieldContainer.SetActive(true);
-
-            // Reset the ShieldBar fill amount to 0 if it's being activated for the first time
-            if (shieldBar.fillAmount == 0)
-                shieldBar.fillAmount = 0;
+            shieldContainer.SetActive(true);               
 
             // Calculate the target shield percentage
             float shieldPercentage = (float)currentShield / maxShield;
@@ -214,6 +210,9 @@ public class EnemyUI : MonoBehaviour
 
 
         if (shieldBar.fillAmount <= 0f)
+        {
             shieldContainer.SetActive(false);
-    }
+            shieldBar.fillAmount = 0;
+        }
+        }
 }

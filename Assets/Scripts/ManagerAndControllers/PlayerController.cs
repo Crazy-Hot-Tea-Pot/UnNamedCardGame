@@ -879,7 +879,7 @@ public class PlayerController : MonoBehaviour
         GameManager.Instance.EndCombat();
 
         // for now just restart the scene.
-        GameManager.Instance.RequestScene(Levels.Level1);
+        GameManager.Instance.RequestScene(Levels.Title);
     }    
 
     #region rangesForAbilites

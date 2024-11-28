@@ -692,6 +692,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 14ebee6ee54267d45ab1cc1159db101a, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: fef974c95c0b45d4686026a96779e714, type: 2}
     - target: {fileID: 919132149155446097, guid: 14ebee6ee54267d45ab1cc1159db101a, type: 3}
       propertyPath: m_Name
       value: Bench (2)
@@ -1453,6 +1457,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 14ebee6ee54267d45ab1cc1159db101a, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: fef974c95c0b45d4686026a96779e714, type: 2}
     - target: {fileID: 919132149155446097, guid: 14ebee6ee54267d45ab1cc1159db101a, type: 3}
       propertyPath: m_Name
       value: Bench
@@ -2059,6 +2067,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 14ebee6ee54267d45ab1cc1159db101a, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: fef974c95c0b45d4686026a96779e714, type: 2}
     - target: {fileID: 919132149155446097, guid: 14ebee6ee54267d45ab1cc1159db101a, type: 3}
       propertyPath: m_Name
       value: Bench (1)
@@ -2939,6 +2951,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -4394737425426834501, guid: af5e8fa1d11b23f42b33f66b52e55b64, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e3515aab6d1454b488de3de07869c0b8, type: 2}
     - target: {fileID: 919132149155446097, guid: af5e8fa1d11b23f42b33f66b52e55b64, type: 3}
       propertyPath: m_Name
       value: TunnelScene 3
@@ -2951,6 +2967,10 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Ground
       objectReference: {fileID: 0}
+    - target: {fileID: 6400841106765727902, guid: af5e8fa1d11b23f42b33f66b52e55b64, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: fefdf87af21c20440878b53b7ec40a8e, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: -5566280049273071899, guid: af5e8fa1d11b23f42b33f66b52e55b64, type: 3}

@@ -59,7 +59,7 @@ public class TitleController : MonoBehaviour
         GameData startData = new GameData();
 
         startData.SaveName = "Beginning";
-        startData.Level = Levels.Level1;
+        startData.Level = Levels.Tutorial;
         startData.MaxHealth = 50;
         startData.Health = 50;
         startData.Scraps = 100;
@@ -125,7 +125,7 @@ public class TitleController : MonoBehaviour
 
         DataManager.Instance.Save(startData.SaveName);
 
-        GameManager.Instance.RequestScene(Levels.Level1);
+        GameManager.Instance.RequestScene(Levels.Tutorial);
 
     }
     /// <summary>

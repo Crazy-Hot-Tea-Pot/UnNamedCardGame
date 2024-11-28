@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.AI;
 using TMPro;
 public enum TargetingType
@@ -339,7 +338,7 @@ public class Enemy : MonoBehaviour
     {
         CurrentHP = maxHP;        
         gameObject.name = EnemyName;
-        defaultShader=enemyRenderer.material.shader;
+       // defaultShader=enemyRenderer.material.shader;
 
         CombatController = GameObject.FindGameObjectWithTag("CombatController").GetComponent<CombatController>();
         enemyTarget = GameObject.FindGameObjectWithTag("Player");
@@ -543,11 +542,6 @@ public class Enemy : MonoBehaviour
         // Ensure the text faces the camera
         damageIndicator.transform.LookAt(Camera.main.transform);
         damageIndicator.transform.Rotate(0, 180, 0); // Correct for backward text
-    }
-    [ContextMenu("Test")]
-    public void Test()
-    {
-        DisplayDamageTaken(10);
     }
     /// <summary>
     /// Updates the enemy's border color and shader properties based on the currently active targeting types.
