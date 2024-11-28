@@ -368,8 +368,6 @@ public class UpgradeController : MonoBehaviour
     /// </summary>
     public void AttemptToUpgradeChip()
     {
-        //Added Scraps for testing.
-        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().GainScrap(500);
 
         if (GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().Scrap >= SelectedChip.costToUpgrade)
         {           
