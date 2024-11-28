@@ -10,6 +10,7 @@ public class DefenseChip : NewChip
     {
         public Effects.Debuff debuffType;
         public int amountToDebuff;
+        public int upgradedAmountToRemoveBy;
         public bool removeAll;
     }
     /// <summary>
@@ -62,6 +63,11 @@ public class DefenseChip : NewChip
             {
                 shieldAmount += upgradedShieldAmountToApply;
                 buffStacks += upgradedBuffStacksByAmout;
+
+                foreach (DebuffInfo debuffInfo in deBuffsToRemove)
+                {
+                    debuffInfo.amountToDebuff += debuffInfo.upgradedAmountToRemoveBy;
+                }
             }
         }
     }

@@ -233,54 +233,7 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     [Header("DeBuffs")]
-    #region Debuffs
-    private bool isGunked;
-    /// <summary>
-    /// Returns if player is gunked.
-    /// </summary>
-    public bool IsGunked
-    {
-        get => isGunked;
-        private set
-        {
-            isGunked = value;
-        }
-    }
-    private int gunkStacks;
-    /// <summary>
-    /// Returns how many stacks of gunk the player has.
-    /// </summary>
-    public int GunkStacks
-    {
-        get => gunkStacks;
-        set
-        {
-            gunkStacks = value;
-
-            if (gunkStacks >= 3)
-            {
-                IsGunked = true;
-                gunkStacks = 0;
-                AmountOfTurnsGunkedLeft = 1;
-            }
-            else if (gunkStacks <= 0)
-                gunkStacks = 0;
-        }
-    }
-    private int amountOfTurnsGunkedLeft;
-    /// <summary>
-    /// Use this to prevent player from attacking when gunked.
-    /// </summary>
-    public int AmountOfTurnsGunkedLeft
-    {
-        get => amountOfTurnsGunkedLeft;
-        private set
-        {
-            amountOfTurnsGunkedLeft = value;
-            if (amountOfTurnsGunkedLeft <= 0)
-                IsGunked = false;
-        }
-    }
+    #region Debuffs    
     private bool isDrained;
     /// <summary>
     /// Returns if the player is drained.
@@ -753,10 +706,7 @@ public class PlayerController : MonoBehaviour
         SoundManager.PlayFXSound(SoundFX.Debuff);
 
         switch (deBuffToApply)
-        {
-            case Effects.Debuff.Stun:
-                GunkStacks += deBuffStacks;
-                break;
+        {           
             case Effects.Debuff.Drained:
                 DrainedStacks += deBuffStacks;
                 break;
@@ -786,13 +736,7 @@ public class PlayerController : MonoBehaviour
                     DrainedStacks = 0;
                 else
                     DrainedStacks-= amount;
-                break;
-            case Effects.Debuff.Stun:
-                if (removeAll)
-                    GunkStacks = 0;
-                else
-                    GunkStacks-= amount;
-                break;
+                break;            
             case Effects.Debuff.Jam:
                 if (removeAll)
                     JammedStacks = 0; 
@@ -880,7 +824,6 @@ public class PlayerController : MonoBehaviour
         RecoverFullEnergy();
 
         //Remove debuffs by 1
-        GunkStacks--;
         DrainedStacks--;
         WornDownStacks--;
         JammedStacks--;
@@ -896,11 +839,7 @@ public class PlayerController : MonoBehaviour
         if (galvanizedStack > 0)
         {
             ApplyShield(galvanizedStack);            
-        }
-        if (isGunked)
-        {
-            AmountOfTurnsGunkedLeft--;
-        }                
+        }               
     }
 
     /// <summary>

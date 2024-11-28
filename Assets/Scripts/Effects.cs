@@ -27,11 +27,7 @@ public static class Effects
         /// <summary>
         /// While drained, your attacks do 20% less damage.
         /// </summary>
-        Drained,
-        /// <summary>
-        /// Cannot move for a Turn.
-        /// </summary>
-        Stun,        
+        Drained,        
         /// <summary>
         /// While your are Jammed, you may not use Chips.
         /// </summary>
