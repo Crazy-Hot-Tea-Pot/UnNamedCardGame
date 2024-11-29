@@ -22,7 +22,7 @@ public class WeaponAbility : Ability
                 try
                 {
                     //Does damage to the enemy
-                    enemy.GetComponent<Enemy>().TakeDamage(damage);
+                    enemy.GetComponent<Enemy>().TakeDamage(damage + GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().PoweredStacks);
                 }
                 catch
                 {
