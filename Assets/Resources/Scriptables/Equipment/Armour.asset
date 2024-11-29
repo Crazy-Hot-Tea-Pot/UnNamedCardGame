@@ -16,5 +16,5 @@ MonoBehaviour:
   itemDescription: Grains the wearer Steel Plating
   destroyme: 0
   AbilityList:
-  - {fileID: 11400000, guid: 842a679b5d7709243bac398b40d0540f, type: 2}
+  - {fileID: 11400000, guid: 1d229ff9f94548c4c8c1dc6be6d07c99, type: 2}
   image: {fileID: 21300000, guid: d9bc3337081eab347b70d1d60022f710, type: 3}

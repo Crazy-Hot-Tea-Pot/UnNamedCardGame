@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: Default Trinket
   m_EditorClassIdentifier: 
   abilityName: Default Trinket
+  isUpgraded: 0
   abilityDescription: Empty
   energyCost: 30
   abilityType: 3
-  uiImage: {fileID: 21300000, guid: b22f420cfa6821d4cb70413a6ed0ae81, type: 3}
+  uiImage: {fileID: 21300000, guid: 4131dfb467fa4df4685a33521551aa71, type: 3}
   powerGain: 1

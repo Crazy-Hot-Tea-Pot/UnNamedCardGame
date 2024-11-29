@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Default Guard
   m_EditorClassIdentifier: 
   abilityName: Default Guard
+  isUpgraded: 0
   abilityDescription: Empty
   energyCost: 5
   abilityType: 2

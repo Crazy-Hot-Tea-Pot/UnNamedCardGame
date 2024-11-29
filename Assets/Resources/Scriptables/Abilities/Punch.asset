@@ -17,5 +17,5 @@ MonoBehaviour:
   abilityDescription: If all else fails we can always punch
   energyCost: 5
   abilityType: 1
-  uiImage: {fileID: 21300000, guid: e0843e1052b3914478180501fe501514, type: 3}
+  uiImage: {fileID: 21300000, guid: 93f773bce58e7b74c9650f611eda271c, type: 3}
   damage: 1
