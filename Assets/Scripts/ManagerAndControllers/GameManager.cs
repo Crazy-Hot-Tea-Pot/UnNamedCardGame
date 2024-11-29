@@ -249,6 +249,8 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void StartCombat()
     {
+        ShufflePlayerDeck();
+
         //Fill variables Make Method
         uiContainer = GameObject.Find("BadCanvasSystem");
         uiCanvas = uiContainer.transform.Find("Canvas").gameObject;
