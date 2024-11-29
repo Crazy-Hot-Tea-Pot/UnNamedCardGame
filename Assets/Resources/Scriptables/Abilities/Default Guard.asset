@@ -17,5 +17,5 @@ MonoBehaviour:
   abilityDescription: Empty
   energyCost: 5
   abilityType: 2
-  uiImage: {fileID: 21300000, guid: 9c8af8a2123bb3a4387249d18ebbd01e, type: 3}
+  uiImage: {fileID: 21300000, guid: 807f77323f16e4748855cd512c9b3e9b, type: 3}
   shield: 1

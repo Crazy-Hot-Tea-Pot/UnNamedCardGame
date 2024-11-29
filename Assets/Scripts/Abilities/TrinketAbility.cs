@@ -12,7 +12,7 @@ public class TrinketAbility : Ability
     {
         base.Activate();
 
-        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().TakeDamage(powerGain);
+        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().ApplyEffect(Effects.Buff.Power, powerGain);
         //GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().RestoreEnergy(powerGain);
     }
 }
