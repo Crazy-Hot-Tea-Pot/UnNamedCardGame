@@ -811,8 +811,7 @@ public class PlayerController : MonoBehaviour
             Shield = 0;
 
         //Remove buffs by 1
-        GalvanizedStack--;
-        PoweredStacks--;
+        GalvanizedStack--;        
     }
 
     /// <summary>
