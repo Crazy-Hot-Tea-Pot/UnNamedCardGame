@@ -12,9 +12,6 @@ public class WeaponAbility : Ability
 
     public override void Activate()
     {
-        //If there is enough energy for the card
-        if (GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().Energy - energyCost > 0)
-        {
             //Cost energy
             GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().PlayedAbility(energyCost);
 
@@ -33,11 +30,6 @@ public class WeaponAbility : Ability
                     Debug.LogWarning("We couldn't find the right enemy object it had no enemy script attached");
                 }
             }
-        }
-        else
-        {
-            Debug.Log("Too high an energy cost");
-        }
 
     }
 }
