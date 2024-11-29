@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class LoadingController : MonoBehaviour
 {
     private string targetScene;
+    private List<NewChip> Chips = new List<NewChip>();
     private NewChip choosenChip;
     
 
@@ -23,8 +24,8 @@ public class LoadingController : MonoBehaviour
     {
         targetScene = GameManager.Instance.TargetScene.ToString();
         StartCoroutine(LoadSceneAsync(targetScene));
-
-        choosenChip = GameManager.Instance.playerDeck[Random.Range(0, GameManager.Instance.playerDeck.Count)];
+        Chips = new List<NewChip>(Resources.LoadAll<NewChip>("Scriptables/Chips"));
+        choosenChip = Chips[Random.Range(0, Chips.Count)];
 
         ChipDisplay.GetComponent<Chip>().newChip = choosenChip;
         ChipTip.SetText("Chip Tip: "+choosenChip.ChipTip);
