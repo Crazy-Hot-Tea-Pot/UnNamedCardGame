@@ -152,12 +152,6 @@ public class CombatController : MonoBehaviour
         CurrentCombatant = "No Combat Yet";
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     /// <summary>
     /// Check if the current combatant has attacked.
     /// Move to the next combatant.
@@ -197,6 +191,8 @@ public class CombatController : MonoBehaviour
             Combadants.Add(enemies);
 
             combatEnemy.GetComponent<Enemy>().InCombat = true;
+
+            combatEnemy.GetComponent<Enemy>().CombatStart();
 
             //A loop to grab every card in the combat enemy for dropping cards
             for(int i = 0; i < combatEnemy.GetComponent<Enemy>().dropedCards.Count; i++)

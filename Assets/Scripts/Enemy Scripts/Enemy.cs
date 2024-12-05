@@ -466,6 +466,14 @@ public class Enemy : MonoBehaviour
     }
 
     /// <summary>
+    /// Combat start stuff for everyenemy.
+    /// </summary>
+    public virtual void CombatStart()
+    {
+        //animator.SetBool("inCombat", true);
+    }
+
+    /// <summary>
     /// Updates the targeting state of the enemy based on the specified targeting type and its active status.
     /// Adds the targeting type to the active list if it starts targeting, or removes it if it stops targeting.
     /// </summary>
@@ -547,14 +555,8 @@ public class Enemy : MonoBehaviour
         damageIndicator.transform.LookAt(Camera.main.transform);
         damageIndicator.transform.Rotate(0, 180, 0); // Correct for backward text
     }
+   
 
-    /// <summary>
-    /// Combat start stuff for everyenemy.
-    /// </summary>
-    protected virtual void CombatStart()
-    {
-        //animator.SetBool("inCombat", value);
-    }
     /// <summary>
     /// Updates the enemy's border color and shader properties based on the currently active targeting types.
     /// The color and outline properties are determined by the highest-priority active targeting type.

@@ -121,7 +121,7 @@ public class CameraModeIndicatorController : MonoBehaviour
         }
 
 
-        // Wait for the active duration, then deactivate the object
+        // Wait for the active UiDuration, then deactivate the object
         yield return new WaitForSeconds(activeDuration);
 
         // Deactivate the object

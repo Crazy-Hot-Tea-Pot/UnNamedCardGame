@@ -10,26 +10,45 @@ public class EnemyUI : MonoBehaviour
     /// Name of Enemy Goes here.
     /// </summary>
     public TextMeshProUGUI EnemyNameBox;
+
     /// <summary>
     /// Enemy Health Bar.
     /// </summary>
     public Image healthBar;
+
+    /// <summary>
+    /// Enemy Health Text.
+    /// </summary>
+    public TextMeshProUGUI healthText;
+
     /// <summary>
     /// Enemy Shield Container.
     /// </summary>
     public GameObject shieldContainer;
+
     /// <summary>
     /// Enemy sheild bar.
     /// </summary>
     public Image shieldBar;
+
+    /// <summary>
+    /// Enemy shield text.
+    /// </summary>
+    public TextMeshProUGUI shieldText;
+
+    // Adjust this for smoother or quicker transitions
+    public float UiDuration = 0.5f;
+
     /// <summary>
     /// reference to effects Panel.
     /// </summary>
     public GameObject EffectsPanel;
+
     /// <summary>
     /// Prefabs of Effects enemy will use."Case sensitive"
     /// </summary>
     public List<GameObject> effectPrefabs;
+
     /// <summary>
     /// list of active effects.
     /// </summary>
@@ -61,6 +80,7 @@ public class EnemyUI : MonoBehaviour
     {        
         FaceCamera();
     }
+
     /// <summary>
     /// Displays EnemyName
     /// </summary>
@@ -69,6 +89,7 @@ public class EnemyUI : MonoBehaviour
     {
         EnemyNameBox.SetText(enemyName);
     }
+
     /// <summary>
     /// Update Enemy HP Bar
     /// </summary>
@@ -84,6 +105,7 @@ public class EnemyUI : MonoBehaviour
         // Start the coroutine to smoothly update the health bar
         StartCoroutine(UpdateHealthOverTime(targetHealthPercentage));
     }
+
     /// <summary>
     /// Update Enemy Shield Bar
     /// </summary>
@@ -103,10 +125,10 @@ public class EnemyUI : MonoBehaviour
 
             //ShieldBar.fillAmount = shieldPercentage;
 
-            StopCoroutine(UpdateShieldOverTime(shieldPercentage));
+            StopCoroutine(UpdateShieldOverTime(shieldPercentage, maxShield));
 
             // Start the coroutine to smoothly update the shield bar
-            StartCoroutine(UpdateShieldOverTime(shieldPercentage));
+            StartCoroutine(UpdateShieldOverTime(shieldPercentage, maxShield));
         }
     }
 
@@ -170,6 +192,7 @@ public class EnemyUI : MonoBehaviour
         IntentText.GetComponent<TextMeshProUGUI>().SetText(intent);
         IntentText.GetComponent<TextMeshProUGUI>().color = colorOfIntent;
     }
+
     /// <summary>
     /// Make the canvas face the player camera
     /// </summary>
@@ -184,52 +207,67 @@ public class EnemyUI : MonoBehaviour
     }
 
     private IEnumerator UpdateHealthOverTime(float targetFillAmount)
-    {
-        // While the bar is not at the target fill amount, update it
-        while (Mathf.Abs(healthBar.fillAmount - targetFillAmount) > 0.001f)
+    {        
+
+        float initialFillAmount = healthBar.fillAmount;
+        float elapsedTime = 0f;       
+
+        while (elapsedTime < UiDuration)
         {
-            // Lerp between the current fill and the target fill amount
-            healthBar.fillAmount = Mathf.Lerp(healthBar.fillAmount, targetFillAmount, 0.5f * Time.deltaTime);
+            elapsedTime += Time.deltaTime;
+            float newFillAmount = Mathf.Lerp(initialFillAmount, targetFillAmount, elapsedTime / UiDuration);
+            healthBar.fillAmount = newFillAmount;
 
-            // Optionally update health bar color or other visual cues here
+            // Update health text as percentage
+            int currentHealthPercentage = Mathf.RoundToInt(newFillAmount * 100);
+            healthText.SetText($"{currentHealthPercentage}%");
 
-            // Ensure the fill value gradually updates each frame
             yield return null;
         }
 
-        // Ensure it snaps to the exact target amount at the end
+        // Ensure it snaps to the final target amount
         healthBar.fillAmount = targetFillAmount;
+        healthText.SetText($"{Mathf.RoundToInt(targetFillAmount * 100)}%");
     }
 
-    private IEnumerator UpdateShieldOverTime(float targetFillAmount)
+    private IEnumerator UpdateShieldOverTime(float targetFillAmount,float maxShield)
     {
-        // While the difference between the current fill amount and the target is greater than the threshold
-        while (Mathf.Abs(shieldBar.fillAmount - targetFillAmount) > 0.001f)
+        float initialFillAmount = shieldBar.fillAmount;
+        float elapsedTime = 0f;
+
+        // Initial shield amount
+        int initialCurrentShield = Mathf.RoundToInt(initialFillAmount * maxShield);
+
+        // Target shield amount
+        int targetCurrentShield = Mathf.RoundToInt(targetFillAmount * maxShield);
+
+        // Store the initial max shield value
+        int initialMaxShield = (int)maxShield;
+
+        // Target max shield value
+        int finalMaxShield = Mathf.RoundToInt(targetFillAmount * maxShield);
+
+        while (elapsedTime < UiDuration)
         {
-            // Lerp between current fill and target fill by the fill speed
-            shieldBar.fillAmount = Mathf.Lerp(shieldBar.fillAmount, targetFillAmount, 0.5f * Time.deltaTime);
+            elapsedTime += Time.deltaTime;
+            float progress = elapsedTime / UiDuration;
 
-            // Display percentage as an integer (0 to 100)
-            //int percentage = Mathf.RoundToInt(shieldBar.fillAmount * 100);
-            //shiedText.SetText(percentage + "%");
+            // Lerp shield bar fill amount
+            float newFillAmount = Mathf.Lerp(initialFillAmount, targetFillAmount, progress);
+            shieldBar.fillAmount = newFillAmount;
 
+            // Dynamically calculate current and max shield values
+            int currentShield = Mathf.RoundToInt(Mathf.Lerp(initialCurrentShield, targetCurrentShield, progress));
+            int updatedMaxShield = Mathf.RoundToInt(Mathf.Lerp(initialMaxShield, finalMaxShield, progress));
 
-            // Ensure the fill value gradually updates each frame
+            // Update the shield text
+            shieldText.SetText($"{currentShield}/{updatedMaxShield}");
+
             yield return null;
         }
 
-        // Ensure it snaps to the exact target amount at the end
+        // Ensure it snaps to the final values
         shieldBar.fillAmount = targetFillAmount;
-
-        // Display percentage as an integer (0 to 100)
-        //int finalPercentage = Mathf.RoundToInt(targetFillAmount * 100);
-        //shiedText.SetText(finalPercentage + "%");
-
-
-        if (shieldBar.fillAmount <= 0f)
-        {
-            shieldContainer.SetActive(false);
-            shieldBar.fillAmount = 0;
-        }
-        }
+        shieldText.SetText($"{targetCurrentShield}/{finalMaxShield}");
+    }
 }

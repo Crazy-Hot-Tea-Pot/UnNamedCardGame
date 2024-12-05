@@ -10,7 +10,7 @@ public static class Effects
     {
         None,
         /// <summary>
-        /// Gain shield at the end of yoru turn, equal to your amount of Galvanize stacks.
+        /// Gain shield at the end of your turn, equal to your amount of Galvanize stacks.
         /// </summary>
         Galvanize,
         /// <summary>

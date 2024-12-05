@@ -79,6 +79,13 @@ public class Looter : Enemy
     {
         base.TakeDamage(damage);
     }
+
+    public override void CombatStart()
+    {
+        base.CombatStart();
+
+        UpdateIntentUI("Swipe", Color.red);
+    }
     /// <summary>
     ///  After the 3rd Swipe, perform Shroud
     /// </summary>
@@ -131,11 +138,5 @@ public class Looter : Enemy
 
         // Reset stolen Scraps after returning
         StolenScrap = 0;
-    }
-    protected override void CombatStart()
-    {
-        base.CombatStart();
-
-        UpdateIntentUI("Swipe", Color.red);
-    }
+    }    
 }
