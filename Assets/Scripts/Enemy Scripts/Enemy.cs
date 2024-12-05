@@ -80,8 +80,7 @@ public class Enemy : MonoBehaviour
         }
         set
         {
-            inCombat = value;
-            //animator.SetBool("inCombat", value);
+            inCombat = value;            
         }
     }
 
@@ -461,6 +460,11 @@ public class Enemy : MonoBehaviour
         Debug.Log("Shield Restored: " + shield);
     }
 
+    public virtual void UpdateIntentUI(string intentName, Color intentColor)
+    {
+        thisEnemyUI.UpdateIntent(intentName, intentColor);
+    }
+
     /// <summary>
     /// Updates the targeting state of the enemy based on the specified targeting type and its active status.
     /// Adds the targeting type to the active list if it starts targeting, or removes it if it stops targeting.
@@ -542,6 +546,14 @@ public class Enemy : MonoBehaviour
         // Ensure the text faces the camera
         damageIndicator.transform.LookAt(Camera.main.transform);
         damageIndicator.transform.Rotate(0, 180, 0); // Correct for backward text
+    }
+
+    /// <summary>
+    /// Combat start stuff for everyenemy.
+    /// </summary>
+    protected virtual void CombatStart()
+    {
+        //animator.SetBool("inCombat", value);
     }
     /// <summary>
     /// Updates the enemy's border color and shader properties based on the currently active targeting types.

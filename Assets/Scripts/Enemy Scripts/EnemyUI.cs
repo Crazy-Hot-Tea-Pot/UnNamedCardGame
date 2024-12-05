@@ -35,6 +35,11 @@ public class EnemyUI : MonoBehaviour
     /// </summary>
     public List<GameObject> activeEffects;
 
+    /// <summary>
+    /// Intent text box.
+    /// </summary>
+    public GameObject IntentText;
+
     private Camera playerCamera;
 
     void Awake()
@@ -152,6 +157,18 @@ public class EnemyUI : MonoBehaviour
         {
             Debug.LogError("So Somebody fucked up.");
         }
+    }
+
+    /// <summary>
+    /// Update intent box.
+    /// </summary>
+    /// <param name="intent"></param>
+    /// <param name="colorOfIntent"></param>
+    public void UpdateIntent(string intent,Color colorOfIntent)
+    {
+        IntentText.SetActive(true);
+        IntentText.GetComponent<TextMeshProUGUI>().SetText(intent);
+        IntentText.GetComponent<TextMeshProUGUI>().color = colorOfIntent;
     }
     /// <summary>
     /// Make the canvas face the player camera

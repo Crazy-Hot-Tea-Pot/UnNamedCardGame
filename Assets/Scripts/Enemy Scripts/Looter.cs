@@ -24,12 +24,12 @@ public class Looter : Enemy
     // To track the number of Swipes performed
     private int swipeCount = 0;
 
-    private bool shrouded;
+    private bool isShrouded;
 
-    public bool Shrouded
+    public bool IsShrouded
     {
-        get { return shrouded; }
-        private set { shrouded = value; }
+        get { return isShrouded; }
+        private set { isShrouded = value; }
     }
 
     // Start is called before the first frame update
@@ -48,17 +48,36 @@ public class Looter : Enemy
         if (swipeCount < 3) // First three turns are Swipe
         {
             Swipe();
+
+            if (swipeCount < 3)
+                UpdateIntentUI("Swipe", Color.red);
+            else
+                UpdateIntentUI("Shroud", Color.blue);
         }
-        else if (swipeCount == 3 && !Shrouded) // After three Swipes, do Shroud
+        else if (swipeCount == 3 && !IsShrouded) // After three Swipes, do Shroud
         {
             Shroud();
+            UpdateIntentUI("Escape", Color.red);
         }
-        else if (Shrouded) // After Shroud, perform Escape
+        else if (IsShrouded) // After Shroud, perform Escape
         {
             Escape();
         }
 
         base.PerformIntent();
+    }
+    /// <summary>
+    /// Return all stolen Scraps upon killing
+    /// </summary>
+    public override void Die()
+    {        
+        ReturnStolenScrap();
+        base.Die();
+    }    
+
+    public override void TakeDamage(int damage)
+    {
+        base.TakeDamage(damage);
     }
     /// <summary>
     ///  After the 3rd Swipe, perform Shroud
@@ -77,7 +96,7 @@ public class Looter : Enemy
             PowerStacks = 0;
         }
         // Drained Swipe
-        else if (DrainedStacks>0)
+        else if (DrainedStacks > 0)
         {
             GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().TakeDamage(Mathf.FloorToInt(6 - 0.8f));
             DrainedStacks--;
@@ -95,33 +114,28 @@ public class Looter : Enemy
         Debug.Log($"{EnemyName} performs Shroud, gaining 10 Shield.");
         Shield += 10;
 
-        Shrouded = true;
+        isShrouded = true;
     }
 
     private void Escape()
     {
         Debug.Log($"{EnemyName} performs Escape, exiting the fight with {StolenScrap} Scrap.");
         CombatController.RemoveCombadant(this.gameObject);
-        Destroy( this.gameObject );
+        Destroy(this.gameObject);
     }
-    /// <summary>
-    /// Return all stolen Scraps upon killing
-    /// </summary>
-    public override void Die()
-    {        
-        ReturnStolenScrap();
-        base.Die();
-    }
-
     private void ReturnStolenScrap()
     {
         Debug.Log($"{EnemyName} returns {StolenScrap} Scrap upon defeat.");
-        // Logic to add stolen Scraps back to the player's resources or similar
-        StolenScrap = 0;  // Reset stolen Scraps after returning
-    }
 
-    public override void TakeDamage(int damage)
+        EnemyTarget.GetComponent<PlayerController>().GainScrap(StolenScrap);
+
+        // Reset stolen Scraps after returning
+        StolenScrap = 0;
+    }
+    protected override void CombatStart()
     {
-        base.TakeDamage(damage);
+        base.CombatStart();
+
+        UpdateIntentUI("Swipe", Color.red);
     }
 }
