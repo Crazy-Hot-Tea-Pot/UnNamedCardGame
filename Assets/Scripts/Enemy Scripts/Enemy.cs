@@ -48,6 +48,7 @@ public class Enemy : MonoBehaviour
     [Header("Enemy statuss")]
     #region EnemyStatus
     private string enemyName;
+
     /// <summary>
     /// Returns name of enemy
     /// </summary>
@@ -68,6 +69,7 @@ public class Enemy : MonoBehaviour
             thisEnemyUI.SetEnemyName(EnemyName);
         }
     }
+
     private bool inCombat;
     /// <summary>
     /// Is the Enemy in Combat.
@@ -305,10 +307,6 @@ public class Enemy : MonoBehaviour
         playerCamera = Camera.main;
         enemyRenderer = GetComponent<Renderer>();
         thisEnemyUI = this.gameObject.GetComponentInChildren<EnemyUI>();
-
-        //Transform enemyCanvasTransform = transform.Find("EnemyCanvas");
-
-        //thisEnemyUI=enemyCanvasTransform.GetComponent<EnemyUI>();
     }
 
     // Start is called before the first frame update
@@ -335,15 +333,14 @@ public class Enemy : MonoBehaviour
 
     public virtual void Initialize()
     {
-        CurrentHP = maxHP;        
-        gameObject.name = EnemyName;
-       // defaultShader=enemyRenderer.material.shader;
+        CurrentHP = maxHP;
+        EnemyName = gameObject.name;
 
         CombatController = GameObject.FindGameObjectWithTag("CombatController").GetComponent<CombatController>();
         enemyTarget = GameObject.FindGameObjectWithTag("Player");
 
-        //UpdateBorderColor();
     }
+
    /// <summary>
    /// Is called when enemy is attacked by player.
    /// </summary>
@@ -374,6 +371,7 @@ public class Enemy : MonoBehaviour
 
         DisplayDamageTaken(damage);
     }    
+
     /// <summary>
     /// Call when enemy die.
     /// </summary>
