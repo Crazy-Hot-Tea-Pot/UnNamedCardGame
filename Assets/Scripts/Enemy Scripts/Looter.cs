@@ -99,19 +99,19 @@ public class Looter : Enemy
         // Empower Swipe
         if (PowerStacks > 0)
         {
-            GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().TakeDamage(6 + PowerStacks);
+            GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().DamagePlayerBy(6 + PowerStacks);
             PowerStacks = 0;
         }
         // Drained Swipe
         else if (DrainedStacks > 0)
         {
-            GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().TakeDamage(Mathf.FloorToInt(6 - 0.8f));
+            GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().DamagePlayerBy(Mathf.FloorToInt(6 - 0.8f));
             DrainedStacks--;
         }
         // Default Swipe
         else
         {
-            GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().TakeDamage(6);
+            GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().DamagePlayerBy(6);
         }
 
     }

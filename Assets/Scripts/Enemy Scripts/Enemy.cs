@@ -543,7 +543,11 @@ public class Enemy : MonoBehaviour
     protected virtual void DisplayDamageTaken(int damage)
     {
         // Instantiate the damage text prefab
-        GameObject damageIndicator = Instantiate(damageTextPrefab, this.gameObject.transform.position + Vector3.up * 2f, Quaternion.identity);
+        // Calculate the position in front of the object
+        Vector3 forwardPosition = this.gameObject.transform.position + this.gameObject.transform.forward * 2f + Vector3.up * 1f;
+
+        // Instantiate the damage indicator at the calculated position
+        GameObject damageIndicator = Instantiate(damageTextPrefab, forwardPosition, Quaternion.identity);
 
         // Set the text to display the damage amount
         TextMeshPro textMesh = damageIndicator.GetComponent<TextMeshPro>();

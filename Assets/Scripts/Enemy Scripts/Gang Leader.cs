@@ -40,7 +40,7 @@ public class GangLeader : Enemy
     private void Disorient()
     {
         EnemyTarget.GetComponent<PlayerController>().ApplyEffect(Effects.Debuff.Jam, 1);
-        EnemyTarget.GetComponent<PlayerController>().TakeDamage(6);
+        EnemyTarget.GetComponent<PlayerController>().DamagePlayerBy(6);
     }
     /// <summary>
     ///  Gain 15 Shield, Deal 3 Damage.
@@ -49,7 +49,7 @@ public class GangLeader : Enemy
     private void Cower()
     {
         ApplyShield(15);
-        EnemyTarget.GetComponent<PlayerController>().TakeDamage(3);
+        EnemyTarget.GetComponent<PlayerController>().DamagePlayerBy(3);
     }
     /// <summary>
     /// Self and Looters gain 2 Power.

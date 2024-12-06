@@ -570,7 +570,7 @@ public class PlayerUIManager : MonoBehaviour
     {       
         var playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
 
-        if (playerController.Shield == 0 && playerController.MaxShield == 0)
+        if (playerController.Shield == 0)
         {
             ShieldBarContainer.SetActive(false);
         }
@@ -591,34 +591,38 @@ public class PlayerUIManager : MonoBehaviour
     }
     private IEnumerator UpdateShieldOverTime(float targetFillAmount)
     {
-        // While the difference between the current fill amount and the target is greater than the threshold
-        while (Mathf.Abs(ShieldBar.fillAmount - targetFillAmount) > 0.001f)
+        var playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+
+        int initialCurrentShield = Mathf.RoundToInt(ShieldBar.fillAmount * playerController.MaxShield);
+        int targetCurrentShield = playerController.Shield;
+
+        int initialMaxShield = playerController.MaxShield;
+
+        float elapsedTime = 0f;
+        // Slow down the update speed
+        float duration = 1.0f;
+
+        while (elapsedTime < duration)
         {
-            // Lerp between current fill and target fill by the fill speed
-            ShieldBar.fillAmount = Mathf.Lerp(ShieldBar.fillAmount, targetFillAmount, 0.5f * Time.deltaTime);
-            
-            // Display percentage as an integer (0 to 100)
-            int percentage = Mathf.RoundToInt(ShieldBar.fillAmount * 100);
-            shiedText.SetText(percentage + "%");
+            elapsedTime += Time.deltaTime;
 
+            // Lerp the shield bar fill amount
+            float newFillAmount = Mathf.Lerp(ShieldBar.fillAmount, targetFillAmount, elapsedTime / duration);
+            ShieldBar.fillAmount = newFillAmount;
 
-            // Ensure the fill value gradually updates each frame
+            // Dynamically calculate shield values
+            int currentShield = Mathf.RoundToInt(Mathf.Lerp(initialCurrentShield, targetCurrentShield, elapsedTime / duration));
+            int maxShield = Mathf.RoundToInt(Mathf.Lerp(initialMaxShield, playerController.MaxShield, elapsedTime / duration));
+
+            // Update the shield text
+            shiedText.SetText($"{currentShield}/{maxShield}");
+
             yield return null;
         }
 
-        // Ensure it snaps to the exact target amount at the end
+        // Snap to final values
         ShieldBar.fillAmount = targetFillAmount;
-
-        // Display percentage as an integer (0 to 100)
-        int finalPercentage = Mathf.RoundToInt(targetFillAmount * 100);
-        shiedText.SetText(finalPercentage + "%");
-
-
-        if (ShieldBar.fillAmount <= 0f)
-        {
-            ShieldBarContainer.SetActive(false);
-            ShieldBar.fillAmount = 0;
-        }
+        shiedText.SetText($"{targetCurrentShield}/{playerController.MaxShield}");
     }
 
     //Sets variables to initalize fill speed

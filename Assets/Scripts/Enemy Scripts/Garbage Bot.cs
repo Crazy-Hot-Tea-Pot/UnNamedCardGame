@@ -29,7 +29,7 @@ public class GarbageBot : Enemy
     private void Compact()
     {
         Debug.Log("Garbage Bot uses Compact!");
-        EnemyTarget.GetComponent<PlayerController>().TakeDamage(15);        
+        EnemyTarget.GetComponent<PlayerController>().DamagePlayerBy(15);        
     }
     /// <summary>
     /// Deal 10 Damage
@@ -40,7 +40,7 @@ public class GarbageBot : Enemy
     {
         Debug.Log("Garbage Bot uses Pile On!");        
 
-        EnemyTarget.GetComponent<PlayerController>().TakeDamage(10);
+        EnemyTarget.GetComponent<PlayerController>().DamagePlayerBy(10);
         EnemyTarget.GetComponent<PlayerController>().ApplyEffect(Effects.Debuff.Jam, 1);
     }
     /// <summary>
@@ -54,6 +54,6 @@ public class GarbageBot : Enemy
         SoundManager.PlayFXSound(SoundFX.ShredGarbageBot,this.gameObject.transform);
 
         ApplyShield(7);
-        EnemyTarget.GetComponent<PlayerController>().TakeDamage(7);
+        EnemyTarget.GetComponent<PlayerController>().DamagePlayerBy(7);
     }
 }

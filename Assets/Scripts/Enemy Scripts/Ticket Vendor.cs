@@ -33,13 +33,13 @@ public class TicketVendor : Enemy
     }
     private void Redirect()
     {
-        EnemyTarget.GetComponent<PlayerController>().TakeDamage(7);
+        EnemyTarget.GetComponent<PlayerController>().DamagePlayerBy(7);
 
         //TODO Sabastian implement ability disabled.
     }
     private void Confiscate()
     {
-        EnemyTarget.GetComponent<PlayerController>().TakeDamage(7);
+        EnemyTarget.GetComponent<PlayerController>().DamagePlayerBy(7);
 
         int temp1 = Random.Range(0, GameManager.Instance.playerHand.Count);
 
@@ -55,7 +55,7 @@ public class TicketVendor : Enemy
     }
     private void Halt()
     {
-        EnemyTarget.GetComponent<PlayerController>().TakeDamage(9);
+        EnemyTarget.GetComponent<PlayerController>().DamagePlayerBy(9);
         EnemyTarget.GetComponent<PlayerController>().ApplyEffect(Effects.Debuff.WornDown, 1);
         EnemyTarget.GetComponent<PlayerController>().ApplyEffect(Effects.Debuff.Drained, 1);
     }

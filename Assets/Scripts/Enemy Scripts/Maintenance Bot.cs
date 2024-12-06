@@ -53,7 +53,7 @@ public class MaintenanceBot : Enemy
     private void Disassemble()
     {
         Debug.Log("Maintenance Bot uses Disassemble!");
-        EnemyTarget.GetComponent<PlayerController>().TakeDamage(9);
+        EnemyTarget.GetComponent<PlayerController>().DamagePlayerBy(9);
         EnemyTarget.GetComponent<PlayerController>().ApplyEffect(Effects.Debuff.WornDown, 1);        
     }
     /// <summary>

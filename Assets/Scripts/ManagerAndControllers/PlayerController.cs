@@ -87,14 +87,15 @@ public class PlayerController : MonoBehaviour
             if (shield <= 0)
             {
                 shield = 0;
-                maxShield = 0;
+                maxShield = 100;
             }
 
             GameObject.FindGameObjectWithTag("PlayerCanvas").
                GetComponent<PlayerUIManager>().UpdateShield();
         }
     }
-    private int maxShield=0;    
+    private int maxShield=100; 
+    
     /// <summary>
     /// Max amount of Shield currently.
     /// </summary>
@@ -588,6 +589,16 @@ public class PlayerController : MonoBehaviour
         Shield += shieldAmount;
 
     }
+    [ContextMenu("Shield Text")]
+    public void TestShield()
+    {
+        ApplyShield(10);
+    }
+    [ContextMenu("Damage Test")]
+    public void TestDamage()
+    {
+        DamagePlayerBy(5);
+    }
 
     /// <summary>
     /// Give player energy.
@@ -613,7 +624,7 @@ public class PlayerController : MonoBehaviour
     /// Deal Damage to player.
     /// </summary>
     /// <param name="damage">Amount of Damage as Int.</param>
-    public void TakeDamage(int damage)
+    public void DamagePlayerBy(int damage)
     {
         //if Impervious
         if (IsImpervious)

@@ -89,7 +89,7 @@ public class SecurityDrone : Enemy
     /// </summary>
     private void Ram()
     {
-        EnemyTarget.GetComponent<PlayerController>().TakeDamage(12);
+        EnemyTarget.GetComponent<PlayerController>().DamagePlayerBy(12);
     }
     /// <summary>
     /// Deals 7 Damage.
@@ -101,7 +101,7 @@ public class SecurityDrone : Enemy
         // Play Sound
         SoundManager.PlayFXSound(SoundFX.NeutralizeSecurityDrone);
 
-        EnemyTarget.GetComponent<PlayerController>().TakeDamage(7);
+        EnemyTarget.GetComponent<PlayerController>().DamagePlayerBy(7);
         EnemyTarget.GetComponent<PlayerController>().ApplyEffect(Effects.Debuff.Drained, 1);
     }
     /// <summary>
