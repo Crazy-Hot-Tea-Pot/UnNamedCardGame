@@ -464,7 +464,6 @@ public class PlayerController : MonoBehaviour
         // Check if the pointer is over a UI element
         if (EventSystem.current.IsPointerOverGameObject())
         {
-            Debug.Log("[PlayerController] Click detected on UI. Ignoring.");
             yield break; // Exit if the click is on the UI
         }
 
