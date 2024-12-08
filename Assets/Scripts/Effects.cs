@@ -35,7 +35,7 @@ public static class Effects
         /// </summary>
         Jam,
         /// <summary>
-        /// While Worn Down, your Shield provides 30% less shield.
+        /// While Worn Down, your ShieldBar provides 30% less shield.
         /// </summary>
         WornDown
     }

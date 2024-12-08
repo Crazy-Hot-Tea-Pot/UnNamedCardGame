@@ -104,7 +104,7 @@ public class Enemy : MonoBehaviour
         {
             currentHp = value;
 
-            //Update UI for enemy Health
+            //Update UI for enemy HealthBar
             thisEnemyUI.UpdateHealth(currentHp,maxHP);
 
             if (currentHp <= 0)
@@ -117,7 +117,7 @@ public class Enemy : MonoBehaviour
 
     private int shield;
     /// <summary>
-    /// Enemy Shield Amount.
+    /// Enemy ShieldBar Amount.
     /// </summary>
     public int Shield
     {
@@ -452,7 +452,7 @@ public class Enemy : MonoBehaviour
     /// <param name="shieldAmount"></param>
     public virtual void ApplyShield(int shieldAmount)
     {
-        //Restore Shield
+        //Restore ShieldBar
         Shield += shieldAmount;
 
         Debug.Log("Shield Restored: " + shield);
@@ -512,7 +512,7 @@ public class Enemy : MonoBehaviour
     /// </summary>
     protected virtual void StartTurn()
     {
-        //Remove Shield if there is shield
+        //Remove ShieldBar if there is shield
         if (Shield > 0)
             Shield = 0;
 

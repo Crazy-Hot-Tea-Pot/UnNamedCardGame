@@ -43,7 +43,7 @@ public class GangLeader : Enemy
         EnemyTarget.GetComponent<PlayerController>().DamagePlayerBy(6);
     }
     /// <summary>
-    ///  Gain 15 Shield, Deal 3 Damage.
+    ///  Gain 15 ShieldBar, Deal 3 Damage.
     ///  60% chance
     /// </summary>    
     private void Cower()

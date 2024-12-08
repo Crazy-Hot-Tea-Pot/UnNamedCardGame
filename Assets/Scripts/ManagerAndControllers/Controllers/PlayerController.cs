@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -20,8 +21,6 @@ public class PlayerController : MonoBehaviour
 
     private bool inCombat;
 
-    private bool isInteracting=false;
-
     [Header("Needed Stuff")]    
     public PlayerInputActions playerInputActions;
     public NavMeshAgent agent;
@@ -34,7 +33,7 @@ public class PlayerController : MonoBehaviour
     #region PlayerStats 
     private int health;
     /// <summary>
-    /// Returns PLayer Health
+    /// Returns PLayer HealthBar
     /// </summary>
     public int Health
     {
@@ -43,8 +42,7 @@ public class PlayerController : MonoBehaviour
         {
             health = value;
 
-            //GameObject.FindGameObjectWithTag("PlayerCanvas").
-            //    GetComponent<PlayerUIManager>().UpdateHealth();
+            UiManager.Instance.UpdateHealth(Health, MaxHealth);
 
             if (health > maxHealth)
                 health = maxHealth;
@@ -57,7 +55,7 @@ public class PlayerController : MonoBehaviour
     }
     private int maxHealth;
     /// <summary>
-    /// Returns max Health
+    /// Returns max HealthBar
     /// </summary>
     public int MaxHealth
     {
@@ -69,7 +67,7 @@ public class PlayerController : MonoBehaviour
     }
     private int shield;
     /// <summary>
-    /// Player Shield amount
+    /// Player ShieldBar amount
     /// </summary>
     public int Shield
     {
@@ -90,14 +88,13 @@ public class PlayerController : MonoBehaviour
                 maxShield = 100;
             }
 
-            //GameObject.FindGameObjectWithTag("PlayerCanvas").
-            //   GetComponent<PlayerUIManager>().UpdateShield();
+            UiManager.Instance.UpdateShield(Shield, MaxShield);
         }
     }
     private int maxShield=100; 
     
     /// <summary>
-    /// Max amount of Shield currently.
+    /// Max amount of ShieldBar currently.
     /// </summary>
     public int MaxShield
     {
@@ -126,7 +123,7 @@ public class PlayerController : MonoBehaviour
             else if (energy <= 0)
                 energy = 0;
 
-            //GameObject.FindGameObjectWithTag("PlayerCanvas").GetComponent<PlayerUIManager>().UpdateEnergy(Energy, MaxEnergy);
+            UiManager.Instance.UpdateEnergy(Energy, MaxEnergy);
         }
     }
     private readonly int maxEnergy=50;
@@ -374,23 +371,7 @@ public class PlayerController : MonoBehaviour
     /// List of current Effects the player has active.
     /// </summary>
     public List<Effects.Effect> ListOfActiveEffects = new List<Effects.Effect>();
-    #endregion
-
-    /// <summary>
-    /// Is player is interacting with object.
-    /// Stops playing from being to move.
-    /// </summary>
-    public bool IsInteracting
-    {
-        get
-        {
-            return isInteracting;
-        }
-        set
-        {
-            isInteracting = value;
-        }
-    }                     
+    #endregion                    
 
     // Awake is called when instance is being loaded
     void Awake()
@@ -472,73 +453,78 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void OnClick(InputAction.CallbackContext context)
     {
-        // Just put this here to cancel everything if clicking over an UI.
+        //Put in Coroutine to cancel out errors
+        StartCoroutine(HandleClick());
+    }
+    private IEnumerator HandleClick()
+    {
+        // Wait until the end of the frame to ensure UI state is updated
+        yield return null;
+
+        // Check if the pointer is over a UI element
         if (EventSystem.current.IsPointerOverGameObject())
         {
-            return;
+            Debug.Log("[PlayerController] Click detected on UI. Ignoring.");
+            yield break; // Exit if the click is on the UI
         }
 
+        // Create a Ray from the current mouse position
+        Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
+        RaycastHit hit;
 
-        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Roaming)
+        // Define LayerMask to exclude the "Player" layer
+        int layerMask = LayerMask.GetMask("Ground"); // Add more layers if needed
+
+        // Perform the raycast
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
         {
-            //temp to hold which gameobject ripple effect to spawn
-            GameObject tempIndicator;
-
-            // Double-click detection: Check if the same point was clicked within the doubleClickTime
-            float currentTime = Time.time;
-
-            if ((currentTime - lastClickTime) <= doubleClickTime)
+            // Ignore clicks on objects other than the ground
+            if (hit.collider.CompareTag("Ground"))
             {
-                // Double-click detected: Set speed to run
-                agent.speed = runSpeed;
-                tempIndicator = RippleRunPrefab;
+                HandleGroundClick(hit.point);
             }
             else
             {
-                agent.speed = walkSpeed;
-                tempIndicator = RipplePrefab;
+                Debug.Log("[PlayerController] Click detected on a non-ground object.");
             }
-
-
-            Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
-            RaycastHit hit;
-
-            // Create a LayerMask that excludes the "Player" layer
-            int layerMask = ~LayerMask.GetMask("Player");
-            int layerMask2 = ~LayerMask.GetMask("Ignore Raycast");
-
-            if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
-            {
-                if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask2))
-                {
-
-                    if (hit.collider.CompareTag("Ground"))
-                    {
-
-                        if (agent != null)
-                        {                            
-                            // Set destination and make player face the destination
-
-                            //Spawn Ripple effect at location.
-                            GameObject ClickIndicator = Instantiate(tempIndicator,hit.point, Quaternion.identity);
-
-                            //make the ! be at player
-                            ClickIndicator.transform.LookAt(this.transform.position);
-
-                            //Destroy it after 2 seconds
-                            Destroy(ClickIndicator, 2f);
-
-
-                            agent.SetDestination(hit.point);
-                            this.gameObject.transform.LookAt(hit.point);
-                        }
-                    }
-                }
-            }
-
-            // Update the time of the last click
-            lastClickTime = currentTime;
         }
+        else
+        {
+            Debug.Log("[PlayerController] No valid object detected.");
+        }
+    }
+    private void HandleGroundClick(Vector3 clickPoint)
+    {
+        GameObject tempIndicator;
+        float currentTime = Time.time;
+
+        // Double-click detection
+        if ((currentTime - lastClickTime) <= doubleClickTime)
+        {
+            agent.speed = runSpeed;
+            tempIndicator = RippleRunPrefab;
+        }
+        else
+        {
+            agent.speed = walkSpeed;
+            tempIndicator = RipplePrefab;
+        }
+
+        // Create ripple effect at the click point
+        GameObject ClickIndicator = Instantiate(tempIndicator, clickPoint, Quaternion.identity);
+
+        // Make the ripple effect face the player
+        ClickIndicator.transform.LookAt(this.transform.position);
+
+        // Destroy the ripple effect after 2 seconds
+        Destroy(ClickIndicator, 2f);
+
+        // Move the player to the clicked position
+        agent.SetDestination(clickPoint);
+        transform.LookAt(clickPoint);
+
+        // Update the last click time
+        lastClickTime = currentTime;
     }
 
     /// <summary>
@@ -564,7 +550,7 @@ public class PlayerController : MonoBehaviour
         Health = maxHealth;
     }
     /// <summary>
-    /// Changes the max Health value
+    /// Changes the max HealthBar value
     /// </summary>
     /// <param name="amount"></param>
     public void UpgradeMaxHealth(int amount)
@@ -578,7 +564,7 @@ public class PlayerController : MonoBehaviour
     /// <param name="shieldAmount"></param>
     public void ApplyShield(int shieldAmount)
     {
-        //Restore Shield
+        //Restore ShieldBar
         Shield += shieldAmount;
 
     }
@@ -878,7 +864,7 @@ public class PlayerController : MonoBehaviour
     {
         Debug.Log("Player died, game over.");
 
-        //Reset Health, energy and other stuff for now.
+        //Reset HealthBar, energy and other stuff for now.
         Health = maxHealth;
         Energy = maxEnergy;
         GainScrap(200);

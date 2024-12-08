@@ -199,7 +199,7 @@ public class DataManager : MonoBehaviour
         GearManager.Instance.PlayerCurrentGear.Clear();
         foreach (var gearData in loadedData.Gear)
         {
-            var matchedItem = GearManager.Instance.AllGears.Find(item => item.itemName == gearData.GearName);
+            var matchedItem = GearManager.Instance.AllGear.Find(item => item.itemName == gearData.GearName);
             if (matchedItem != null)
             {
                 matchedItem.IsEquipped = gearData.IsEquipped;

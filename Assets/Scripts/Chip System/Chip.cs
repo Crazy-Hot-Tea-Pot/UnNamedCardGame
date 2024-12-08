@@ -60,24 +60,35 @@ public class Chip : MonoBehaviour
     /// </summary>
     public Button chipButton;  
 
-    public NewChip newChip;
+    public NewChip NewChip
+    {
+        get
+        {
+            return newChip;
+        }
+        set
+        {
+            newChip = value;
+
+            if (NewChip != null)
+            {
+                ChipTitle = NewChip.chipName + " Chip";
+                this.gameObject.name = ChipTitle;
+                NewChip.ThisChip = this.gameObject;
+                // Set image to chip
+                GetComponent<Image>().sprite = newChip.chipImage;
+
+                SetChipModeTo(Mode);
+            }
+        }
+    }
+        private NewChip newChip;
 
     void Start()
-    {
-        ChipTitle = newChip.chipName + " Chip";
-        this.gameObject.name = ChipTitle;
-        newChip.ThisChip = this.gameObject;
+    {        
 
         Player = GameObject.FindGameObjectWithTag("Player");
-
-        // Set image to chip
-        GetComponent<Image>().sprite = newChip.chipImage;
-
-        //When the chip is active start method will run and set it's mode
-        if(Mode != ChipMode.None)
-        {
-            SetChipModeTo(Mode);
-        }
+       
     }
     /// <summary>
     /// Tell the Upgrade Controller this is the chip the user selected to ugprade.

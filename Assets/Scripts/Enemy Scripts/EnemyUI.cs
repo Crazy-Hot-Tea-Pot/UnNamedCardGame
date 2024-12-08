@@ -12,17 +12,17 @@ public class EnemyUI : MonoBehaviour
     public TextMeshProUGUI EnemyNameBox;
 
     /// <summary>
-    /// Enemy Health Bar.
+    /// Enemy HealthBar Bar.
     /// </summary>
     public Image healthBar;
 
     /// <summary>
-    /// Enemy Health Text.
+    /// Enemy HealthBar Text.
     /// </summary>
     public TextMeshProUGUI healthText;
 
     /// <summary>
-    /// Enemy Shield Container.
+    /// Enemy ShieldBar Container.
     /// </summary>
     public GameObject shieldContainer;
 
@@ -107,7 +107,7 @@ public class EnemyUI : MonoBehaviour
     }
 
     /// <summary>
-    /// Update Enemy Shield Bar
+    /// Update Enemy ShieldBar Bar
     /// </summary>
     public void UpdateShield(int currentShield, int maxShield)
     {       

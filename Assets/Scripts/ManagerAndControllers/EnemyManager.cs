@@ -33,7 +33,7 @@ public class EnemyManager : MonoBehaviour
 
 
     private static EnemyManager instance;
-    private List<GameObject> combatEnemies;
+    private List<GameObject> combatEnemies = new();
 
     void Awake()
     {
@@ -90,7 +90,7 @@ public class EnemyManager : MonoBehaviour
     }
     private void StartCombat()
     {
-        Debug.Log("[ManagerName] Combat started.");
+
     }
     private void EndCombat()
     {
@@ -98,7 +98,6 @@ public class EnemyManager : MonoBehaviour
     }
     private void SceneChange(Levels newLevel)
     {
-        Debug.Log($"[ManagerName] Scene changed to {newLevel}.");
 
         switch (newLevel)
         {

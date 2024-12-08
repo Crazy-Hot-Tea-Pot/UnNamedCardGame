@@ -9,11 +9,13 @@ public class LoadingController : MonoBehaviour
 {
     private string targetScene;
     private List<NewChip> Chips = new List<NewChip>();
+    private List<Item> Items = new List<Item>();
     private NewChip choosenChip;
+    private Item choosenItem;
     
 
-    public GameObject ChipDisplay;
-    public TextMeshProUGUI ChipTip;
+    public GameObject Display;
+    public TextMeshProUGUI TipText;
     public Image ProgressBar;
 
     [Header("Loading screen settings")]
@@ -23,21 +25,38 @@ public class LoadingController : MonoBehaviour
     void Start()
     {
         targetScene = GameManager.Instance.TargetScene.ToString();
+
         StartCoroutine(LoadSceneAsync(targetScene));
-        Chips = new List<NewChip>(Resources.LoadAll<NewChip>("Scriptables/Chips"));
-        choosenChip = Chips[Random.Range(0, Chips.Count)];
 
-        ChipDisplay.GetComponent<Chip>().newChip = choosenChip;
-        ChipTip.SetText("Chip Tip: "+choosenChip.ChipTip);
+        // Get all chips and items from their respective managers
+        Chips = new List<NewChip>(ChipManager.Instance.AllChips);
+        Items = new List<Item>(GearManager.Instance.AllGear);
 
-        ChipDisplay.SetActive(true);
+        // Randomly choose between a chip or an item
+        bool showChipTip = true; //Random.value > 0.5f;
+
+        if (showChipTip)// && Chips.Count > 0)
+        {
+            // Randomly select a chip
+            choosenChip = Chips[Random.Range(0, Chips.Count)];
+            Display.GetComponent<Image>().sprite = choosenChip.chipImage;
+            TipText.SetText("Chip Tip: " + choosenChip.ChipTip);
+        }
+        else if (Items.Count > 0)
+        {
+            // Randomly select an item
+            choosenItem = Items[Random.Range(0, Items.Count)];
+            TipText.SetText("Item Tip: " + choosenItem.itemTip);
+        }
+
+        Display.SetActive(true);
     }
 
     // Update is called once per frame
     void Update()
     {
         // Gradually rotate the image on the Y-axis
-        ChipDisplay.GetComponent<Transform>().Rotate(0f, rotationSpeed * Time.deltaTime, 0f);
+        Display.GetComponent<Transform>().Rotate(0f, rotationSpeed * Time.deltaTime, 0f);
     }
 
     private IEnumerator LoadSceneAsync(string sceneName)

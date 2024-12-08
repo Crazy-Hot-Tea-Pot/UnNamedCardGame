@@ -412,7 +412,7 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
             {
                 GameObject UIChip = Instantiate(ChipPrefab, ChipHolder.transform);
 
-                UIChip.GetComponent<Chip>().newChip = newChip;
+                UIChip.GetComponent<Chip>().NewChip = newChip;
 
                 UIChip.GetComponent<Chip>().SetChipModeTo(Chip.ChipMode.WorkShop);                                
             }

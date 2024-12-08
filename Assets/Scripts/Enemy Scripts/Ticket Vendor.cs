@@ -50,8 +50,8 @@ public class TicketVendor : Enemy
             temp2 = Random.Range(0, ChipManager.Instance.PlayerHand.Count);
         }
 
-        ChipManager.Instance.PlayerHand[temp1].GetComponent<Chip>().newChip.GetComponent<NewChip>().IsActive = false;
-        ChipManager.Instance.PlayerHand[temp2].GetComponent<Chip>().newChip.GetComponent<NewChip>().IsActive = false;
+        ChipManager.Instance.PlayerHand[temp1].GetComponent<Chip>().NewChip.GetComponent<NewChip>().IsActive = false;
+        ChipManager.Instance.PlayerHand[temp2].GetComponent<Chip>().NewChip.GetComponent<NewChip>().IsActive = false;
     }
     private void Halt()
     {

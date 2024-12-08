@@ -23,7 +23,8 @@ public class GameManager : MonoBehaviour
         Roaming,
         Combat,
         Settings,
-        Credits
+        Credits,
+        Loading
     }
 
     public GameMode CurrentGameMode
@@ -134,6 +135,15 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Update Gamemode Externally.
+    /// </summary>
+    /// <param name="gameMode"></param>
+    public void UpdateGameMode(GameMode gameMode)
+    {
+        CurrentGameMode = gameMode;
+    }
+
+    /// <summary>
     /// Initate change level.
     /// </summary>
     /// <param name="level"></param>
@@ -187,8 +197,15 @@ public class GameManager : MonoBehaviour
                 case Levels.Title:
                     CurrentGameMode = GameMode.Title;
                     break;
+                case Levels.Loading:
+                    CurrentGameMode = GameMode.Loading;
+                    break;
+                case Levels.Settings:
+                    CurrentGameMode = GameMode.Settings;
+                    break;
                 default:
                     CurrentGameMode = GameMode.Roaming;
+                    SoundManager.StartBackgroundSound(BgSound.Background);
                     break;
             }
             

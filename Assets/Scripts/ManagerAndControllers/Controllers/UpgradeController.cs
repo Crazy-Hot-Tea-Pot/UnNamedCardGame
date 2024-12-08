@@ -326,7 +326,7 @@ public class UpgradeController : MonoBehaviour
     }
 
     /// <summary>
-    /// Try to upgrade player Health.
+    /// Try to upgrade player HealthBar.
     /// </summary>
     public void AttemptToUpgradeHealth()
     {
@@ -337,7 +337,7 @@ public class UpgradeController : MonoBehaviour
             // made this bank for later.
             var Bank = tempPlayer.TakeScrap(150);
 
-            //Updade max Health
+            //Updade max HealthBar
             tempPlayer.UpgradeMaxHealth(10);
 
             //heal by same amount
@@ -427,9 +427,8 @@ public class UpgradeController : MonoBehaviour
         yield return new WaitForSeconds(1f);
         SwitchToScreen(Screens.Intro);
 
-        //Set player to interacting
-        GameObject.FindGameObjectWithTag("Player")
-        .GetComponent<PlayerController>().IsInteracting = true;
+        //Set GameMode to interacting
+        GameManager.Instance.UpdateGameMode(GameManager.GameMode.Interacting);
 
         //Turn off bad Ui
         PlayerCanvas.SetActive(false);
@@ -450,9 +449,8 @@ public class UpgradeController : MonoBehaviour
     /// <returns></returns>
     private IEnumerator ExitTerminal()
     {
-        //Set player to interacting
-        GameObject.FindGameObjectWithTag("Player")
-        .GetComponent<PlayerController>().IsInteracting = false;
+        //Set game to interacting        
+        GameManager.Instance.UpdateGameMode(GameManager.GameMode.Roaming);
 
         Camera.SwitchCamera(CameraController.CameraState.Default);        
 

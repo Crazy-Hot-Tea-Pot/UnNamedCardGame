@@ -133,8 +133,8 @@ public class ChipManager : MonoBehaviour
         Chip chipComponent = chipObject.GetComponent<Chip>();
         if (chipComponent != null)
         {
-            UsedChips.Add(chipComponent.newChip);
-            PlayerHand.Remove(chipComponent.newChip);
+            UsedChips.Add(chipComponent.NewChip);
+            PlayerHand.Remove(chipComponent.NewChip);
         }
 
         Destroy(chipObject);
@@ -161,7 +161,7 @@ public class ChipManager : MonoBehaviour
     private void LoadAllChips()
     {
         AllChips.Clear();       
-        AllChips = new List<NewChip>(Resources.LoadAll<NewChip>("Scriptables/Chip"));
+        AllChips = new List<NewChip>(Resources.LoadAll<NewChip>("Scriptables/Chips"));
     }
     private void StartCombat()
     {
@@ -201,7 +201,12 @@ public class ChipManager : MonoBehaviour
     }
     private void SceneChange(Levels newLevel)
     {
-
+        switch (newLevel)
+        {
+            case Levels.Tutorial:
+                ShufflePlayerDeck();
+                break;
+        }
     }
     private void OnDestroy()
     {

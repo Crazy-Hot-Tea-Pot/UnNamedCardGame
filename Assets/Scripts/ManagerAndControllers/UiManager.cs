@@ -16,9 +16,17 @@ public class UiManager : MonoBehaviour
         }
     }
 
-
+    /// <summary>
+    /// Current Ui being displayed.
+    /// </summary>
+    public GameObject CurrentUI;
+    /// <summary>
+    /// List of Prefabs UI.
+    /// </summary>
     public List<GameObject> listOfUis;
+    public GameObject RoamingAndCombatUI;
 
+    private UiController currentController;
     private static UiManager instance;
 
     void Awake()
@@ -32,6 +40,8 @@ public class UiManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        UpdateUIForGameMode();
     }
     // Start is called before the first frame update
     void Start()
@@ -40,54 +50,108 @@ public class UiManager : MonoBehaviour
         GameManager.Instance.OnEndCombat += EndCombat;
         GameManager.Instance.OnSceneChange += SceneChange;
         GameManager.Instance.OnGameModeChanged += UpdateUIForGameMode;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
         
+    }
+    #region RoamingAndCombatUI
+    public void UpdateCameraIndicator(CameraController.CameraState cameraState)
+    {
+        //Activate UI Obejct        
+        GetCurrentController<RoamingAndCombatUiController>().CameraIndicator.SetActive(true);
+
+        GetCurrentController<RoamingAndCombatUiController>().CameraModeIndicatorController.SwitchIndicatorTo(cameraState);
+    }
+    public void UpdateHealth(int currentHealth, int MaxHealth)
+    {
+        GetCurrentController<RoamingAndCombatUiController>().UpdateHealth(currentHealth, MaxHealth);
+    }
+    public void UpdateShield(int currentShield, int MaxShield)
+    {
+        GetCurrentController<RoamingAndCombatUiController>().UpdateShield(currentShield, MaxShield);
+    }
+    public void UpdateEnergy(int currentEnergy, int MaxEnergy)
+    {
+        GetCurrentController<RoamingAndCombatUiController>().UpdateEnergy(currentEnergy, MaxEnergy);
+    }
+    public void EndTurnButtonVisibility(bool Visiable)
+    {
+        GetCurrentController<RoamingAndCombatUiController>().EndTurn.SetActive( Visiable );
+    }
+    public void EndTurnButtonInteractable(bool Interact)
+    {
+        GetCurrentController<RoamingAndCombatUiController>().EndTurnButton.interactable = Interact;
+    }
+    #endregion
+    private T GetCurrentController<T>() where T : UiController
+    {
+        T controller = currentController as T;
+        if (controller == null)
+        {
+            Debug.LogWarning($"[UiManager] Current controller is not of type {typeof(T)}.");
+        }
+        return controller;
     }
     private void UpdateUIForGameMode()
     {
+        // Destroy current UI if it exists
+        if (CurrentUI != null)
+        {
+            Destroy(CurrentUI);
+        }
+
         // Update UI elements based on the game mode
         switch (GameManager.Instance.CurrentGameMode)
         {
             case GameManager.GameMode.Title:
-                Debug.Log("[UiManager] Displaying Title Screen UI.");
+            case GameManager.GameMode.Loading:
+            case GameManager.GameMode.Settings:
+            case GameManager.GameMode.Credits:
                 break;
             case GameManager.GameMode.Combat:
-                Debug.Log("[UiManager] Displaying Combat UI.");
-                break;
             case GameManager.GameMode.Roaming:
-                Debug.Log("[UiManager] Displaying Roaming UI.");
+                SwitchScreen(listOfUis.Find(ui => ui.name == "Roaming And Combat UI"));
                 break;
             case GameManager.GameMode.Pause:
                 Debug.Log("[UiManager] Displaying Pause Menu.");
-                break;
-            case GameManager.GameMode.Settings:
-                Debug.Log("[UiManager] Displaying Settings Screen.");
-                break;
-            case GameManager.GameMode.Credits:
-                Debug.Log("[UiManager] Displaying Credits Screen.");
-                break;
+                break;                            
             default:
                 Debug.Log("[UiManager] Hiding all UI.");
                 break;
         }
     }
+    private void SwitchScreen(GameObject targetScreen)
+    {
+        if (listOfUis.Count == 0)
+        {
+            Debug.LogError("Ui list is empty!");
+            return;
+        }
+        if (targetScreen == null)
+        {
+            Debug.LogError($"[UiManager] No UI prefab found for mode: {GameManager.Instance.CurrentGameMode}");
+            return;
+        }
+
+        // Instantiate the target UI prefab under this object's transform (Canvas)
+        CurrentUI = Instantiate(targetScreen, transform);
+
+        currentController = CurrentUI.GetComponent<UiController>();
+        currentController?.Initialize();
+
+        // Optionally reset the local position, rotation, and scale
+        CurrentUI.transform.localPosition = Vector3.zero;
+        CurrentUI.transform.localRotation = Quaternion.identity;
+        CurrentUI.transform.localScale = Vector3.one;
+    }
     private void StartCombat()
     {
-        Debug.Log("[ManagerName] Combat started.");
     }
 
     private void EndCombat()
     {
-        Debug.Log("[ManagerName] Combat ended.");
     }
 
     private void SceneChange(Levels newLevel)
     {
-        Debug.Log($"[ManagerName] Scene changed to {newLevel}.");
     }
 
     private void OnDestroy()

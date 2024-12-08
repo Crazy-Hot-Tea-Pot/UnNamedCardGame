@@ -31,7 +31,7 @@ public class GearManager : MonoBehaviour
     /// </summary>
     public List<Item> PlayerCurrentGear = new List<Item>();
 
-    public List<Item> AllGears = new List<Item>();
+    public List<Item> AllGear = new List<Item>();
 
     private static GearManager instance;
 
@@ -65,7 +65,7 @@ public class GearManager : MonoBehaviour
     {
         PlayerCurrentGear.Clear();
 
-        foreach (Item item in AllGears)
+        foreach (Item item in AllGear)
         {
             if (item.IsEquipped)
             {
@@ -81,7 +81,7 @@ public class GearManager : MonoBehaviour
     /// <returns></returns>
     public List<Item> GetIAllGearByType(Item.ItemType type)
     {
-        return AllGears.FindAll(item => item.type == type);
+        return AllGear.FindAll(item => item.type == type);
     }
 
     /// <summary>
@@ -90,25 +90,24 @@ public class GearManager : MonoBehaviour
     private void LoadAllGear()
     {
         // Load all Item ScriptableObjects in the Resources folder
-        AllGears = new List<Item>(Resources.LoadAll<Item>("Scriptables/Gear"));       
+        AllGear = new List<Item>(Resources.LoadAll<Item>("Scriptables/Gear"));       
     }
 
     private void StartCombat()
     {
-        Debug.Log("[GearManager] Combat started.");
+
         UpdateGear();
     }
 
     private void EndCombat()
     {
-        Debug.Log("[GearManager] Combat ended.");
+
         UpdateGear();
     }
 
     private void SceneChange(Levels newLevel)
     {
-        Debug.Log($"[GearManager] Scene changed to {newLevel}.");
-        // Reset or adjust gear data as necessary for the new scene
+
     }
 
     private void OnDestroy()

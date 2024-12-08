@@ -26,7 +26,7 @@ public class GameData
     public DateTime TimeStamp;
     //Level the player is on
     public Levels Level;
-    //Player Health
+    //Player HealthBar
     public int Health;
     //Player MaxHealth;
     public int MaxHealth;

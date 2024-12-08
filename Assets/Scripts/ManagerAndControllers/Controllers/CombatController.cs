@@ -28,13 +28,7 @@ public class CombatController : MonoBehaviour
     public List<Combadant> Combadants;
     private int currentCombatantIndex;
 
-    private GameObject player;    
-    
-
-    private GameObject endTurnButton;
-
-    
-
+    private GameObject player;       
 
     /// <summary>
     /// Amount of rounds that has passed.
@@ -87,14 +81,14 @@ public class CombatController : MonoBehaviour
             if(currentCombatant == "Player")
             {
                 //Activate Button so player can end turn
-                endTurnButton.GetComponent<Button>().interactable =true;
+                UiManager.Instance.EndTurnButtonInteractable(true);                                
 
                 // let player know its their turn
                 player.GetComponent<PlayerController>().StartTurn();
             }
             else
             {
-                endTurnButton.GetComponent<Button>().interactable = false;
+                UiManager.Instance.EndTurnButtonInteractable(false);                
             }
         }
     }
@@ -143,11 +137,9 @@ public class CombatController : MonoBehaviour
     {        
 
         player = GameObject.FindGameObjectWithTag("Player");
-
-        endTurnButton = GameObject.Find("BtnEndTurn");
-        endTurnButton.GetComponent<Button>().onClick.AddListener(() => TurnUsed(player));
-
-        endTurnButton.SetActive(false);
+       
+        
+        UiManager.Instance.EndTurnButtonVisibility(false);
 
         CurrentCombatantIndex = 0;
         CurrentCombatant = "No Combat Yet";
@@ -209,7 +201,7 @@ public class CombatController : MonoBehaviour
         //Play Start Combat
         SoundManager.PlayFXSound(SoundFX.BattleStart);
 
-        endTurnButton.SetActive(true);
+        UiManager.Instance.EndTurnButtonVisibility(true);        
     }
 
     /// <summary>
@@ -331,7 +323,7 @@ public class CombatController : MonoBehaviour
         CurrentCombatantIndex = 0;
         CurrentCombatant = "No Combat Yet";
 
-        endTurnButton.SetActive(false);
+        UiManager.Instance.EndTurnButtonVisibility(false);        
 
         // Notify the GameManager or other systems
         GameManager.Instance.EndCombat();
@@ -344,7 +336,7 @@ public class CombatController : MonoBehaviour
     // Method to select target by clicking on an enemy
     private void OnSelectTarget(InputAction.CallbackContext context)
     {
-        if (!GameManager.Instance.InCombat)
+        if (GameManager.Instance.CurrentGameMode != GameManager.GameMode.Combat)
         {
             return;
         }
@@ -366,7 +358,7 @@ public class CombatController : MonoBehaviour
     // Method to cycle through combatEnemies using Tab key
     private void OnCycleTarget(InputAction.CallbackContext context)
     {
-        if (!GameManager.Instance.InCombat)
+        if (GameManager.Instance.CurrentGameMode != GameManager.GameMode.Combat)
         {
             return;
         }
