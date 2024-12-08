@@ -369,6 +369,11 @@ public class PlayerController : MonoBehaviour
             isImpervious = value;
         }
     }
+
+    /// <summary>
+    /// List of current Effects the player has active.
+    /// </summary>
+    public List<Effects.Effect> ListOfActiveEffects = new List<Effects.Effect>();
     #endregion
 
     /// <summary>
@@ -683,6 +688,8 @@ public class PlayerController : MonoBehaviour
                 break;
         }
 
+        ListOfActiveEffects.Add(effect);
+
     }
 
     /// <summary>
@@ -763,7 +770,7 @@ public class PlayerController : MonoBehaviour
             default:
                 Debug.LogWarning("Debuff not found.");
                 break;
-        }
+        }        
     }
 
     /// <summary>
@@ -781,6 +788,8 @@ public class PlayerController : MonoBehaviour
                 Debug.LogWarning("Effect hasn't been programmed.");
                 break;
         }
+
+        ListOfActiveEffects.Remove(effect);
     }
 
     /// <summary>

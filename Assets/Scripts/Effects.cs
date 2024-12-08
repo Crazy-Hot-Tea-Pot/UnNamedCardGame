@@ -1,4 +1,6 @@
-﻿/// <summary>
+﻿using System;
+
+/// <summary>
 /// Just made this to keep track of Buffs and Debuffs in the game.
 /// </summary>
 public static class Effects
@@ -43,8 +45,38 @@ public static class Effects
     public enum Effect
     {
         None,
+        /// <summary>
+        /// You take no Damage this Turn.
+        /// </summary>
         Impervious,
-        Motivation
+        /// <summary>
+        /// Your next Chip activates twice.
+        /// </summary>
+        Motivation,
+        /// <summary>
+        /// Gain 10 Scrap at the end of every combat.
+        /// </summary>
+        LuckyTrinket,
+    }
+    // FOR SCRIPTABLES
+
+    /// <summary>
+    /// Buff for scritable
+    /// </summary>
+    [Serializable]
+    public class TempBuffs
+    {
+        public Buff Buff;
+        public int AmountToBuff;
+    }
+    /// <summary>
+    /// Debuff for scriptable
+    /// </summary>
+    [Serializable]
+    public class TempDeBuffs
+    {
+        public Debuff DeBuff;
+        public int AmountToDeBuff;
     }
 
 }

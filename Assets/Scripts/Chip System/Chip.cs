@@ -64,7 +64,7 @@ public class Chip : MonoBehaviour
 
     void Start()
     {
-        chipTitle = newChip.chipName + " Chip";
+        ChipTitle = newChip.chipName + " Chip";
         this.gameObject.name = ChipTitle;
         newChip.ThisChip = this.gameObject;
 

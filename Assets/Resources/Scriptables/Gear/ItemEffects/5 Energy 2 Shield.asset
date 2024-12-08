@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2c25048b4633724da1c382ff8b97b7d, type: 3}
+  m_Name: 5 Energy 2 Shield
+  m_EditorClassIdentifier: 
+  ItemEffectDescription: Spend 5 Energy, and gain 1 Shield.
+  energyCost: 5
+  damage: 0
+  shield: 2
+  SpecialConditionEffect: 0
+  WhenTargetHasLessThanHalfHealth: 0
+  buffToApply: 
+  debuffToApply: 
