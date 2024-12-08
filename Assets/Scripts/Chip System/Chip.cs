@@ -125,7 +125,7 @@ public class Chip : MonoBehaviour
                                 // Looping to attack twice
                                 for (int i = 0; i < 2; i++)
                                 {
-                                    foreach (GameObject target in GameManager.Instance.enemyList)
+                                    foreach (GameObject target in EnemyManager.Instance.CombatEnemies)
                                     {
                                         newChip.OnChipPlayed(Player.GetComponent<PlayerController>(), target.GetComponent<Enemy>());
                                     }
@@ -150,7 +150,7 @@ public class Chip : MonoBehaviour
                         {
                             if (newChip.hitAllTargets)
                             {
-                                foreach (GameObject target in GameManager.Instance.enemyList)
+                                foreach (GameObject target in EnemyManager.Instance.CombatEnemies)
                                 {
                                     newChip.OnChipPlayed(Player.GetComponent<PlayerController>(), target.GetComponent<Enemy>());
                                 }
@@ -160,8 +160,7 @@ public class Chip : MonoBehaviour
                         }
 
                     }
-                    GameManager.Instance.KillChip(this.gameObject);
-                    Destroy(this.gameObject);
+                ChipManager.Instance.KillChip(this.gameObject);
                 }
                 else
                 {

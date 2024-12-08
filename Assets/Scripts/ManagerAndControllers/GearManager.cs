@@ -26,6 +26,9 @@ public class GearManager : MonoBehaviour
     /// </summary>
     public IReadOnlyList<Item> StartingGear => startingGear;
 
+    /// <summary>
+    /// List of Gear the player current has.
+    /// </summary>
     public List<Item> PlayerCurrentGear = new List<Item>();
 
     public List<Item> AllGears = new List<Item>();
@@ -49,6 +52,10 @@ public class GearManager : MonoBehaviour
     {
         LoadAllGear();
         UpdateGear();
+
+        GameManager.Instance.OnStartCombat += StartCombat;
+        GameManager.Instance.OnEndCombat += EndCombat;
+        GameManager.Instance.OnSceneChange += SceneChange;
     }
 
     /// <summary>
@@ -56,10 +63,14 @@ public class GearManager : MonoBehaviour
     /// </summary>
     public void UpdateGear()
     {
+        PlayerCurrentGear.Clear();
+
         foreach (Item item in AllGears)
         {
             if (item.IsEquipped)
+            {
                 PlayerCurrentGear.Add(item);
+            }
         }
     }
 
@@ -73,20 +84,40 @@ public class GearManager : MonoBehaviour
         return AllGears.FindAll(item => item.type == type);
     }
 
+    /// <summary>
+    /// Load all gear from scriptables
+    /// </summary>
     private void LoadAllGear()
     {
         // Load all Item ScriptableObjects in the Resources folder
-        AllGears = new List<Item>(Resources.LoadAll<Item>("Scriptables/Gear"));
+        AllGears = new List<Item>(Resources.LoadAll<Item>("Scriptables/Gear"));       
+    }
 
-        // Debugging to confirm the items loaded
-        foreach (var item in AllGears)
-        {
-            Debug.Log($"Loaded Item: {item.itemName}, Type: {item.type}");
-        }
+    private void StartCombat()
+    {
+        Debug.Log("[GearManager] Combat started.");
+        UpdateGear();
+    }
 
-        if (AllGears.Count == 0)
+    private void EndCombat()
+    {
+        Debug.Log("[GearManager] Combat ended.");
+        UpdateGear();
+    }
+
+    private void SceneChange(Levels newLevel)
+    {
+        Debug.Log($"[GearManager] Scene changed to {newLevel}.");
+        // Reset or adjust gear data as necessary for the new scene
+    }
+
+    private void OnDestroy()
+    {
+        if (GameManager.Instance != null)
         {
-            Debug.LogWarning("No items found in the Gear folder!");
+            GameManager.Instance.OnStartCombat -= StartCombat;
+            GameManager.Instance.OnEndCombat -= EndCombat;
+            GameManager.Instance.OnSceneChange -= SceneChange;
         }
-    }    
+    }
 }

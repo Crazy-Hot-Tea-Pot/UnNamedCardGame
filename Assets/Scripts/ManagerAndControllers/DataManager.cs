@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using static GameData;
 public class DataManager : MonoBehaviour
 {    
     public static DataManager Instance
@@ -32,8 +33,6 @@ public class DataManager : MonoBehaviour
 
     [SerializeField]
     private GameData currentGameData;
-
-
 
     void Awake()
     {
@@ -71,6 +70,32 @@ public class DataManager : MonoBehaviour
         CurrentGameData.SaveName = saveName;
         CurrentGameData.TimeStamp = DateTime.Now;
         CurrentGameData.UpdateTimeStamp();
+
+        // Save Chips
+        CurrentGameData.Chips.Clear();
+        foreach (var chip in ChipManager.Instance.PlayerDeck)
+        {
+            GameData.ChipData chipData = new()
+            {
+                Name = chip.chipName,
+                IsUpgraded = chip.IsUpgraded,
+                DisableCounter = chip.DisableCounter
+            };
+
+            CurrentGameData.Chips.Add(chipData);
+        }
+
+        //Save Gear
+        CurrentGameData.Gear.Clear();
+        foreach (var gear in GearManager.Instance.PlayerCurrentGear) {
+            GearData gearData = new()
+            {
+                GearName = gear.itemName,
+                IsEquipped = gear.IsEquipped
+            };
+
+            CurrentGameData.Gear.Add(gearData);
+        }
 
         string json = JsonUtility.ToJson(CurrentGameData, true);
         File.WriteAllText(saveFilePath, json);
@@ -141,66 +166,49 @@ public class DataManager : MonoBehaviour
         }
 
         string json = File.ReadAllText(saveFilePath);
-        GameData saveData = JsonUtility.FromJson<GameData>(json);
+        GameData loadedData = JsonUtility.FromJson<GameData>(json);
 
         // Parse the string back into a DateTime object
-        saveData.ParseTimeStamp();
-        CurrentGameData = saveData;
+        loadedData.ParseTimeStamp();
+        CurrentGameData = loadedData;
 
         //Load player stats
-        CurrentGameData.Health = saveData.Health;
-        CurrentGameData.MaxHealth = saveData.MaxHealth;
-        CurrentGameData.Scraps = saveData.Scraps;
+        CurrentGameData.Health = loadedData.Health;
+        CurrentGameData.MaxHealth = loadedData.MaxHealth;
+        CurrentGameData.Scraps = loadedData.Scraps;
 
 
-        // Reconstruct the player's deck
-        GameManager.Instance.playerDeck.Clear();
-        foreach (var chipSave in saveData.Chips)
+        // Load Chips
+        ChipManager.Instance.PlayerDeck.Clear();
+        foreach (var chipData in loadedData.Chips)
         {
-            NewChip baseChip = Resources.Load<NewChip>($"Scriptables/Chips/{chipSave.Name}");
-            if (baseChip != null)
+            var matchedChip = ChipManager.Instance.AllChips.Find(chip => chip.chipName == chipData.Name);
+            if (matchedChip != null)
             {
-                // Create a copy and apply the saved state
-                NewChip loadedChip = Instantiate(baseChip);
-                if(loadedChip.canBeUpgraded)
-                    loadedChip.IsUpgraded = chipSave.IsUpgraded;
-                else
-                    loadedChip.IsUpgraded = false;
-
-                loadedChip.DisableCounter = chipSave.DisableCounter;
-                GameManager.Instance.playerDeck.Add(loadedChip);
+                matchedChip.IsUpgraded = chipData.IsUpgraded;
+                matchedChip.DisableCounter = chipData.DisableCounter;
+                ChipManager.Instance.PlayerDeck.Add(matchedChip);
             }
             else
             {
-                Debug.LogWarning($"Chip {chipSave.Name} not found in Resources.");
+                Debug.LogWarning($"Chip {chipData.Name} not found in AllChips.");
             }
         }
 
-        // load Gears
-        GameManager.Instance.Items.Clear();
-
-        foreach(var item in saveData.Gears)
+        // Load Gears
+        GearManager.Instance.PlayerCurrentGear.Clear();
+        foreach (var gearData in loadedData.Gear)
         {
-            Gear gear = Resources.Load<Gear>($"Scriptables/Equipment/{item.GearName}");
-
-            Gear newGear = Instantiate(gear);
-
-            newGear.IsEquipted=item.isEquipped;
-
-
-
-            if (item.AmountOfAbilities > 0)
+            var matchedItem = GearManager.Instance.AllGears.Find(item => item.itemName == gearData.GearName);
+            if (matchedItem != null)
             {
-                for (int i = 0; i < item.AmountOfAbilities; i++)
-                {
-                    if(item.ListOfAbilities[i].AbilityName == newGear.AbilityList[i].abilityName)
-                    {
-                        newGear.AbilityList[i].isUpgraded = item.ListOfAbilities[i].IsUpgraded;
-                    }
-                }
+                matchedItem.IsEquipped = gearData.IsEquipped;
+                GearManager.Instance.PlayerCurrentGear.Add(matchedItem);
             }
-
-            GameManager.Instance.Items.Add(newGear);
+            else
+            {
+                Debug.LogWarning($"Gear {gearData.GearName} not found in AllGears.");
+            }
         }
 
         Debug.Log("Game loaded successfully.");

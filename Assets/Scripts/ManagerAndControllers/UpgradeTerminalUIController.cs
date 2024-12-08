@@ -406,7 +406,7 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
 
         ChipHolder.SetActive(false);
 
-        foreach(NewChip newChip in GameManager.Instance.playerDeck)
+        foreach(NewChip newChip in ChipManager.Instance.PlayerDeck)
         {
             if (newChip.canBeUpgraded)
             {

@@ -1,9 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class UpgradeController : MonoBehaviour
@@ -374,7 +372,7 @@ public class UpgradeController : MonoBehaviour
 
             var Bank = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().TakeScrap(SelectedChip.costToUpgrade);
 
-            GameManager.Instance.playerDeck.Find(item => item == SelectedChip).IsUpgraded = true;
+            ChipManager.Instance.PlayerDeck.Find(item => item == SelectedChip).IsUpgraded = true;
 
             // FOr now lets go back to main menu.
             SwitchToScreen(Screens.Intro);

@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour
     //Camera in the scene
     private Camera mainCamera;
 
-    //A list of enemies in range for abilites
+    //A list of combatEnemies in range for abilites
     public List<GameObject> abilityRangedEnemies;
 
     // The Select Action from inputAction class.
@@ -43,8 +43,8 @@ public class PlayerController : MonoBehaviour
         {
             health = value;
 
-            GameObject.FindGameObjectWithTag("PlayerCanvas").
-                GetComponent<PlayerUIManager>().UpdateHealth();
+            //GameObject.FindGameObjectWithTag("PlayerCanvas").
+            //    GetComponent<PlayerUIManager>().UpdateHealth();
 
             if (health > maxHealth)
                 health = maxHealth;
@@ -90,8 +90,8 @@ public class PlayerController : MonoBehaviour
                 maxShield = 100;
             }
 
-            GameObject.FindGameObjectWithTag("PlayerCanvas").
-               GetComponent<PlayerUIManager>().UpdateShield();
+            //GameObject.FindGameObjectWithTag("PlayerCanvas").
+            //   GetComponent<PlayerUIManager>().UpdateShield();
         }
     }
     private int maxShield=100; 
@@ -126,7 +126,7 @@ public class PlayerController : MonoBehaviour
             else if (energy <= 0)
                 energy = 0;
 
-            GameObject.FindGameObjectWithTag("PlayerCanvas").GetComponent<PlayerUIManager>().UpdateEnergy(Energy, MaxEnergy);
+            //GameObject.FindGameObjectWithTag("PlayerCanvas").GetComponent<PlayerUIManager>().UpdateEnergy(Energy, MaxEnergy);
         }
     }
     private readonly int maxEnergy=50;
@@ -377,18 +377,6 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     /// <summary>
-    /// Returns if player is in combat.
-    /// </summary>
-    public bool InCombat
-    {
-        get { return inCombat; }
-        set
-        {
-            inCombat = value;
-        }
-    }
-
-    /// <summary>
     /// Is player is interacting with object.
     /// Stops playing from being to move.
     /// </summary>
@@ -491,7 +479,7 @@ public class PlayerController : MonoBehaviour
         }
 
 
-        if (!InCombat && !IsInteracting)
+        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Roaming)
         {
             //temp to hold which gameobject ripple effect to spawn
             GameObject tempIndicator;

@@ -99,7 +99,7 @@ public class NewChip : ScriptableObject
     }
 
     /// <summary>
-    /// This chip hits all enemies
+    /// This chip hits all combatEnemies
     /// </summary>
     public bool hitAllTargets;
 

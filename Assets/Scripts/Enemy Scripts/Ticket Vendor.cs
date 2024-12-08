@@ -41,17 +41,17 @@ public class TicketVendor : Enemy
     {
         EnemyTarget.GetComponent<PlayerController>().DamagePlayerBy(7);
 
-        int temp1 = Random.Range(0, GameManager.Instance.playerHand.Count);
+        int temp1 = Random.Range(0, ChipManager.Instance.PlayerHand.Count);
 
-        int temp2 = Random.Range(0, GameManager.Instance.playerHand.Count);
+        int temp2 = Random.Range(0, ChipManager.Instance.PlayerHand.Count);
 
         while (temp1 == temp2)
         {
-            temp2 = Random.Range(0, GameManager.Instance.playerHand.Count);
+            temp2 = Random.Range(0, ChipManager.Instance.PlayerHand.Count);
         }
 
-        GameManager.Instance.playerHand[temp1].GetComponent<Chip>().newChip.GetComponent<NewChip>().IsActive = false;
-        GameManager.Instance.playerHand[temp2].GetComponent<Chip>().newChip.GetComponent<NewChip>().IsActive = false;
+        ChipManager.Instance.PlayerHand[temp1].GetComponent<Chip>().newChip.GetComponent<NewChip>().IsActive = false;
+        ChipManager.Instance.PlayerHand[temp2].GetComponent<Chip>().newChip.GetComponent<NewChip>().IsActive = false;
     }
     private void Halt()
     {

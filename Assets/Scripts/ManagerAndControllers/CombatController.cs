@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+
 [Serializable]
 public class Combadant
 {
@@ -182,8 +183,8 @@ public class CombatController : MonoBehaviour
         Combadants.Add(player);
 
 
-        //Set enemies to combat mode in combat zone
-        foreach (GameObject combatEnemy in GameManager.Instance.enemyList)
+        //Set combatEnemies to combat mode in combat zone
+        foreach (GameObject combatEnemy in EnemyManager.Instance.CombatEnemies)
         {
             Combadant enemies = new Combadant();
             enemies.combadant = combatEnemy;
@@ -199,7 +200,7 @@ public class CombatController : MonoBehaviour
             {
                 //Adds the player 
                 //PlayerUIManager.Instance.AddChipChoices(combatEnemy.GetComponent<Enemy>().dropedCards[i]);
-                GameObject.Find("PlayerUIManager").GetComponent<PlayerUIManager>().AddChipChoices(combatEnemy.GetComponent<Enemy>().dropedCards[i]);
+                //GameObject.Find("PlayerUIManager").GetComponent<PlayerUIManager>().AddChipChoices(combatEnemy.GetComponent<Enemy>().dropedCards[i]);
             }
         }
 
@@ -256,7 +257,7 @@ public class CombatController : MonoBehaviour
     }
 
     /// <summary>
-    /// Check if enemies are still in combat zone.
+    /// Check if combatEnemies are still in combat zone.
     /// </summary>
     /// <returns></returns>
     public bool AreEnemiesRemaining()
@@ -309,13 +310,12 @@ public class CombatController : MonoBehaviour
                 combadant.combadant.GetComponent<Enemy>().RoundEnd();
         }
 
-        foreach(NewChip newchip in GameManager.Instance.playerHand)
+        foreach(NewChip newchip in ChipManager.Instance.PlayerHand)
         {
             newchip.EndRound();
         }
 
-        //Draws a card based on draws per turn
-        GameManager.Instance.DrawChip(GameManager.Instance.drawsPerTurn);
+        ChipManager.Instance.RefreshPlayerHand();        
     }
 
     /// <summary>
@@ -333,14 +333,12 @@ public class CombatController : MonoBehaviour
 
         endTurnButton.SetActive(false);
 
-        //Clear enemy list, selection list in ui and short selection list
-        GameManager.Instance.enemyList.Clear();
         // Notify the GameManager or other systems
         GameManager.Instance.EndCombat();
 
         //Card Pickups at combat end
         //PlayerUIManager.Instance.openDropUI();
-        GameObject.Find("PlayerUIManager").GetComponent<PlayerUIManager>().openDropUI();
+        //GameObject.Find("PlayerUIManager").GetComponent<PlayerUIManager>().openDropUI();
     }
 
     // Method to select target by clicking on an enemy
@@ -365,7 +363,7 @@ public class CombatController : MonoBehaviour
         }
     }
 
-    // Method to cycle through enemies using Tab key
+    // Method to cycle through combatEnemies using Tab key
     private void OnCycleTarget(InputAction.CallbackContext context)
     {
         if (!GameManager.Instance.InCombat)

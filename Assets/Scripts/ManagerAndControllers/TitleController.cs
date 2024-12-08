@@ -18,9 +18,6 @@ public class TitleController : MonoBehaviour
     [Header("Game Status Info")]
     public TextMeshProUGUI VersionText;
 
-    [Header("Starter Gear")]
-    public List<Gear> StartingInventory;
-
     private GameData latestSave = null;
     // Start is called before the first frame update
     void Start()
@@ -65,61 +62,32 @@ public class TitleController : MonoBehaviour
         startData.Scraps = 100;
         startData.TimeStamp = DateTime.Now;
 
-        // Load default chips from Resources
-        NewChip punch = Resources.Load<NewChip>("Scriptables/Chips/Punch");
-        NewChip guard = Resources.Load<NewChip>("Scriptables/Chips/Guard");
-        NewChip motivation = Resources.Load<NewChip>("Scriptables/Chips/Motivation");
-        NewChip kickstart = Resources.Load<NewChip>("Scriptables/Chips/Kickstart");
 
         // Adds gear to list.
         
-            foreach (var gear in StartingInventory)
+        foreach (var gear in GearManager.Instance.StartingGear)
+        {
+            GearData itemData = new GearData();
+            itemData.GearName = gear.itemName;
+            itemData.IsEquipped = gear.IsEquipped;
+
+            startData.Gear.Add(itemData);            
+        }
+
+        GearManager.Instance.PlayerCurrentGear.AddRange(GearManager.Instance.StartingGear);
+
+        // Add Starting Chips
+        foreach(NewChip newChip in ChipManager.Instance.StartingChips)
+        {
+            startData.Chips.Add(new ChipData
             {
-                ItemData itemData = new ItemData();
-                itemData.GearName = gear.itemName;
-            itemData.isEquipped = gear.IsEquipted;
-                itemData.AmountOfAbilities = gear.AbilityList.Count;
-
-                foreach (var ability in gear.AbilityList)
-                {
-                    AbilityData abilityData = new AbilityData();
-                    abilityData.AbilityName = ability.abilityName;
-                    abilityData.IsUpgraded = ability.isUpgraded;
-                    itemData.ListOfAbilities.Add(abilityData);
-                }
-
-                startData.Gears.Add(itemData);
-            }
-
-
-        // Check if chips were loaded successfully
-        if (punch == null) 
-            Debug.LogWarning("Punch chip not found in Resources.");
-        if (guard == null)
-            Debug.LogWarning("Guard chip not found in Resources.");
-        if (motivation == null) 
-            Debug.LogWarning("Motivation chip not found in Resources.");
-        if (kickstart == null) 
-            Debug.LogWarning("Kickstart chip not found in Resources.");
-
-        if (punch != null)
-        {
-            startData.Chips.Add(new ChipData { Name = punch.chipName });
-            startData.Chips.Add(new ChipData { Name = punch.chipName });
-            startData.Chips.Add(new ChipData { Name = punch.chipName });
-        }
-        if (guard != null)
-        {
-            startData.Chips.Add(new ChipData { Name = guard.chipName });
-            startData.Chips.Add(new ChipData { Name = guard.chipName });
-            startData.Chips.Add(new ChipData { Name = guard.chipName });
+                Name=newChip.chipName,
+                IsUpgraded=newChip.IsUpgraded,
+                DisableCounter=newChip.DisableCounter
+            });
         }
 
-        if (motivation != null) 
-            startData.Chips.Add(new ChipData { Name = motivation.chipName });
-
-        if (kickstart != null) 
-            startData.Chips.Add(new ChipData { Name = kickstart.chipName });
+        ChipManager.Instance.PlayerDeck.AddRange(ChipManager.Instance.StartingChips);
         
         DataManager.Instance.CurrentGameData=startData;
 
