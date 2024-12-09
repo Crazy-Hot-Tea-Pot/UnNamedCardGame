@@ -37,4 +37,9 @@ public class SkillChip : NewChip
             Debug.LogWarning("No special effect assigned to this card.");
         }
     }
- }
+
+    void OnValidate()
+    {
+        ChipType = TypeOfChips.Skill;
+    }
+}

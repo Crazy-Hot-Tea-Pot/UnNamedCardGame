@@ -453,8 +453,9 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void OnClick(InputAction.CallbackContext context)
     {
-        //Put in Coroutine to cancel out errors
-        StartCoroutine(HandleClick());
+        if(GameManager.Instance.CurrentGameMode==GameManager.GameMode.Roaming)
+            //Put in Coroutine to cancel out errors
+            StartCoroutine(HandleClick());
     }
     private IEnumerator HandleClick()
     {

@@ -19,6 +19,7 @@ public class GameData
     {
         public string GearName;        
         public bool IsEquipped;
+        public bool IsPlayerOwned;
     }
     //Name of Save
     public string SaveName;

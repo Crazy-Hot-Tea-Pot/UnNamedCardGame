@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
 
 public class GearManager : MonoBehaviour
@@ -31,6 +32,9 @@ public class GearManager : MonoBehaviour
     /// </summary>
     public List<Item> PlayerCurrentGear = new List<Item>();
 
+    /// <summary>
+    /// All gear in the game. Not what the player has.
+    /// </summary>
     public List<Item> AllGear = new List<Item>();
 
     private static GearManager instance;
@@ -67,23 +71,121 @@ public class GearManager : MonoBehaviour
 
         foreach (Item item in AllGear)
         {
-            if (item.IsEquipped)
+            if (item.IsEquipped || item.IsPlayerOwned)
             {
                 PlayerCurrentGear.Add(item);
             }
         }
     }
-
     /// <summary>
-    /// Return all gear by type
+    /// Add item to player gear.
+    /// </summary>
+    /// <param name="newItem"></param>
+    public void Acquire(Item newItem)
+    {
+        if (newItem == null)
+            return;
+
+        if (!newItem.IsPlayerOwned)
+        {
+            newItem.IsPlayerOwned = true;
+
+            // Add to PlayerCurrentGear if it's not already there
+            if (!PlayerCurrentGear.Contains(newItem))
+            {
+                PlayerCurrentGear.Add(newItem);                
+            }
+        }
+        else
+        {
+            Debug.LogWarning($"{newItem.itemName} is already owned by the player.");
+        }
+    }
+    /// <summary>
+    /// Remove item from player inventory
+    /// </summary>
+    /// <param name="itemToRemove"></param>
+    public void RemoveItem(Item itemToRemove)
+    {
+        if(itemToRemove == null) 
+            return;
+
+        itemToRemove.IsPlayerOwned = false;
+        itemToRemove.IsEquipped = false;
+    }
+    /// <summary>
+    /// Return all gear by itemType
     /// </summary>
     /// <param name="type"></param>
     /// <returns></returns>
     public List<Item> GetIAllGearByType(Item.ItemType type)
     {
-        return AllGear.FindAll(item => item.type == type);
+        return AllGear.FindAll(item => item.itemType == type);
     }
+    /// <summary>
+    /// Equip gear.
+    /// Check if the item itemType is already equipped.
+    /// </summary>
+    /// <param name="item"></param>
+    public bool EquipGear(Item item)
+    {
+        if (item == null)
+        {
+            return false;
+        }
 
+        // Check if an item of the same itemType is already equipped
+        foreach (Item itemCheck in PlayerCurrentGear)
+        {
+            if (itemCheck.itemType == item.itemType && itemCheck.IsEquipped)
+            {
+                // Unequip the currently equipped item
+                itemCheck.IsEquipped = false;
+                break;
+            }
+        }
+
+        // Equip the new item
+        item.IsEquipped = true;
+
+        // Update gear lists
+        UpdateGear();
+
+        return true;
+    }
+    /// <summary>
+    /// Unequip an item of a specific itemType.
+    /// </summary>
+    public bool UnequipItem(Item.ItemType type)
+    {
+        foreach (Item item in PlayerCurrentGear)
+        {
+            if (item.itemType == type && item.IsEquipped)
+            {
+                item.IsEquipped = false;
+
+                // Update gear lists
+                UpdateGear();
+
+                return true;
+            }
+        }
+        return false;
+    }
+    /// <summary>
+    /// Get currently equipped item by itemType.
+    /// </summary>
+    public Item GetEquippedItem(Item.ItemType type)
+    {
+        foreach (Item item in PlayerCurrentGear)
+        {
+            if (item.itemType == type && item.IsEquipped)
+            {
+                return item;
+            }
+        }
+        return null;
+    }
     /// <summary>
     /// Load all gear from scriptables
     /// </summary>

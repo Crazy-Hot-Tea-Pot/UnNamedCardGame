@@ -7,21 +7,11 @@ TagManager:
   - Ground
   - Enemy
   - CombatController
-  - Card
-  - abilityTrinket
-  - abilitySword
-  - abilityShield
-  - potionHealth
-  - weaponSword
-  - itemNecklace
-  - itemLuckyTrinket
-  - abilityLuckyTrinket
-  - itemArmour
-  - abilityBasicPunch
   - UpgradeController
   - PlayerCanvas
   - CameraModeIndicator
   - DataManager
+  - UiManager
   layers:
   - Default
   - TransparentFX

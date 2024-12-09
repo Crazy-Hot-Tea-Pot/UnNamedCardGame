@@ -65,16 +65,11 @@ public class TitleController : MonoBehaviour
 
         // Adds gear to list.
         
-        foreach (var gear in GearManager.Instance.StartingGear)
+        foreach (Item gear in GearManager.Instance.StartingGear)
         {
-            GearData itemData = new GearData();
-            itemData.GearName = gear.itemName;
-            itemData.IsEquipped = gear.IsEquipped;
-
-            startData.Gear.Add(itemData);            
+            GearManager.Instance.Acquire(gear);
+            GearManager.Instance.EquipGear(gear); 
         }
-
-        GearManager.Instance.PlayerCurrentGear.AddRange(GearManager.Instance.StartingGear);
 
         // Add Starting Chips
         foreach(NewChip newChip in ChipManager.Instance.StartingChips)
@@ -82,7 +77,7 @@ public class TitleController : MonoBehaviour
             startData.Chips.Add(new ChipData
             {
                 Name=newChip.chipName,
-                IsUpgraded=newChip.IsUpgraded,
+                IsUpgraded=false,
                 DisableCounter=newChip.DisableCounter
             });
         }

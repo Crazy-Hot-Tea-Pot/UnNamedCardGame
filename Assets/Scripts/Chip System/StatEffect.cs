@@ -31,7 +31,7 @@ public class StatEffect : SkillEffects
             amount -= upgradedAmount;
         }
     }
-    // Apply the effect (modifies player stats based on the specified stat type)
+    // Apply the effect (modifies player stats based on the specified stat itemType)
     public override void ApplyEffect(PlayerController player)
     {
         switch (statWillBeEffect)

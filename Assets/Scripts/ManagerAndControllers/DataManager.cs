@@ -91,7 +91,8 @@ public class DataManager : MonoBehaviour
             GearData gearData = new()
             {
                 GearName = gear.itemName,
-                IsEquipped = gear.IsEquipped
+                IsEquipped = gear.IsEquipped,
+                IsPlayerOwned = gear.IsPlayerOwned
             };
 
             CurrentGameData.Gear.Add(gearData);
@@ -202,6 +203,7 @@ public class DataManager : MonoBehaviour
             var matchedItem = GearManager.Instance.AllGear.Find(item => item.itemName == gearData.GearName);
             if (matchedItem != null)
             {
+                matchedItem.IsPlayerOwned = gearData.IsPlayerOwned;
                 matchedItem.IsEquipped = gearData.IsEquipped;
                 GearManager.Instance.PlayerCurrentGear.Add(matchedItem);
             }

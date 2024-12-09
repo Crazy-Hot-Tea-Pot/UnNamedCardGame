@@ -28,14 +28,14 @@ public class Item : ScriptableObject
     public Sprite itemImage;
 
     /// <summary>
-    /// What kind of type is the item.
+    /// What kind of itemType is the item.
     /// </summary>
-    public ItemType type;
+    public ItemType itemType;
 
     /// <summary>
-    /// List of abilities the item has.
+    /// List of itemEffects the item has.
     /// </summary>
-    public List<ItemEffect> abilities;
+    public List<ItemEffect> itemEffects;
     public bool IsEquipped
     {
         get
@@ -47,39 +47,71 @@ public class Item : ScriptableObject
         {
             isEquipped = value;
 
-            //If false remove the passive effect from player.
-            if (isEquipped)
+            AppleEffect();
+        }
+    }    
+
+    public bool IsPlayerOwned
+    {
+        get
+        {
+            return playerOwned;
+        }
+        set
+        {
+            playerOwned = value;
+        }
+    }
+
+    private bool isEquipped = false;
+
+    private bool playerOwned = false;
+    void OnEnable()
+    {
+        // Reset equipped and owned status
+        isEquipped = false;
+        playerOwned = false;
+    }
+    public void ItemActivate()
+    {
+
+    }
+    private void AppleEffect()
+    {
+        //If false remove the passive effect from player.
+        if (isEquipped)
+        {
+            switch (itemType)
             {
-                switch (type)
-                {
-                    case ItemType.Equipment:
-                        foreach (ItemEffect effect in abilities)
-                        {
-                            if (effect.IsPassiveEffect)
-                                GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().ApplyEffect(effect.effectToApply);
-                        }
-                        break;
-                }
+                case ItemType.Equipment:
+                    foreach (ItemEffect effect in itemEffects)
+                    {
+                        if (effect.IsPassiveEffect)
+                            GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().ApplyEffect(effect.effectToApply);
+                    }
+                    break;
             }
-            else
+        }
+        else
+        {
+            switch (itemType)
             {
-                switch (type)
-                {
-                    case ItemType.Equipment:
-                        foreach (ItemEffect effect in abilities)
-                        {
-                            if (effect.IsPassiveEffect)
-                                GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().RemoveEffect(effect.effectToApply);
-                        }
-                        break;
-                }
+                case ItemType.Equipment:
+                    foreach (ItemEffect effect in itemEffects)
+                    {
+                        if (effect.IsPassiveEffect)
+                            GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().RemoveEffect(effect.effectToApply);
+                    }
+                    break;
             }
         }
     }
 
-    private bool isEquipped;
-    public void ItemActivate()
+    [ContextMenu("Reset to Default")]
+    public void ResetToDefault()
     {
-
+        isEquipped = false;
+        playerOwned = false;
+        Debug.Log($"{itemName} reset to default values.");
     }
 }

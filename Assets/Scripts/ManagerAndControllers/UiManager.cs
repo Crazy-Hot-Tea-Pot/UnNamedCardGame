@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class UiManager : MonoBehaviour
 {
@@ -15,20 +16,31 @@ public class UiManager : MonoBehaviour
             instance = value;
         }
     }
+    public PlayerInputActions playerInputActions;
 
     /// <summary>
     /// Current Ui being displayed.
     /// </summary>
-    public GameObject CurrentUI;
+    [SerializeField]
+    public GameObject CurrentUI
+    {
+        get;
+        set;
+    }
     /// <summary>
     /// List of Prefabs UI.
     /// </summary>
     public List<GameObject> listOfUis;
     public GameObject RoamingAndCombatUI;
+    public GameObject InventoryUI;
 
     private UiController currentController;
     private static UiManager instance;
 
+    void OnEnable()
+    {
+        playerInputActions.Player.Inventory.performed += ToggleInventory; 
+    }
     void Awake()
     {
         if (Instance == null)
@@ -41,7 +53,9 @@ public class UiManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        UpdateUIForGameMode();
+        // assign player Input class
+        playerInputActions = new PlayerInputActions();
+        playerInputActions.Enable();
     }
     // Start is called before the first frame update
     void Start()
@@ -50,7 +64,9 @@ public class UiManager : MonoBehaviour
         GameManager.Instance.OnEndCombat += EndCombat;
         GameManager.Instance.OnSceneChange += SceneChange;
         GameManager.Instance.OnGameModeChanged += UpdateUIForGameMode;
-        
+
+        UpdateUIForGameMode();
+
     }
     #region RoamingAndCombatUI
     public void UpdateCameraIndicator(CameraController.CameraState cameraState)
@@ -81,6 +97,26 @@ public class UiManager : MonoBehaviour
         GetCurrentController<RoamingAndCombatUiController>().EndTurnButton.interactable = Interact;
     }
     #endregion
+    #region InventoryUI
+    public void ToggleInventory(InputAction.CallbackContext context)
+    {
+        if (context.performed && GameManager.Instance.CurrentGameMode == GameManager.GameMode.Roaming)
+        {
+            if (CurrentUI.name ==InventoryUI.name )
+            {
+                SwitchScreen(RoamingAndCombatUI);
+            }
+            else
+            {
+                SwitchScreen(InventoryUI);
+            }
+        }
+    }
+    public void RefreshInventory()
+    {
+        GetCurrentController<InventoryController>().RefreshCurrentInventory();
+    }
+    #endregion
     private T GetCurrentController<T>() where T : UiController
     {
         T controller = currentController as T;
@@ -91,12 +127,7 @@ public class UiManager : MonoBehaviour
         return controller;
     }
     private void UpdateUIForGameMode()
-    {
-        // Destroy current UI if it exists
-        if (CurrentUI != null)
-        {
-            Destroy(CurrentUI);
-        }
+    {       
 
         // Update UI elements based on the game mode
         switch (GameManager.Instance.CurrentGameMode)
@@ -130,9 +161,15 @@ public class UiManager : MonoBehaviour
             Debug.LogError($"[UiManager] No UI prefab found for mode: {GameManager.Instance.CurrentGameMode}");
             return;
         }
-
+        // Destroy current UI if it exists
+        if (CurrentUI != null)
+        {
+            Destroy(CurrentUI);
+        }
         // Instantiate the target UI prefab under this object's transform (Canvas)
         CurrentUI = Instantiate(targetScreen, transform);
+
+        CurrentUI.name=targetScreen.name;
 
         currentController = CurrentUI.GetComponent<UiController>();
         currentController?.Initialize();
@@ -152,7 +189,7 @@ public class UiManager : MonoBehaviour
 
     private void SceneChange(Levels newLevel)
     {
-    }
+    }    
 
     private void OnDestroy()
     {
@@ -163,5 +200,9 @@ public class UiManager : MonoBehaviour
             GameManager.Instance.OnSceneChange -= SceneChange;
             GameManager.Instance.OnGameModeChanged -= UpdateUIForGameMode;
         }
+    }
+    void OnDisable()
+    {
+        playerInputActions.Player.Inventory.performed -= ToggleInventory;
     }
 }

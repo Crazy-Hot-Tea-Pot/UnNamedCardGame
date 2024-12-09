@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Power Booster
   itemDescription: Spend 30 Energy and gain 1 Power
+  itemTip: 
   itemImage: {fileID: 0}
-  type: 2
-  abilities:
+  itemType: 2
+  itemEffects:
   - {fileID: 11400000, guid: a4802cc6267e1784a81ae2c174fb8826, type: 2}

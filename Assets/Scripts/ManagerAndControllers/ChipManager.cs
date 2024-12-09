@@ -85,14 +85,24 @@ public class ChipManager : MonoBehaviour
     {
         LoadAllChips();
     }
-    // Update is called once per frame
-    void Update()
+    
+    /// <summary>
+    /// Add chip to deck
+    /// </summary>
+    /// <param name="newChipToAdd"></param>
+    public bool AddNewChipToDeck(NewChip newChipToAdd)
     {
-        
-    }    
-    public void AddChipToDeck(NewChip newChipToAdd)
-    {
-        PlayerDeck.Add(newChipToAdd);
+        if (PlayerDeck.Count < deckLimit)
+        {
+            PlayerDeck.Add(newChipToAdd);
+            return true;
+        }
+        else
+        {
+            Debug.LogError("Deck full");
+            return false;
+        }
+
     }
     /// <summary>
     /// Draws a chip from playerDeck.

@@ -154,7 +154,7 @@ MonoBehaviour:
   startingGear:
   - {fileID: 11400000, guid: d57fb71f1d719884d84e9a0d857a57bd, type: 2}
   - {fileID: 11400000, guid: 7ff7d1455ba77784980378027f4c4a04, type: 2}
-  - {fileID: 11400000, guid: dcf354d50175283449db4a1edfdde66a, type: 2}
+  - {fileID: 11400000, guid: c3da98fd61fa11d4e99dff0283ada25f, type: 2}
   PlayerCurrentGear: []
   AllGear: []
 --- !u!4 &413283431
@@ -187,8 +187,8 @@ GameObject:
   - component: {fileID: 684417304}
   m_Layer: 0
   m_Name: UiManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_TagString: UiManager
+  m_Icon: {fileID: -1412012063857583412, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -267,10 +267,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d00cfbd686d8b124ca8a8cf895d7e6cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CurrentUI: {fileID: 0}
   listOfUis:
   - {fileID: 2605184496312659243, guid: 3fb4564ae17676e449e6d4efa9998cba, type: 3}
+  - {fileID: 6835000082307060844, guid: 371ef51de7d326049a99e9bc62f20284, type: 3}
   RoamingAndCombatUI: {fileID: 2605184496312659243, guid: 3fb4564ae17676e449e6d4efa9998cba, type: 3}
+  InventoryUI: {fileID: 6835000082307060844, guid: 371ef51de7d326049a99e9bc62f20284, type: 3}
 --- !u!224 &684417308
 RectTransform:
   m_ObjectHideFlags: 0

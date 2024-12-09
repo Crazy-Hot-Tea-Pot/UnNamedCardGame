@@ -24,7 +24,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "InventoryUI",
+                    "name": "Inventory",
                     "type": "Button",
                     "id": "259d25dc-ed99-4d26-8895-1f92afe27ba2",
                     "expectedControlType": "Button",
@@ -81,7 +81,18 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "InventoryUI",
+                    "action": "Inventory",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cb46be92-09cf-43e5-9056-433442ccb7bf",
+                    "path": "<Keyboard>/i",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Inventory",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

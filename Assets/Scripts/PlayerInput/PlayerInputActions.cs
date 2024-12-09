@@ -46,7 +46,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""InventoryUI"",
+                    ""name"": ""Inventory"",
                     ""type"": ""Button"",
                     ""id"": ""259d25dc-ed99-4d26-8895-1f92afe27ba2"",
                     ""expectedControlType"": ""Button"",
@@ -103,7 +103,18 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""InventoryUI"",
+                    ""action"": ""Inventory"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cb46be92-09cf-43e5-9056-433442ccb7bf"",
+                    ""path"": ""<Keyboard>/i"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Inventory"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -442,7 +453,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Select = m_Player.FindAction("Select", throwIfNotFound: true);
         m_Player_UseTrinket = m_Player.FindAction("Use Trinket", throwIfNotFound: true);
-        m_Player_InventoryUI = m_Player.FindAction("InventoryUI", throwIfNotFound: true);
+        m_Player_Inventory = m_Player.FindAction("Inventory", throwIfNotFound: true);
         m_Player_DropItem = m_Player.FindAction("DropItem", throwIfNotFound: true);
         m_Player_Enteract = m_Player.FindAction("Enteract", throwIfNotFound: true);
         // Camera Controls
@@ -522,7 +533,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
     private readonly InputAction m_Player_Select;
     private readonly InputAction m_Player_UseTrinket;
-    private readonly InputAction m_Player_InventoryUI;
+    private readonly InputAction m_Player_Inventory;
     private readonly InputAction m_Player_DropItem;
     private readonly InputAction m_Player_Enteract;
     public struct PlayerActions
@@ -531,7 +542,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public PlayerActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @Select => m_Wrapper.m_Player_Select;
         public InputAction @UseTrinket => m_Wrapper.m_Player_UseTrinket;
-        public InputAction @InventoryUI => m_Wrapper.m_Player_InventoryUI;
+        public InputAction @Inventory => m_Wrapper.m_Player_Inventory;
         public InputAction @DropItem => m_Wrapper.m_Player_DropItem;
         public InputAction @Enteract => m_Wrapper.m_Player_Enteract;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
@@ -549,9 +560,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @UseTrinket.started += instance.OnUseTrinket;
             @UseTrinket.performed += instance.OnUseTrinket;
             @UseTrinket.canceled += instance.OnUseTrinket;
-            @InventoryUI.started += instance.OnInventoryUI;
-            @InventoryUI.performed += instance.OnInventoryUI;
-            @InventoryUI.canceled += instance.OnInventoryUI;
+            @Inventory.started += instance.OnInventory;
+            @Inventory.performed += instance.OnInventory;
+            @Inventory.canceled += instance.OnInventory;
             @DropItem.started += instance.OnDropItem;
             @DropItem.performed += instance.OnDropItem;
             @DropItem.canceled += instance.OnDropItem;
@@ -568,9 +579,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @UseTrinket.started -= instance.OnUseTrinket;
             @UseTrinket.performed -= instance.OnUseTrinket;
             @UseTrinket.canceled -= instance.OnUseTrinket;
-            @InventoryUI.started -= instance.OnInventoryUI;
-            @InventoryUI.performed -= instance.OnInventoryUI;
-            @InventoryUI.canceled -= instance.OnInventoryUI;
+            @Inventory.started -= instance.OnInventory;
+            @Inventory.performed -= instance.OnInventory;
+            @Inventory.canceled -= instance.OnInventory;
             @DropItem.started -= instance.OnDropItem;
             @DropItem.performed -= instance.OnDropItem;
             @DropItem.canceled -= instance.OnDropItem;
@@ -754,7 +765,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     {
         void OnSelect(InputAction.CallbackContext context);
         void OnUseTrinket(InputAction.CallbackContext context);
-        void OnInventoryUI(InputAction.CallbackContext context);
+        void OnInventory(InputAction.CallbackContext context);
         void OnDropItem(InputAction.CallbackContext context);
         void OnEnteract(InputAction.CallbackContext context);
     }

@@ -59,4 +59,9 @@ public class AttackChip : NewChip
             Target.ApplyDebuff(debuffToApply, debuffStacks);
         }
     }
+
+    void OnValidate()
+    {
+        ChipType = TypeOfChips.Attack;
+    }
 }

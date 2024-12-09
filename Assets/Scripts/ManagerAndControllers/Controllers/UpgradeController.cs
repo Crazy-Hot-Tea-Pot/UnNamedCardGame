@@ -122,7 +122,7 @@ public class UpgradeController : MonoBehaviour
     /// <summary>
     /// Switches to the specified screen and deactivates the current screen.
     /// </summary>
-    /// <param name="screen">The screen type to switch to.</param>
+    /// <param name="screen">The screen itemType to switch to.</param>
     public void SwitchToScreen(Screens screen)
     {
         // Stop specific coroutines before starting new ones

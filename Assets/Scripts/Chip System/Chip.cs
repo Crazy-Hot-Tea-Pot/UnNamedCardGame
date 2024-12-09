@@ -3,10 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 
-public class Chip : MonoBehaviour
+public class Chip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public enum ChipMode
     {
@@ -16,9 +17,6 @@ public class Chip : MonoBehaviour
         Inventory,
         Delete
     }
-
-    private ChipMode mode = ChipMode.None;
-
     /// <summary>
     /// What mode is the chip in.
     /// </summary>
@@ -37,8 +35,7 @@ public class Chip : MonoBehaviour
     public CombatController CombatController;
     public GameObject Player;
     public UpgradeController UpgradeController;
-
-    private string chipTitle;    
+    public GameObject ChipinfoPrefab;    
 
     /// <summary>
     /// Chip title is the title that the card will display in game and the ID of the card.
@@ -58,7 +55,7 @@ public class Chip : MonoBehaviour
     /// <summary>
     /// Button Component so player can click on card
     /// </summary>
-    public Button chipButton;  
+    public Button chipButton;
 
     public NewChip NewChip
     {
@@ -82,20 +79,18 @@ public class Chip : MonoBehaviour
             }
         }
     }
-        private NewChip newChip;
+
+    private ChipMode mode = ChipMode.None;
+
+    private string chipTitle;        
+    private NewChip newChip;
+    private GameObject chipinfoDisplay;
 
     void Start()
     {        
 
         Player = GameObject.FindGameObjectWithTag("Player");
        
-    }
-    /// <summary>
-    /// Tell the Upgrade Controller this is the chip the user selected to ugprade.
-    /// </summary>
-    private void UpgradeChipSelected()
-    {
-        UpgradeController.ChipSelectToUpgrade(newChip);
     }
     /// <summary>
     /// Runs Scriptable Chip
@@ -211,6 +206,7 @@ public class Chip : MonoBehaviour
                 break;
             case ChipMode.Inventory:
                 chipButton.interactable = false;
+                chipButton.enabled = false;
                 break;
             case ChipMode.Delete:
                 chipButton.interactable = true;
@@ -219,6 +215,63 @@ public class Chip : MonoBehaviour
             default:
                 break;
         }
+    }
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (chipinfoDisplay == null)
+        {
+
+            chipinfoDisplay = Instantiate(ChipinfoPrefab, UiManager.Instance.transform);
+
+            ChipInfoController controller = chipinfoDisplay.GetComponent<ChipInfoController>();
+
+            StartCoroutine(DelayForAnimator(controller));            
+        }
+    }
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        if(chipinfoDisplay != null)
+        {
+            ChipInfoController controller = chipinfoDisplay.GetComponent<ChipInfoController>();
+
+            // Animate shrinking
+            Vector3 targetPosition = this.transform.position;
+            Vector3 startPosition = UiManager.Instance.transform.position;
+
+            controller.Shrink(startPosition, targetPosition);
+
+            // Optional: Delay destruction for animation
+            Destroy(chipinfoDisplay, 1f);
+        }
+    }
+
+    /// <summary>
+    /// Tell the Upgrade Controller this is the chip the user selected to ugprade.
+    /// </summary>
+    private void UpgradeChipSelected()
+    {
+        UpgradeController.ChipSelectToUpgrade(newChip);
+    }
+
+    private IEnumerator DelayForAnimator(ChipInfoController controller)
+    {
+        yield return null;
+
+        controller.ChipName.SetText(ChipTitle);
+        controller.ChipImage.sprite = NewChip.chipImage;
+        controller.ChipType.SetText(NewChip.ChipType.ToString());
+        controller.ChipDescription.SetText(NewChip.description);
+
+        //Animate
+
+        Vector3 targetPosition = UiManager.Instance.transform.position;
+        Vector3 startPosition = this.transform.position;
+        controller.Enlarge(startPosition, targetPosition);
+    }
+    private void OnDestroy()
+    {
+        if(chipinfoDisplay != null)
+            Destroy(chipinfoDisplay);
     }
 
 }

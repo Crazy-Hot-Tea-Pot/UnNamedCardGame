@@ -9,12 +9,22 @@ public class NewChip : ScriptableObject
     protected bool isUpgraded = false;
     protected bool isActive;   
     protected int disableCounter;
-    public GameObject ThisChip;
+    public GameObject ThisChip
+    {
+        get;
+        set;
+    }
     public enum ChipRarity
     {
         Basic,
         Common,
         Rare
+    }
+    public enum TypeOfChips
+    {
+        Attack,
+        Defense,
+        Skill
     }
     /// <summary>
     /// This variable decides if the chip is isActive or inactive
@@ -29,7 +39,22 @@ public class NewChip : ScriptableObject
         {
             isActive = value;
 
-            ThisChip.GetComponent<Button>().interactable = value;
+            if (ThisChip != null)
+            {
+                Button button = ThisChip.GetComponent<Button>();
+                if (button != null)
+                {
+                    button.interactable = value;
+                }
+                else
+                {
+                    Debug.LogError($"No Button component found on {ThisChip.name}.");
+                }
+            }
+            else
+            {
+                Debug.LogError("ThisChip is not assigned.");
+            }
 
             if (isActive)
                 disableCounter = 0;
@@ -47,6 +72,20 @@ public class NewChip : ScriptableObject
         set
         {
             disableCounter = value;
+        }
+    }
+    /// <summary>
+    /// What itemType is the chip.
+    /// </summary>
+    public TypeOfChips ChipType
+    {
+        get
+        {
+            return chipType;
+        }
+        protected set
+        {
+            chipType = value;
         }
     }
     /// <summary>
@@ -103,6 +142,15 @@ public class NewChip : ScriptableObject
     /// </summary>
     public bool hitAllTargets;
 
+    private TypeOfChips chipType;
+
+    void OnEnable()
+    {
+        IsUpgraded = false;
+        isActive = false;
+        disableCounter = 0; ;
+}
+
     public virtual void OnChipPlayed(PlayerController player)
     {
         Debug.Log(chipName + " played.");
@@ -129,5 +177,7 @@ public class NewChip : ScriptableObject
             }
         }
     }
+
+
 
 }

@@ -36,12 +36,21 @@ public class RoamingAndCombatUiController : UiController
     void Start()
     {
         EndTurnButton.onClick.AddListener(() => GameObject.FindGameObjectWithTag("CombatController").GetComponent<CombatController>().TurnUsed(GameObject.FindGameObjectWithTag("Player")));
+        
+        EndTurn.SetActive(false);
         CameraIndicator.SetActive(false);
+
+        PlayerController player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        if (player == null)
+        {
+            UpdateHealth(player.Health, player.MaxHealth);
+            UpdateShield(player.Shield, player.MaxShield);
+            UpdateEnergy(player.Energy, player.MaxEnergy);
+        }        
     }
     public override void Initialize()
     {
-        Debug.Log("RoamingAndCombatUiController initialized");
-        // Perform setup specific to this controller
+        Debug.Log("RoamingAndCombatUiController initialized");        
     }
     /// <summary>
     /// Updates the UI for player HealthBar
@@ -174,5 +183,10 @@ public class RoamingAndCombatUiController : UiController
 
         // Ensure it snaps to the exact target amount at the end
         EnergyBar.fillAmount = targetFillAmount;
+    }
+
+    void OnDestroy()
+    {
+        EndTurnButton.onClick.RemoveAllListeners();
     }
 }

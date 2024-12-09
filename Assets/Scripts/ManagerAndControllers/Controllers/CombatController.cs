@@ -136,10 +136,7 @@ public class CombatController : MonoBehaviour
     void Start()
     {        
 
-        player = GameObject.FindGameObjectWithTag("Player");
-       
-        
-        UiManager.Instance.EndTurnButtonVisibility(false);
+        player = GameObject.FindGameObjectWithTag("Player");             
 
         CurrentCombatantIndex = 0;
         CurrentCombatant = "No Combat Yet";

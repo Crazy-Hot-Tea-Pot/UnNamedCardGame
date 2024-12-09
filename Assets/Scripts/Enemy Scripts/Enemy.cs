@@ -472,24 +472,24 @@ public class Enemy : MonoBehaviour
     }
 
     /// <summary>
-    /// Updates the targeting state of the enemy based on the specified targeting type and its active status.
-    /// Adds the targeting type to the active list if it starts targeting, or removes it if it stops targeting.
+    /// Updates the targeting state of the enemy based on the specified targeting itemType and its active status.
+    /// Adds the targeting itemType to the active list if it starts targeting, or removes it if it stops targeting.
     /// </summary>
-    /// <param name="targetingType">The type of targeting to set (e.g., CombatController, Ability).</param>
-    /// <param name="isTargeted">Indicates whether the specified targeting type is active (true) or inactive (false).</param>
+    /// <param name="targetingType">The itemType of targeting to set (e.g., CombatController, Ability).</param>
+    /// <param name="isTargeted">Indicates whether the specified targeting itemType is active (true) or inactive (false).</param>
     public void SetTarget(TargetingType targetingType, bool isTargeted)
     {
         if (isTargeted)
         {
             if (!activeTargetingTypes.Contains(targetingType))
             {
-                // Add the targeting type.
+                // Add the targeting itemType.
                 activeTargetingTypes.Add(targetingType);
             }
         }
         else
         {
-            // Remove the targeting type.
+            // Remove the targeting itemType.
             activeTargetingTypes.Remove(targetingType);
         }
 
@@ -577,7 +577,7 @@ public class Enemy : MonoBehaviour
     //        return;
     //    }
 
-    //    // Check for the highest-priority targeting type.
+    //    // Check for the highest-priority targeting itemType.
     //    TargetingType highestPriorityType = activeTargetingTypes[activeTargetingTypes.Count - 1];
 
     //    // Set shader only if it has changed.
@@ -586,7 +586,7 @@ public class Enemy : MonoBehaviour
     //        enemyRenderer.material.shader = outlineShader;
     //    }
 
-    //    // Assign the color based on the targeting type.
+    //    // Assign the color based on the targeting itemType.
     //    switch (highestPriorityType)
     //    {
     //        case TargetingType.CombatController:

@@ -4,7 +4,7 @@ using static Effects;
 
 [CreateAssetMenu(fileName = "NewDefenseChip", menuName = "Chip System/Defense Chip")]
 public class DefenseChip : NewChip
-{
+{  
     [System.Serializable]
     public class DebuffInfo
     {
@@ -108,5 +108,10 @@ public class DefenseChip : NewChip
             if (!IsUpgraded)
                 break;           
         }
+    }
+
+    void OnValidate()
+    {
+        ChipType = TypeOfChips.Defense;
     }
 }
