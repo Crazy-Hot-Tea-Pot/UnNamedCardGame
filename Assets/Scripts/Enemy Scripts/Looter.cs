@@ -42,22 +42,17 @@ public class Looter : Enemy
     }
 
     protected override void PerformIntent()
-    {       
+    {    
+        UpdateIntentUI();
         // Since 100% on first chance just made it this way.
 
         if (swipeCount < 3) // First three turns are Swipe
         {
             Swipe();
-
-            if (swipeCount < 3)
-                UpdateIntentUI("Swipe", Color.red);
-            else
-                UpdateIntentUI("Shroud", Color.blue);
         }
         else if (swipeCount == 3 && !IsShrouded) // After three Swipes, do Shroud
         {
             Shroud();
-            UpdateIntentUI("Escape", Color.red);
         }
         else if (IsShrouded) // After Shroud, perform Escape
         {
@@ -83,8 +78,23 @@ public class Looter : Enemy
     public override void CombatStart()
     {
         base.CombatStart();
-
-        UpdateIntentUI("Swipe", Color.red);
+        UpdateIntentUI();        
+    }
+    protected override Intent GetNextIntent()
+    {
+        if (swipeCount < 3)
+        {
+            return new Intent("Swipe", Color.red, 6, "Steals 5 Scrap");
+        }
+        else if (swipeCount == 3 && !IsShrouded)
+        {
+            return new Intent("Shroud", Color.blue, 0, "Gains 10 Shield");
+        }
+        else if (IsShrouded)
+        {
+            return new Intent("Escape", Color.yellow, 0, "Exits the fight with stolen Scrap");
+        }
+        return new Intent("Unknown", Color.gray);
     }
     /// <summary>
     ///  After the 3rd Swipe, perform Shroud

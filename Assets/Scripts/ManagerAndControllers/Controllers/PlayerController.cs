@@ -397,7 +397,6 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        TargetAbilityRangedVisual();
     }
 
     /// <summary>
@@ -873,56 +872,5 @@ public class PlayerController : MonoBehaviour
 
         // for now just restart the scene.
         GameManager.Instance.RequestScene(Levels.Title);
-    }    
-
-    #region rangesForAbilites
-    private void OnTriggerEnter(Collider other)
-    {
-        //If the hit is an enemy
-        if(other.tag == "Enemy")
-        {
-            //Add to the list
-            abilityRangedEnemies.Add(other.gameObject);
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        //If an enemy leaves the target range
-        if(other.tag == "Enemy")
-        {
-            //remove from the list
-            abilityRangedEnemies.Remove(other.gameObject);
-            //Untarget it
-            try
-            {
-                //Enemy is set as untargeted
-                other.GetComponent<Enemy>().SetTarget(TargetingType.Ability, false);
-            }
-            catch
-            {
-                //Assume we couldn't find the enemy
-                Debug.LogWarning("We couldn't find the right enemy object it had no enemy script attached in player controller when leaving range");
-            }
-        }
-    }
-
-    public void TargetAbilityRangedVisual()
-    {
-        foreach (GameObject enemy in abilityRangedEnemies)
-        {
-            //Try to deal damage one by one to each enemy
-            try
-            {
-                //Enemy is set as targed
-                enemy.GetComponent<Enemy>().SetTarget(TargetingType.Ability, true);
-            }
-            catch
-            {
-                //Assume we couldn't find the enemy
-                Debug.LogWarning("We couldn't find the right enemy object it had no enemy script attached in player controller");
-            }
-        }
-    }
-    #endregion    
+    }       
 }

@@ -386,7 +386,7 @@ public class CombatController : MonoBehaviour
             Enemy previousEnemy = target.GetComponent<Enemy>();
             if (previousEnemy != null)
             {
-                previousEnemy.SetTarget(TargetingType.CombatController, false);
+                previousEnemy.IsTargeted=false;
             }
         }
 
@@ -395,7 +395,7 @@ public class CombatController : MonoBehaviour
         Enemy newEnemy = target.GetComponent<Enemy>();
         if (newEnemy != null)
         {
-            newEnemy.SetTarget(TargetingType.CombatController, true);
+            newEnemy.IsTargeted=true;
         }
     }
     /// <summary>

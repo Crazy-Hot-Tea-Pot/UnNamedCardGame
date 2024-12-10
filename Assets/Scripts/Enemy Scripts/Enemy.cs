@@ -3,10 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using TMPro;
-public enum TargetingType
+/// <summary>
+/// For UI display of Intent
+/// </summary>
+public class Intent
 {
-    CombatController,
-    Ability
+    public string Name { get; set; }
+    public Color IntentColor { get; set; }
+    public int Damage { get; set; }
+    public string AdditionalInfo { get; set; }
+
+    public Intent(string name, Color intentColor, int damage = 0, string additionalInfo = "")
+    {
+        Name = name;
+        IntentColor = intentColor;
+        Damage = damage;
+        AdditionalInfo = additionalInfo;
+    }
 }
 public class Enemy : MonoBehaviour
 {   
@@ -24,9 +37,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    public float AttackRange;
-    
-    private float distanceToPlayer;
+    public float AttackRange;       
 
     public float DistanceToPlayer
     {
@@ -153,18 +164,13 @@ public class Enemy : MonoBehaviour
         {
             return isTargeted;
         }
-        protected set
+        set
         {
             isTargeted = value;
             TargetIcon.SetActive(value);
         }
     }
     #endregion
-
-    [Header("Boarder Effects")]    
-    private List<TargetingType> activeTargetingTypes = new List<TargetingType>();
-    private Color SelectedTarget = Color.red;
-    private Color InAbilityRange = Color.yellow;
 
     [Header("Status Effects")]
     #region StatusEffects
@@ -276,11 +282,6 @@ public class Enemy : MonoBehaviour
         }
     }
     #endregion
-
-    [Header("Needed Assets")]
-    public Shader outlineShader;
-    private Shader defaultShader;
-    private Renderer enemyRenderer;
     public GameObject damageTextPrefab;
 
     /// <summary>
@@ -300,12 +301,12 @@ public class Enemy : MonoBehaviour
 
     public GameObject TargetIcon;
 
+    private float distanceToPlayer;
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
         playerCamera = Camera.main;
-        enemyRenderer = GetComponent<Renderer>();
         thisEnemyUI = this.gameObject.GetComponentInChildren<EnemyUI>();
     }
 
@@ -458,9 +459,10 @@ public class Enemy : MonoBehaviour
         Debug.Log("Shield Restored: " + shield);
     }
 
-    public virtual void UpdateIntentUI(string intentName, Color intentColor)
+    public virtual void UpdateIntentUI()
     {
-        thisEnemyUI.UpdateIntent(intentName, intentColor);
+        var nextIntent = GetNextIntent();
+        thisEnemyUI.UpdateIntent(nextIntent);
     }
 
     /// <summary>
@@ -468,33 +470,6 @@ public class Enemy : MonoBehaviour
     /// </summary>
     public virtual void CombatStart()
     {
-        //animator.SetBool("inCombat", true);
-    }
-
-    /// <summary>
-    /// Updates the targeting state of the enemy based on the specified targeting itemType and its active status.
-    /// Adds the targeting itemType to the active list if it starts targeting, or removes it if it stops targeting.
-    /// </summary>
-    /// <param name="targetingType">The itemType of targeting to set (e.g., CombatController, Ability).</param>
-    /// <param name="isTargeted">Indicates whether the specified targeting itemType is active (true) or inactive (false).</param>
-    public void SetTarget(TargetingType targetingType, bool isTargeted)
-    {
-        if (isTargeted)
-        {
-            if (!activeTargetingTypes.Contains(targetingType))
-            {
-                // Add the targeting itemType.
-                activeTargetingTypes.Add(targetingType);
-            }
-        }
-        else
-        {
-            // Remove the targeting itemType.
-            activeTargetingTypes.Remove(targetingType);
-        }
-
-        // Determine if CombatController is active and update IsTargeted.
-        IsTargeted = activeTargetingTypes.Contains(TargetingType.CombatController);        
     }
    
     /// <summary>
@@ -557,49 +532,11 @@ public class Enemy : MonoBehaviour
         damageIndicator.transform.LookAt(Camera.main.transform);
         damageIndicator.transform.Rotate(0, 180, 0); // Correct for backward text
     }
-   
 
-    /// <summary>
-    /// Updates the enemy's border color and shader properties based on the currently active targeting types.
-    /// The color and outline properties are determined by the highest-priority active targeting type.
-    /// </summary>
-    //private void UpdateBorderColor()
-    //{ 
-    //    if (activeTargetingTypes.Count == 0)
-    //    {
-    //        if (enemyRenderer.material.shader != defaultShader)
-    //        {
-    //            enemyRenderer.material.shader = defaultShader;
-    //        }
-
-    //        // No CombatController targeting.
-    //        IsTargeted = false;
-    //        return;
-    //    }
-
-    //    // Check for the highest-priority targeting itemType.
-    //    TargetingType highestPriorityType = activeTargetingTypes[activeTargetingTypes.Count - 1];
-
-    //    // Set shader only if it has changed.
-    //    if (enemyRenderer.material.shader != outlineShader)
-    //    {
-    //        enemyRenderer.material.shader = outlineShader;
-    //    }
-
-    //    // Assign the color based on the targeting itemType.
-    //    switch (highestPriorityType)
-    //    {
-    //        case TargetingType.CombatController:
-    //            enemyRenderer.material.SetColor("_OutlineColor", SelectedTarget);
-    //            //IsTargeted = true;
-    //            break;
-    //        case TargetingType.Ability:
-    //            enemyRenderer.material.SetColor("_OutlineColor", InAbilityRange);
-    //            break;
-    //    }
-
-    //    // Set the outline width.
-    //    enemyRenderer.material.SetFloat("_OutlineWidth", 0.1f);
-    //}
+    protected virtual Intent GetNextIntent()
+    {
+        // Default implementation, overridden in derived classes
+        return new Intent("Unknown", Color.gray);
+    }
 
 }

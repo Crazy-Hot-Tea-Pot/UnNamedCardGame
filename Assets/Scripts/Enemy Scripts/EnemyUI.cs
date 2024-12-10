@@ -180,17 +180,16 @@ public class EnemyUI : MonoBehaviour
             Debug.LogError("So Somebody fucked up.");
         }
     }
-
     /// <summary>
     /// Update intent box.
     /// </summary>
     /// <param name="intent"></param>
-    /// <param name="colorOfIntent"></param>
-    public void UpdateIntent(string intent,Color colorOfIntent)
+    public void UpdateIntent(Intent intent)
     {
         IntentText.SetActive(true);
-        IntentText.GetComponent<TextMeshProUGUI>().SetText(intent);
-        IntentText.GetComponent<TextMeshProUGUI>().color = colorOfIntent;
+        var textComponent = IntentText.GetComponent<TextMeshProUGUI>();
+        textComponent.SetText($"{intent.Name} - {intent.Damage} Damage\n{intent.AdditionalInfo}");
+        textComponent.color = intent.IntentColor;
     }
 
     /// <summary>

@@ -56,7 +56,6 @@ MonoBehaviour:
   agent: {fileID: 4613368357221273264}
   playerCamera: {fileID: 0}
   maxHP: 50
-  outlineShader: {fileID: 4800000, guid: d9ef6ae6b5e3b6548bb49be4036cd675, type: 3}
   damageTextPrefab: {fileID: 8797586467627540377, guid: adf7e13694cdcc04ab4b930ff94a86cb, type: 3}
   thisEnemyUI: {fileID: 3499041421513826723}
   CombatController: {fileID: 0}
