@@ -18,7 +18,7 @@ public class DataPrefabController : MonoBehaviour
     public Button LoadButton;
     public Button DeleteButton;
 
-    public UpgradeController UpgradeController;
+    public TerminalController UpgradeController;
 
     void Start()
     {

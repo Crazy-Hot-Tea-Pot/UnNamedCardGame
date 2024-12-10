@@ -4,16 +4,13 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class UpgradeController : MonoBehaviour
+public class TerminalController : MonoBehaviour
 {
     private Coroutine activeScreenCoroutine;
     private Coroutine activeTextRevealCoroutine;
 
-    public GameObject PlayerCanvas;
-
     private bool isInteracting;
     private NewChip selectedChip;
-    private CameraController Camera;
 
     // to avoid using getComponent repeatdly
     private TextMeshPro defaultScreenText;
@@ -63,8 +60,6 @@ public class UpgradeController : MonoBehaviour
     //Current Data mode the terminal is at.
     public DataMode currentDataMode;
 
-    public UpgradeTerminalUIController UIController;
-
     /// <summary>
     /// Created event for UI.
     /// </summary>
@@ -98,6 +93,8 @@ public class UpgradeController : MonoBehaviour
     //Current Screen Active in game world
     private Screens currentScreen;
 
+    private CameraController Camera;
+
     void Awake()
     {
         defaultScreenText = DefaultScreen.GetComponent<TextMeshPro>();
@@ -111,12 +108,7 @@ public class UpgradeController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        PlayerCanvas = GameObject.FindGameObjectWithTag("PlayerCanvas");
-        SwitchToScreen(Screens.Default);
-        UIController.UpdateScrapDisplay(
-            GameObject.FindGameObjectWithTag("Player")
-            .GetComponent<PlayerController>().Scrap
-            );
+        SwitchToScreen(Screens.Default);        
     }
 
     /// <summary>
@@ -179,7 +171,7 @@ public class UpgradeController : MonoBehaviour
 
                 switch (currentDataMode)
                 {
-                    case UpgradeController.DataMode.Title:
+                    case TerminalController.DataMode.Title:
                         tempDataText = string.Format("<#80ff80>....Connecting To Data Servers.....</color>\n\n" +
                             "User <#A20000> *Error*</color> backup data have been found.\n\n" +
                             "<#80ff80>....Loading Options...</color>\n\n" +
@@ -191,7 +183,7 @@ public class UpgradeController : MonoBehaviour
 
                         StartCoroutine(RevealText(DataScreen, false, 0.01f, false, 0, 0, false, 0));
                         break;
-                    case UpgradeController.DataMode.View:
+                    case TerminalController.DataMode.View:
                         tempDataText = string.Format("<#80ff80>...Pinging Chip Tech Servers...</color>\n" +
                             "Sending Data Request\n" +
                             "...Retrieving Data...");
@@ -201,7 +193,7 @@ public class UpgradeController : MonoBehaviour
                         StartCoroutine(RevealText(DataScreen, true, 0.01f, true, 0.1f, 5, false, 0));
 
                         break;
-                    case UpgradeController.DataMode.Save:
+                    case TerminalController.DataMode.Save:
                         tempDataText = string.Format("<#80ff80>...Pinging Chip Tech Servers...</color>\n" +
                             "Preparing to send copy of memory Ciruits.");
 
@@ -260,6 +252,7 @@ public class UpgradeController : MonoBehaviour
                 currentScreen = screen;
 
                 StartCoroutine(ExitTerminal());
+
                 break;
             default:
                 break;
@@ -306,7 +299,7 @@ public class UpgradeController : MonoBehaviour
     {
         try
         {
-            DataManager.Instance.Save(UIController.UserInput.GetComponent<TMP_InputField>().text);
+            DataManager.Instance.Save(UiManager.Instance.GetUserInput());
 
             //For now lets exit the terminal all together
             SwitchToScreen(Screens.Exit);
@@ -320,7 +313,7 @@ public class UpgradeController : MonoBehaviour
     public void AttemptToDeleteSave(string saveName)
     {
         if (DataManager.Instance.DeleteSave(saveName))
-            UIController.FillData();
+            UiManager.Instance.FillData();
         else
             DisplayError("Failed to Delete Copy.");
     }
@@ -344,10 +337,10 @@ public class UpgradeController : MonoBehaviour
             tempPlayer.Heal(10);
 
             //Display new info
-            SwitchToScreen(UpgradeController.Screens.HealthUpgrade);
+            SwitchToScreen(TerminalController.Screens.HealthUpgrade);
 
             //Refresh Scrap Amount
-            UIController.UpdateScrapDisplay(
+            UiManager.Instance.UpdateScrapDisplay(
             GameObject.FindGameObjectWithTag("Player")
             .GetComponent<PlayerController>().Scrap
             );
@@ -378,7 +371,7 @@ public class UpgradeController : MonoBehaviour
             SwitchToScreen(Screens.Intro);
 
             //Refresh Scrap Amount
-            UIController.UpdateScrapDisplay(
+            UiManager.Instance.UpdateScrapDisplay(
             GameObject.FindGameObjectWithTag("Player")
             .GetComponent<PlayerController>().Scrap
             );
@@ -421,22 +414,21 @@ public class UpgradeController : MonoBehaviour
     private IEnumerator EnterTerminal()
     {
         IsInteractingWithMe = true;
+
         Camera.SwitchCamera(CameraController.CameraState.FirstPerson);
         Camera.FirstPersonCamera.LookAt = IntroScreen.transform;       
 
         yield return new WaitForSeconds(1f);
-        SwitchToScreen(Screens.Intro);
 
         //Set GameMode to interacting
         GameManager.Instance.UpdateGameMode(GameManager.GameMode.Interacting);
 
-        //Turn off bad Ui
-        PlayerCanvas.SetActive(false);
+        SwitchToScreen(Screens.Intro);       
 
-        UIController.ScrapPanel.SetActive(true);
+        UiManager.Instance.SetScrapDisplay(true);
 
         //Refresh Scrap Amount
-        UIController.UpdateScrapDisplay(
+        UiManager.Instance.UpdateScrapDisplay(
         GameObject.FindGameObjectWithTag("Player")
         .GetComponent<PlayerController>().Scrap
         );
@@ -449,20 +441,15 @@ public class UpgradeController : MonoBehaviour
     /// <returns></returns>
     private IEnumerator ExitTerminal()
     {
-        //Set game to interacting        
+        //deactive Scrap Panel
+        //UiManager.Instance.SetScrapDisplay(false);
+
         GameManager.Instance.UpdateGameMode(GameManager.GameMode.Roaming);
 
-        Camera.SwitchCamera(CameraController.CameraState.Default);        
-
         yield return new WaitForSeconds(1f);
-        IsInteractingWithMe = false;
-
-        //deactive Scrap Panel
-        UIController.ScrapPanel.SetActive(false);
-
-        // reactive bad Ui
-        PlayerCanvas.SetActive(true);
-                
+        IsInteractingWithMe = false;        
+        
+        Camera.SwitchCamera(CameraController.CameraState.Default);
     }    
 
     /// <summary>

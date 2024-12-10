@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -33,6 +34,7 @@ public class UiManager : MonoBehaviour
     public List<GameObject> listOfUis;
     public GameObject RoamingAndCombatUI;
     public GameObject InventoryUI;
+    public GameObject TerminalUI;
 
     private UiController currentController;
     private static UiManager instance;
@@ -117,6 +119,24 @@ public class UiManager : MonoBehaviour
         GetCurrentController<InventoryController>().RefreshCurrentInventory();
     }
     #endregion
+    #region TerminalUI
+    public void UpdateScrapDisplay(int playerScrap)
+    {
+        GetCurrentController<UpgradeTerminalUIController>().UpdateScrapDisplay(playerScrap);
+    }
+    public string GetUserInput()
+    {
+        return GetCurrentController<UpgradeTerminalUIController>().UserInput.GetComponent<TMP_InputField>().text;
+    }
+    public void SetScrapDisplay(bool state)
+    {
+        GetCurrentController<UpgradeTerminalUIController>().ScrapPanel.SetActive( state );
+    }
+    public void FillData()
+    {
+        GetCurrentController<UpgradeTerminalUIController>().FillData();
+    }
+    #endregion
     private T GetCurrentController<T>() where T : UiController
     {
         T controller = currentController as T;
@@ -143,7 +163,10 @@ public class UiManager : MonoBehaviour
                 break;
             case GameManager.GameMode.Pause:
                 Debug.Log("[UiManager] Displaying Pause Menu.");
-                break;                            
+                break;
+            case GameManager.GameMode.Interacting:
+                SwitchScreen(listOfUis.Find(ui => ui.name == "Terminal UI"));
+                break;
             default:
                 Debug.Log("[UiManager] Hiding all UI.");
                 break;

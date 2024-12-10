@@ -7,12 +7,8 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
-{
-    private UpgradeController controller;
-    private bool isWaintingForInput = false;
-    private Coroutine activeRevealCoroutine;
-    private Coroutine activePanelCoroutine;
+public class UpgradeTerminalUIController : UiController, IPointerClickHandler
+{          
 
     [Header("Scrap Display")]
     public GameObject ScrapPanel;
@@ -53,7 +49,7 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
     public Vector2 startPosition;    
     public Vector2 endPosition;
 
-    public float TimeForPanelToGetToCenter=2.0f;
+    public float TimeForPanelToGetToCenter = 2.0f;
 
     [Header("Error Screen")]
     public GameObject ErrorPanel;
@@ -61,9 +57,25 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
 
     public List<GameObject> allUIPanels;
     public List<TMP_Text> Consoles = new List<TMP_Text>();
+    public bool IsWaitingForInput
+    {
+        get
+        {
+            return isWaitingForInput;
+        }
+        set
+        {
+            isWaitingForInput = value;
+        }
+    }
+
+    private bool isWaitingForInput;
+    private TerminalController controller;
+    private Coroutine activeRevealCoroutine;
+    private Coroutine activePanelCoroutine;
     void Awake()
     {
-        controller = GameObject.FindGameObjectWithTag("UpgradeController").GetComponent<UpgradeController>();
+        controller = GameObject.FindGameObjectWithTag("UpgradeController").GetComponent<TerminalController>();
     }
     void OnEnable()
     {
@@ -76,14 +88,17 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
         controller.OnScreenChanged -= UpdateUIScreen;
         controller.OnErrorOccurred -= UpdateErrorScreen;
     }
-
+    public override void Initialize()
+    {
+        Debug.Log("Upgrade Terminal Initalize");
+    }
     /// <summary>
     /// When player clicks one of the links.
     /// </summary>
     /// <param name="eventData"></param>
     public void OnPointerClick(PointerEventData eventData)
     {
-        if(isWaintingForInput)
+        if(IsWaitingForInput)
             foreach (var console in Consoles)
             {
                 // Skip inactive components
@@ -109,7 +124,7 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
     /// </summary>
     public void FillData()
     {
-        isWaintingForInput = false;
+        IsWaitingForInput = false;
 
         // Remove all existing child objects from DataHolder
         foreach (Transform child in DataHolder.transform)
@@ -150,7 +165,7 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
         {
             case"UpgradeHealthScreen":
 
-                controller.SwitchToScreen(UpgradeController.Screens.HealthUpgrade);
+                controller.SwitchToScreen(TerminalController.Screens.HealthUpgrade);
 
                 break;
             case "UpgradeHealth":
@@ -159,32 +174,32 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
 
                 break;
             case "UpgradeChipScreen":
-                controller.SwitchToScreen(UpgradeController.Screens.ChipUpgrade);
+                controller.SwitchToScreen(TerminalController.Screens.ChipUpgrade);
                 break;
             case "UpgradeSelectedChip":               
                 controller.AttemptToUpgradeChip();
                 break;
             case "DataServer":
-                controller.SwitchToScreen(UpgradeController.Screens.Data);
+                controller.SwitchToScreen(TerminalController.Screens.Data);
                 break;
             case "View":
-                controller.currentDataMode=UpgradeController.DataMode.View;
+                controller.currentDataMode=TerminalController.DataMode.View;
 
-                controller.SwitchToScreen(UpgradeController.Screens.Data);
+                controller.SwitchToScreen(TerminalController.Screens.Data);
                
                 break;
             case "Save":
-                controller.currentDataMode = UpgradeController.DataMode.Save;
+                controller.currentDataMode = TerminalController.DataMode.Save;
 
-                controller.SwitchToScreen(UpgradeController.Screens.Data);
+                controller.SwitchToScreen(TerminalController.Screens.Data);
                 break;            
             case "Back":
-                controller.SwitchToScreen(UpgradeController.Screens.Intro);
+                controller.SwitchToScreen(TerminalController.Screens.Intro);
                 break;
             case "Exit":
             case "Exit1":
             case "Exit2":
-                controller.SwitchToScreen(UpgradeController.Screens.Exit);
+                controller.SwitchToScreen(TerminalController.Screens.Exit);
                 ExitButton.GetComponent<Button>().onClick.RemoveAllListeners();
                 ViewDataExitButton.GetComponent<Button>().onClick.RemoveAllListeners();
                 UserInput.SetActive(false);
@@ -200,28 +215,28 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
     /// Switches to the specified UI screen and deactivates all others.
     /// </summary>
     /// <param name="screen">The UI screen to activate.</param>
-    private void UpdateUIScreen(UpgradeController.Screens screen)
+    private void UpdateUIScreen(TerminalController.Screens screen)
     {
         StopAndClearCoroutine(ref activePanelCoroutine);
         StopAndClearCoroutine(ref activeRevealCoroutine);
 
         switch (screen)
         {
-            case UpgradeController.Screens.Default:
-            case UpgradeController.Screens.Exit:
+            case TerminalController.Screens.Default:
+            case TerminalController.Screens.Exit:
                 IntroPanel.SetActive(false);
                 HealthPanel.SetActive(false);
                 ChipPanel.SetActive(false);
                 DataPanel.SetActive(false);
                 ErrorPanel.SetActive(false);
                 break;
-            case UpgradeController.Screens.Intro:
+            case TerminalController.Screens.Intro:
 
                 SetActiveUIElement(IntroPanel);
 
                 activeRevealCoroutine = StartCoroutine(RevealText(IntroConsole, true, 0.01f, false,0f,0,false,0));
                 break;
-            case UpgradeController.Screens.HealthUpgrade:
+            case TerminalController.Screens.HealthUpgrade:
 
                 SetActiveUIElement(HealthPanel);
 
@@ -238,7 +253,7 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
 
                 activeRevealCoroutine = StartCoroutine(RevealText(HealthConsole, false, 0.01f, false, 0f,0,false,0));
                 break;
-            case UpgradeController.Screens.ChipUpgrade:
+            case TerminalController.Screens.ChipUpgrade:
 
                 SetActiveUIElement(ChipPanel);
 
@@ -249,7 +264,7 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
                     StartCoroutine(BringUpChipSelector());
 
                     CancelButton.GetComponent<Button>().onClick.RemoveAllListeners();
-                    CancelButton.GetComponent<Button>().onClick.AddListener(() => controller.SwitchToScreen(UpgradeController.Screens.Intro));
+                    CancelButton.GetComponent<Button>().onClick.AddListener(() => controller.SwitchToScreen(TerminalController.Screens.Intro));
                 }
                 else
                 {
@@ -287,7 +302,7 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
                 }
 
                 break;
-            case UpgradeController.Screens.Data:
+            case TerminalController.Screens.Data:
 
                 SetActiveUIElement(DataPanel);
 
@@ -295,7 +310,7 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
 
                 switch (controller.currentDataMode)
                 {
-                    case UpgradeController.DataMode.Title:
+                    case TerminalController.DataMode.Title:
                         tempDataText = string.Format("<#80ff80>....Connecting To Data Servers.....</color>\n\n" +
                             "User <#A20000> *Error*</color> backup data have been found.\n\n" +
                             "<#80ff80>....Loading Options...</color>\n\n" +
@@ -309,7 +324,7 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
 
                         StartCoroutine(RevealText(DataConsole, false, 0.01f, false, 0, 0, false, 0));
                         break;
-                    case UpgradeController.DataMode.View:
+                    case TerminalController.DataMode.View:
                         tempDataText = string.Format("<#80ff80>...Pinging Chip Tech Servers...</color>\n" +
                             "Sending Data Request\n" +
                             "...Retrieving Data...");
@@ -326,9 +341,9 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
                         StartCoroutine(BringUpDataScreen());
 
                         ViewDataExitButton.GetComponent<Button>().onClick.RemoveAllListeners();
-                        ViewDataExitButton.GetComponent<Button>().onClick.AddListener(() => controller.SwitchToScreen(UpgradeController.Screens.Exit));
+                        ViewDataExitButton.GetComponent<Button>().onClick.AddListener(() => controller.SwitchToScreen(TerminalController.Screens.Exit));
                         break;
-                    case UpgradeController.DataMode.Save:
+                    case TerminalController.DataMode.Save:
                         tempDataText = string.Format("<#80ff80>...Pinging Chip Tech Servers...</color>\r\n\r\n" +
                             "Preparing to send copy of memory Ciruits.\r\n" +
                             "                    _____________\r\n" +
@@ -350,7 +365,7 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
 
                             ExitButton.GetComponent<Button>().onClick.RemoveAllListeners();
 
-                            ExitButton.GetComponent<Button>().onClick.AddListener(() => controller.SwitchToScreen(UpgradeController.Screens.Exit));
+                            ExitButton.GetComponent<Button>().onClick.AddListener(() => controller.SwitchToScreen(TerminalController.Screens.Exit));
                             UploadButton.GetComponent<Button>().onClick.AddListener(() => controller.AttemptToSave());
                         }));
 
@@ -358,7 +373,7 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
                 }
                 
                 break;
-            case UpgradeController.Screens.Error:
+            case TerminalController.Screens.Error:
                 SetActiveUIElement(ErrorPanel);
 
                 StartCoroutine(RevealText(ErrorConsole, false, 0.01f, false, 0f, 0, false, 0f));
@@ -402,7 +417,7 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
     /// </summary>
     private IEnumerator BringUpChipSelector()
     {
-        isWaintingForInput = false;
+        IsWaitingForInput = false;
 
         ChipHolder.SetActive(false);
 
@@ -439,6 +454,7 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
 
         CancelButton.SetActive(true);
     }
+
     /// <summary>
     /// Bring Up window to select Data
     /// </summary>
@@ -475,7 +491,7 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
     /// <returns></returns>
     private IEnumerator RevealText(TMP_Text tmpText, bool byLetter, float revealSpeed, bool blinkText, float blinkDuration, int blinkCount,bool loopAnimation, float timeBeforeRestartAnimation)
     {
-        isWaintingForInput = false;
+        IsWaitingForInput = false;
 
         tmpText.ForceMeshUpdate();
 
@@ -512,7 +528,7 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
                     }
                     else
                     {
-                        isWaintingForInput = true;
+                        IsWaitingForInput = true;
                         break;
                     }
                 }
@@ -544,7 +560,7 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
                         yield return new WaitForSeconds(timeBeforeRestartAnimation);
                     else
                     {
-                        isWaintingForInput = true;
+                        IsWaitingForInput = true;
                         break;
                     }
                 }
@@ -554,6 +570,7 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
             }
         }        
     }
+
     /// <summary>
     /// This is for when you want something to be done after the Text is revealed
     /// </summary>
@@ -569,7 +586,7 @@ public class UpgradeTerminalUIController : MonoBehaviour, IPointerClickHandler
     /// <returns></returns>
     private IEnumerator RevealTextWithCallback(TMP_Text tmpText, bool byLetter, float revealSpeed, bool blinkText, float blinkDuration, int blinkCount, bool loopAnimation, float timeBeforeRestartAnimation, Action onComplete)
     {
-        isWaintingForInput = false;
+        IsWaitingForInput = false;
 
         tmpText.ForceMeshUpdate();
 

@@ -770,7 +770,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.251, y: 8.84}
+  m_AnchoredPosition: {x: -0.251, y: 9.72}
   m_SizeDelta: {x: 4.4296, y: 8.39}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!23 &465160378898363998
@@ -932,7 +932,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6883745671306307171}
   - component: {fileID: 1814477234781881809}
-  - component: {fileID: 1766289161021364399}
+  - component: {fileID: 4779221662984650222}
   m_Layer: 2
   m_Name: Upgrade Computer
   m_TagString: UpgradeController
@@ -979,7 +979,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 4.5152526, y: 3.7597065, z: 5.68116}
   m_Center: {x: -0.38835263, y: 1.8816237, z: 4.656082}
---- !u!114 &1766289161021364399
+--- !u!114 &4779221662984650222
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -988,12 +988,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 3394045560713610535}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d590a072d2f425a40b899c16af3b2be5, type: 3}
+  m_Script: {fileID: 11500000, guid: e6900fe9b8da44b41a1a04ed0501750d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerCanvas: {fileID: 0}
   currentDataMode: 0
-  UIController: {fileID: 0}
   AllScreens:
   - {fileID: 5574748035061414842}
   - {fileID: 2917759372585944903}

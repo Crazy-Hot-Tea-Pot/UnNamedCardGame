@@ -34,7 +34,7 @@ public class Chip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public CombatController CombatController;
     public GameObject Player;
-    public UpgradeController UpgradeController;
+    public TerminalController UpgradeController;
     public GameObject ChipinfoPrefab;    
 
     /// <summary>
@@ -200,7 +200,7 @@ public class Chip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                 newChip.IsActive = true;                
                 break;
             case ChipMode.WorkShop:
-                UpgradeController = GameObject.FindGameObjectWithTag("UpgradeController").GetComponent<UpgradeController>();
+                UpgradeController = GameObject.FindGameObjectWithTag("UpgradeController").GetComponent<TerminalController>();
                 chipButton.onClick.AddListener(UpgradeChipSelected);
                 chipButton.interactable = true;                
                 break;
