@@ -49,8 +49,17 @@ public class Enemy : MonoBehaviour
     }
 
     [Header("Enemy Components")]
+    /// <summary>
+    /// reference to enemy canvas.
+    /// </summary>
+    public EnemyUI thisEnemyUI;
+    /// <summary>
+    /// Reference to combat controller.
+    /// </summary>
+    public CombatController CombatController;
     public Animator animator;
-    public NavMeshAgent agent;    
+    public NavMeshAgent agent;
+    public GameObject TargetIcon;
     /// <summary>
     /// reference to player camera.
     /// </summary>
@@ -284,22 +293,14 @@ public class Enemy : MonoBehaviour
     #endregion
     public GameObject damageTextPrefab;
 
-    /// <summary>
-    /// reference to enemy canvas.
-    /// </summary>
-    public EnemyUI thisEnemyUI;
-
-    /// <summary>
-    /// Reference to combat controller.
-    /// </summary>
-    public CombatController CombatController;
-
+    [Header("Dropped stuff")]
     /// <summary>
     /// This holds the cards we want to have dropped on death
     /// </summary>
-    public List<NewChip> dropedCards;
-
-    public GameObject TargetIcon;
+    public List<NewChip> DroppedChips;
+    public List<Item> DroppedItems;
+    [Range(0,100)]
+    public int DroppedScrap;
 
     private float distanceToPlayer;
     void Awake()
@@ -381,8 +382,15 @@ public class Enemy : MonoBehaviour
         SoundManager.PlayFXSound(SoundFX.EnemyDefeated,this.gameObject.transform);
 
         Debug.Log($"{enemyName} has been defeated!");
-        CombatController.RemoveCombadant(this.gameObject);
-        Destroy(this.gameObject);
+
+        CombatController.RemoveCombadant(this.gameObject,DroppedScrap,DroppedChips,DroppedItems);
+
+        EnemyManager.Instance.RemoveEnemy(this.gameObject);
+    }
+    [ContextMenu("Test Death")]
+    public void TestDeath()
+    {
+        CurrentHP = 0;
     }
 
     /// <summary>

@@ -52,19 +52,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyTarget: {fileID: 0}
   AttackRange: 10
+  thisEnemyUI: {fileID: 3499041421513826723}
+  CombatController: {fileID: 0}
   animator: {fileID: 8895841024513928323}
   agent: {fileID: 4613368357221273264}
+  TargetIcon: {fileID: 6115485176170895110}
   playerCamera: {fileID: 0}
   maxHP: 50
   damageTextPrefab: {fileID: 8797586467627540377, guid: adf7e13694cdcc04ab4b930ff94a86cb, type: 3}
-  thisEnemyUI: {fileID: 3499041421513826723}
-  CombatController: {fileID: 0}
-  dropedCards:
-  - {fileID: 11400000, guid: af8d67b61375d7a4b9e92b3f514d9917, type: 2}
-  - {fileID: 11400000, guid: 38b543807d56b5c40a979618f6600269, type: 2}
-  - {fileID: 11400000, guid: 27b83e771aa4f0a448abe213e528e05b, type: 2}
-  - {fileID: 11400000, guid: 1f04b1f225942644bbf7c1f01ca2418e, type: 2}
-  TargetIcon: {fileID: 6115485176170895110}
+  DroppedChips:
+  - {fileID: 11400000, guid: 91969f243e8a3e348832cf8db2fe6f61, type: 2}
+  DroppedItems:
+  - {fileID: 11400000, guid: 981e6c8c2ec18ae46afc4e05d23ab248, type: 2}
+  - {fileID: 11400000, guid: 2d213ab2834cc1348bf06d8ea2e71b18, type: 2}
+  DroppedScrap: 15
 --- !u!195 &4613368357221273264
 NavMeshAgent:
   m_ObjectHideFlags: 0

@@ -138,7 +138,11 @@ public class ChipManager : MonoBehaviour
         }
     }
 
-    public void KillChip(GameObject chipObject)
+    /// <summary>
+    /// Add chip to use chips.
+    /// </summary>
+    /// <param name="chipObject"></param>
+    public void AddToUsedChips(GameObject chipObject)
     {
         Chip chipComponent = chipObject.GetComponent<Chip>();
         if (chipComponent != null)
@@ -150,18 +154,20 @@ public class ChipManager : MonoBehaviour
         Destroy(chipObject);
     }
 
-    public void DropChip(NewChip chip)
+    /// <summary>
+    /// Removes Chip from Player deck.
+    /// </summary>
+    /// <param name="chip"></param>
+    public void DeleteChip(NewChip chip)
     {
         // Removes chip from the player's hand and places it in the used chips
-        if (PlayerHand.Contains(chip))
+        if (PlayerDeck.Contains(chip))
         {
-            PlayerHand.Remove(chip);
-            UsedChips.Add(chip);
-            Debug.Log($"[ChipManager] Dropped chip: {chip.chipName}");
+            PlayerDeck.Remove(chip);
         }
         else
         {
-            Debug.LogWarning("[ChipManager] Chip not found in hand.");
+            Debug.LogWarning("[ChipManager] Chip not found in Deck.");
         }
     }    
 

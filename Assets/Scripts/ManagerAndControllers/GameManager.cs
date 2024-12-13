@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
         Interacting,
         Roaming,
         Combat,
+        CombatLoot,
         Settings,
         Credits,
         Loading
@@ -108,9 +109,6 @@ public class GameManager : MonoBehaviour
     void Initialize()
     {
 
-    }
-    private void SetGameMode()
-    {
     }
     /// <summary>
     /// A method that can be used to transition into combat when out of combat

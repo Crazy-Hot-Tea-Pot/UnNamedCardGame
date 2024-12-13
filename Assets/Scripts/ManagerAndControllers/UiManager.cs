@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -35,6 +36,7 @@ public class UiManager : MonoBehaviour
     public GameObject RoamingAndCombatUI;
     public GameObject InventoryUI;
     public GameObject TerminalUI;
+    public GameObject LootUI;
 
     private UiController currentController;
     private static UiManager instance;
@@ -137,6 +139,44 @@ public class UiManager : MonoBehaviour
         GetCurrentController<UpgradeTerminalUIController>().FillData();
     }
     #endregion
+    #region LootUI
+    /// <summary>
+    /// Send loot info to the UI.
+    /// </summary>
+    /// <param name="Scrap"></param>
+    /// <param name="Items"></param>
+    /// <param name="Chips"></param>
+    public void SendLoot(int Scrap,List<Item> Items, List<NewChip> Chips)
+    {
+        GetCurrentController<LootUiController>().LootScrap=Scrap;
+        GetCurrentController<LootUiController>().LootItems.AddRange(Items);
+        GetCurrentController<LootUiController>().LootChips.AddRange(Chips);
+        GetCurrentController<LootUiController>().UpdateLootScreen();
+    }
+    public void SelectedChipToReplace(NewChip selectedChip)
+    {
+        GetCurrentController<LootUiController>().BringUpChipSelection(selectedChip);
+    }
+    public void SelectedChipToReplaceWith(NewChip replaceChip)
+    {
+        GetCurrentController<LootUiController>().ReplaceChip(replaceChip);
+    }
+    public void DropLoot(NewChip selection)
+    {
+        GetCurrentController<LootUiController>().LootChips.Remove(selection);
+    }
+    public void DropLoot(Item selection)
+    {
+        GetCurrentController<LootUiController>().LootItems.Remove(selection);
+    }
+    public void AddItemToInventory(Item item)
+    {
+        GearManager.Instance.Acquire(item);
+        GetCurrentController<LootUiController>().LootItems.Remove(item);
+        GetCurrentController<LootUiController>().UpdateLootScreen();
+    }
+    #endregion
+
     private T GetCurrentController<T>() where T : UiController
     {
         T controller = currentController as T;
@@ -159,13 +199,16 @@ public class UiManager : MonoBehaviour
                 break;
             case GameManager.GameMode.Combat:
             case GameManager.GameMode.Roaming:
-                SwitchScreen(listOfUis.Find(ui => ui.name == "Roaming And Combat UI"));
+                SwitchScreen(listOfUis.Find(ui => ui.name == RoamingAndCombatUI.name));
                 break;
             case GameManager.GameMode.Pause:
                 Debug.Log("[UiManager] Displaying Pause Menu.");
                 break;
             case GameManager.GameMode.Interacting:
-                SwitchScreen(listOfUis.Find(ui => ui.name == "Terminal UI"));
+                SwitchScreen(listOfUis.Find(ui => ui.name == TerminalUI.name));
+                break;
+            case GameManager.GameMode.CombatLoot:
+                SwitchScreen(listOfUis.Find(ui => ui.name == LootUI.name));
                 break;
             default:
                 Debug.Log("[UiManager] Hiding all UI.");

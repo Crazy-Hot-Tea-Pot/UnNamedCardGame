@@ -31,10 +31,7 @@ public class Chip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             mode = value;
         }
     }
-
-    public CombatController CombatController;
-    public GameObject Player;
-    public TerminalController UpgradeController;
+        
     public GameObject ChipinfoPrefab;    
 
     /// <summary>
@@ -85,6 +82,9 @@ public class Chip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     private string chipTitle;        
     private NewChip newChip;
     private GameObject chipinfoDisplay;
+    private CombatController CombatController;
+    private GameObject Player;
+    private TerminalController UpgradeController;
 
     void Start()
     {        
@@ -166,7 +166,7 @@ public class Chip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                         }
 
                     }
-                ChipManager.Instance.KillChip(this.gameObject);
+                ChipManager.Instance.AddToUsedChips(this.gameObject);
                 }
                 else
                 {
@@ -210,6 +210,7 @@ public class Chip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                 break;
             case ChipMode.Delete:
                 chipButton.interactable = true;
+                chipButton.onClick.AddListener(() => UiManager.Instance.SelectedChipToReplaceWith(NewChip));
                 break;
             case ChipMode.None:
             default:
@@ -268,9 +269,16 @@ public class Chip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         Vector3 startPosition = this.transform.position;
         controller.Enlarge(startPosition, targetPosition);
     }
-    private void OnDestroy()
+    void OnDestroy()
     {
         if(chipinfoDisplay != null)
+            Destroy(chipinfoDisplay);
+
+        chipButton.onClick.RemoveAllListeners();
+    }
+    void OnDisable()
+    {
+        if (chipinfoDisplay != null)
             Destroy(chipinfoDisplay);
     }
 

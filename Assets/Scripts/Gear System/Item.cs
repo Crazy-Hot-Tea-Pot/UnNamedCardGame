@@ -18,11 +18,6 @@ public class Item : ScriptableObject
     public string itemDescription;
 
     /// <summary>
-    /// Tip for player about item.
-    /// </summary>
-    public string itemTip;
-
-    /// <summary>
     /// Image of item.
     /// </summary>
     public Sprite itemImage;

@@ -137,8 +137,10 @@ public class Looter : Enemy
     private void Escape()
     {
         Debug.Log($"{EnemyName} performs Escape, exiting the fight with {StolenScrap} Scrap.");
-        CombatController.RemoveCombadant(this.gameObject);
-        Destroy(this.gameObject);
+
+        CombatController.RemoveCombadant(this.gameObject,0,null,null);
+
+        EnemyManager.Instance.RemoveEnemy(this.gameObject);
     }
     private void ReturnStolenScrap()
     {
