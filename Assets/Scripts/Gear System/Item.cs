@@ -7,6 +7,10 @@ public class Item : ScriptableObject
 {
     public enum ItemType { Weapon, Armor, Equipment }
 
+    public enum Teir { Base, I,II,III,IV,V,VI}
+
+    public Teir ItemTeir;
+
     /// <summary>
     /// name of item.
     /// </summary>
@@ -31,6 +35,12 @@ public class Item : ScriptableObject
     /// List of itemEffects the item has.
     /// </summary>
     public List<ItemEffect> itemEffects;
+
+    /// <summary>
+    /// Value of Scrap
+    /// </summary>
+    public int ScrapWorth;
+
     public bool IsEquipped
     {
         get
@@ -66,6 +76,7 @@ public class Item : ScriptableObject
         // Reset equipped and owned status
         isEquipped = false;
         playerOwned = false;
+        ItemTeir=Teir.Base;
     }
     public void ItemActivate()
     {
@@ -107,6 +118,7 @@ public class Item : ScriptableObject
     {
         isEquipped = false;
         playerOwned = false;
+        ItemTeir = Teir.Base;
         Debug.Log($"{itemName} reset to default values.");
     }
 }
