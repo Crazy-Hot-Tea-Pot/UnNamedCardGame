@@ -12,10 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45bf2db36f037774b85d1970e0c78057, type: 3}
   m_Name: Energy Cannon
   m_EditorClassIdentifier: 
+  ItemTeir: 0
   itemName: Energy Cannon
   itemDescription: "Spend 10 Energy, do 2 Damage, and apply \u201CStun\u201D  when
     the enemy is below 50% health."
   itemImage: {fileID: 0}
-  type: 0
-  abilities:
-  - {fileID: 11400000, guid: 9eb2075b4c9507d4fb665fdce6b86f72, type: 2}
+  itemType: 0
+  itemEffects: []
+  ScrapWorth: 0
+  ItemRarityWeight: 0.15

@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6809844b7762fe74eb18f9fe19518433, type: 3}
   m_Name: Rocket Punch
   m_EditorClassIdentifier: 
-  ThisChip: {fileID: 0}
   chipRarity: 2
   chipName: Rocket Punch
   description: Deal 6 Damage to all Enemies
@@ -20,6 +19,7 @@ MonoBehaviour:
   canBeUpgraded: 1
   costToUpgrade: 150
   ChipTip: A wide range attack that will deal serious damage to all foes on screen.
+  ChipRareityWeight: 0.15
   hitAllTargets: 1
   damage: 6
   upgradedDamageByAmount: 3

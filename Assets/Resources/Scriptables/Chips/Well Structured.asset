@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 537e8ace226ea7a4eb72b09b510bb7c1, type: 3}
   m_Name: Well Structured
   m_EditorClassIdentifier: 
-  ThisChip: {fileID: 0}
   chipRarity: 1
   chipName: Well Structured
   description: Gaint 3 "Galvanize"
@@ -20,5 +19,6 @@ MonoBehaviour:
   canBeUpgraded: 1
   costToUpgrade: 150
   ChipTip: Add more power to your shields to protect against powerful attacks!
+  ChipRareityWeight: 0.15
   hitAllTargets: 0
   specialEffect: {fileID: 11400000, guid: 180aa68582dd04748b9b5346e1eba23f, type: 2}

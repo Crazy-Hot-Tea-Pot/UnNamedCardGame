@@ -12,10 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45bf2db36f037774b85d1970e0c78057, type: 3}
   m_Name: Steel Plating
   m_EditorClassIdentifier: 
+  ItemTeir: 0
   itemName: Steel Plating
   itemDescription: '(dropped by Maintenance Bot): Spend 5 Energy, Gain 20 Shield.'
-  itemTip: 
   itemImage: {fileID: 0}
   itemType: 1
   itemEffects:
   - {fileID: 11400000, guid: 95074ed4183c20340a012a3c11478dde, type: 2}
+  ScrapWorth: 0
+  ItemRarityWeight: 0.15

@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6809844b7762fe74eb18f9fe19518433, type: 3}
   m_Name: Static Shock
   m_EditorClassIdentifier: 
-  ThisChip: {fileID: 0}
   chipRarity: 1
   chipName: Static Shock
   description: Deal 12 Damage, Apply 2 "Worn Down"
@@ -20,6 +19,7 @@ MonoBehaviour:
   canBeUpgraded: 1
   costToUpgrade: 150
   ChipTip: Deal a massive amount of damage, but at the cost of reducign your Shield!
+  ChipRareityWeight: 0.15
   hitAllTargets: 0
   damage: 12
   upgradedDamageByAmount: 3

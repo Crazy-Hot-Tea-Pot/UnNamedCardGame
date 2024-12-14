@@ -41,6 +41,11 @@ public class Item : ScriptableObject
     /// </summary>
     public int ScrapWorth;
 
+    /// <summary>
+    /// The weight in decimal representing a % that the selection is weighted by. For example 0.50 would be 50% chance of droping
+    /// </summary>
+    public float ItemRarityWeight;
+
     public bool IsEquipped
     {
         get

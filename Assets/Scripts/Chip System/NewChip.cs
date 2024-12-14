@@ -116,6 +116,10 @@ public class NewChip : ScriptableObject
     /// Information to display to player about card.
     /// </summary>
     public string ChipTip= "<#A20000>*Error missing from Chip Sect Corp database.*</color>";
+    /// <summary>
+    /// The weight in decimal representing a % that the selection is weighted by. For example 0.50 would be 50% chance of droping
+    /// </summary>
+    public float ChipRareityWeight;
 
     /// <summary>
     /// If Chip is upgraded.

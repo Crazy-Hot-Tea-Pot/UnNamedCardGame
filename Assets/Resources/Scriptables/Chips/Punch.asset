@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6809844b7762fe74eb18f9fe19518433, type: 3}
   m_Name: Punch
   m_EditorClassIdentifier: 
-  ThisChip: {fileID: 0}
   chipRarity: 0
   chipName: Punch
   description: Punch dealing 5 damage.
@@ -20,6 +19,7 @@ MonoBehaviour:
   canBeUpgraded: 0
   costToUpgrade: 0
   ChipTip: Use this to punch stuff. The ultimate solution to conflict resolution!
+  ChipRareityWeight: 0.2
   hitAllTargets: 0
   damage: 5
   upgradedDamageByAmount: 0

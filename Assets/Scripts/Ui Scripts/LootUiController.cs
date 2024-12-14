@@ -67,6 +67,9 @@ public class LootUiController : UiController
     private readonly int startValue = 0;
     private NewChip selectedChip;
 
+    public List<NewChip> lootTempChip = new();
+    public List<Item> lootTempItems = new();
+
 
     public override void Initialize()
     {
@@ -157,32 +160,127 @@ public class LootUiController : UiController
     }
     private IEnumerator SpawnLootWithDelay()
     {
-        foreach (NewChip chip in lootChips)
+        #region RandomDistributionForChips
+        //Temp variable for top of equation
+        float sum = 0;
+        //Temp variable for bottom of equation
+        float sumWeight = 0;
+        int counter = lootTempChip.Count;
+        if(counter > 3)
         {
+            counter = 3;
+        }
+        //We need to loot 3 cards
+        for(int i = 0; i < counter; i++)
+        {
+            //Loop through and perform our formula for distrapuation of random cards based on weights for each card as a top and bottom
+            foreach (NewChip selection in lootTempChip)
+            {
+                //Sum = (random * weight)(random2 * weight2)...
+                sum += (RandomNumberForSelection(lootTempChip.Count) * selection.ChipRareityWeight);
+                Debug.Log("Chip Value Sum for random drops: " + sum);
+                //sumWeigh = weight1 + weight2...
+                sumWeight += selection.ChipRareityWeight;
+            }
+            //Sum/sumWeights
+            float answer = sum / sumWeight;
+            if(sum == 0 && sumWeight == 0)
+            {
+                answer = 0;
+            }
+        #endregion
+            //Make it a solid int
+            //If the converted value is larger (has been rounded up) subtract the result by 1 also do this if it's equal as we would normally round up on the 0.5
+            if (System.Convert.ToInt32(answer) >= answer && System.Convert.ToInt32(answer) != 0)
+            {
+                answer = System.Convert.ToInt32(answer);
+                answer -= 1;
+            }
+            //Else just convert it normal it will round down
+            else
+            {
+                answer = System.Convert.ToInt32(answer);
+            }
+
             // Instantiate the LootPrefab
             GameObject newLoot = Instantiate(LootPrefab, LootContainer.transform);
 
             // Populate the loot
             LootController lootController = newLoot.GetComponent<LootController>();
-            lootController.PopulateLoot(chip);
+            lootController.PopulateLoot(lootTempChip[(int)answer]);
+            lootTempChip.Remove(lootTempChip[(int)answer]);
 
             // Wait for 1 second before spawning the next
             yield return new WaitForSeconds(Duration);
         }
 
-        foreach (Item item in lootItems)
+        #region RandomDistributionForChips
+        //Temp variable for top of equation
+        sum = 0;
+        //Temp variable for bottom of equation
+        sumWeight = 0;
+        counter = 0;
+        counter = lootTempItems.Count;
+        if (counter > 3)
         {
+            counter = 3;
+        }
+        //We need to loot 3 cards
+        for (int i = 0; i < counter; i++)
+        {
+            //Loop through and perform our formula for distrapuation of random cards based on weights for each card as a top and bottom
+            foreach (Item item in lootTempItems)
+            {
+                //Sum = (random * weight)(random2 * weight2)...
+                sum += (RandomNumberForSelection(lootTempItems.Count) * item.ItemRarityWeight);
+                Debug.Log("Chip Value Sum for random drops: " + sum);
+                //sumWeigh = weight1 + weight2...
+                sumWeight += item.ItemRarityWeight;
+            }
+            //Sum/sumWeights
+            float answer = sum / sumWeight;
+            if (sum == 0 && sumWeight == 0)
+            {
+                answer = 0;
+            }
+            #endregion
+
+            //Make it a solid int
+            //If the converted value is larger (has been rounded up) subtract the result by 1 also do this if it's equal as we would normally round up on the 0.5
+            if (System.Convert.ToInt32(answer) >= answer && System.Convert.ToInt32(answer) != 0)
+            {
+                answer = System.Convert.ToInt32(answer);
+                answer -= 1;
+            }
+            //Else just convert it normal it will round down
+            else
+            {
+                answer = System.Convert.ToInt32(answer);
+            }
+
             // Instantiate the LootPrefab
             GameObject newLoot = Instantiate(LootPrefab, LootContainer.transform);
 
             // Populate the loot
             LootController lootController = newLoot.GetComponent<LootController>();
-            lootController.PopulateLoot(item);
+            lootController.PopulateLoot(lootTempItems[(int)answer]);
+            lootTempItems.Remove(lootTempItems[(int)answer]);
 
             // Wait for 1 second before spawning the next
             yield return new WaitForSeconds(Duration);
         }
     }
+
+    /// <summary>
+    /// Generates a random number based on the size of our chipdroplist
+    /// </summary>
+    /// <returns></returns>
+    public float RandomNumberForSelection(int count)
+    {
+        float randomNumber = UnityEngine.Random.Range(0, count - 1);
+        return randomNumber;
+    }
+
     void OnDestroy()
     {
         CancelButton.onClick.RemoveAllListeners();

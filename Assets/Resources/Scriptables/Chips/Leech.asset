@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 537e8ace226ea7a4eb72b09b510bb7c1, type: 3}
   m_Name: Leech
   m_EditorClassIdentifier: 
-  ThisChip: {fileID: 0}
   chipRarity: 1
   chipName: Leech
   description: Deal 5 Damage,Gain that much Energy.
@@ -20,5 +19,6 @@ MonoBehaviour:
   canBeUpgraded: 1
   costToUpgrade: 150
   ChipTip: Absorb energy from enemies as you deal damage.
+  ChipRareityWeight: 0.5
   hitAllTargets: 0
   specialEffect: {fileID: 11400000, guid: 970b29a93c655d24e9cd3c2814692cb9, type: 2}

@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6809844b7762fe74eb18f9fe19518433, type: 3}
   m_Name: Power Down
   m_EditorClassIdentifier: 
-  ThisChip: {fileID: 0}
   chipRarity: 1
   chipName: Power Down
   description: Deal 7 damage, Apply 1 Drained.
@@ -21,6 +20,7 @@ MonoBehaviour:
   costToUpgrade: 150
   ChipTip: Use Drained to weaken your foes so you can save your Defense chips for
     later!
+  ChipRareityWeight: 0.5
   hitAllTargets: 0
   damage: 7
   upgradedDamageByAmount: 2

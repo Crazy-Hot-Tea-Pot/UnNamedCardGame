@@ -315,6 +315,8 @@ MonoBehaviour:
   SelectionContainer: {fileID: 1882492880423110567}
   CancelButton: {fileID: 9125883295523011117}
   Duration: 1
+  lootTempChip: []
+  lootTempItems: []
 --- !u!1 &1402098523685576534
 GameObject:
   m_ObjectHideFlags: 0

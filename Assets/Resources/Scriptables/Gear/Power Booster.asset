@@ -12,10 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45bf2db36f037774b85d1970e0c78057, type: 3}
   m_Name: Power Booster
   m_EditorClassIdentifier: 
+  ItemTeir: 0
   itemName: Power Booster
   itemDescription: Spend 30 Energy and gain 1 Power
-  itemTip: 
   itemImage: {fileID: 0}
   itemType: 2
   itemEffects:
   - {fileID: 11400000, guid: a4802cc6267e1784a81ae2c174fb8826, type: 2}
+  ScrapWorth: 0
+  ItemRarityWeight: 0.2
