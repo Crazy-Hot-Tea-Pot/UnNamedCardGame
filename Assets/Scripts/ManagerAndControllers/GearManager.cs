@@ -22,6 +22,7 @@ public class GearManager : MonoBehaviour
     /// </summary>
     [SerializeField]
     private List<Item> startingGear = new List<Item>();
+
     /// <summary>
     /// Making it read only to prevent future problems
     /// </summary>
@@ -29,6 +30,7 @@ public class GearManager : MonoBehaviour
 
     /// <summary>
     /// List of Gear the player current has.
+    /// Max is 10.
     /// </summary>
     public List<Item> PlayerCurrentGear = new List<Item>();
 
@@ -38,6 +40,8 @@ public class GearManager : MonoBehaviour
     public List<Item> AllGear = new List<Item>();
 
     private static GearManager instance;
+    [SerializeField]
+    private int gearLimit = 10;
 
     void Awake()
     {
@@ -61,7 +65,6 @@ public class GearManager : MonoBehaviour
         GameManager.Instance.OnEndCombat += EndCombat;
         GameManager.Instance.OnSceneChange += SceneChange;
     }
-
     /// <summary>
     /// Updates the list of playercurrentgear.
     /// </summary>
@@ -81,25 +84,27 @@ public class GearManager : MonoBehaviour
     /// Add item to player gear.
     /// </summary>
     /// <param name="newItem"></param>
-    public void Acquire(Item newItem)
+    public bool Acquire(Item newItem)
     {
         if (newItem == null)
-            return;
+            return false;
+
+        // Check if the maximum limit is reached
+        if (PlayerCurrentGear.Count >= gearLimit)
+        {
+            return false;
+        }
 
         if (!newItem.IsPlayerOwned)
         {
-            newItem.IsPlayerOwned = true;
+            newItem.IsPlayerOwned = true;           
+        }
 
-            // Add to PlayerCurrentGear if it's not already there
-            if (!PlayerCurrentGear.Contains(newItem))
-            {
-                PlayerCurrentGear.Add(newItem);                
-            }
-        }
-        else
-        {
-            Debug.LogWarning($"{newItem.itemName} is already owned by the player.");
-        }
+        // Add the item regardless of duplicates, as long as the limit is not exceeded
+        PlayerCurrentGear.Add(newItem);
+
+        return true;
+
     }
     /// <summary>
     /// Remove item from player inventory
