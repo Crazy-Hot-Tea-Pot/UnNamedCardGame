@@ -7,6 +7,17 @@ public class PlayerHandContainer : MonoBehaviour
 {
     public GameObject PlayerHand;
     public Button SliderButton;
+    public bool PanelIsVisible
+    {
+        get
+        {
+            return isVisible;
+        }
+        set
+        {
+            isVisible = value;
+        }
+    }
     private Animator animator;
     private bool isVisible = false;
 
@@ -17,12 +28,15 @@ public class PlayerHandContainer : MonoBehaviour
         SliderButton.onClick.AddListener(TogglePanel);
     }
 
-    private void TogglePanel()
+    public void TogglePanel()
     {
         isVisible = !isVisible;
 
         if(isVisible)
             FillPlayerHand();
+
+        if(animator==null)
+            animator = GetComponent<Animator>();
 
         animator.SetTrigger("Slide");
 

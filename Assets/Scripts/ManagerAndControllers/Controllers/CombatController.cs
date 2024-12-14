@@ -180,10 +180,6 @@ public class CombatController : MonoBehaviour
         player.attacked = false;
         Combadants.Add(player);
 
-        //Clear the list of loot for resetting
-        UiManager.Instance.LootUI.GetComponent<LootUiController>().lootTempChip.Clear();
-        UiManager.Instance.LootUI.GetComponent<LootUiController>().lootTempItems.Clear();
-
         //Set combatEnemies to combat mode in combat zone
         foreach (GameObject combatEnemy in EnemyManager.Instance.CombatEnemies)
         {
@@ -196,20 +192,6 @@ public class CombatController : MonoBehaviour
 
             combatEnemy.GetComponent<Enemy>().CombatStart();
 
-            //A loop to grab every card in the combat enemy for dropping cards
-            for (int i = 0; i < combatEnemy.GetComponent<Enemy>().DroppedChips.Count; i++)
-            {
-                //Adds the chips to a list in loot ui for drops
-                UiManager.Instance.LootUI.GetComponent<LootUiController>().lootTempChip.Add(combatEnemy.GetComponent<Enemy>().DroppedChips[i]);
-                //PlayerUIManager.Instance.AddChipChoices(combatEnemy.GetComponent<Enemy>().DroppedChips[i]);
-                //GameObject.Find("PlayerUIManager").GetComponent<PlayerUIManager>().AddChipChoices(combatEnemy.GetComponent<Enemy>().DroppedChips[i]);
-            }
-            //A loop to grab every item in the enemy for dropping items
-            for(int i = 0; i <combatEnemy.GetComponent<Enemy>().DroppedItems.Count; i++)
-            {
-                //Adds the items to the loot ui for drops
-                UiManager.Instance.LootUI.GetComponent<LootUiController>().lootTempItems.Add(combatEnemy.GetComponent<Enemy>().DroppedItems[i]);
-            }
         }
 
         CurrentCombatantIndex = 0;

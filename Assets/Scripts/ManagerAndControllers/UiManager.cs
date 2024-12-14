@@ -106,7 +106,7 @@ public class UiManager : MonoBehaviour
     {
         if (context.performed && GameManager.Instance.CurrentGameMode == GameManager.GameMode.Roaming)
         {
-            if (CurrentUI.name ==InventoryUI.name )
+            if (CurrentUI.name == InventoryUI.name )
             {
                 SwitchScreen(RoamingAndCombatUI);
             }
@@ -176,7 +176,11 @@ public class UiManager : MonoBehaviour
         GetCurrentController<LootUiController>().UpdateLootScreen();
     }
     #endregion
-
+    /// <summary>
+    /// Get Current controller for UI.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
     private T GetCurrentController<T>() where T : UiController
     {
         T controller = currentController as T;
@@ -209,7 +213,7 @@ public class UiManager : MonoBehaviour
                 break;
             case GameManager.GameMode.CombatLoot:
                 SwitchScreen(listOfUis.Find(ui => ui.name == LootUI.name));
-                break;
+                break;            
             default:
                 Debug.Log("[UiManager] Hiding all UI.");
                 break;
@@ -247,6 +251,10 @@ public class UiManager : MonoBehaviour
     }
     private void StartCombat()
     {
+        if (!GetCurrentController<RoamingAndCombatUiController>().PlayerHandContainer.PanelIsVisible)
+        {
+            GetCurrentController<RoamingAndCombatUiController>().PlayerHandContainer.TogglePanel();
+        }        
     }
 
     private void EndCombat()

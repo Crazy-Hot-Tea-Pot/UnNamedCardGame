@@ -67,7 +67,18 @@ public class LootUiController : UiController
     private readonly int startValue = 0;
     private NewChip selectedChip;
 
-    public List<NewChip> lootTempChip = new();
+    public List<NewChip> LootTempChip
+    {
+        get
+        {
+            return lootTempChip;
+        }
+        set
+        {
+            lootTempChip = value;
+        }
+    }
+    private List<NewChip> lootTempChip = new();
     public List<Item> lootTempItems = new();
 
 
@@ -86,6 +97,12 @@ public class LootUiController : UiController
         {
             Destroy(child.gameObject);
         }
+
+        LootTempChip.Clear();
+        lootTempItems.Clear();
+
+        LootTempChip.AddRange(LootChips);
+        lootTempItems.AddRange(LootItems);
 
         StartCoroutine(UpdateScrapLootGainInfo());
         StartCoroutine(SpawnLootWithDelay());
@@ -114,6 +131,7 @@ public class LootUiController : UiController
             Chip.GetComponent<Chip>().SetChipModeTo(global::Chip.ChipMode.Delete);
         }
     }
+
     /// <summary>
     /// Replace replaceChip with selectedChip and refresh LootScreen.
     /// </summary>
@@ -131,6 +149,16 @@ public class LootUiController : UiController
         SelectionDisplay.SetActive(false);
 
         UpdateLootScreen();
+    }
+
+    /// <summary>
+    /// Generates a random number based on the size of our chipdroplist
+    /// </summary>
+    /// <returns></returns>
+    public float RandomNumberForSelection(int count)
+    {
+        float randomNumber = UnityEngine.Random.Range(0, count - 1);
+        return randomNumber;
     }
     private void CancelSelection()
     {
@@ -150,13 +178,13 @@ public class LootUiController : UiController
             int currentScrap = Mathf.RoundToInt(Mathf.Lerp(startValue, targetValue, elapsedTime / Duration));
 
             // Update the text
-            LootGainInfo.SetText($"They have dropped {currentScrap} Scrap and the following chips and items.");
+            LootGainInfo.SetText("They have dropped <color=#FFFF00>" + currentScrap + "</color> Scrap and the following chips and items.");
 
             yield return null; // Wait for the next frame
         }
 
         // Ensure the final value is set
-        LootGainInfo.SetText($"They have dropped {LootScrap} Scrap and the following chips and items.");
+        LootGainInfo.SetText("They have dropped <color=#FFFF00>" + LootScrap + "</color> Scrap and the following chips and items.");
     }
     private IEnumerator SpawnLootWithDelay()
     {
@@ -165,20 +193,20 @@ public class LootUiController : UiController
         float sum = 0;
         //Temp variable for bottom of equation
         float sumWeight = 0;
-        int counter = lootTempChip.Count;
+        int counter = LootTempChip.Count;
+
         if(counter > 3)
         {
             counter = 3;
         }
-        //We need to loot 3 cards
+        //We need to loot 3 chips
         for(int i = 0; i < counter; i++)
         {
-            //Loop through and perform our formula for distrapuation of random cards based on weights for each card as a top and bottom
-            foreach (NewChip selection in lootTempChip)
+            //Loop through and perform our formula for distrapuation of random chips based on weights for each card as a top and bottom
+            foreach (NewChip selection in LootTempChip)
             {
                 //Sum = (random * weight)(random2 * weight2)...
-                sum += (RandomNumberForSelection(lootTempChip.Count) * selection.ChipRareityWeight);
-                Debug.Log("Chip Value Sum for random drops: " + sum);
+                sum += (RandomNumberForSelection(LootTempChip.Count) * selection.ChipRareityWeight);
                 //sumWeigh = weight1 + weight2...
                 sumWeight += selection.ChipRareityWeight;
             }
@@ -187,8 +215,7 @@ public class LootUiController : UiController
             if(sum == 0 && sumWeight == 0)
             {
                 answer = 0;
-            }
-        #endregion
+            }        
             //Make it a solid int
             //If the converted value is larger (has been rounded up) subtract the result by 1 also do this if it's equal as we would normally round up on the 0.5
             if (System.Convert.ToInt32(answer) >= answer && System.Convert.ToInt32(answer) != 0)
@@ -207,14 +234,15 @@ public class LootUiController : UiController
 
             // Populate the loot
             LootController lootController = newLoot.GetComponent<LootController>();
-            lootController.PopulateLoot(lootTempChip[(int)answer]);
-            lootTempChip.Remove(lootTempChip[(int)answer]);
+            lootController.PopulateLoot(LootTempChip[(int)answer]);            
+            LootTempChip.Remove(LootTempChip[(int)answer]);
 
             // Wait for 1 second before spawning the next
             yield return new WaitForSeconds(Duration);
         }
+        #endregion
 
-        #region RandomDistributionForChips
+        #region RandomDistributionForItems
         //Temp variable for top of equation
         sum = 0;
         //Temp variable for bottom of equation
@@ -242,8 +270,7 @@ public class LootUiController : UiController
             if (sum == 0 && sumWeight == 0)
             {
                 answer = 0;
-            }
-            #endregion
+            }            
 
             //Make it a solid int
             //If the converted value is larger (has been rounded up) subtract the result by 1 also do this if it's equal as we would normally round up on the 0.5
@@ -269,16 +296,7 @@ public class LootUiController : UiController
             // Wait for 1 second before spawning the next
             yield return new WaitForSeconds(Duration);
         }
-    }
-
-    /// <summary>
-    /// Generates a random number based on the size of our chipdroplist
-    /// </summary>
-    /// <returns></returns>
-    public float RandomNumberForSelection(int count)
-    {
-        float randomNumber = UnityEngine.Random.Range(0, count - 1);
-        return randomNumber;
+        #endregion
     }
 
     void OnDestroy()
