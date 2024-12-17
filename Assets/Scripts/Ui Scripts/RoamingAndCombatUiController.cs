@@ -66,7 +66,7 @@ public class RoamingAndCombatUiController : UiController
         StartCoroutine(UpdateHealthOverTime(targetHealthPercentage));
     }    
     /// <summary>
-    /// Updates the UI for player shield
+    /// Updates the UI for player ShieldAmount
     /// </summary>
     public void UpdateShield(int Shield, int MaxShield)
     {        
@@ -79,12 +79,12 @@ public class RoamingAndCombatUiController : UiController
         {
             ShieldContainer.SetActive(true);
 
-            // Calculate the target shield percentage
+            // Calculate the target ShieldAmount percentage
             float shieldPercentage = (float)Shield / (float)MaxShield;
 
             StopCoroutine(UpdateShieldOverTime(shieldPercentage,Shield,MaxShield));
 
-            // Start the coroutine to smoothly update the shield bar
+            // Start the coroutine to smoothly update the ShieldAmount bar
             StartCoroutine(UpdateShieldOverTime(shieldPercentage, Shield, MaxShield));
         }
     }
@@ -129,15 +129,15 @@ public class RoamingAndCombatUiController : UiController
         {
             elapsedTime += Time.deltaTime;
 
-            // Lerp the shield bar fill amount
+            // Lerp the ShieldAmount bar fill amount
             float newFillAmount = Mathf.Lerp(ShieldBar.fillAmount, targetFillAmount, elapsedTime / SpeedOfFill);
             ShieldBar.fillAmount = newFillAmount;
 
-            // Dynamically calculate shield values
+            // Dynamically calculate ShieldAmount values
             int currentShield = Mathf.RoundToInt(Mathf.Lerp(initialCurrentShield, targetCurrentShield, elapsedTime / SpeedOfFill));
             int maxShield = Mathf.RoundToInt(Mathf.Lerp(initialMaxShield, MaxShield, elapsedTime / SpeedOfFill));
 
-            // Update the shield text
+            // Update the ShieldAmount text
             ShieldText.SetText($"{currentShield}/{maxShield}");
 
             yield return null;

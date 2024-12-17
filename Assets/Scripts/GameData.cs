@@ -10,8 +10,17 @@ public class GameData
     [System.Serializable]
     public class ChipData
     {
+        /// <summary>
+        /// Name of Chip
+        /// </summary>
         public string Name;
+        /// <summary>
+        /// If Chip is Upgraded
+        /// </summary>
         public bool IsUpgraded;
+        /// <summary>
+        /// count for turns chip disable.
+        /// </summary>
         public int DisableCounter;
     }
     [System.Serializable]
@@ -20,7 +29,13 @@ public class GameData
         public string GearName;        
         public bool IsEquipped;
         public bool IsPlayerOwned;
+
+        /// <summary>
+        /// Item Teir Currently
+        /// </summary>
+        public string Teir;
     }
+
     //Name of Save
     public string SaveName;
     //time of save

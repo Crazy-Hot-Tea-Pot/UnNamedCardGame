@@ -83,10 +83,10 @@ public class GearManager : MonoBehaviour
     /// <summary>
     /// Add item to player gear.
     /// </summary>
-    /// <param name="newItem"></param>
-    public bool Acquire(Item newItem)
+    /// <param name="CloneOfNewItem">Clone Of item Only!</param>
+    public bool Acquire(Item CloneOfNewItem)
     {
-        if (newItem == null)
+        if (CloneOfNewItem == null)
             return false;
 
         // Check if the maximum limit is reached
@@ -95,13 +95,13 @@ public class GearManager : MonoBehaviour
             return false;
         }
 
-        if (!newItem.IsPlayerOwned)
+        if (!CloneOfNewItem.IsPlayerOwned)
         {
-            newItem.IsPlayerOwned = true;           
+            CloneOfNewItem.IsPlayerOwned = true;           
         }
 
         // Add the item regardless of duplicates, as long as the limit is not exceeded
-        PlayerCurrentGear.Add(newItem);
+        PlayerCurrentGear.Add(CloneOfNewItem);
 
         return true;
 
@@ -118,6 +118,7 @@ public class GearManager : MonoBehaviour
         itemToRemove.IsPlayerOwned = false;
         itemToRemove.IsEquipped = false;
     }
+
     /// <summary>
     /// Return all gear by itemType
     /// </summary>
@@ -127,6 +128,7 @@ public class GearManager : MonoBehaviour
     {
         return AllGear.FindAll(item => item.itemType == type);
     }
+
     /// <summary>
     /// Equip gear.
     /// Check if the item itemType is already equipped.
@@ -158,6 +160,7 @@ public class GearManager : MonoBehaviour
 
         return true;
     }
+
     /// <summary>
     /// Unequip an item of a specific itemType.
     /// </summary>
@@ -177,6 +180,7 @@ public class GearManager : MonoBehaviour
         }
         return false;
     }
+
     /// <summary>
     /// Get currently equipped item by itemType.
     /// </summary>
@@ -191,6 +195,7 @@ public class GearManager : MonoBehaviour
         }
         return null;
     }
+
     /// <summary>
     /// Load all gear from scriptables
     /// </summary>

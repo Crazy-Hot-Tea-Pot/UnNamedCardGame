@@ -37,7 +37,17 @@ public class ChipManager : MonoBehaviour
     /// <summary>
     /// Chips in the players deck
     /// </summary>
-    public List<NewChip> PlayerDeck = new();
+    public List<NewChip> PlayerDeck
+    {
+        get
+        {
+            return playerDeck;
+        }
+        private set
+        {
+            playerDeck = value;
+        }
+    }
 
     /// <summary>
     /// Chips player has used.
@@ -58,6 +68,7 @@ public class ChipManager : MonoBehaviour
     private int handLimit = 4;
 
     private static ChipManager instance;
+    private List<NewChip> playerDeck = new();
 
     void Awake()
     {
@@ -89,12 +100,13 @@ public class ChipManager : MonoBehaviour
     /// <summary>
     /// Add chip to deck
     /// </summary>
-    /// <param name="newChipToAdd"></param>
-    public bool AddNewChipToDeck(NewChip newChipToAdd)
+    /// <param name="CloneOfNewChip">Clone Before Sending!</param>
+    public bool AddNewChipToDeck(NewChip CloneOfNewChip)
     {
         if (PlayerDeck.Count < deckLimit)
         {
-            PlayerDeck.Add(newChipToAdd);
+
+            PlayerDeck.Add(CloneOfNewChip);
             return true;
         }
         else
@@ -104,6 +116,7 @@ public class ChipManager : MonoBehaviour
         }
 
     }
+
     /// <summary>
     /// Draws a chip from playerDeck.
     /// </summary>
@@ -123,18 +136,6 @@ public class ChipManager : MonoBehaviour
             PlayerHand.Add(PlayerDeck[0]);
             PlayerDeck.RemoveAt(0);
             tempChipsToDraw--;
-        }
-    }
-    public void PickUpChip(NewChip chip)
-    {
-        if (PlayerDeck.Count < deckLimit)
-        {
-            PlayerDeck.Add(chip);
-            Debug.Log($"Picked up chip: {chip.chipName}");
-        }
-        else
-        {
-            Debug.LogWarning("Deck limit reached. Cannot pick up more chips.");
         }
     }
 

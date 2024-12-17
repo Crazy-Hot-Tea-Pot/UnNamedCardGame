@@ -59,6 +59,9 @@ public class DataManager : MonoBehaviour
         
         CurrentGameData = new GameData();
     }
+
+    #region Saving
+
     /// <summary>
     /// Saves all CurrentGameData.
     /// Make sure to update the CurrentGameData first.
@@ -73,6 +76,7 @@ public class DataManager : MonoBehaviour
 
         // Save Chips
         CurrentGameData.Chips.Clear();
+
         foreach (var chip in ChipManager.Instance.PlayerDeck)
         {
             GameData.ChipData chipData = new()
@@ -87,12 +91,14 @@ public class DataManager : MonoBehaviour
 
         //Save Gear
         CurrentGameData.Gear.Clear();
+
         foreach (var gear in GearManager.Instance.PlayerCurrentGear) {
             GearData gearData = new()
             {
                 GearName = gear.itemName,
                 IsEquipped = gear.IsEquipped,
-                IsPlayerOwned = gear.IsPlayerOwned
+                IsPlayerOwned = gear.IsPlayerOwned,
+                Teir=gear.ItemTeir.ToString()
             };
 
             CurrentGameData.Gear.Add(gearData);
@@ -149,7 +155,9 @@ public class DataManager : MonoBehaviour
         // Save the data
         Save(saveName);
     }
+    #endregion
 
+    #region Loading
     /// <summary>
     /// Load Player stats
     /// Re-link Chips by loading from Resources
@@ -181,13 +189,18 @@ public class DataManager : MonoBehaviour
 
         // Load Chips
         ChipManager.Instance.PlayerDeck.Clear();
+
         foreach (var chipData in loadedData.Chips)
         {
             var matchedChip = ChipManager.Instance.AllChips.Find(chip => chip.chipName == chipData.Name);
             if (matchedChip != null)
             {
+                // Clone the chip
+                NewChip chipInstance = Instantiate(matchedChip);
+
                 matchedChip.IsUpgraded = chipData.IsUpgraded;
                 matchedChip.DisableCounter = chipData.DisableCounter;
+
                 ChipManager.Instance.PlayerDeck.Add(matchedChip);
             }
             else
@@ -198,13 +211,22 @@ public class DataManager : MonoBehaviour
 
         // Load Gears
         GearManager.Instance.PlayerCurrentGear.Clear();
+
         foreach (var gearData in loadedData.Gear)
         {
             var matchedItem = GearManager.Instance.AllGear.Find(item => item.itemName == gearData.GearName);
             if (matchedItem != null)
             {
+                // Clone the gear
+                Item itemInstance = Instantiate(matchedItem);
+
                 matchedItem.IsPlayerOwned = gearData.IsPlayerOwned;
                 matchedItem.IsEquipped = gearData.IsEquipped;
+
+                //Restore Teir
+                if(Enum.TryParse(gearData.Teir, out Item.Teir loadedTier))
+                    matchedItem.ItemTeir=loadedTier;
+
                 GearManager.Instance.PlayerCurrentGear.Add(matchedItem);
             }
             else
@@ -215,6 +237,7 @@ public class DataManager : MonoBehaviour
 
         Debug.Log("Game loaded successfully.");
     }
+    #endregion
 
     /// <summary>
     /// 

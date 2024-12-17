@@ -3,36 +3,53 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "NewItemEffect", menuName = "Gear/ItemEffect")]
 public class ItemEffect : ScriptableObject
 {
-    /// <summary>
-    /// If this effect is passive
-    /// </summary>
-    public bool IsPassiveEffect;
+
+    public bool IsEquipped
+    {
+        get
+        {
+            return isEquipped;
+        }
+        set
+        {
+            isEquipped = value;
+
+            Equipped();
+        }
+    }
+
+    public enum ConditionEffect { LessThanHalfHealth }
 
     public string ItemEffectDescription;
     [Tooltip("Cost to use the ItemEffect")]
     public int energyCost;
-    [Tooltip("Damage dealt")]
-    public int damage;
-    [Tooltip("Shield Amount")]
-    public int shield;
-    [Tooltip("Amount of Scrap")]
-    public int scrapAmount;
+
+    public SoundFX ItemActivate;
+    public SoundFX ItemDeactivate;
+    public SoundFX ItemFail;      
 
     [Tooltip("If effect is only applied on special conditions.")]
     public bool SpecialConditionEffect = false;
+    public ConditionEffect Condition;
+    public List<Effects.TempDeBuffs> deBuffEffectToApplyToEnemy = new();
 
-    public bool WhenTargetHasLessThanHalfHealth=false;
 
-    public List<Effects.TempBuffs> buffToApply = new();
-    public List<Effects.TempDeBuffs> debuffToApply = new();
-    public Effects.Effect effectToApply = new();
+    [Header("Effects if applicable to apply to player on Use")]
+    public List<Effects.TempBuffs> buffToApplyToPlayer = new();
+    public List<Effects.TempDeBuffs> debuffToApplyToPlayer = new();
+    public Effects.Effect effectToApplyToPlayer;
 
-    public void Activate()
+    private bool isEquipped = false;
+
+    public virtual void Activate(PlayerController player, Item item, Enemy enemy = null)
     {
-        Debug.Log($"Activated {ItemEffectDescription}");
-       
+
+    }
+
+    protected virtual void Equipped()
+    {
+
     }
 }

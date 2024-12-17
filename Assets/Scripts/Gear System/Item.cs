@@ -1,4 +1,4 @@
-using Microsoft.Unity.VisualStudio.Editor;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,9 +7,9 @@ public class Item : ScriptableObject
 {
     public enum ItemType { Weapon, Armor, Equipment }
 
-    public enum Teir { Base, I,II,III,IV,V,VI}
+    public enum Teir { Base, Bronze,Silver,Gold,Platinum}
 
-    public Teir ItemTeir;
+    public Teir ItemTeir = Teir.Base;    
 
     /// <summary>
     /// name of item.
@@ -37,11 +37,6 @@ public class Item : ScriptableObject
     public List<ItemEffect> itemEffects;
 
     /// <summary>
-    /// Value of Scrap
-    /// </summary>
-    public int ScrapWorth;
-
-    /// <summary>
     /// The weight in decimal representing a % that the selection is weighted by. For example 0.50 would be 50% chance of droping
     /// </summary>
     public float ItemRarityWeight;
@@ -55,9 +50,9 @@ public class Item : ScriptableObject
         }
         set
         {
-            isEquipped = value;
+            isEquipped = value;           
 
-            AppleEffect();
+            ItemEquipped();
         }
     }    
 
@@ -73,9 +68,17 @@ public class Item : ScriptableObject
         }
     }
 
+    [Header("Tier Values")]
+    [Tooltip("How much to increase for Damage Or Shield per Tier")]
+    public List<int> valueIncreaseBy = new() { 0, 2, 3, 4, 5 };
+
+    [Tooltip("How much to increase Energy By for each Teir")]
+    public List<int> energyCostIncreaseBy = new() { 0, 2, 3, 4, 5 };
+
     private bool isEquipped = false;
 
     private bool playerOwned = false;
+
     void OnEnable()
     {
         // Reset equipped and owned status
@@ -83,39 +86,74 @@ public class Item : ScriptableObject
         playerOwned = false;
         ItemTeir=Teir.Base;
     }
-    public void ItemActivate()
-    {
 
-    }
-    private void AppleEffect()
+    public void ItemActivate(PlayerController player,Enemy targetEnemy = null)
     {
-        //If false remove the passive effect from player.
+        foreach (ItemEffect effect in itemEffects)
+        {
+            effect.Activate(player,this, targetEnemy);
+        }
+    }
+    public void ItemEquipped()
+    {
         if (isEquipped)
         {
-            switch (itemType)
+            foreach (var effect in itemEffects)
             {
-                case ItemType.Equipment:
-                    foreach (ItemEffect effect in itemEffects)
-                    {
-                        if (effect.IsPassiveEffect)
-                            GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().ApplyEffect(effect.effectToApply);
-                    }
-                    break;
+                effect.IsEquipped = IsEquipped;                
             }
         }
-        else
+    }   
+
+    public int GetEnergyCostIncreaseBy()
+    {
+        int tempReturnValue = 0;
+
+        switch (ItemTeir)
         {
-            switch (itemType)
-            {
-                case ItemType.Equipment:
-                    foreach (ItemEffect effect in itemEffects)
-                    {
-                        if (effect.IsPassiveEffect)
-                            GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().RemoveEffect(effect.effectToApply);
-                    }
-                    break;
-            }
+            case Teir.Base:
+                tempReturnValue = energyCostIncreaseBy[(int)Teir.Base];
+                break;
+            case Teir.Bronze:
+                tempReturnValue = energyCostIncreaseBy[(int)Teir.Bronze];
+            break;
+            case Teir.Silver:
+                tempReturnValue = energyCostIncreaseBy[(int)Teir.Silver];
+                break;
+            case Teir.Gold:
+                tempReturnValue = energyCostIncreaseBy[(int)Teir.Gold];
+                break;
+            case Teir.Platinum:
+                tempReturnValue = energyCostIncreaseBy[(int)Teir.Platinum];
+                break;
         }
+
+        return tempReturnValue;
+    }
+    public int GetValueIncreaseBy()
+    {
+        int tempReturnValue = 0;
+
+        switch (ItemTeir)
+        {
+            case Teir.Base:
+                tempReturnValue = valueIncreaseBy[(int)Teir.Base];
+                break;
+            case Teir.Bronze:
+                tempReturnValue = valueIncreaseBy[(int)Teir.Bronze];
+                break;
+            case Teir.Silver:
+                tempReturnValue = valueIncreaseBy[(int)Teir.Silver];
+                break;
+            case Teir.Gold:
+                tempReturnValue = valueIncreaseBy[(int)Teir.Gold];
+                break;
+            case Teir.Platinum:
+                tempReturnValue = valueIncreaseBy[(int)Teir.Platinum];
+                break;
+        }
+
+        return tempReturnValue;
     }
 
     [ContextMenu("Reset to Default")]

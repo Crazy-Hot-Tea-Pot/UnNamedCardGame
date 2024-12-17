@@ -1,10 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 
 public class CombatController : MonoBehaviour
 {
@@ -271,10 +269,14 @@ public class CombatController : MonoBehaviour
     /// <param name="itemLoot">item loot the enemy gives</param>
     public void RemoveCombadant(GameObject combadant,int scrapLoot, List<NewChip> chipLoot, List<Item> itemLoot)
     {
-        //Add loot
+        // Add loot safely by cloning
         ScrapLootForCurrentCombat += scrapLoot;
-        ItemsLootForCurrentCombat.AddRange(itemLoot);
-        NewChipLootForCurrentCombat.AddRange(chipLoot);
+
+        foreach (var item in itemLoot)
+            ItemsLootForCurrentCombat.Add(Instantiate(item));
+
+        foreach (var chip in chipLoot)
+            NewChipLootForCurrentCombat.Add(Instantiate(chip));
 
         //Remove from CombatList
         Combadant combatantToRemove = Combadants.Find(c => c.combadant == combadant);

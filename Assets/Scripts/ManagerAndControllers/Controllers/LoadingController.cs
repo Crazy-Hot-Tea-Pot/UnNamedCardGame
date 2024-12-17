@@ -32,9 +32,10 @@ public class LoadingController : MonoBehaviour
         // Randomly choose between a chip or an item
         bool showChipTip = true; //Random.value > 0.5f;
 
-            // Randomly select a chip
-            choosenChip = Chips[Random.Range(0, Chips.Count)];
-            Display.GetComponent<Image>().sprite = choosenChip.chipImage;
+        // Randomly select a chip
+        choosenChip = Instantiate(Chips[Random.Range(0, Chips.Count)]);
+
+        Display.GetComponent<Image>().sprite = choosenChip.chipImage;
             TipText.SetText("Chip Tip: " + choosenChip.ChipTip);
 
 

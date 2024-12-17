@@ -139,7 +139,10 @@ public class LootUiController : UiController
     public void ReplaceChip(NewChip replaceChip)
     {
         ChipManager.Instance.DeleteChip(replaceChip);
-        ChipManager.Instance.AddNewChipToDeck(selectedChip);
+
+        NewChip CloneOfSelectedChip=Instantiate(selectedChip);
+
+        ChipManager.Instance.AddNewChipToDeck(CloneOfSelectedChip);
 
         LootChips.Remove(selectedChip);
 

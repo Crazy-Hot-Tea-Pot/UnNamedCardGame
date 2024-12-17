@@ -51,6 +51,10 @@ public class UpgradeTerminalUIController : UiController, IPointerClickHandler
 
     public float TimeForPanelToGetToCenter = 2.0f;
 
+    [Header("Item Screen")]
+    public GameObject ItemPanel;
+    public GameObject ItemSelectionContainer;
+
     [Header("Error Screen")]
     public GameObject ErrorPanel;
     public TMP_Text ErrorConsole;
@@ -192,7 +196,10 @@ public class UpgradeTerminalUIController : UiController, IPointerClickHandler
                 controller.currentDataMode = TerminalController.DataMode.Save;
 
                 controller.SwitchToScreen(TerminalController.Screens.Data);
-                break;            
+                break;
+            case "Items":
+                controller.SwitchToScreen(TerminalController.Screens.Items);
+                break;
             case "Back":
                 controller.SwitchToScreen(TerminalController.Screens.Intro);
                 break;
@@ -301,6 +308,8 @@ public class UpgradeTerminalUIController : UiController, IPointerClickHandler
 
                 }
 
+                break;
+            case TerminalController.Screens.Items:
                 break;
             case TerminalController.Screens.Data:
 
@@ -453,7 +462,7 @@ public class UpgradeTerminalUIController : UiController, IPointerClickHandler
         tempRectTransform.anchoredPosition=endPosition;
 
         CancelButton.SetActive(true);
-    }
+    }    
 
     /// <summary>
     /// Bring Up window to select Data

@@ -49,7 +49,7 @@ public class Gear : MonoBehaviour
                 throw new NullReferenceException("No Item equipped.");
             else
             {
-                Item.ItemActivate();
+                Item.ItemActivate(Player.GetComponent<PlayerController>(),CombatController.Target.GetComponent<Enemy>());
             }
         }
         catch (NullReferenceException ex)

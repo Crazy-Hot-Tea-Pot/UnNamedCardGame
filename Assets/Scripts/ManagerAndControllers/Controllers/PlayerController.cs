@@ -353,7 +353,7 @@ public class PlayerController : MonoBehaviour
     }
     private bool isImpervious;
     /// <summary>
-    /// Used to apply effect to not take damage.
+    /// Used to apply effect to not take Damage.
     /// </summary>
     public bool IsImpervious
     {
@@ -395,10 +395,6 @@ public class PlayerController : MonoBehaviour
         Initialize();
     }
 
-    void Update()
-    {
-    }
-
     /// <summary>
     /// We will do animations in Late Update.
     /// </summary>
@@ -427,7 +423,7 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// Enables
     /// </summary>
-    private void OnEnable()
+    void OnEnable()
     {
         select = playerInputActions.Player.Select;
         select.Enable();
@@ -437,22 +433,314 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// Disables
     /// </summary>
-    private void OnDisable()
+    void OnDisable()
     {
         select.Disable();
         select.performed -= OnClick;
     }
 
+    #region PlayerHealth
+
+    /// <summary>
+    /// heal player by amount
+    /// </summary>
+    /// <param name="amountHeal"></param>
+    public void Heal(int amountHeal)
+    {
+        //Heal the player using the getter and setter value
+        //This will also check for over healing and correct
+        Health += amountHeal;
+
+        //Debug log healing
+        Debug.Log("Health Restored: " + health);
+
+    }
+
+    /// <summary>
+    /// Heal to max hp.
+    /// </summary>
+    public void FullHeal()
+    {
+        Health = maxHealth;
+    }
+
+    /// <summary>
+    /// Changes the max HealthBar value
+    /// </summary>
+    /// <param name="amount"></param>
+    public void UpgradeMaxHealth(int amount)
+    {
+        MaxHealth += amount;
+    }
+
+    /// <summary>
+    /// Deal Damage to player.
+    /// </summary>
+    /// <param name="damage">Amount of Damage as Int.</param>
+    public void DamagePlayerBy(int damage)
+    {
+        //if Impervious
+        if (IsImpervious)
+        {
+            return;
+        }
+        else
+        {
+            int modifiedDamage = damage;
+
+            if (IsWornDown)
+            {
+                modifiedDamage = Mathf.CeilToInt(damage * 1.3f);
+            }
+            // if has ShieldAmount
+            if (Shield > 0)
+            {
+                if (modifiedDamage >= Shield)
+                {
+                    modifiedDamage -= Shield;
+                    Shield = 0;
+                    Debug.Log(name + "Shield destroyed.");
+                }
+                else
+                {
+                    // Reduce the ShieldAmount by the Damage amount
+                    Shield -= modifiedDamage;
+                    Debug.Log("Shield " + Shield + " Took Damage" + modifiedDamage);
+                    // No remaining Damage to apply to HP
+                    modifiedDamage = 0;
+                }
+            }
+            Health = Health - modifiedDamage;
+
+
+            //Play Sound
+            SoundManager.PlayFXSound(SoundFX.DamageTaken, this.transform);
+        }
+    }
+
+    #endregion
+
+    #region PlayerShield
+
+    /// <summary>
+    /// Give player baseShieldAmount.
+    /// </summary>
+    /// <param name="shieldAmount"></param>
+    public void ApplyShield(int shieldAmount)
+    {
+        //Restore ShieldBar
+        Shield += shieldAmount;
+
+    }
+
+    #endregion
+
+    #region PlayerEnergy
+
+    /// <summary>
+    /// Give player energy.
+    /// </summary>
+    /// <param name="energyAmount"></param>
+    public void RecoverEnergy(int energyAmount)
+    {
+        //Restore energy this will inside of the getter and setter variable check if we are over energizing and correct
+        Energy += energyAmount;
+
+        Debug.Log("Energy Restored: " + energy);
+    }
+
+    /// <summary>
+    /// Recover energy to max.
+    /// </summary>
+    public void RecoverFullEnergy()
+    {
+        Energy = maxEnergy;
+    }
+
+    /// <summary>
+    /// Will try to spend Energy if not enough energy return false.
+    /// </summary>
+    /// <param name="energyAmount"></param>
+    /// <returns></returns>
+    public bool SpendEnergy(int energyAmount)
+    {
+        if(energyAmount>Energy)
+            return false;
+        
+        Energy-= energyAmount;
+        return true;
+    }
+
+    #endregion
+
+    #region Effects
+
+    /// <summary>
+    /// Apply Skill Effect
+    /// </summary>
+    /// <param name="effect"></param>
+    public void ApplyEffect(Effects.Effect effect)
+    {
+        switch (effect)
+        {
+            case Effects.Effect.Motivation:
+                NextChipActivatesTwice = true;
+                break;
+            case Effects.Effect.Impervious:
+                IsImpervious = true;
+                break;
+            default:
+                break;
+        }
+
+        ListOfActiveEffects.Add(effect);
+
+    }
+
+    /// <summary>
+    /// Apply Buff to Player
+    /// </summary>
+    /// <param name="buffToApply"></param>
+    /// <param name="buffStacks"></param>
+    public void ApplyEffect(Effects.Buff buffToApply, int buffStacks)
+    {
+        //Play buff sound
+        SoundManager.PlayFXSound(SoundFX.Buff);
+
+        switch (buffToApply)
+        {
+            case Effects.Buff.Galvanize:
+                GalvanizedStack += buffStacks;
+                break;
+            case Effects.Buff.Power:
+                PoweredStacks += buffStacks;
+                break;
+        }
+    }
+
+    /// <summary>
+    /// Apply Debuff to player.
+    /// </summary>
+    /// <param name="deBuffToApply"></param>
+    /// <param name="deBuffStacks"></param>
+    public void ApplyEffect(Effects.Debuff deBuffToApply, int deBuffStacks)
+    {
+        //Play sound effect
+        SoundManager.PlayFXSound(SoundFX.Debuff);
+
+        switch (deBuffToApply)
+        {
+            case Effects.Debuff.Drained:
+                DrainedStacks += deBuffStacks;
+                break;
+            case Effects.Debuff.WornDown:
+                WornDownStacks += deBuffStacks;
+                break;
+            case Effects.Debuff.Jam:
+                JammedStacks += deBuffStacks;
+                break;
+            default:
+                break;
+        }
+    }
+
+    /// <summary>
+    /// Remove Debuffs on player.
+    /// </summary>
+    /// <param name="deBuffToRemove"></param>
+    /// <param name="amount"></param>
+    /// <param name="removeAll"></param>
+    public void RemoveEffect(Effects.Debuff deBuffToRemove, int amount, bool removeAll)
+    {
+        switch (deBuffToRemove)
+        {
+            case Effects.Debuff.Drained:
+                if (removeAll)
+                    DrainedStacks = 0;
+                else
+                    DrainedStacks -= amount;
+                break;
+            case Effects.Debuff.Jam:
+                if (removeAll)
+                    JammedStacks = 0;
+                else
+                    JammedStacks -= amount;
+                break;
+            case Effects.Debuff.WornDown:
+                if (removeAll)
+                    WornDownStacks = 0;
+                else
+                    WornDownStacks -= amount;
+                break;
+            default:
+                Debug.LogWarning("Debuff not found.");
+                break;
+        }
+    }
+
+    /// <summary>
+    /// Remove an special affect from being isActive.
+    /// </summary>
+    /// <param name="effect"></param>
+    public void RemoveEffect(Effects.Effect effect)
+    {
+        switch (effect)
+        {
+            case Effects.Effect.Motivation:
+                NextChipActivatesTwice = false;
+                break;
+            default:
+                Debug.LogWarning("Effect hasn't been programmed.");
+                break;
+        }
+
+        ListOfActiveEffects.Remove(effect);
+    }
+
+    #endregion
+
+    #region Scrap
+
+    /// <summary>
+    /// Adds Scraps
+    /// </summary>
+    /// <param name="amount"></param>
+    public void GainScrap(int amount)
+    {
+        Scrap += amount;
+    }
+
+    /// <summary>
+    /// Returns the Scraps stolen or whats left.
+    /// </summary>
+    /// <param name="amount">the amount of Scraps want to steal</param>
+    /// <returns></returns>
+    public int TakeScrap(int amount)
+    {
+        if (Scrap < amount)
+        {
+            int scrapleft = Scrap;
+            Scrap -= amount;
+            return scrapleft;
+        }
+        else
+        {
+            Scrap = Scrap - amount;
+            return amount;
+        }
+    }
+
+    #endregion
+
+    #region Movement
+
     /// <summary>
     /// On click is run everytime the user clicks into the scene.
     /// Using Physics raycast.
-    /// Depends on the result it will either:
-    /// Assign the selectedObject .
-    /// Move the selectedObejct to the position on Ground.
     /// </summary>
     private void OnClick(InputAction.CallbackContext context)
     {
-        if(GameManager.Instance.CurrentGameMode==GameManager.GameMode.Roaming)
+        if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Roaming)
             //Put in Coroutine to cancel out errors
             StartCoroutine(HandleClick());
     }
@@ -525,286 +813,21 @@ public class PlayerController : MonoBehaviour
         // Update the last click time
         lastClickTime = currentTime;
     }
+    #endregion
 
-    /// <summary>
-    /// heal player by amount
-    /// </summary>
-    /// <param name="amountHeal"></param>
-    public void Heal(int amountHeal)
-    {
-            //Heal the player using the getter and setter value
-            //This will also check for over healing and correct
-            Health += amountHeal;
-
-        //Debug log healing
-        Debug.Log("Health Restored: " + health);
-        
-    }
-
-    /// <summary>
-    /// Heal to max hp.
-    /// </summary>
-    public void FullHeal()
-    {
-        Health = maxHealth;
-    }
-    /// <summary>
-    /// Changes the max HealthBar value
-    /// </summary>
-    /// <param name="amount"></param>
-    public void UpgradeMaxHealth(int amount)
-    {
-        MaxHealth += amount;
-    }
-
-    /// <summary>
-    /// Give player shield.
-    /// </summary>
-    /// <param name="shieldAmount"></param>
-    public void ApplyShield(int shieldAmount)
-    {
-        //Restore ShieldBar
-        Shield += shieldAmount;
-
-    }
-    [ContextMenu("Shield Text")]
-    public void TestShield()
-    {
-        ApplyShield(10);
-    }
-    [ContextMenu("Damage Test")]
-    public void TestDamage()
-    {
-        DamagePlayerBy(5);
-    }
-
-    /// <summary>
-    /// Give player energy.
-    /// </summary>
-    /// <param name="energyAmount"></param>
-    public void RecoverEnergy(int energyAmount)
-    {
-            //Restore energy this will inside of the getter and setter variable check if we are over energizing and correct
-            Energy += energyAmount;
-
-        Debug.Log("Energy Restored: " + energy);
-    }
-
-    /// <summary>
-    /// Recover energy to max.
-    /// </summary>
-    public void RecoverFullEnergy()
-    {
-        Energy = maxEnergy;
-    }
-
-    /// <summary>
-    /// Deal Damage to player.
-    /// </summary>
-    /// <param name="damage">Amount of Damage as Int.</param>
-    public void DamagePlayerBy(int damage)
-    {
-        //if Impervious
-        if (IsImpervious)
-        {
-            return;
-        }
-        else
-        {
-            int modifiedDamage = damage;
-
-            if (IsWornDown)
-            {
-                modifiedDamage = Mathf.CeilToInt(damage * 1.3f);
-            }
-            // if has shield
-            if (Shield > 0)
-            {                
-                if (modifiedDamage >= Shield)
-                {
-                    modifiedDamage -= Shield;
-                    Shield = 0;
-                    Debug.Log(name + "Shield destroyed.");
-                }
-                else
-                {
-                    // Reduce the shield by the damage amount
-                    Shield -= modifiedDamage;
-                    Debug.Log("Shield "+Shield+ " Took Damage"+ modifiedDamage);
-                    // No remaining damage to apply to HP
-                    modifiedDamage = 0;
-                }
-            }
-            Health = Health - modifiedDamage;
-            
-
-            //Play Sound
-            SoundManager.PlayFXSound(SoundFX.DamageTaken, this.transform);
-        }
-    }
-
-    /// <summary>
-    /// Apply Skill Effect
-    /// </summary>
-    /// <param name="effect"></param>
-    public void ApplyEffect(Effects.Effect effect)
-    {
-        switch (effect)
-        {
-            case Effects.Effect.Motivation:
-                NextChipActivatesTwice = true;
-                break;
-            case Effects.Effect.Impervious:
-                IsImpervious = true;
-                break;
-            default:
-                break;
-        }
-
-        ListOfActiveEffects.Add(effect);
-
-    }
-
-    /// <summary>
-    /// Apply Buff to Player
-    /// </summary>
-    /// <param name="buffToApply"></param>
-    /// <param name="buffStacks"></param>
-    public void ApplyEffect(Effects.Buff buffToApply, int buffStacks)
-    {
-        //Play buff sound
-        SoundManager.PlayFXSound(SoundFX.Buff);
-
-        switch (buffToApply)
-        {
-            case Effects.Buff.Galvanize:
-                GalvanizedStack += buffStacks;
-                break;
-            case Effects.Buff.Power:
-                PoweredStacks += buffStacks;
-                break;
-        }
-    }
-
-    /// <summary>
-    /// Apply Debuff to player.
-    /// </summary>
-    /// <param name="deBuffToApply"></param>
-    /// <param name="deBuffStacks"></param>
-    public void ApplyEffect(Effects.Debuff deBuffToApply, int deBuffStacks)
-    {
-        //Play sound effect
-        SoundManager.PlayFXSound(SoundFX.Debuff);
-
-        switch (deBuffToApply)
-        {           
-            case Effects.Debuff.Drained:
-                DrainedStacks += deBuffStacks;
-                break;
-            case Effects.Debuff.WornDown:
-                WornDownStacks += deBuffStacks;
-                break;
-            case Effects.Debuff.Jam:
-                JammedStacks += deBuffStacks;
-                break;
-            default:
-                break;
-        }
-    }
-
-    /// <summary>
-    /// Remove Debuffs on player.
-    /// </summary>
-    /// <param name="deBuffToRemove"></param>
-    /// <param name="amount"></param>
-    /// <param name="removeAll"></param>
-    public void RemoveEffect(Effects.Debuff deBuffToRemove, int amount,bool removeAll)
-    {
-        switch (deBuffToRemove)
-        {
-            case Effects.Debuff.Drained:
-                if (removeAll)
-                    DrainedStacks = 0;
-                else
-                    DrainedStacks-= amount;
-                break;            
-            case Effects.Debuff.Jam:
-                if (removeAll)
-                    JammedStacks = 0; 
-                else
-                    JammedStacks-= amount;
-                break;
-            case Effects.Debuff.WornDown:
-                if (removeAll)
-                    WornDownStacks = 0;
-                else
-                    WornDownStacks-= amount;
-                break;                
-            default:
-                Debug.LogWarning("Debuff not found.");
-                break;
-        }        
-    }
-
-    /// <summary>
-    /// Remove an special affect from being isActive.
-    /// </summary>
-    /// <param name="effect"></param>
-    public void RemoveEffect(Effects.Effect effect)
-    {
-        switch (effect)
-        {
-            case Effects.Effect.Motivation:
-                NextChipActivatesTwice = false;
-                break;
-            default:
-                Debug.LogWarning("Effect hasn't been programmed.");
-                break;
-        }
-
-        ListOfActiveEffects.Remove(effect);
-    }
-
-    /// <summary>
-    /// Adds Scraps
-    /// </summary>
-    /// <param name="amount"></param>
-    public void GainScrap(int amount)
-    {
-        Scrap+=amount;
-    }
-
-    /// <summary>
-    /// Returns the Scraps stolen or whats left.
-    /// </summary>
-    /// <param name="amount">the amount of Scraps want to steal</param>
-    /// <returns></returns>
-    public int TakeScrap(int amount)
-    {
-        if (Scrap < amount)
-        {
-            int scrapleft = Scrap;
-            Scrap -= amount;
-            return scrapleft;
-        }
-        else
-        {
-            Scrap = Scrap - amount;
-            return amount;
-        }
-    }
+    #region Combat
 
     /// <summary>
     /// Stuff to do at start of players turn.
     /// </summary>
     public void StartTurn()
     {
-        //Remove shield
-        if (Shield > 0)        
+        //Remove ShieldAmount
+        if (Shield > 0)
             Shield = 0;
 
         //Remove buffs by 1
-        GalvanizedStack--;        
+        GalvanizedStack--;
     }
 
     /// <summary>
@@ -827,30 +850,10 @@ public class PlayerController : MonoBehaviour
     /// Debuffs Stack go away every round.
     /// </summary>
     public void RoundEnd()
-    {       
+    {
         if (galvanizedStack > 0)
         {
-            ApplyShield(galvanizedStack);            
-        }               
-    }
-
-    /// <summary>
-    /// Spend energy for ability
-    /// </summary>
-    /// <param name="loss"></param>
-    public void PlayedAbility(int loss)
-    {
-        SoundManager.PlayFXSound(SoundFX.Charging_Up, this.transform);
-
-        //If energy - loss is greater then 0 or equal to 0 then continue
-        if(Energy - loss >= 0)
-        {
-            Energy -= loss;
-        }
-        //If not then don't be negative
-        else
-        {
-            Energy = 0;
+            ApplyShield(galvanizedStack);
         }
     }
 
@@ -872,5 +875,7 @@ public class PlayerController : MonoBehaviour
 
         // for now just restart the scene.
         GameManager.Instance.RequestScene(Levels.Title);
-    }       
+    }
+
+    #endregion
 }

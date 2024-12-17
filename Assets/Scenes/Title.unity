@@ -157,6 +157,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c3da98fd61fa11d4e99dff0283ada25f, type: 2}
   PlayerCurrentGear: []
   AllGear: []
+  gearLimit: 10
 --- !u!4 &413283431
 Transform:
   m_ObjectHideFlags: 0
@@ -802,7 +803,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 80bd3d30c595bec48b1f376b6f3736f1, type: 2}
   - {fileID: 11400000, guid: 1f04b1f225942644bbf7c1f01ca2418e, type: 2}
   PlayerHand: []
-  PlayerDeck: []
   UsedChips: []
   AllChips: []
   chipPrefab: {fileID: 7436777728557001682, guid: d9849c1ec37ff6e499ec76c0fe76af67, type: 3}

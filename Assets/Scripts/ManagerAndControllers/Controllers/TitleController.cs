@@ -67,22 +67,18 @@ public class TitleController : MonoBehaviour
         
         foreach (Item gear in GearManager.Instance.StartingGear)
         {
-            GearManager.Instance.Acquire(gear);
-            GearManager.Instance.EquipGear(gear); 
+            Item gearInstance = Instantiate(gear);
+            GearManager.Instance.Acquire(gearInstance);
+            GearManager.Instance.EquipGear(gearInstance); 
         }
 
         // Add Starting Chips
         foreach(NewChip newChip in ChipManager.Instance.StartingChips)
         {
-            startData.Chips.Add(new ChipData
-            {
-                Name=newChip.chipName,
-                IsUpgraded=false,
-                DisableCounter=newChip.DisableCounter
-            });
-        }
+            NewChip chipInstance = Instantiate(newChip);
 
-        ChipManager.Instance.PlayerDeck.AddRange(ChipManager.Instance.StartingChips);
+            ChipManager.Instance.AddNewChipToDeck(chipInstance);
+        }
         
         DataManager.Instance.CurrentGameData=startData;
 

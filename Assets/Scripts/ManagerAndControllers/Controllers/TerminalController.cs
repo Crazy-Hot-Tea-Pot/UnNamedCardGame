@@ -17,6 +17,7 @@ public class TerminalController : MonoBehaviour
     private TextMeshPro introScreenText;
     private TextMeshPro healthUpgradeScreenText;
     private TextMeshPro chipUpgradeScreenText;
+    private TextMeshPro itemScreenText;
     private TextMeshPro dataScreenText;
     private TextMeshPro errorScreenText;
 
@@ -76,6 +77,7 @@ public class TerminalController : MonoBehaviour
     public GameObject IntroScreen;
     public GameObject HealthUpgradeScreen;
     public GameObject ChipUpgradeScreen;
+    public GameObject ItemScreen;
     public GameObject DataScreen;
     public GameObject ErrorScreen;
 
@@ -86,6 +88,7 @@ public class TerminalController : MonoBehaviour
         HealthUpgrade,
         ChipUpgrade,
         Data,
+        Items,
         Error,
         Exit
     }
@@ -236,6 +239,10 @@ public class TerminalController : MonoBehaviour
                 currentScreen = screen;
 
             break;
+            case Screens.Items:
+                SetActiveScreen(ItemScreen);
+                StartCoroutine(RevealText(ItemScreen, true, 0.01f, false, 0f, 0, false, 0));                
+                break;
             case Screens.Error:
 
                 SetActiveScreen(ErrorScreen);
