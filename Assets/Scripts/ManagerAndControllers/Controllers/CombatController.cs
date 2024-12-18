@@ -272,9 +272,10 @@ public class CombatController : MonoBehaviour
         // Add loot safely by cloning
         ScrapLootForCurrentCombat += scrapLoot;
 
+        //Add items to loot
         foreach (var item in itemLoot)
             ItemsLootForCurrentCombat.Add(Instantiate(item));
-
+        //Add chips to loot
         foreach (var chip in chipLoot)
             NewChipLootForCurrentCombat.Add(Instantiate(chip));
 
