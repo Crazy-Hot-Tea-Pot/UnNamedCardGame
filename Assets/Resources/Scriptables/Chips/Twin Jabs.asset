@@ -21,6 +21,7 @@ MonoBehaviour:
   ChipTip: Try pairing this with Power buffs for some serious damage!
   ChipRareityWeight: 0.15
   hitAllTargets: 0
+  chipType: 1
   damage: 4
   upgradedDamageByAmount: 2
   numberOfHits: 2

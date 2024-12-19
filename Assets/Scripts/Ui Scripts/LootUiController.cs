@@ -58,19 +58,8 @@ public class LootUiController : UiController
     [Header("Animation values")]
     [Range(0.01f,10f)]
     public float Duration = 1f;
-    
-
-    private int lootScrap;
-    private List<NewChip> lootChips=new();
-    private List<Item> lootItems=new();
-    private float elapsedTime=0f;
-    private readonly int startValue = 0;
-    private NewChip selectedChip;
 
     public bool distributionCheck = true;
-    private List<NewChip> distributedChips=new();
-    private List<Item> distributedItem=new();
-
     //When dropping items and cards we need to know how many times we have run through without a rare
     public int lootRunThroughCounter = 0;
 
@@ -85,8 +74,18 @@ public class LootUiController : UiController
             lootTempChip = value;
         }
     }
-    private List<NewChip> lootTempChip = new();
     public List<Item> lootTempItems = new();
+
+    private int lootScrap;
+    private List<NewChip> lootChips=new();
+    private List<Item> lootItems=new();
+    private float elapsedTime=0f;
+    private readonly int startValue = 0;
+    private NewChip selectedChip;    
+    private List<NewChip> distributedChips=new();
+    private List<Item> distributedItem=new();
+    private List<NewChip> lootTempChip = new();
+    
 
 
     public override void Initialize()
@@ -103,6 +102,11 @@ public class LootUiController : UiController
         foreach (Transform child in LootContainer.transform)
         {
             Destroy(child.gameObject);
+        }
+
+        if (lootChips.Count == 0 && lootItems.Count == 0)
+        {
+            GameManager.Instance.UpdateGameMode(GameManager.GameMode.Roaming);
         }
 
         LootTempChip.Clear();

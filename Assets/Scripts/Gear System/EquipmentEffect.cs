@@ -18,11 +18,11 @@ public class EquipmentEffect : ItemEffect
     {
         get
         {
-            return HasPassiveEffect;
+            return isPassiveEffectActive;
         }
         set
         {
-            HasPassiveEffect = value;
+            isPassiveEffectActive = value;
         }
     }
 

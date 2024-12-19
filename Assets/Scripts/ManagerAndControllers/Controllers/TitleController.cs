@@ -39,6 +39,7 @@ public class TitleController : MonoBehaviour
     {
         
     }
+
     /// <summary>
     /// Plays Sound for when mouse over Button.
     /// 0 references because from inspector.
@@ -47,6 +48,7 @@ public class TitleController : MonoBehaviour
     {
         SoundManager.PlayFXSound(SoundFX.MenuSelectionSound);
     }
+
     /// <summary>
     /// Start a new game.
     /// Set Default player Stats

@@ -22,6 +22,7 @@ public class NewChip : ScriptableObject
     }
     public enum TypeOfChips
     {
+        Default,
         Attack,
         Defense,
         Skill
@@ -146,14 +147,20 @@ public class NewChip : ScriptableObject
     /// </summary>
     public bool hitAllTargets;
 
+    [SerializeField]
     private TypeOfChips chipType;
 
     void OnEnable()
     {
         IsUpgraded = false;
         isActive = false;
-        disableCounter = 0; ;
-}
+        disableCounter = 0;
+
+        if (chipType == TypeOfChips.Default)
+        {
+            Debug.LogWarning($"{chipName} ChipType not set. Please check the specific chip script.");
+        }
+    }
 
     public virtual void OnChipPlayed(PlayerController player)
     {
@@ -182,6 +189,10 @@ public class NewChip : ScriptableObject
         }
     }
 
+    void OnValidate()
+    {
+        Debug.Log($"OnValidate called for {name}. ChipType: {chipType}");
+    }
 
 
 }

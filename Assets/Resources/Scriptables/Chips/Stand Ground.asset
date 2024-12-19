@@ -21,6 +21,7 @@ MonoBehaviour:
   ChipTip: Gain Galvanize to have constant source of Defense!
   ChipRareityWeight: 0.15
   hitAllTargets: 0
+  chipType: 2
   shieldAmount: 7
   upgradedShieldAmountToApply: 2
   effectToApply: 0

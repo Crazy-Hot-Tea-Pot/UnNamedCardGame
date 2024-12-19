@@ -21,6 +21,7 @@ MonoBehaviour:
   ChipTip: A great defensive option when in need to remove your debuffs.
   ChipRareityWeight: 0.15
   hitAllTargets: 0
+  chipType: 2
   shieldAmount: 0
   upgradedShieldAmountToApply: 0
   effectToApply: 0

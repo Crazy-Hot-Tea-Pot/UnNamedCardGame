@@ -59,7 +59,6 @@ public class GearManager : MonoBehaviour
     void Start()
     {
         LoadAllGear();
-        UpdateGear();
 
         GameManager.Instance.OnStartCombat += StartCombat;
         GameManager.Instance.OnEndCombat += EndCombat;
@@ -67,19 +66,20 @@ public class GearManager : MonoBehaviour
     }
     /// <summary>
     /// Updates the list of playercurrentgear.
+    /// no longer needed
     /// </summary>
-    public void UpdateGear()
-    {
-        PlayerCurrentGear.Clear();
+    //public void UpdateGear()
+    //{
+    //    PlayerCurrentGear.Clear();
 
-        foreach (Item item in AllGear)
-        {
-            if (item.IsEquipped || item.IsPlayerOwned)
-            {
-                PlayerCurrentGear.Add(item);
-            }
-        }
-    }
+    //    foreach (Item item in AllGear)
+    //    {
+    //        if (item.IsEquipped || item.IsPlayerOwned)
+    //        {
+    //            PlayerCurrentGear.Add(item);
+    //        }
+    //    }
+    //}
     /// <summary>
     /// Add item to player gear.
     /// </summary>
@@ -155,9 +155,6 @@ public class GearManager : MonoBehaviour
         // Equip the new item
         item.IsEquipped = true;
 
-        // Update gear lists
-        UpdateGear();
-
         return true;
     }
 
@@ -171,9 +168,6 @@ public class GearManager : MonoBehaviour
             if (item.itemType == type && item.IsEquipped)
             {
                 item.IsEquipped = false;
-
-                // Update gear lists
-                UpdateGear();
 
                 return true;
             }
@@ -208,13 +202,11 @@ public class GearManager : MonoBehaviour
     private void StartCombat()
     {
 
-        UpdateGear();
     }
 
     private void EndCombat()
     {
 
-        UpdateGear();
     }
 
     private void SceneChange(Levels newLevel)

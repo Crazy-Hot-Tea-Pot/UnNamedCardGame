@@ -41,5 +41,7 @@ public class SkillChip : NewChip
     void OnValidate()
     {
         ChipType = TypeOfChips.Skill;
+        Debug.Log($"{name}: ChipType set to {ChipType}");
     }
+
 }

@@ -26,9 +26,12 @@ public class ItemEffect : ScriptableObject
     [Tooltip("Cost to use the ItemEffect")]
     public int energyCost;
 
+    [Header("Sound Effects")]
     public SoundFX ItemActivate;
     public SoundFX ItemDeactivate;
-    public SoundFX ItemFail;      
+    public SoundFX ItemFail;
+
+    [Space(20)]
 
     [Tooltip("If effect is only applied on special conditions.")]
     public bool SpecialConditionEffect = false;

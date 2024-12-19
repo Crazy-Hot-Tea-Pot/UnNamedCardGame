@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 537e8ace226ea7a4eb72b09b510bb7c1, type: 3}
   m_Name: Recharge
   m_EditorClassIdentifier: 
-  ThisChip: {fileID: 0}
   chipRarity: 2
   chipName: Recharge
   description: Refresh  your Energy.
@@ -20,5 +19,7 @@ MonoBehaviour:
   canBeUpgraded: 0
   costToUpgrade: 0
   ChipTip: What's better than another round of energy?
+  ChipRareityWeight: 0
   hitAllTargets: 0
+  chipType: 3
   specialEffect: {fileID: 11400000, guid: bd075ab368830c7409b2e740dc79966c, type: 2}

@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "NewWeaponEffect", menuName = "Gear/Effects/WeaponEffect")]
-public class WeaponEffect : ItemEffect
+[CreateAssetMenu(fileName = "NewDamageEffect", menuName = "Gear/Effects/DamageEffect")]
+public class DamageEffect : ItemEffect
 {
     [Header("Weapon values")]
     [Tooltip("Damage dealt")]

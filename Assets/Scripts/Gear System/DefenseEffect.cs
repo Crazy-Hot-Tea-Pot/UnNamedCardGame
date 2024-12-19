@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(fileName = "NewArmorEffect", menuName = "Gear/Effects/ArmorEffect")]
-public class ArmorEffect : ItemEffect
+[CreateAssetMenu(fileName = "NewDefenseEffect", menuName = "Gear/Effects/DefenseEffect")]
+public class DefenseEffect : ItemEffect
 {
     [Header("Armor values")]
     [Tooltip("Shield Amount")]

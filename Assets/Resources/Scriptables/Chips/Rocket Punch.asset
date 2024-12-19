@@ -21,6 +21,7 @@ MonoBehaviour:
   ChipTip: A wide range attack that will deal serious damage to all foes on screen.
   ChipRareityWeight: 0.15
   hitAllTargets: 1
+  chipType: 1
   damage: 6
   upgradedDamageByAmount: 3
   numberOfHits: 1

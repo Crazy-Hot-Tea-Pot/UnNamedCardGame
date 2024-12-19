@@ -29,9 +29,6 @@ public class LoadingController : MonoBehaviour
         // Get all chips and items from their respective managers
         Chips = new List<NewChip>(ChipManager.Instance.AllChips);
 
-        // Randomly choose between a chip or an item
-        bool showChipTip = true; //Random.value > 0.5f;
-
         // Randomly select a chip
         choosenChip = Instantiate(Chips[Random.Range(0, Chips.Count)]);
 

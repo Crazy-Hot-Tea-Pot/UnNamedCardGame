@@ -21,6 +21,7 @@ MonoBehaviour:
   ChipTip: Deal a massive amount of damage, but at the cost of reducign your Shield!
   ChipRareityWeight: 0.15
   hitAllTargets: 0
+  chipType: 1
   damage: 12
   upgradedDamageByAmount: 3
   numberOfHits: 1

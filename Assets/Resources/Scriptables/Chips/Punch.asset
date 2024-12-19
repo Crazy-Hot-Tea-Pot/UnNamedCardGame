@@ -21,6 +21,7 @@ MonoBehaviour:
   ChipTip: Use this to punch stuff. The ultimate solution to conflict resolution!
   ChipRareityWeight: 0.2
   hitAllTargets: 0
+  chipType: 1
   damage: 5
   upgradedDamageByAmount: 0
   numberOfHits: 1
