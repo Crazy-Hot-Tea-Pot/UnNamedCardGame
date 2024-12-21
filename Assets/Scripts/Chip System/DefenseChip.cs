@@ -111,7 +111,6 @@ public class DefenseChip : NewChip
     void OnValidate()
     {
         ChipType = TypeOfChips.Defense;
-        Debug.Log($"{name}: ChipType set to {ChipType}");
     }
 
 }

@@ -22,7 +22,7 @@ public class SkillEffects : ScriptableObject
     }
     protected virtual void ChipUpgraded()
     {
-        Debug.Log("Chip Upgraded");
+
     }
 
     /// <summary>

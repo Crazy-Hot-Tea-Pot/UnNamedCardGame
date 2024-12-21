@@ -94,7 +94,7 @@ public class UiManager : MonoBehaviour
     }
     public void EndTurnButtonVisibility(bool Visiable)
     {
-        GetCurrentController<RoamingAndCombatUiController>().EndTurn.SetActive( Visiable );
+        GetCurrentController<RoamingAndCombatUiController>().ChangeEndButtonVisibility(Visiable);
     }
     public void EndTurnButtonInteractable(bool Interact)
     {
@@ -231,6 +231,14 @@ public class UiManager : MonoBehaviour
             Debug.LogError($"[UiManager] No UI prefab found for mode: {GameManager.Instance.CurrentGameMode}");
             return;
         }
+
+        // Check if the target screen is already active
+        if (CurrentUI != null && CurrentUI.name == targetScreen.name)
+        {
+            Debug.Log($"[UiManager] Target screen '{targetScreen.name}' is already active.");
+            return;
+        }
+
         // Destroy current UI if it exists
         if (CurrentUI != null)
         {

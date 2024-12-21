@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -137,7 +136,7 @@ public class NewChip : ScriptableObject
                 isUpgraded = value;
             else
             {
-                Debug.Log("This card can't be upgraded.");
+                Debug.LogWarning("This card can't be upgraded.");
             }
         }
     }
