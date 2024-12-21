@@ -171,7 +171,11 @@ public class CameraController : MonoBehaviour
             }            
         };
 
-        playerInputActions.CameraControls.RotateCamera.performed += ctx => SwitchCamera(CameraState.Rotation);
+        // Handle rotation start and stop
+        playerInputActions.CameraControls.RotateCamera.started += ctx => SwitchCamera(CameraState.Rotation);
+        playerInputActions.CameraControls.RotateCamera.canceled += ctx => OnResetCamera();
+
+
         playerInputActions.CameraControls.FreeCam.performed += ctx => SwitchCamera(CameraState.Free);
         playerInputActions.CameraControls.ResetCamera.performed += ctx => OnResetCamera();
         playerInputActions.CameraControls.IncreaseCameraSpeed.performed += OnIncreaseCameraSpeed;
