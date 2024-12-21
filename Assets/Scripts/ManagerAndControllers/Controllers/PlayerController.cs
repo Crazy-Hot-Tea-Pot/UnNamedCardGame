@@ -7,7 +7,7 @@ using UnityEngine.AI;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
-// Controller for player this class is not the input class that is generated.
+// Controller for Player this class is not the input class that is generated.
 public class PlayerController : MonoBehaviour
 {    
     public PlayerUiController uiController;
@@ -188,7 +188,7 @@ public class PlayerController : MonoBehaviour
 
     #region Buffs   
     /// <summary>
-    /// Returns if player is Galvanized.
+    /// Returns if Player is Galvanized.
     /// </summary>
     public bool IsGalvanized
     {
@@ -211,7 +211,7 @@ public class PlayerController : MonoBehaviour
         }
     }  
     /// <summary>
-    /// Returns if player is Powered.
+    /// Returns if Player is Powered.
     /// </summary>
     public bool IsPowered
     {
@@ -224,7 +224,7 @@ public class PlayerController : MonoBehaviour
         }
     }
     /// <summary>
-    /// Returns how many stacks of power the player has.
+    /// Returns how many stacks of power the Player has.
     /// </summary>
     public int PoweredStacks
     {
@@ -237,7 +237,7 @@ public class PlayerController : MonoBehaviour
 
     #region Debuffs    
     /// <summary>
-    /// Returns if the player is drained.
+    /// Returns if the Player is drained.
     /// </summary>
     public bool IsDrained
     {
@@ -250,7 +250,7 @@ public class PlayerController : MonoBehaviour
         }
     }
     /// <summary>
-    /// Returns how many stacks of drained the player has.
+    /// Returns how many stacks of drained the Player has.
     /// </summary>
     public int DrainedStacks
     {
@@ -260,7 +260,7 @@ public class PlayerController : MonoBehaviour
         }
     }
     /// <summary>
-    /// Returns if the player is in worndown state.
+    /// Returns if the Player is in worndown state.
     /// </summary>
     public bool IsWornDown
     {
@@ -273,7 +273,7 @@ public class PlayerController : MonoBehaviour
         }
     }
     /// <summary>
-    /// Returns how many stacks of worn down the player has.
+    /// Returns how many stacks of worn down the Player has.
     /// </summary>
     public int WornDownStacks
     {
@@ -283,7 +283,7 @@ public class PlayerController : MonoBehaviour
         }
     }
     /// <summary>
-    /// Returns if player is Jammed.
+    /// Returns if Player is Jammed.
     /// </summary>
     public bool IsJammed
     {
@@ -336,7 +336,7 @@ public class PlayerController : MonoBehaviour
     // Awake is called when instance is being loaded
     void Awake()
     {
-        // assign player Input class
+        // assign Player Input class
         playerInputActions = new PlayerInputActions();
 
         // Automatically finds the camera
@@ -362,7 +362,7 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     void LateUpdate()
     {
-        // Determine if player is running or walking based on the agent's current speed
+        // Determine if Player is running or walking based on the agent's current speed
         bool isRunning = agent.velocity.magnitude > runThreshold;
         bool isWalking = agent.velocity.magnitude > 0.1f && !isRunning;
 
@@ -404,12 +404,12 @@ public class PlayerController : MonoBehaviour
     #region PlayerHealth
 
     /// <summary>
-    /// heal player by amount
+    /// heal Player by amount
     /// </summary>
     /// <param name="amountHeal"></param>
     public void Heal(int amountHeal)
     {
-        //Heal the player using the getter and setter value
+        //Heal the Player using the getter and setter value
         //This will also check for over healing and correct
         Health += amountHeal;
 
@@ -436,7 +436,7 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// Deal Damage to player.
+    /// Deal Damage to Player.
     /// </summary>
     /// <param name="damage">Amount of Damage as Int.</param>
     public void DamagePlayerBy(int damage)
@@ -485,7 +485,7 @@ public class PlayerController : MonoBehaviour
     #region PlayerShield
 
     /// <summary>
-    /// Give player baseShieldAmount.
+    /// Give Player baseShieldAmount.
     /// </summary>
     /// <param name="shieldAmount"></param>
     public void ApplyShield(int shieldAmount)
@@ -500,7 +500,7 @@ public class PlayerController : MonoBehaviour
     #region PlayerEnergy
 
     /// <summary>
-    /// Give player energy.
+    /// Give Player energy.
     /// </summary>
     /// <param name="energyAmount"></param>
     public void RecoverEnergy(int energyAmount)
@@ -541,7 +541,7 @@ public class PlayerController : MonoBehaviour
 
     #region AddEffects
     /// <summary>
-    /// Add buff to player.
+    /// Add buff to Player.
     /// </summary>
     /// <param name="buff"></param>
     /// <param name="stacks"></param>
@@ -550,7 +550,7 @@ public class PlayerController : MonoBehaviour
         AddOrUpdateEffect(buff, stacks);
     }
     /// <summary>
-    /// Add Debuff to player
+    /// Add Debuff to Player
     /// </summary>
     /// <param name="debuff"></param>
     /// <param name="stacks"></param>
@@ -559,7 +559,7 @@ public class PlayerController : MonoBehaviour
         AddOrUpdateEffect(debuff, stacks);
     }
     /// <summary>
-    /// Add Special effec tto player
+    /// Add Special effec tto Player
     /// </summary>
     /// <param name="specialEffect"></param>
     public void AddEffect(Effects.SpecialEffects specialEffect)
@@ -571,7 +571,7 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// Add Special Effect to player
+    /// Add Special Effect to Player
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="effect"></param>
@@ -598,7 +598,7 @@ public class PlayerController : MonoBehaviour
 
     #region RemoveEffects
     /// <summary>
-    /// Remove buff from player
+    /// Remove buff from Player
     /// </summary>
     /// <param name="buff"></param>
     /// <param name="stacks"></param>
@@ -621,7 +621,7 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// Remove Speical effect from player
+    /// Remove Speical effect from Player
     /// </summary>
     /// <param name="specialEffect"></param>
     public void RemoveEffect(Effects.SpecialEffects specialEffect)
@@ -630,7 +630,7 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// Remove or Reduce Effect on player.
+    /// Remove or Reduce Effect on Player.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="effect"></param>
@@ -774,13 +774,13 @@ public class PlayerController : MonoBehaviour
         // Create ripple effect at the click point
         GameObject ClickIndicator = Instantiate(tempIndicator, clickPoint, Quaternion.identity);
 
-        // Make the ripple effect face the player
+        // Make the ripple effect face the Player
         ClickIndicator.transform.LookAt(this.transform.position);
 
         // Destroy the ripple effect after 2 seconds
         Destroy(ClickIndicator, 2f);
 
-        // Move the player to the clicked position
+        // Move the Player to the clicked position
         agent.SetDestination(clickPoint);
         transform.LookAt(clickPoint);
 
@@ -805,7 +805,7 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// Called player ends their turn
+    /// Called Player ends their turn
     /// </summary>
     public void EndTurn()
     {
@@ -832,7 +832,7 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
-    /// Call when player is dead.
+    /// Call when Player is dead.
     /// Does stuff for game over.
     /// </summary>
     /// <exception cref="NotImplementedException"></exception>

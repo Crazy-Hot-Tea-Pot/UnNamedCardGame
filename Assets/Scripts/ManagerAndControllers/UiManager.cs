@@ -57,7 +57,7 @@ public class UiManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        // assign player Input class
+        // assign Player Input class
         playerInputActions = new PlayerInputActions();
         playerInputActions.Enable();
     }
@@ -99,6 +99,12 @@ public class UiManager : MonoBehaviour
     public void EndTurnButtonInteractable(bool Interact)
     {
         GetCurrentController<RoamingAndCombatUiController>().EndTurnButton.interactable = Interact;
+    }
+    public void ReDrawPlayerhand()
+    {
+        StopCoroutine(GetCurrentController<RoamingAndCombatUiController>().RedrawPlayerHand());
+
+        StartCoroutine(GetCurrentController<RoamingAndCombatUiController>().RedrawPlayerHand());
     }
     #endregion
     #region InventoryUI
@@ -259,10 +265,7 @@ public class UiManager : MonoBehaviour
     }
     private void StartCombat()
     {
-        if (!GetCurrentController<RoamingAndCombatUiController>().PlayerHandContainer.PanelIsVisible)
-        {
-            GetCurrentController<RoamingAndCombatUiController>().PlayerHandContainer.TogglePanel();
-        }        
+        
     }
 
     private void EndCombat()

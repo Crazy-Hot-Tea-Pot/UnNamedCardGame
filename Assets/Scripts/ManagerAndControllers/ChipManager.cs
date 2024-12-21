@@ -20,7 +20,7 @@ public class ChipManager : MonoBehaviour
     }
 
     /// <summary>
-    /// What the player starts with in a new game.
+    /// What the Player starts with in a new game.
     /// </summary>
     [SerializeField]
     private List<NewChip> startingChips = new();
@@ -50,7 +50,7 @@ public class ChipManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Chips player has used.
+    /// Chips Player has used.
     /// </summary>
     public List<NewChip> UsedChips = new();
 
@@ -161,7 +161,7 @@ public class ChipManager : MonoBehaviour
     /// <param name="chip"></param>
     public void DeleteChip(NewChip chip)
     {
-        // Removes chip from the player's hand and places it in the used chips
+        // Removes chip from the Player's hand and places it in the used chips
         if (PlayerDeck.Contains(chip))
         {
             PlayerDeck.Remove(chip);

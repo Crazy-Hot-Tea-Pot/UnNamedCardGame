@@ -82,11 +82,11 @@ public class DefenseChip : NewChip
         else
             GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().ApplyShield(shieldAmount);
 
-        //ApplyEffect to player
+        //ApplyEffect to Player
         if(effectToApply != Effects.SpecialEffects.None)
             player.AddEffect(effectToApply);        
 
-        //Apply buffs to player
+        //Apply buffs to Player
         if(buffToApply != Effects.Buff.None)
             player.AddEffect(buffToApply, buffStacks);
 

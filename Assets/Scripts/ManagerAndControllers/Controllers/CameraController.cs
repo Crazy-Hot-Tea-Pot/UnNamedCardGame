@@ -63,7 +63,7 @@ public class CameraController : MonoBehaviour
             if (currentCamera != previousCamera)
             {
 
-                //Indicate to player what camera mode they changed to.
+                //Indicate to Player what camera mode they changed to.
                 UiManager.Instance.UpdateCameraIndicator(value);                
             }
 
@@ -300,7 +300,7 @@ public class CameraController : MonoBehaviour
     /// </summary>
     private void OnResetCamera()
     {
-        // Prevent the Reset action if player is interacting
+        // Prevent the Reset action if Player is interacting
         if (IsPlayerInteracting())
         {
             Debug.Log("Camera reset ignored because the player is interacting.");
@@ -356,7 +356,7 @@ public class CameraController : MonoBehaviour
     }
 
     /// <summary>
-    /// Check if player is interacting
+    /// Check if Player is interacting
     /// </summary>
     /// <returns></returns>
     private bool IsPlayerInteracting()

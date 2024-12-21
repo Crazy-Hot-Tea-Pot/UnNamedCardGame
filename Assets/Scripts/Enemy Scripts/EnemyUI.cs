@@ -177,7 +177,7 @@ public class EnemyUI : MonoBehaviour
     }
 
     /// <summary>
-    /// Make the canvas face the player camera
+    /// Make the canvas face the Player camera
     /// </summary>
     private void FaceCamera()
     {

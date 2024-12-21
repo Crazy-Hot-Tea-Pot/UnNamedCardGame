@@ -113,7 +113,7 @@ public class NewChip : ScriptableObject
     /// </summary>
     public int costToUpgrade;
     /// <summary>
-    /// Information to display to player about card.
+    /// Information to display to Player about card.
     /// </summary>
     public string ChipTip= "<#A20000>*Error missing from Chip Sect Corp database.*</color>";
     /// <summary>

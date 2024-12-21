@@ -71,7 +71,7 @@ public class GangLeader : Enemy
         }
     }
     /// <summary>
-    /// Apply 1 Worn and 1 Drained to player.
+    /// Apply 1 Worn and 1 Drained to Player.
     /// 50% chance
     /// </summary>
     private void Intimidate()

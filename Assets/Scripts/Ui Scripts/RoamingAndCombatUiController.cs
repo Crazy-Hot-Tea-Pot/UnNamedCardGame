@@ -35,7 +35,7 @@ public class RoamingAndCombatUiController : UiController
     // Start is called before the first frame update
     void Start()
     {
-        EndTurnButton.onClick.AddListener(() => GameObject.FindGameObjectWithTag("CombatController").GetComponent<CombatController>().TurnUsed(GameObject.FindGameObjectWithTag("Player")));
+        EndTurnButton.onClick.AddListener(() => GameObject.FindGameObjectWithTag("CombatController").GetComponent<CombatController>().EndTurn(GameObject.FindGameObjectWithTag("Player")));
         
         EndTurn.SetActive(false);
         CameraIndicator.SetActive(false);
@@ -52,6 +52,24 @@ public class RoamingAndCombatUiController : UiController
     {
         Debug.Log("RoamingAndCombatUiController initialized");      
     }
+
+    /// <summary>
+    /// Close hand and reopen with new cards or just draw hand with cards.
+    /// </summary>
+    public IEnumerator RedrawPlayerHand()
+    {
+        if(PlayerHandContainer.PanelIsVisible)
+            PlayerHandContainer.TogglePanel();
+
+        yield return new WaitForSeconds(1f);
+
+        ChipManager.Instance.RefreshPlayerHand();
+
+        yield return new WaitForSeconds(1f);
+
+        if (!PlayerHandContainer.PanelIsVisible)
+            PlayerHandContainer.TogglePanel();
+    }
     public void ChangeEndButtonVisibility(bool visibility)
     {
         EndTurn.SetActive(visibility);
@@ -59,7 +77,7 @@ public class RoamingAndCombatUiController : UiController
     }
 
     /// <summary>
-    /// Updates the UI for player HealthBar
+    /// Updates the UI for Player HealthBar
     /// </summary>
     public void UpdateHealth(int currentHealth, int maxHealth)
     {        
@@ -73,7 +91,7 @@ public class RoamingAndCombatUiController : UiController
     }   
     
     /// <summary>
-    /// Updates the UI for player ShieldAmount
+    /// Updates the UI for Player ShieldAmount
     /// </summary>
     public void UpdateShield(int Shield, int MaxShield)
     {        
@@ -97,7 +115,7 @@ public class RoamingAndCombatUiController : UiController
     }
 
     /// <summary>
-    /// Updates the UI for player Energy
+    /// Updates the UI for Player Energy
     /// </summary>
     /// <param name="currentEnergy"></param>
     /// <param name="maxEnergy"></param>
@@ -171,6 +189,7 @@ public class RoamingAndCombatUiController : UiController
         ShieldBar.fillAmount = targetFillAmount;
         ShieldText.SetText($"{targetCurrentShield}/{MaxShield}");
     }
+
     /// <summary>
     /// Fill EnergyBar by amount over time.
     /// </summary>

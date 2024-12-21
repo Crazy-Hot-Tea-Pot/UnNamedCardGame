@@ -40,7 +40,7 @@ public class Enemy : MonoBehaviour
     }
 
     /// <summary>
-    /// Range enemy must be to attack the player.
+    /// Range enemy must be to attack the Player.
     /// </summary>
     public float AttackRange;     
 
@@ -66,7 +66,7 @@ public class Enemy : MonoBehaviour
     public NavMeshAgent agent;
     public GameObject TargetIcon;
     /// <summary>
-    /// reference to player camera.
+    /// reference to Player camera.
     /// </summary>
     public Camera playerCamera;
 
@@ -169,7 +169,7 @@ public class Enemy : MonoBehaviour
     private int maxShield = 0;
     private bool isTargeted;
     /// <summary>
-    /// Is enemy being targeted by player.
+    /// Is enemy being targeted by Player.
     /// When enemy is targeted by CombatController to change boarder.
     /// </summary>
     public bool IsTargeted
@@ -312,16 +312,14 @@ public class Enemy : MonoBehaviour
     }
     public virtual void Update()
     {
-
-        if (InCombat)
-        {
-            if(CombatController.CanIMakeAction(this.gameObject))
-            {
-                StartTurn();                
-            }
-        }
-    }   
-
+    }
+    /// <summary>
+    /// Current CombatEnemies turn to act.
+    /// </summary>
+    public virtual void MyTurn()
+    {
+        StartTurn();
+    }
     public virtual void Initialize()
     {
         CurrentHP = maxHP;
@@ -333,7 +331,7 @@ public class Enemy : MonoBehaviour
     }
 
    /// <summary>
-   /// Is called when enemy is attacked by player.
+   /// Is called when enemy is attacked by Player.
    /// </summary>
    /// <param name="damage"></param>
     public virtual void TakeDamage(int damage)
@@ -372,7 +370,7 @@ public class Enemy : MonoBehaviour
 
         Debug.Log($"{enemyName} has been defeated!");
 
-        CombatController.RemoveCombadant(this.gameObject,DroppedScrap,DroppedChips,DroppedItems);
+        CombatController.LeaveCombat(this.gameObject, DroppedScrap, DroppedChips, DroppedItems);        
 
         EnemyManager.Instance.RemoveEnemy(this.gameObject);
     }
@@ -402,7 +400,7 @@ public class Enemy : MonoBehaviour
     protected virtual void PerformIntent()
     {
         if (this.gameObject != null)
-            CombatController.TurnUsed(this.gameObject);
+            CombatController.EndTurn(this.gameObject);
     }
 
     /// <summary>
@@ -475,10 +473,10 @@ public class Enemy : MonoBehaviour
         RemoveEffect(Effects.Buff.Power, 1);
         RemoveEffect(Effects.Buff.Galvanize, 1);        
 
-        //Look at player
+        //Look at Player
         this.gameObject.transform.LookAt(EnemyTarget.transform);
 
-        //Check if player is in range
+        //Check if Player is in range
         if (DistanceToPlayer <= AttackRange)
         {
             agent.ResetPath();
@@ -486,7 +484,7 @@ public class Enemy : MonoBehaviour
         }
         else
         {
-            // move to player
+            // move to Player
             agent.SetDestination(EnemyTarget.transform.position);
         }
     }

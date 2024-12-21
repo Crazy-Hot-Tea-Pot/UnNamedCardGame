@@ -97,7 +97,7 @@ public class UpgradeTerminalUIController : UiController, IPointerClickHandler
         Debug.Log("Upgrade Terminal Initalize");
     }
     /// <summary>
-    /// When player clicks one of the links.
+    /// When Player clicks one of the links.
     /// </summary>
     /// <param name="eventData"></param>
     public void OnPointerClick(PointerEventData eventData)

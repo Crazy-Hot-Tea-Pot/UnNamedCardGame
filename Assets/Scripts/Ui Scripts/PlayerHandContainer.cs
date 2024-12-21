@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -33,7 +31,7 @@ public class PlayerHandContainer : MonoBehaviour
         isVisible = !isVisible;
 
         if(isVisible)
-            FillPlayerHand();
+                FillPlayerHand();
 
         if(animator==null)
             animator = GetComponent<Animator>();
@@ -51,7 +49,9 @@ public class PlayerHandContainer : MonoBehaviour
             Destroy(child.gameObject);
         }
 
-        ChipManager.Instance.RefreshPlayerHand();
+        //Change this so it only draws new cards via the combat controller
+        if(GameManager.Instance.CurrentGameMode != GameManager.GameMode.Combat)
+            ChipManager.Instance.RefreshPlayerHand();
 
         foreach (var chip in ChipManager.Instance.PlayerHand)
         {

@@ -2,7 +2,7 @@
 using System;
 
 /// <summary>
-/// Data we would be saving for the player.
+/// Data we would be saving for the Player.
 /// </summary>
 [System.Serializable]
 public class GameData
@@ -40,7 +40,7 @@ public class GameData
     public string SaveName;
     //time of save
     public DateTime TimeStamp;
-    //Level the player is on
+    //Level the Player is on
     public Levels Level;
     //Player HealthBar
     public int Health;

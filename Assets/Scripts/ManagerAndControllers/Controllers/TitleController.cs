@@ -51,7 +51,7 @@ public class TitleController : MonoBehaviour
 
     /// <summary>
     /// Start a new game.
-    /// Set Default player Stats
+    /// Set Default Player Stats
     /// </summary>
    private void StartGame()
    {

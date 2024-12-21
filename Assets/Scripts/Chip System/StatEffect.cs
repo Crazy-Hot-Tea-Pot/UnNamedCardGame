@@ -2,7 +2,7 @@
 
 [CreateAssetMenu(fileName = "NewStatEffect", menuName = "Chip System/Skill Effects/Stat Effect")]
 /// <summary>
-/// This scriptable is for effecting player Stats
+/// This scriptable is for effecting Player Stats
 /// </summary>
 public class StatEffect : SkillEffects
 {
@@ -31,7 +31,7 @@ public class StatEffect : SkillEffects
             amount -= upgradedAmount;
         }
     }
-    // Apply the effect (modifies player stats based on the specified stat itemType)
+    // Apply the effect (modifies Player stats based on the specified stat itemType)
     public override void ApplyEffect(PlayerController player)
     {
         switch (statWillBeEffect)
