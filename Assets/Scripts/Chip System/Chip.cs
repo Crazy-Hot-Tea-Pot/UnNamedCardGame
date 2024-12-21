@@ -120,7 +120,7 @@ public class Chip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
                     newChip.IsActive = true;
 
-                    if (Player.GetComponent<PlayerController>().NextChipActivatesTwice)
+                    if (Player.GetComponent<PlayerController>().IsMotivated)
                     {
                         if (newChip is DefenseChip defenseChip)
                             newChip.OnChipPlayed(Player.GetComponent<PlayerController>());
@@ -146,7 +146,7 @@ public class Chip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
 
                         //Remove effect after it has been used.
-                        Player.GetComponent<PlayerController>().RemoveEffect(Effects.Effect.Motivation);
+                        Player.GetComponent<PlayerController>().RemoveEffect(Effects.SpecialEffects.Motivation);
                     }
                     else
                     {

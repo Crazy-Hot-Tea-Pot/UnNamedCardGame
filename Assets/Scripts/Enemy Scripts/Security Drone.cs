@@ -102,7 +102,7 @@ public class SecurityDrone : Enemy
         SoundManager.PlayFXSound(SoundFX.NeutralizeSecurityDrone);
 
         EnemyTarget.GetComponent<PlayerController>().DamagePlayerBy(7);
-        EnemyTarget.GetComponent<PlayerController>().ApplyEffect(Effects.Debuff.Drained, 1);
+        EnemyTarget.GetComponent<PlayerController>().AddEffect(Effects.Debuff.Drained, 1);
     }
     /// <summary>
     /// Calls another Security Drone to the Combat Zone.

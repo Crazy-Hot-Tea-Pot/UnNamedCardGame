@@ -56,7 +56,7 @@ public class TicketVendor : Enemy
     private void Halt()
     {
         EnemyTarget.GetComponent<PlayerController>().DamagePlayerBy(9);
-        EnemyTarget.GetComponent<PlayerController>().ApplyEffect(Effects.Debuff.WornDown, 1);
-        EnemyTarget.GetComponent<PlayerController>().ApplyEffect(Effects.Debuff.Drained, 1);
+        EnemyTarget.GetComponent<PlayerController>().AddEffect(Effects.Debuff.WornDown, 1);
+        EnemyTarget.GetComponent<PlayerController>().AddEffect(Effects.Debuff.Drained, 1);
     }
 }

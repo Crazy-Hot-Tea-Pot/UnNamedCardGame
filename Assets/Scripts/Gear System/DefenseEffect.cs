@@ -16,24 +16,22 @@ public class DefenseEffect : ItemEffect
 
         if (player.SpendEnergy(adjustedEnergyCost))
         {
-            //Play Item Effect
             SoundManager.PlayFXSound(ItemActivate);
+
+            // Adjust shield based on debuffs
+            if (player.IsWornDown)
+            {
+                adjustedShieldAmount = Mathf.FloorToInt(adjustedShieldAmount * 0.7f); // Reduce shield by 30%
+            }
 
             player.ApplyShield(adjustedShieldAmount);
 
-            foreach (Effects.TempBuffs buff in buffToApplyToPlayer)
-            {
-                player.ApplyEffect(buff.Buff, buff.AmountToBuff);
-            }
-            if (effectToApplyToPlayer != Effects.Effect.None)
-                player.ApplyEffect(effectToApplyToPlayer);
-
+            // Apply buffs and debuffs
+            base.Activate(player, item, enemy);
         }
         else
         {
             SoundManager.PlayFXSound(ItemFail);
-
-            Debug.Log("Not enough energy to use Armor.");
         }
     }
 }

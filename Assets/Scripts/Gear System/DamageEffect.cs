@@ -11,7 +11,6 @@ public class DamageEffect : ItemEffect
     public override void Activate(PlayerController player, Item item, Enemy enemy)
     {
         int adjustedDamage = baseDamage + item.GetValueIncreaseBy();
-
         // increase for energy cost
         int adjustedEnergyCost = energyCost + item.GetEnergyCostIncreaseBy();
 
@@ -19,6 +18,12 @@ public class DamageEffect : ItemEffect
         {
             //Play Item Effect
             SoundManager.PlayFXSound(ItemActivate);
+
+            if (player.IsPowered)
+                adjustedDamage += player.PoweredStacks;
+
+            if(player.IsDrained)
+                adjustedDamage = Mathf.FloorToInt(adjustedDamage * 0.8f); // Reduce damage by 20%
 
             //Do Damage to enemy
             enemy?.TakeDamage(adjustedDamage);
@@ -34,28 +39,19 @@ public class DamageEffect : ItemEffect
                         {
                             foreach(Effects.TempDeBuffs debuff in deBuffEffectToApplyToEnemy)
                             {
-                                enemy.ApplyDebuff(debuff.DeBuff, debuff.AmountToDeBuff);
+                                enemy.AddEffect(debuff.DeBuff, debuff.AmountToDeBuff);
                             }
                         }
 
                     break;
                 }
             }
-
-            //Apply any effects to player if any
-
-            foreach(Effects.TempDeBuffs debuff in debuffToApplyToPlayer)
+            foreach (Effects.TempDeBuffs tempDeBuffs in deBuffEffectToApplyToEnemy) 
             {
-                player.ApplyEffect(debuff.DeBuff, debuff.AmountToDeBuff);
+                enemy.AddEffect(tempDeBuffs.DeBuff, tempDeBuffs.AmountToDeBuff);
             }
-
-            foreach(Effects.TempBuffs buff in buffToApplyToPlayer)
-            {
-                player.ApplyEffect(buff.Buff,buff.AmountToBuff);
-            }
-
-            if(effectToApplyToPlayer != Effects.Effect.None)                
-                player.ApplyEffect(effectToApplyToPlayer);
+            // Apply buffs and debuffs
+            base.Activate(player, item, enemy);
         }
         else
         {

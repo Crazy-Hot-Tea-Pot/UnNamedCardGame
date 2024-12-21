@@ -455,7 +455,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 600, y: 100}
+  m_SizeDelta: {x: 600, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4192711060963504253
 CanvasRenderer:
@@ -485,7 +485,7 @@ MonoBehaviour:
   m_ChildAlignment: 4
   m_Spacing: 0
   m_ChildForceExpandWidth: 0
-  m_ChildForceExpandHeight: 1
+  m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 0
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
@@ -1068,7 +1068,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!114 &1802790648603662737
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1130,6 +1130,7 @@ MonoBehaviour:
   shieldContainer: {fileID: 2554812336669711024}
   shieldBar: {fileID: 2113841974419198981}
   shieldText: {fileID: 688954988217840069}
+  UiDuration: 0.5
   EffectsPanel: {fileID: 5999033585686323767}
   effectPrefabs:
   - {fileID: 8724220798877620809, guid: cede0f028bad1a148baa1cb79d5559b5, type: 3}

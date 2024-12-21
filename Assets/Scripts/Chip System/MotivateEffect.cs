@@ -5,7 +5,7 @@ public class MotivateEffect : SkillEffects
 {
     public override void ApplyEffect(PlayerController player)
     {
-        player.ApplyEffect(Effects.Effect.Motivation);
+        player.AddEffect(Effects.SpecialEffects.Motivation);
         Debug.Log("Motivate Effect: Next chip activates twice.");
     }
 }

@@ -16,6 +16,6 @@ public class Buff : SkillEffects
     }
     public override void ApplyEffect(PlayerController player)
     {
-        player.ApplyEffect(buffToApply, amountOfBuffToApply);
+        player.AddEffect(buffToApply, amountOfBuffToApply);
     }
 }

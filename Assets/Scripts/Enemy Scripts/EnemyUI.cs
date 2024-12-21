@@ -133,53 +133,37 @@ public class EnemyUI : MonoBehaviour
     }
 
     /// <summary>
-    /// Check if the effect is already active.
-    /// Method to instantiate and add effect to EffectsPanel.
-    /// Instantiate effect icon and set its parent to EffectsPanel.
-    /// Track active effects.
+    /// Update the Effects for Enemy
     /// </summary>
-    /// <param name="effectPrefab">Name of effect case sensitive</param>
-    public void AddEffect(string effectName)
+    /// <param name="activeEffects"></param>
+    public void UpdateEffectsPanel(List<Effects.StatusEffect> activeEffects)
     {
-        if (activeEffects.Exists(effect => effect.name == effectName))
-            return;
-
-        GameObject effectPrefab = effectPrefabs.Find(prefab => prefab.name == effectName);
-
-        try
+        // Clear existing UI elements
+        foreach (var effect in this.activeEffects)
         {
-            GameObject effectInstance = Instantiate(effectPrefab, EffectsPanel.transform);
-            effectInstance.name = effectName;
-            activeEffects.Add(effectInstance);
+            Destroy(effect);
         }
-        catch
-        {
-            Debug.LogError("So Somebody fucked up.");
-        }
-    }
+        this.activeEffects.Clear();
 
-    /// <summary>
-    /// Method to remove an effect from EffectsPanel.
-    /// Remove from tracking list.
-    /// Destroy the effect GameObject.
-    /// </summary>
-    /// <param name="effect"></param>
-    public void RemoveEffect(string effectName)
-    {
-        GameObject effectToRemove = activeEffects.Find(effect => effect.name == effectName);
-        try
+        // Populate the panel with new effects
+        foreach (var statusEffect in activeEffects)
         {
-            if (effectToRemove != null)
+            string effectName = statusEffect.Effect.ToString();
+            GameObject effectPrefab = effectPrefabs.Find(prefab => prefab.name == effectName);
+
+            if (effectPrefab != null)
             {
-                activeEffects.Remove(effectToRemove);
-                Destroy(effectToRemove);
+                GameObject effectInstance = Instantiate(effectPrefab, EffectsPanel.transform);
+                effectInstance.name = effectName;
+                this.activeEffects.Add(effectInstance);
+            }
+            else
+            {
+                Debug.LogError($"Effect prefab not found for {effectName}");
             }
         }
-        catch
-        {
-            Debug.LogError("So Somebody fucked up.");
-        }
     }
+
     /// <summary>
     /// Update intent box.
     /// </summary>

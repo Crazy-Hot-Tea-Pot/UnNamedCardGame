@@ -41,7 +41,7 @@ public class GarbageBot : Enemy
         Debug.Log("Garbage Bot uses Pile On!");        
 
         EnemyTarget.GetComponent<PlayerController>().DamagePlayerBy(10);
-        EnemyTarget.GetComponent<PlayerController>().ApplyEffect(Effects.Debuff.Jam, 1);
+        EnemyTarget.GetComponent<PlayerController>().AddEffect(Effects.Debuff.Jam, 1);
     }
     /// <summary>
     /// Gain 7 shield

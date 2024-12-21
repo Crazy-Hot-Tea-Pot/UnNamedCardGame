@@ -12,7 +12,7 @@ public class EquipmentEffect : ItemEffect
     /// </summary>
     public bool HasPassiveEffect;
 
-    public Effects.Effect passiveEffect;
+    public Effects.SpecialEffects passiveEffect;
 
     public bool IsPassiveEffectActive
     {
@@ -35,7 +35,7 @@ public class EquipmentEffect : ItemEffect
             //Play Item Effect
             SoundManager.PlayFXSound(ItemActivate);
 
-            player.ApplyEffect(effectToApplyToPlayer);
+            player.AddEffect(effectToApplyToPlayer);
         }
         else
         {
@@ -48,20 +48,17 @@ public class EquipmentEffect : ItemEffect
     {
         base.Equipped();
 
-        if (HasPassiveEffect)
+        if (HasPassiveEffect && IsEquipped)
         {
-            if (IsEquipped)
-            {
                 if (!IsPassiveEffectActive)
                 {
-                    GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().ApplyEffect(passiveEffect);
+                    GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().AddEffect(passiveEffect);
                     IsPassiveEffectActive = true;
                 }
-                else
+                else if(IsPassiveEffectActive)
                 {
                     GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().RemoveEffect(passiveEffect);
-                }
-            }            
+                }            
         }
     }
 }

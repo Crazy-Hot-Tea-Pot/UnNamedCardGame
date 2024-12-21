@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.EventSystems;
@@ -9,6 +10,7 @@ using UnityEngine.InputSystem;
 // Controller for player this class is not the input class that is generated.
 public class PlayerController : MonoBehaviour
 {    
+    public PlayerUiController uiController;
 
     //Camera in the scene
     private Camera mainCamera;
@@ -164,10 +166,27 @@ public class PlayerController : MonoBehaviour
 
 
     [Header("Status Effects")]
-    [Header("Buffs")]
-    #region Buffs
-    private bool isGalvanized;    
-    private int galvanizedStack;
+
+    #region Effects
+
+    [SerializeField]
+    private List<Effects.StatusEffect> listOfActiveEffects = new List<Effects.StatusEffect>();
+
+    public List<Effects.StatusEffect> ListOfActiveEffects
+    {
+        get
+        {
+            return listOfActiveEffects;
+        }
+        set
+        {
+            listOfActiveEffects = value;
+            
+            uiController.UpdateEffectsPanel(listOfActiveEffects);
+        }
+    }   
+
+    #region Buffs   
     /// <summary>
     /// Returns if player is Galvanized.
     /// </summary>
@@ -175,64 +194,48 @@ public class PlayerController : MonoBehaviour
     {
         get
         {
-            return isGalvanized;
-        }
-        private set
-        {
-            isGalvanized = value;
+           if(GalvanizedStacks > 0)
+                return true;
+           else
+                return false;
         }
     }
     /// <summary>
-    /// Returns how many stacks of Galvanized the player has.
+    /// How many GalvanizedStacks
     /// </summary>
-    public int GalvanizedStack
+    public int GalvanizedStacks
     {
-        get => galvanizedStack;
-        private set
+        get
         {
-            galvanizedStack = value;
-            if (galvanizedStack <= 0)
-            {
-                IsGalvanized = false;
-                galvanizedStack = 0;
-            }
-            else
-                IsGalvanized = true;
+            return GetStacks(Effects.Buff.Galvanize);
         }
-    }
-    private bool isPowered;    
-    private int poweredStacks;
+    }  
     /// <summary>
     /// Returns if player is Powered.
     /// </summary>
     public bool IsPowered
     {
-        get => isPowered;
-        private set => isPowered = value;
+        get
+        {
+            if (PoweredStacks > 0)
+                return true;
+            else
+                return false;
+        }
     }
     /// <summary>
     /// Returns how many stacks of power the player has.
     /// </summary>
     public int PoweredStacks
     {
-        get => poweredStacks;
-        private set
+        get
         {
-            poweredStacks = value;
-            if (poweredStacks <= 0)
-            {
-                IsPowered = false;
-                poweredStacks = 0;
-            }
-            else
-                IsPowered = true;
+            return GetStacks(Effects.Buff.Power);
         }
     }
     #endregion
 
-    [Header("DeBuffs")]
     #region Debuffs    
-    private bool isDrained;
     /// <summary>
     /// Returns if the player is drained.
     /// </summary>
@@ -240,14 +243,12 @@ public class PlayerController : MonoBehaviour
     {
         get
         {
-            return isDrained;
-        }
-        private set
-        {
-            isDrained = value;
+            if (DrainedStacks > 0)
+                return true;
+            else
+                return false;
         }
     }
-    private int drainedStacks;
     /// <summary>
     /// Returns how many stacks of drained the player has.
     /// </summary>
@@ -255,30 +256,22 @@ public class PlayerController : MonoBehaviour
     {
         get
         {
-            return drainedStacks;
-        }
-        private set
-        {
-            drainedStacks = value;
-            if (drainedStacks <= 0)
-            {
-                IsDrained = false;
-                drainedStacks = 0;
-            }
-            else
-                IsDrained = true;
+           return GetStacks(Effects.Debuff.Drained);
         }
     }
-    private bool isWornDown;
     /// <summary>
     /// Returns if the player is in worndown state.
     /// </summary>
     public bool IsWornDown
     {
-        get => isWornDown;
-        private set => isWornDown = value;
+        get
+        {
+            if(WornDownStacks>0)
+                return true;
+            else
+                return false;
+        }
     }
-    private int wornDownStacks;
     /// <summary>
     /// Returns how many stacks of worn down the player has.
     /// </summary>
@@ -286,31 +279,23 @@ public class PlayerController : MonoBehaviour
     {
         get
         {
-            return wornDownStacks;
-        }
-        private set
-        {
-            wornDownStacks = value;
-            if (wornDownStacks <= 0)
-            {
-                IsWornDown = false;
-                wornDownStacks = 0;
-            }
-            else
-                IsWornDown = true;
+            return GetStacks(Effects.Debuff.WornDown);
         }
     }
-    private bool isJammed;
     /// <summary>
     /// Returns if player is Jammed.
     /// </summary>
     public bool IsJammed
     {
-        get => isJammed;
-        private set => isJammed = value;
+        get
+        {
+            if(JammedStacks > 0)
+                return true;
+            else
+                return false;
+        }
     }
 
-    private int jammedStacks;
     /// <summary>
     /// Returns how many stacks of jammed the palyer has.
     /// </summary>
@@ -318,40 +303,22 @@ public class PlayerController : MonoBehaviour
     {
         get
         {
-            return jammedStacks;
-        }
-        private set
-        {
-            jammedStacks = value;
-            if (jammedStacks <= 0)
-            {
-                IsJammed = false;
-                jammedStacks = 0;
-            }
-            else
-                IsJammed = true;
+            return GetStacks(Effects.Debuff.Jam);
         }
     }
     #endregion
 
-    [Header("Effects")]
     #region Effects
-    private bool nextChipActivatesTwice;
     /// <summary>
     /// Used to apply effect of activing a chip twice.
     /// </summary>
-    public bool NextChipActivatesTwice
+    public bool IsMotivated
     {
         get
         {
-            return nextChipActivatesTwice;
-        }
-        private set
-        {
-            nextChipActivatesTwice = value;
+            return ListOfActiveEffects.Any(e => e.Effect.Equals(Effects.SpecialEffects.Motivation));
         }
     }
-    private bool isImpervious;
     /// <summary>
     /// Used to apply effect to not take Damage.
     /// </summary>
@@ -359,19 +326,12 @@ public class PlayerController : MonoBehaviour
     {
         get
         {
-            return isImpervious;
-        }
-        private set
-        {
-            isImpervious = value;
+            return ListOfActiveEffects.Any(e => e.Effect.Equals(Effects.SpecialEffects.Impervious));
         }
     }
+    #endregion
 
-    /// <summary>
-    /// List of current Effects the player has active.
-    /// </summary>
-    public List<Effects.Effect> ListOfActiveEffects = new List<Effects.Effect>();
-    #endregion                    
+    #endregion
 
     // Awake is called when instance is being loaded
     void Awake()
@@ -393,6 +353,8 @@ public class PlayerController : MonoBehaviour
         agent.speed = walkSpeed;
 
         Initialize();
+
+        CharacterSpeak("Made it\nhere we go.", false, 0.5f,2f);
     }
 
     /// <summary>
@@ -417,7 +379,7 @@ public class PlayerController : MonoBehaviour
         health = DataManager.Instance.CurrentGameData.Health;
         MaxHealth = DataManager.Instance.CurrentGameData.MaxHealth;
         Scrap = DataManager.Instance.CurrentGameData.Scraps;
-        Energy = MaxEnergy;
+        Energy = MaxEnergy;       
     }
 
     /// <summary>
@@ -573,130 +535,142 @@ public class PlayerController : MonoBehaviour
 
     #endregion
 
-    #region Effects
+    #region EffectsMethods
+
+    // Add Effect Methods
+
+    #region AddEffects
+    /// <summary>
+    /// Add buff to player.
+    /// </summary>
+    /// <param name="buff"></param>
+    /// <param name="stacks"></param>
+    public void AddEffect(Effects.Buff buff, int stacks)
+    {
+        AddOrUpdateEffect(buff, stacks);
+    }
+    /// <summary>
+    /// Add Debuff to player
+    /// </summary>
+    /// <param name="debuff"></param>
+    /// <param name="stacks"></param>
+    public void AddEffect(Effects.Debuff debuff, int stacks)
+    {
+        AddOrUpdateEffect(debuff, stacks);
+    }
+    /// <summary>
+    /// Add Special effec tto player
+    /// </summary>
+    /// <param name="specialEffect"></param>
+    public void AddEffect(Effects.SpecialEffects specialEffect)
+    {
+        if (!ListOfActiveEffects.Any(e => e.Effect.Equals(specialEffect)))
+        {
+            ListOfActiveEffects.Add(new Effects.StatusEffect(specialEffect, 0));
+        }
+    }
 
     /// <summary>
-    /// Apply Skill Effect
+    /// Add Special Effect to player
     /// </summary>
+    /// <typeparam name="T"></typeparam>
     /// <param name="effect"></param>
-    public void ApplyEffect(Effects.Effect effect)
+    /// <param name="stacks"></param>
+    private void AddOrUpdateEffect<T>(T effect, int stacks) where T : Enum
     {
-        switch (effect)
+        for (int i = 0; i < ListOfActiveEffects.Count; i++)
         {
-            case Effects.Effect.Motivation:
-                NextChipActivatesTwice = true;
-                break;
-            case Effects.Effect.Impervious:
-                IsImpervious = true;
-                break;
-            default:
-                break;
+            var statusEffect = ListOfActiveEffects[i];
+            if (statusEffect.Effect.Equals(effect))
+            {
+                statusEffect.StackCount += stacks;
+                ListOfActiveEffects[i] = statusEffect; // Reassign to update the list
+                return;
+            }
         }
 
-        ListOfActiveEffects.Add(effect);
-
+        // If the effect does not exist in the list
+        ListOfActiveEffects.Add(new Effects.StatusEffect(effect, stacks));
     }
+    #endregion
 
+    // Remove Effect Methods
+
+    #region RemoveEffects
     /// <summary>
-    /// Apply Buff to Player
+    /// Remove buff from player
     /// </summary>
-    /// <param name="buffToApply"></param>
-    /// <param name="buffStacks"></param>
-    public void ApplyEffect(Effects.Buff buffToApply, int buffStacks)
-    {
-        //Play buff sound
-        SoundManager.PlayFXSound(SoundFX.Buff);
-
-        switch (buffToApply)
-        {
-            case Effects.Buff.Galvanize:
-                GalvanizedStack += buffStacks;
-                break;
-            case Effects.Buff.Power:
-                PoweredStacks += buffStacks;
-                break;
-        }
-    }
-
-    /// <summary>
-    /// Apply Debuff to player.
-    /// </summary>
-    /// <param name="deBuffToApply"></param>
-    /// <param name="deBuffStacks"></param>
-    public void ApplyEffect(Effects.Debuff deBuffToApply, int deBuffStacks)
-    {
-        //Play sound effect
-        SoundManager.PlayFXSound(SoundFX.Debuff);
-
-        switch (deBuffToApply)
-        {
-            case Effects.Debuff.Drained:
-                DrainedStacks += deBuffStacks;
-                break;
-            case Effects.Debuff.WornDown:
-                WornDownStacks += deBuffStacks;
-                break;
-            case Effects.Debuff.Jam:
-                JammedStacks += deBuffStacks;
-                break;
-            default:
-                break;
-        }
-    }
-
-    /// <summary>
-    /// Remove Debuffs on player.
-    /// </summary>
-    /// <param name="deBuffToRemove"></param>
-    /// <param name="amount"></param>
+    /// <param name="buff"></param>
+    /// <param name="stacks"></param>
     /// <param name="removeAll"></param>
-    public void RemoveEffect(Effects.Debuff deBuffToRemove, int amount, bool removeAll)
+    public void RemoveEffect(Effects.Buff buff, int stacks = 0, bool removeAll = false)
     {
-        switch (deBuffToRemove)
-        {
-            case Effects.Debuff.Drained:
-                if (removeAll)
-                    DrainedStacks = 0;
-                else
-                    DrainedStacks -= amount;
-                break;
-            case Effects.Debuff.Jam:
-                if (removeAll)
-                    JammedStacks = 0;
-                else
-                    JammedStacks -= amount;
-                break;
-            case Effects.Debuff.WornDown:
-                if (removeAll)
-                    WornDownStacks = 0;
-                else
-                    WornDownStacks -= amount;
-                break;
-            default:
-                Debug.LogWarning("Debuff not found.");
-                break;
-        }
+        RemoveOrReduceEffect(buff, stacks, removeAll);
     }
 
     /// <summary>
-    /// Remove an special affect from being isActive.
+    /// Remove Debuff from Player
     /// </summary>
-    /// <param name="effect"></param>
-    public void RemoveEffect(Effects.Effect effect)
-    {
-        switch (effect)
-        {
-            case Effects.Effect.Motivation:
-                NextChipActivatesTwice = false;
-                break;
-            default:
-                Debug.LogWarning("Effect hasn't been programmed.");
-                break;
-        }
+    /// <param name="debuff"></param>
+    /// <param name="stacks"></param>
+    /// <param name="removeAll"></param>
 
-        ListOfActiveEffects.Remove(effect);
+    public void RemoveEffect(Effects.Debuff debuff, int stacks = 0, bool removeAll = false)
+    {
+        RemoveOrReduceEffect(debuff, stacks, removeAll);
     }
 
+    /// <summary>
+    /// Remove Speical effect from player
+    /// </summary>
+    /// <param name="specialEffect"></param>
+    public void RemoveEffect(Effects.SpecialEffects specialEffect)
+    {
+        ListOfActiveEffects.RemoveAll(e => e.Effect.Equals(specialEffect));
+    }
+
+    /// <summary>
+    /// Remove or Reduce Effect on player.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="effect"></param>
+    /// <param name="stacks"></param>
+    /// <param name="removeAll"></param>
+    private void RemoveOrReduceEffect<T>(T effect, int stacks, bool removeAll = false) where T : Enum
+    {
+        for (int i = 0; i < ListOfActiveEffects.Count; i++)
+        {
+            var statusEffect = ListOfActiveEffects[i];
+            if (statusEffect.Effect.Equals(effect))
+            {
+                if (removeAll || statusEffect.StackCount <= stacks)
+                {
+                    ListOfActiveEffects.RemoveAt(i);
+                    return;
+                }
+
+                statusEffect.StackCount -= stacks;
+
+                // Reassign to ensure the list is updated
+                ListOfActiveEffects[i] = statusEffect;
+                return;
+            }
+        }
+    }
+    #endregion
+
+    private int GetStacks<T>(T effect) where T : Enum
+    {
+        foreach (var statusEffect in ListOfActiveEffects)
+        {
+            if (statusEffect.Effect.Equals(effect))
+            {
+                return statusEffect.StackCount;
+            }
+        }
+
+        return 0;
+    }
     #endregion
 
     #region Scrap
@@ -827,7 +801,7 @@ public class PlayerController : MonoBehaviour
             Shield = 0;
 
         //Remove buffs by 1
-        GalvanizedStack--;
+        RemoveOrReduceEffect(Effects.Buff.Galvanize, 1);
     }
 
     /// <summary>
@@ -839,9 +813,9 @@ public class PlayerController : MonoBehaviour
         RecoverFullEnergy();
 
         //Remove debuffs by 1
-        DrainedStacks--;
-        WornDownStacks--;
-        JammedStacks--;
+        RemoveOrReduceEffect(Effects.Debuff.Drained, 1);
+        RemoveOrReduceEffect(Effects.Debuff.WornDown, 1);
+        RemoveOrReduceEffect(Effects.Debuff.Jam, 1);
     }
 
     /// <summary>
@@ -851,9 +825,9 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public void RoundEnd()
     {
-        if (galvanizedStack > 0)
+        if (GalvanizedStacks > 0)
         {
-            ApplyShield(galvanizedStack);
+            ApplyShield(GalvanizedStacks);
         }
     }
 
@@ -878,4 +852,21 @@ public class PlayerController : MonoBehaviour
     }
 
     #endregion
+
+    /// <summary>
+    /// To make character speak in game world.
+    /// </summary>
+    /// <param name="message">accepts string format for textmeshpro</param>
+    /// <param name="revealByLetter">true if you want to reveal speech by letter or false by word</param>
+    /// <param name="howFastToTalk"></param>
+    /// <param name="howLongToDisplay">default is 3</param>
+    public void CharacterSpeak(string message, bool revealByLetter, float howFastToTalk, float howLongToDisplay = 3f)
+    {
+        uiController.PlayerTalk(message, revealByLetter, howFastToTalk, howLongToDisplay);
+    }
+    [ContextMenu("Test Speak")]
+    private void TestSpeak()
+    {
+        CharacterSpeak("I have a voice.\nI realy do have a voice !!", true, 0.1f, 5f);
+    }
 }

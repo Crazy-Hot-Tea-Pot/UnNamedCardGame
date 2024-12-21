@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using TMPro;
+using System.Linq;
+using System;
 /// <summary>
 /// For UI display of Intent
 /// </summary>
@@ -37,7 +39,10 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    public float AttackRange;       
+    /// <summary>
+    /// Range enemy must be to attack the player.
+    /// </summary>
+    public float AttackRange;     
 
     public float DistanceToPlayer
     {
@@ -65,7 +70,7 @@ public class Enemy : MonoBehaviour
     /// </summary>
     public Camera playerCamera;
 
-    [Header("Enemy statuss")]
+    [Header("Enemy status")]
     #region EnemyStatus
     private string enemyName;
 
@@ -183,7 +188,23 @@ public class Enemy : MonoBehaviour
 
     [Header("Status Effects")]
     #region StatusEffects
-    private int galvanizedStacks;
+
+    [SerializeField]
+    private List<Effects.StatusEffect> listOfActiveEffects = new List<Effects.StatusEffect>();
+
+    public List<Effects.StatusEffect> ListOfActiveEffects
+    {
+        get => listOfActiveEffects;
+        set
+        {
+            listOfActiveEffects = value;
+
+            // Update the UI when effects change
+            thisEnemyUI.UpdateEffectsPanel(listOfActiveEffects);
+        }
+    }
+
+
     /// <summary>
     /// Is enemy GalvanizedStacks.
     /// Added for animation or effect later.
@@ -192,50 +213,22 @@ public class Enemy : MonoBehaviour
     {
         get
         {
-            return isGalvanized;
-        }
-        private set
-        {
-            isGalvanized = value;
-
-            // remove Galvanized from panel
-            if (!isGalvanized)
-                thisEnemyUI.RemoveEffect(Effects.Buff.Galvanize.ToString());
+            if (GalvanizedStacks > 0)            
+                return true;            
+            else
+                return false;
         }
     }
-    private bool isGalvanized;
     /// <summary>
     /// Amount of stacks of Galvanize the enemy have.
     /// </summary>
     public int GalvanizedStacks
     {
-        get => galvanizedStacks;
-        protected set
+        get
         {
-            galvanizedStacks = value;
-            if (galvanizedStacks <= 0)
-                IsGalvanized = false;
-            else if (galvanizedStacks >= 1)
-                IsGalvanized = true;
+            return GetStacks(Effects.Buff.Galvanize);
         }
     }
-    private int powerStacks;
-    /// <summary>
-    /// Amount of stacks of Power the enemy have.
-    /// </summary>
-    public int PowerStacks
-    {
-        get => powerStacks;
-        protected set
-        {
-            powerStacks = value;
-            if (powerStacks <= 0)
-                IsPowered = false;
-            else
-                IsPowered = true;
-        }
-    }
-    private bool isPowered;
     /// <summary>
     /// Is enemy powered.
     /// Added for animation or effect later.
@@ -244,17 +237,36 @@ public class Enemy : MonoBehaviour
     {
         get
         {
-            return isPowered;
-        }
-        protected set
-        {
-            isPowered = value;
-
-            if (!IsPowered)
-                thisEnemyUI.RemoveEffect(Effects.Buff.Power.ToString());
+            if (PowerStacks > 0)
+                return true;
+            else
+                return false;
         }
     }
-    private int drainStacks;
+    /// <summary>
+    /// Amount of stacks of Power the enemy have.
+    /// </summary>
+    public int PowerStacks
+    {
+        get
+        {
+            return GetStacks(Effects.Buff.Power);
+        }
+    }
+    /// <summary>
+    /// Is enemy Drained.
+    /// Added for animation or effect later.
+    /// </summary>
+    public bool IsDrained
+    {
+        get
+        {
+            if(DrainedStacks > 0) 
+                return true;
+            else
+                return false;
+        }
+    }
     /// <summary>
     /// Amount of stacks of Drained the enemy have.
     /// </summary>
@@ -262,35 +274,11 @@ public class Enemy : MonoBehaviour
     {
         get
         {
-            return drainStacks;
+            return GetStacks(Effects.Debuff.Drained);
         }
-        protected set
-        {
-            drainStacks = value;
-            if (drainStacks <= 0)
-                IsDrained = false;
-            else
-                IsDrained = true;
-        }
-    }
-    private bool isDrained;
-    /// <summary>
-    /// Is enemy Drained.
-    /// Added for animation or effect later.
-    /// </summary>
-    public bool IsDrained
-    {
-        get => isDrained;
-        private set
-        {
-            isDrained = value;
-
-            //Remove drained from panel
-            if (!IsDrained)
-                thisEnemyUI.RemoveEffect(Effects.Debuff.Drained.ToString());
-        }
-    }
+    }        
     #endregion
+
     public GameObject damageTextPrefab;
 
     [Header("Dropped stuff")]
@@ -303,6 +291,7 @@ public class Enemy : MonoBehaviour
     public int DroppedScrap;
 
     private float distanceToPlayer;
+
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -387,73 +376,6 @@ public class Enemy : MonoBehaviour
 
         EnemyManager.Instance.RemoveEnemy(this.gameObject);
     }
-    [ContextMenu("Test Death")]
-    public void TestDeath()
-    {
-        CurrentHP = 0;
-    }
-
-    /// <summary>
-    /// Call at end of enemyies turn.
-    /// </summary>
-    public virtual void EndTurn()
-    {
-        //Remove debuffs by 1
-        DrainedStacks--;
-    }
-
-    /// <summary>
-    /// Called when round ends
-    /// </summary>
-    public virtual void RoundEnd()
-    {
-        if (GalvanizedStacks > 0)
-        {
-            Shield += GalvanizedStacks;
-            IsGalvanized = false;
-        }
-    }
-    
-    /// <summary>
-    /// Apply Debuffs to Enemy
-    /// </summary>
-    /// <param name="debuffToApply"></param>
-    /// <param name="debuffStacks"></param>
-    public virtual void ApplyDebuff(Effects.Debuff debuffToApply, int debuffStacks)
-    {
-        //Plays Debuff sound effect
-        SoundManager.PlayFXSound(SoundFX.Debuff, this.gameObject.transform);
-
-        switch (debuffToApply)
-        {
-            case Effects.Debuff.Drained:
-                DrainedStacks += debuffStacks;                
-                break;
-            default:
-                break;
-        }
-
-        thisEnemyUI.AddEffect(debuffToApply.ToString());
-    }
-
-    /// <summary>
-    /// Apply Buff to Enemy
-    /// </summary>
-    /// <param name="buffToApply"></param>
-    /// <param name="buffStacks"></param>
-    public virtual void ApplyBuff(Effects.Buff buffToApply, int buffStacks)
-    {        
-        switch (buffToApply)
-        {
-            case Effects.Buff.Galvanize:
-                GalvanizedStacks += buffStacks;                
-                break;
-            case Effects.Buff.Power:
-                PowerStacks+= buffStacks;                
-                break;
-        }
-        thisEnemyUI.AddEffect(buffToApply.ToString());
-    }       
 
     /// <summary>
     /// Give enemy shield.
@@ -472,13 +394,6 @@ public class Enemy : MonoBehaviour
         var nextIntent = GetNextIntent();
         thisEnemyUI.UpdateIntent(nextIntent);
     }
-
-    /// <summary>
-    /// Combat start stuff for everyenemy.
-    /// </summary>
-    public virtual void CombatStart()
-    {
-    }
    
     /// <summary>
     /// Base Perform Intent.
@@ -488,35 +403,6 @@ public class Enemy : MonoBehaviour
     {
         if (this.gameObject != null)
             CombatController.TurnUsed(this.gameObject);
-    }
-
-    /// <summary>
-    /// Start Combat turn
-    /// </summary>
-    protected virtual void StartTurn()
-    {
-        //Remove ShieldBar if there is shield
-        if (Shield > 0)
-            Shield = 0;
-
-        //Remove Buffs
-        PowerStacks--;
-        GalvanizedStacks--;
-
-        //Look at player
-        this.gameObject.transform.LookAt(EnemyTarget.transform);
-
-        //Check if player is in range
-        if (DistanceToPlayer <= AttackRange)
-        {
-            agent.ResetPath();
-            PerformIntent();
-        }
-        else
-        {
-            // move to player
-            agent.SetDestination(EnemyTarget.transform.position);
-        }
     }
 
     /// <summary>
@@ -547,4 +433,215 @@ public class Enemy : MonoBehaviour
         return new Intent("Unknown", Color.gray);
     }
 
+    #region Combat
+
+    /// <summary>
+    /// Combat start stuff for everyenemy.
+    /// </summary>
+    public virtual void CombatStart()
+    {
+    }
+
+    /// <summary>
+    /// Call at end of enemyies turn.
+    /// </summary>
+    public virtual void EndTurn()
+    {
+        //Remove debuffs by 1
+        RemoveEffect(Effects.Debuff.Drained, 1);        
+    }
+
+    /// <summary>
+    /// Called when round ends
+    /// </summary>
+    public virtual void RoundEnd()
+    {
+        if (IsGalvanized)
+        {
+            Shield += GalvanizedStacks;            
+        }
+    }
+
+    /// <summary>
+    /// Start Combat turn
+    /// </summary>
+    protected virtual void StartTurn()
+    {
+        //Remove ShieldBar if there is shield
+        if (Shield > 0)
+            Shield = 0;
+
+        //Remove Buffs
+        RemoveEffect(Effects.Buff.Power, 1);
+        RemoveEffect(Effects.Buff.Galvanize, 1);        
+
+        //Look at player
+        this.gameObject.transform.LookAt(EnemyTarget.transform);
+
+        //Check if player is in range
+        if (DistanceToPlayer <= AttackRange)
+        {
+            agent.ResetPath();
+            PerformIntent();
+        }
+        else
+        {
+            // move to player
+            agent.SetDestination(EnemyTarget.transform.position);
+        }
+    }
+
+    #endregion
+
+    #region Effects
+
+    #region Add Effects
+
+    /// <summary>
+    /// Add Buff to enemy.
+    /// </summary>
+    /// <param name="buff"></param>
+    /// <param name="stacks"></param>
+    public void AddEffect(Effects.Buff buff, int stacks)
+    {
+        AddOrUpdateEffect(buff, stacks);
+    }
+
+    /// <summary>
+    /// Add debuff to enemy.
+    /// </summary>
+    /// <param name="debuff"></param>
+    /// <param name="stacks"></param>
+    public void AddEffect(Effects.Debuff debuff, int stacks)
+    {
+        AddOrUpdateEffect(debuff, stacks);
+    }
+
+    /// <summary>
+    /// Add Special Effect to enemy.
+    /// </summary>
+    /// <param name="specialEffect"></param>
+    public void AddEffect(Effects.SpecialEffects specialEffect)
+    {
+        if (!ListOfActiveEffects.Any(e => e.Effect.Equals(specialEffect)))
+        {
+            ListOfActiveEffects.Add(new Effects.StatusEffect(specialEffect, 0));
+        }
+    }
+
+    /// <summary>
+    /// Add a new effect or update the stacks on an effect
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="effect"></param>
+    /// <param name="stacks"></param>
+    private void AddOrUpdateEffect<T>(T effect, int stacks) where T : Enum
+    {
+        for (int i = 0; i < ListOfActiveEffects.Count; i++)
+        {
+            var statusEffect = ListOfActiveEffects[i];
+            if (statusEffect.Effect.Equals(effect))
+            {
+                statusEffect.StackCount += stacks;
+                // Reassign the updated effect
+                ListOfActiveEffects[i] = statusEffect;
+                return;
+            }
+        }
+
+        // Add a new effect if it doesn't exist
+        ListOfActiveEffects.Add(new Effects.StatusEffect(effect, stacks));
+    }
+    #endregion
+
+    #region Remove Effects
+
+    /// <summary>
+    /// Remove Buff from Enemy
+    /// </summary>
+    /// <param name="buff"></param>
+    /// <param name="stacks"></param>
+    /// <param name="removeAll"></param>
+    public void RemoveEffect(Effects.Buff buff, int stacks = 0, bool removeAll = false)
+    {
+        RemoveOrReduceEffect(buff, stacks, removeAll);
+    }
+
+    /// <summary>
+    /// Remove Debuff From Enemy
+    /// </summary>
+    /// <param name="debuff"></param>
+    /// <param name="stacks"></param>
+    /// <param name="removeAll"></param>
+    public void RemoveEffect(Effects.Debuff debuff, int stacks = 0, bool removeAll = false)
+    {
+        RemoveOrReduceEffect(debuff, stacks, removeAll);
+    }
+
+    /// <summary>
+    /// Remove Special Effect from Enemy
+    /// </summary>
+    /// <param name="specialEffect"></param>
+    public void RemoveEffect(Effects.SpecialEffects specialEffect)
+    {
+        ListOfActiveEffects.RemoveAll(e => e.Effect.Equals(specialEffect));
+    }
+
+    /// <summary>
+    /// Remove or reduce stacks effects for enemy.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="effect"></param>
+    /// <param name="stacks"></param>
+    /// <param name="removeAll"></param>
+    private void RemoveOrReduceEffect<T>(T effect, int stacks, bool removeAll = false) where T : Enum
+    {
+        for (int i = 0; i < ListOfActiveEffects.Count; i++)
+        {
+            var statusEffect = ListOfActiveEffects[i];
+            if (statusEffect.Effect.Equals(effect))
+            {
+                if (removeAll || statusEffect.StackCount <= stacks)
+                {
+                    // Fully remove the effect
+                    ListOfActiveEffects.RemoveAt(i);
+                    return;
+                }
+
+                // Reduce stack count
+                statusEffect.StackCount -= stacks;
+                ListOfActiveEffects[i] = statusEffect;
+                return;
+            }
+        }
+    }
+    #endregion
+
+    /// <summary>
+    /// Get how many stacks the current Effect has.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="effect"></param>
+    /// <returns></returns>
+    private int GetStacks<T>(T effect) where T : Enum
+    {
+        foreach (var statusEffect in ListOfActiveEffects)
+        {
+            if (statusEffect.Effect.Equals(effect))
+            {
+                return statusEffect.StackCount;
+            }
+        }
+
+        // Return 0 if the effect is not present
+        return 0;
+    }
+
+    #endregion
+
+    [ContextMenu("Test Death")]
+    public void TestDeath()
+    {
+        CurrentHP = 0;
+    }
 }

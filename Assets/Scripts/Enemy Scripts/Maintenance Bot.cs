@@ -54,7 +54,7 @@ public class MaintenanceBot : Enemy
     {
         Debug.Log("Maintenance Bot uses Disassemble!");
         EnemyTarget.GetComponent<PlayerController>().DamagePlayerBy(9);
-        EnemyTarget.GetComponent<PlayerController>().ApplyEffect(Effects.Debuff.WornDown, 1);        
+        EnemyTarget.GetComponent<PlayerController>().AddEffect(Effects.Debuff.WornDown, 1);        
     }
     /// <summary>
     /// Gains 4 stacks of Galvanize.
@@ -64,7 +64,7 @@ public class MaintenanceBot : Enemy
         //PlaySound
         SoundManager.PlayFXSound(SoundFX.GalvanizeMainenanceBot, this.gameObject.transform);
 
-        ApplyBuff(Effects.Buff.Galvanize, 4);
+        AddEffect(Effects.Buff.Galvanize, 4);        
     }
     /// <summary>
     /// heals 30% of its Max Hp

@@ -39,7 +39,7 @@ public class GangLeader : Enemy
     /// </summary>    
     private void Disorient()
     {
-        EnemyTarget.GetComponent<PlayerController>().ApplyEffect(Effects.Debuff.Jam, 1);
+        EnemyTarget.GetComponent<PlayerController>().AddEffect(Effects.Debuff.Jam, 1);
         EnemyTarget.GetComponent<PlayerController>().DamagePlayerBy(6);
     }
     /// <summary>
@@ -57,13 +57,13 @@ public class GangLeader : Enemy
     /// </summary>
     private void Threaten()
     {
-        this.ApplyBuff(Effects.Buff.Power, 2);
+        this.AddEffect(Effects.Buff.Power, 2);
 
         //Come back and remove this for better logic
         try
         {
-            Looter1.GetComponent<Looter>().ApplyBuff(Effects.Buff.Power, 2);
-            Looter2.GetComponent<Looter>().ApplyBuff(Effects.Buff.Power, 2);
+            Looter1.GetComponent<Looter>().AddEffect(Effects.Buff.Power, 2);
+            Looter2.GetComponent<Looter>().AddEffect(Effects.Buff.Power, 2);
         }
         catch
         {
@@ -76,7 +76,7 @@ public class GangLeader : Enemy
     /// </summary>
     private void Intimidate()
     {
-        EnemyTarget.GetComponent<PlayerController>().ApplyEffect(Effects.Debuff.WornDown, 1);
-        EnemyTarget.GetComponent<PlayerController>().ApplyEffect(Effects.Debuff.Drained, 1);
+        EnemyTarget.GetComponent<PlayerController>().AddEffect(Effects.Debuff.WornDown, 1);
+        EnemyTarget.GetComponent<PlayerController>().AddEffect(Effects.Debuff.Drained, 1);
     }
 }

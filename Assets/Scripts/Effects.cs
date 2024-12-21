@@ -20,6 +20,7 @@ public static class Effects
         /// </summary>
         Power,
     }
+
     /// <summary>
     /// Type of Debuffs
     /// </summary>
@@ -39,10 +40,11 @@ public static class Effects
         /// </summary>
         WornDown
     }
+
     /// <summary>
-    /// Type of Effects
+    /// Type of Special Effects
     /// </summary>
-    public enum Effect
+    public enum SpecialEffects
     {
         None,
         /// <summary>
@@ -58,6 +60,24 @@ public static class Effects
         /// </summary>
         LuckyTrinket,
     }
+
+    /// <summary>
+    /// General structure to represent a status effect.
+    /// </summary>
+    public struct StatusEffect
+    {
+        // Effect(buff,Debuff or SpecialEffect)
+        public Enum Effect;
+        // Stack count for buffs/debuffs (if applicable)
+        public int StackCount;        
+
+        public StatusEffect(Enum effect, int stackCount)
+        {
+            Effect = effect;
+            StackCount = stackCount;
+        }
+    }
+
     // FOR SCRIPTABLES
 
     /// <summary>

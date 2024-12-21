@@ -26,7 +26,7 @@ public class DefenseChip : NewChip
     /// <summary>
     /// Effect to give.
     /// </summary>
-    public Effects.Effect effectToApply = Effect.None;
+    public Effects.SpecialEffects effectToApply = Effects.SpecialEffects.None;
 
     /// <summary>
     /// The buff to apply.
@@ -78,17 +78,17 @@ public class DefenseChip : NewChip
         
         //Apply worndown effect
         if (player.IsWornDown)
-        {
             GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().ApplyShield(Mathf.FloorToInt(shieldAmount*0.7f));
-        }
         else
             GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().ApplyShield(shieldAmount);
 
         //ApplyEffect to player
-        player.ApplyEffect(effectToApply);
+        if(effectToApply != Effects.SpecialEffects.None)
+            player.AddEffect(effectToApply);        
 
         //Apply buffs to player
-        player.ApplyEffect(buffToApply, buffStacks);
+        if(buffToApply != Effects.Buff.None)
+            player.AddEffect(buffToApply, buffStacks);
 
         // Remove specified debuffs will only remove first one if not upgraded
         foreach (DebuffInfo debuffToRemove in deBuffsToRemove)
@@ -100,9 +100,7 @@ public class DefenseChip : NewChip
             catch
             {
                 Debug.LogWarning($"Debuff {debuffToRemove.debuffType} not recognized.");
-            }                                                           
-
-            Debug.Log($"{player.name} removes the {debuffToRemove.debuffType} debuff.");
+            }                                                                       
 
             //Break out if not upgraded
             if (!IsUpgraded)

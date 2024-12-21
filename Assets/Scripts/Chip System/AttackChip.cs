@@ -36,27 +36,26 @@ public class AttackChip : NewChip
     public override void OnChipPlayed(PlayerController player, Enemy Target)
     {
         base.OnChipPlayed(player,Target);
-        
+
+        int tempDamage = damage;
+
+        // Apply buffs/debuffs to damage
         if (player.IsPowered)
         {
-            Debug.Log("Player does Empower attack.");
-            Target.TakeDamage(damage+player.PoweredStacks);
+            tempDamage += player.PoweredStacks;
         }
-        else if (player.IsDrained)
+
+        if (player.IsDrained)
         {
-            Target.TakeDamage(Mathf.FloorToInt(damage * 0.8f));
-            player.RemoveEffect(Effects.Debuff.Drained, 1,false);            
-            Debug.Log("Player is Drained! Damage reduced to: " + Mathf.FloorToInt(damage * 0.8f));
+            tempDamage = Mathf.FloorToInt(tempDamage * 0.8f);
         }
-        else
-        {
-            Target.TakeDamage(damage);
-        }
+
+        Target.TakeDamage(tempDamage);
 
         //Now to apply debuffs
         if (debuffStacks > 0)
         {
-            Target.ApplyDebuff(debuffToApply, debuffStacks);
+            Target.AddEffect(debuffToApply, debuffStacks);
         }
     }
 

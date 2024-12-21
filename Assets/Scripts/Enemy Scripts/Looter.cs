@@ -110,13 +110,13 @@ public class Looter : Enemy
         if (PowerStacks > 0)
         {
             GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().DamagePlayerBy(6 + PowerStacks);
-            PowerStacks = 0;
+            RemoveEffect(Effects.Buff.Power,0, true);
         }
         // Drained Swipe
         else if (DrainedStacks > 0)
         {
             GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().DamagePlayerBy(Mathf.FloorToInt(6 - 0.8f));
-            DrainedStacks--;
+            RemoveEffect(Effects.Debuff.Drained,1, false);            
         }
         // Default Swipe
         else

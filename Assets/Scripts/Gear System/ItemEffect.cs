@@ -20,7 +20,13 @@ public class ItemEffect : ScriptableObject
         }
     }
 
-    public enum ConditionEffect { LessThanHalfHealth }
+    public enum ConditionEffect { 
+        None,
+        /// <summary>
+        /// If Enemy has less than 50% hp.
+        /// </summary>
+        LessThanHalfHealth 
+    }
 
     public string ItemEffectDescription;
     [Tooltip("Cost to use the ItemEffect")]
@@ -35,20 +41,36 @@ public class ItemEffect : ScriptableObject
 
     [Tooltip("If effect is only applied on special conditions.")]
     public bool SpecialConditionEffect = false;
-    public ConditionEffect Condition;
+    public ConditionEffect Condition = ConditionEffect.None;
     public List<Effects.TempDeBuffs> deBuffEffectToApplyToEnemy = new();
 
 
     [Header("Effects if applicable to apply to player on Use")]
     public List<Effects.TempBuffs> buffToApplyToPlayer = new();
     public List<Effects.TempDeBuffs> debuffToApplyToPlayer = new();
-    public Effects.Effect effectToApplyToPlayer;
+    public Effects.SpecialEffects effectToApplyToPlayer;
 
     private bool isEquipped = false;
 
     public virtual void Activate(PlayerController player, Item item, Enemy enemy = null)
     {
+        // Apply buffs
+        foreach (Effects.TempBuffs buff in buffToApplyToPlayer)
+        {
+            player.AddEffect(buff.Buff, buff.AmountToBuff);
+        }
 
+        // Apply debuffs
+        foreach (Effects.TempDeBuffs debuff in debuffToApplyToPlayer)
+        {
+            player.AddEffect(debuff.DeBuff, debuff.AmountToDeBuff);
+        }
+
+        // Apply special effects
+        if (effectToApplyToPlayer != Effects.SpecialEffects.None)
+        {
+            player.AddEffect(effectToApplyToPlayer);
+        }
     }
 
     protected virtual void Equipped()
