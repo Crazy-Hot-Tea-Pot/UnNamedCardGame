@@ -145,8 +145,7 @@ public class CombatController : MonoBehaviour
     void Awake()
     {
         // assign player Input class
-        playerInputActions = new PlayerInputActions();
-        
+        playerInputActions = new PlayerInputActions();        
     }
 
     // Start is called before the first frame update
@@ -210,7 +209,10 @@ public class CombatController : MonoBehaviour
         if (gameObject.tag == "Enemy")
             gameObject.GetComponent<Enemy>().EndTurn();
         else
+        {
             gameObject.GetComponent<PlayerController>().EndTurn();
+            UiManager.Instance.EndTurnButtonVisibility(true);
+        }
 
         foreach (var combadent in Combadants)
         {
@@ -426,6 +428,8 @@ public class CombatController : MonoBehaviour
         }
 
         ChipManager.Instance.RefreshPlayerHand();
+
+        UiManager.Instance.EndTurnButtonVisibility(true);
     }
 
     /// <summary>

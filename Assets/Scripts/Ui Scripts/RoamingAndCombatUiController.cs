@@ -50,21 +50,28 @@ public class RoamingAndCombatUiController : UiController
     }
     public override void Initialize()
     {
-        Debug.Log("RoamingAndCombatUiController initialized");        
+        Debug.Log("RoamingAndCombatUiController initialized");      
     }
+    public void ChangeEndButtonVisibility(bool visibility)
+    {
+        EndTurn.SetActive(visibility);
+        Debug.Log("Setting Button to " + visibility);
+    }
+
     /// <summary>
     /// Updates the UI for player HealthBar
     /// </summary>
     public void UpdateHealth(int currentHealth, int maxHealth)
     {        
 
-        float targetHealthPercentage = currentHealth / maxHealth;
+        float targetHealthPercentage = (float)currentHealth / maxHealth;
 
         StopCoroutine(UpdateHealthOverTime(targetHealthPercentage));
 
         // Start the coroutine to smoothly update the health bar
         StartCoroutine(UpdateHealthOverTime(targetHealthPercentage));
-    }    
+    }   
+    
     /// <summary>
     /// Updates the UI for player ShieldAmount
     /// </summary>
@@ -88,6 +95,23 @@ public class RoamingAndCombatUiController : UiController
             StartCoroutine(UpdateShieldOverTime(shieldPercentage, Shield, MaxShield));
         }
     }
+
+    /// <summary>
+    /// Updates the UI for player Energy
+    /// </summary>
+    /// <param name="currentEnergy"></param>
+    /// <param name="maxEnergy"></param>
+    public void UpdateEnergy(int currentEnergy, int maxEnergy)
+    {
+        // Normalize the energy value to a 0-1 range
+        float tempTargetFillAmount = currentEnergy / maxEnergy;
+
+
+        StopCoroutine(FillEnergyOverTime(tempTargetFillAmount));
+
+        StartCoroutine(FillEnergyOverTime(tempTargetFillAmount));
+    }
+
     private IEnumerator UpdateHealthOverTime(float targetFillAmount)
     {
         // While the bar is not at the target fill amount, update it
@@ -146,21 +170,6 @@ public class RoamingAndCombatUiController : UiController
         // Snap to final values
         ShieldBar.fillAmount = targetFillAmount;
         ShieldText.SetText($"{targetCurrentShield}/{MaxShield}");
-    }
-    /// <summary>
-    /// Updates the UI for player Energy
-    /// </summary>
-    /// <param name="currentEnergy"></param>
-    /// <param name="maxEnergy"></param>
-    public void UpdateEnergy(int currentEnergy, int maxEnergy)
-    {        
-            // Normalize the energy value to a 0-1 range
-            float tempTargetFillAmount = currentEnergy / maxEnergy;
-
-
-            StopCoroutine(FillEnergyOverTime(tempTargetFillAmount));
-
-            StartCoroutine(FillEnergyOverTime(tempTargetFillAmount));
     }
     /// <summary>
     /// Fill EnergyBar by amount over time.
