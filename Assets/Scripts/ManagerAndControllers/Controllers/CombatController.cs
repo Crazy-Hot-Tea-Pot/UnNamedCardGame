@@ -144,7 +144,7 @@ public class CombatController : MonoBehaviour
     public void EndTurn(GameObject combatant)
     {
         if (combatant == Player)        
-            UiManager.Instance.EndTurnButtonVisibility(false);
+            UiManager.Instance.EndTurnButtonInteractable(false);
 
         StartTurn();
     }
