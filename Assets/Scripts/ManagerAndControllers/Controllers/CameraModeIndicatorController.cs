@@ -63,7 +63,7 @@ public class CameraModeIndicatorController : MonoBehaviour
     }
 
     /// <summary>
-    /// Tell the player what mode the camera is in.
+    /// Tell the Player what mode the camera is in.
     /// </summary>
     /// <param name="state"></param>
     public void SwitchIndicatorTo(CameraController.CameraState state)

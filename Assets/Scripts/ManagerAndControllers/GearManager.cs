@@ -18,7 +18,7 @@ public class GearManager : MonoBehaviour
     }
 
     /// <summary>
-    /// What the player starts with in a new game.
+    /// What the Player starts with in a new game.
     /// </summary>
     [SerializeField]
     private List<Item> startingGear = new List<Item>();
@@ -29,13 +29,13 @@ public class GearManager : MonoBehaviour
     public IReadOnlyList<Item> StartingGear => startingGear;
 
     /// <summary>
-    /// List of Gear the player current has.
+    /// List of Gear the Player current has.
     /// Max is 10.
     /// </summary>
     public List<Item> PlayerCurrentGear = new List<Item>();
 
     /// <summary>
-    /// All gear in the game. Not what the player has.
+    /// All gear in the game. Not what the Player has.
     /// </summary>
     public List<Item> AllGear = new List<Item>();
 
@@ -81,7 +81,7 @@ public class GearManager : MonoBehaviour
     //    }
     //}
     /// <summary>
-    /// Add item to player gear.
+    /// Add item to Player gear.
     /// </summary>
     /// <param name="CloneOfNewItem">Clone Of item Only!</param>
     public bool Acquire(Item CloneOfNewItem)
@@ -107,7 +107,7 @@ public class GearManager : MonoBehaviour
 
     }
     /// <summary>
-    /// Remove item from player inventory
+    /// Remove item from Player inventory
     /// </summary>
     /// <param name="itemToRemove"></param>
     public void RemoveItem(Item itemToRemove)

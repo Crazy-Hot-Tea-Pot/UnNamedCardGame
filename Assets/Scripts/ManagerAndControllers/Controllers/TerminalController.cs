@@ -22,7 +22,7 @@ public class TerminalController : MonoBehaviour
     private TextMeshPro errorScreenText;
 
     /// <summary>
-    /// If player is interacting with terminal
+    /// If Player is interacting with terminal
     /// </summary>
     public bool IsInteractingWithMe
     {
@@ -37,7 +37,7 @@ public class TerminalController : MonoBehaviour
     }  
 
     /// <summary>
-    /// Chip player has selected
+    /// Chip Player has selected
     /// </summary>
     public NewChip SelectedChip
     {
@@ -326,7 +326,7 @@ public class TerminalController : MonoBehaviour
     }
 
     /// <summary>
-    /// Try to upgrade player HealthBar.
+    /// Try to upgrade Player HealthBar.
     /// </summary>
     public void AttemptToUpgradeHealth()
     {
@@ -443,7 +443,7 @@ public class TerminalController : MonoBehaviour
     }
 
     /// <summary>
-    /// Players animation and doe sother stuff so player can exit terminal.
+    /// Players animation and doe sother stuff so Player can exit terminal.
     /// </summary>
     /// <returns></returns>
     private IEnumerator ExitTerminal()

@@ -50,7 +50,7 @@ public class Chip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     }
 
     /// <summary>
-    /// Button Component so player can click on card
+    /// Button Component so Player can click on card
     /// </summary>
     public Button chipButton;
 
@@ -106,7 +106,7 @@ public class Chip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                     throw new NullReferenceException("No target assigned.");
                 }
 
-                //Check if player is jammed
+                //Check if Player is jammed
                 if (Player.GetComponent<PlayerController>().IsJammed)
                 {
                     return;

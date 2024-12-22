@@ -26,7 +26,7 @@ public class SkillEffects : ScriptableObject
     }
 
     /// <summary>
-    /// Default method for player-only effects
+    /// Default method for Player-only effects
     /// </summary>
     /// <param name="player"></param>
     public virtual void ApplyEffect(PlayerController player)
@@ -34,7 +34,7 @@ public class SkillEffects : ScriptableObject
         Debug.LogWarning("ApplyEffect method needs to be overridden for player-only effects.");
     }
     /// <summary>
-    /// Optional method for player-enemy interaction effects
+    /// Optional method for Player-enemy interaction effects
     /// </summary>
     /// <param name="player"></param>
     /// <param name="target"></param>
@@ -43,7 +43,7 @@ public class SkillEffects : ScriptableObject
         Debug.LogWarning("ApplyEffect method needs to be overridden for player-enemy interaction effects.");
     }
     /// <summary>
-    /// Optional method for player-enemy interaction effects and need card info
+    /// Optional method for Player-enemy interaction effects and need card info
     /// </summary>
     /// <param name="player"></param>
     /// <param name="target"></param>

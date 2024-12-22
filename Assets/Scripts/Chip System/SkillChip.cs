@@ -17,7 +17,7 @@ public class SkillChip : NewChip
     {
         base.OnChipPlayed(player,target);
 
-        // If the effect is player-only. might change to switch case later
+        // If the effect is Player-only. might change to switch case later
         if (specialEffect != null)
         {
             if (specialEffect is LeechEffect leechEffect)
@@ -27,7 +27,7 @@ public class SkillChip : NewChip
             }
             else
             {
-                // Apply player-only effect
+                // Apply Player-only effect
                 specialEffect.ApplyEffect(player);
             }
             Debug.Log(chipName + " triggered a special effect: " + specialEffect.name);

@@ -4,7 +4,7 @@ public class CameraSettings
     //How fast the camera moves.
     public float cameraSpeed = 3f;
 
-    //If player wants BoarderMovement on or off.
+    //If Player wants BoarderMovement on or off.
     public bool boarderMouseMovement = false;
         
 

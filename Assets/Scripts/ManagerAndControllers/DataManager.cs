@@ -181,7 +181,7 @@ public class DataManager : MonoBehaviour
         loadedData.ParseTimeStamp();
         CurrentGameData = loadedData;
 
-        //Load player stats
+        //Load Player stats
         CurrentGameData.Health = loadedData.Health;
         CurrentGameData.MaxHealth = loadedData.MaxHealth;
         CurrentGameData.Scraps = loadedData.Scraps;
@@ -260,7 +260,7 @@ public class DataManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Gets all the saves the player has made.
+    /// Gets all the saves the Player has made.
     /// </summary>
     /// <returns></returns>
     public List<GameData> GetAllSaves()

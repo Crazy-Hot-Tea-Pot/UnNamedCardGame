@@ -13,7 +13,7 @@ public class SceneChange : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        //If player collids with object
+        //If Player collids with object
         if (other.transform.tag == "Player")
         {
             //load next scene

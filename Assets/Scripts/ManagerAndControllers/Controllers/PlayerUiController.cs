@@ -60,7 +60,7 @@ public class PlayerUiController : MonoBehaviour
     }
 
     /// <summary>
-    /// Make it look like the player character in the game is talking to player.
+    /// Make it look like the Player character in the game is talking to Player.
     /// </summary>
     /// <param name="message">What you want the character to say.</param>
     /// <param name="byLetter">Reveal by letter or by word.</param>
