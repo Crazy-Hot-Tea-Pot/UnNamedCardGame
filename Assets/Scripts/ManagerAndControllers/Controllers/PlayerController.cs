@@ -21,8 +21,6 @@ public class PlayerController : MonoBehaviour
     // The Select Action from inputAction class.
     private InputAction select;
 
-    private bool inCombat;
-
     [Header("Needed Stuff")]    
     public PlayerInputActions playerInputActions;
     public NavMeshAgent agent;

@@ -48,6 +48,7 @@ public class RoamingAndCombatUiController : UiController
             UpdateEnergy(player.Energy, player.MaxEnergy);
         }        
     }
+
     public override void Initialize()
     {
         Debug.Log("RoamingAndCombatUiController initialized");      
@@ -67,9 +68,10 @@ public class RoamingAndCombatUiController : UiController
 
         yield return new WaitForSeconds(1f);
 
-        if (!PlayerHandContainer.PanelIsVisible)
+        if (!PlayerHandContainer.PanelIsVisible && ChipManager.Instance.PlayerHand.Count != 0)
             PlayerHandContainer.TogglePanel();
     }
+
     public void ChangeEndButtonVisibility(bool visibility)
     {
         EndTurn.SetActive(visibility);
@@ -96,7 +98,7 @@ public class RoamingAndCombatUiController : UiController
     public void UpdateShield(int Shield, int MaxShield)
     {        
 
-        if (Shield == 0 && MaxShield == 0)
+        if (Shield == 0 && MaxShield == 100)
         {
             ShieldContainer.SetActive(false);
         }
@@ -157,6 +159,7 @@ public class RoamingAndCombatUiController : UiController
         int finalPercentage = Mathf.RoundToInt(targetFillAmount * 100);
         HealthText.SetText(finalPercentage + "%");
     }
+
     private IEnumerator UpdateShieldOverTime(float targetFillAmount, int Shield, int MaxShield)
     {      
 
