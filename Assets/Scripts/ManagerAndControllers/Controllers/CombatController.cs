@@ -168,10 +168,14 @@ public class CombatController : MonoBehaviour
 
         // Add loot
         ScrapLootForCurrentCombat += scrapLoot;
+
         //Add items to loot
-        ItemsLootForCurrentCombat.AddRange(items);
+        if(items != null)
+            ItemsLootForCurrentCombat.AddRange(items);
+
         //Add chips to loot
-        NewChipLootForCurrentCombat.AddRange(newChips);
+        if(newChips != null)
+            NewChipLootForCurrentCombat.AddRange(newChips);
 
         // Check for combat end
         CheckCombatEnd();

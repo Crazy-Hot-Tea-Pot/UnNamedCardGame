@@ -88,9 +88,7 @@ public class Chip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     void Start()
     {        
-
-        Player = GameObject.FindGameObjectWithTag("Player");
-       
+        Player = GameObject.FindGameObjectWithTag("Player"); 
     }
     /// <summary>
     /// Runs Scriptable Chip
@@ -99,7 +97,6 @@ public class Chip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {        
         try
         {
-
                 // Check if there is a target available
                 if (CombatController.Target == null)
                 {
@@ -123,7 +120,10 @@ public class Chip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                     if (Player.GetComponent<PlayerController>().IsMotivated)
                     {
                         if (newChip is DefenseChip defenseChip)
+                        {
                             newChip.OnChipPlayed(Player.GetComponent<PlayerController>());
+                            newChip.OnChipPlayed(Player.GetComponent<PlayerController>());
+                        }
                         else
                         {
                             if (newChip.hitAllTargets)
@@ -143,8 +143,6 @@ public class Chip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                                 newChip.OnChipPlayed(Player.GetComponent<PlayerController>(), CombatController.Target.GetComponent<Enemy>());
                             }
                         }
-
-
                         //Remove effect after it has been used.
                         Player.GetComponent<PlayerController>().RemoveEffect(Effects.SpecialEffects.Motivation);
                     }
@@ -166,7 +164,8 @@ public class Chip : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                         }
 
                     }
-                ChipManager.Instance.AddToUsedChips(this.gameObject);
+
+                    ChipManager.Instance.AddToUsedChips(this.gameObject);
                 }
                 else
                 {
