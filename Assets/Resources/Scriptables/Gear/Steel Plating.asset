@@ -18,6 +18,7 @@ MonoBehaviour:
   itemImage: {fileID: 0}
   itemType: 1
   itemEffects:
-  - {fileID: 11400000, guid: 95074ed4183c20340a012a3c11478dde, type: 2}
-  ScrapWorth: 0
+  - {fileID: 11400000, guid: 9ef3b593ab57312468562689dd4b75d5, type: 2}
   ItemRarityWeight: 0.15
+  valueIncreaseBy: 0000000002000000030000000400000005000000
+  energyCostIncreaseBy: 0000000002000000030000000400000005000000

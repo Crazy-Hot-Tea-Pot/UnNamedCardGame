@@ -27,6 +27,11 @@ public class RoamingAndCombatUiController : UiController
     [Header("Energy")]
     public Image EnergyBar;
 
+    [Header("Gear")]
+    public Gear Armor;
+    public Gear Weapon;
+    public Gear Equipment;
+
     [Header("Combat Mode Stuff")]
     public PlayerHandContainer PlayerHandContainer;
     public GameObject EndTurn;
@@ -46,7 +51,11 @@ public class RoamingAndCombatUiController : UiController
             UpdateHealth(player.Health, player.MaxHealth);
             UpdateShield(player.Shield, player.MaxShield);
             UpdateEnergy(player.Energy, player.MaxEnergy);
-        }        
+        }
+
+        Armor.EquipItem(GearManager.Instance.GetEquippedItem(Item.ItemType.Armor));
+        Weapon.EquipItem(GearManager.Instance.GetEquippedItem(Item.ItemType.Weapon));
+        Equipment.EquipItem(GearManager.Instance.GetEquippedItem(Item.ItemType.Equipment));
     }
 
     public override void Initialize()
@@ -124,7 +133,7 @@ public class RoamingAndCombatUiController : UiController
     public void UpdateEnergy(int currentEnergy, int maxEnergy)
     {
         // Normalize the energy value to a 0-1 range
-        float tempTargetFillAmount = currentEnergy / maxEnergy;
+        float tempTargetFillAmount = (float)currentEnergy / maxEnergy;
 
 
         StopCoroutine(FillEnergyOverTime(tempTargetFillAmount));

@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ItemTeir: 0
   itemName: Shiv
-  itemDescription: Spend 5 energy, and no 2 Damage.
+  itemDescription: Spend 5 energy, and do 2 Damage.
   itemImage: {fileID: 0}
   itemType: 0
   itemEffects:
-  - {fileID: 11400000, guid: 33a58f3eb68737b4da89817effd3ab7c, type: 2}
-  ScrapWorth: 0
+  - {fileID: 11400000, guid: 5a3fb7415e13ea44388a648887154172, type: 2}
   ItemRarityWeight: 0.2
+  valueIncreaseBy: 0000000002000000030000000400000005000000
+  energyCostIncreaseBy: 0000000002000000030000000400000005000000

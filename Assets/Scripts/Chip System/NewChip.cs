@@ -136,7 +136,7 @@ public class NewChip : ScriptableObject
                 isUpgraded = value;
             else
             {
-                Debug.LogWarning("This card can't be upgraded.");
+                //Give some feedback that chip can't be upgraded.
             }
         }
     }

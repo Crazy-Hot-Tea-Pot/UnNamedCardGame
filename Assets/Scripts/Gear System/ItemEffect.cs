@@ -50,6 +50,9 @@ public class ItemEffect : ScriptableObject
     public List<Effects.TempDeBuffs> debuffToApplyToPlayer = new();
     public Effects.SpecialEffects effectToApplyToPlayer;
 
+    [Space(20)]
+    public bool HitAllTargets = false;
+
     private bool isEquipped = false;
 
     public virtual void Activate(PlayerController player, Item item, Enemy enemy = null)
