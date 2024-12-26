@@ -47,7 +47,7 @@ public class StatEffect : SkillEffects
                 if (toFull)
                     player.RecoverFullEnergy();
                 else if(toHalf)
-                    player.RecoverEnergy((Mathf.FloorToInt(player.Energy * 0.5f)));
+                    player.RecoverEnergy((Mathf.FloorToInt(player.MaxEnergy * 0.5f)));
                 else
                     player.RecoverEnergy(amount);
                 Debug.Log("Player's energy modified by: " + amount);

@@ -163,13 +163,12 @@ public class NewChip : ScriptableObject
 
     public virtual void OnChipPlayed(PlayerController player)
     {
-        Debug.Log(chipName + " played.");
+        
     }
 
     public virtual void OnChipPlayed(PlayerController player, Enemy Target)
     {
-        if(!IsActive)
-        Debug.Log(chipName + " played.");
+        
     }
 
     /// <summary>

@@ -253,6 +253,9 @@ public class CombatController : MonoBehaviour
     /// </summary>
     private void EndRound()
     {
+        if (Player == null)
+            Player = GameObject.Find("Player");
+
         Player.GetComponent<PlayerController>().RoundEnd();
 
         foreach (GameObject enemy in CombatEnemies)
@@ -267,7 +270,7 @@ public class CombatController : MonoBehaviour
         {
             turnQueue.Enqueue(enemy);
         }
-
+        
         StartTurn();
     }
 
@@ -294,11 +297,16 @@ public class CombatController : MonoBehaviour
 
         // Notify GameManager or handle loot distribution
         GameManager.Instance.EndCombat();
+
         if (ScrapLootForCurrentCombat > 0 || ItemsLootForCurrentCombat.Count > 0 || NewChipLootForCurrentCombat.Count > 0)
         {
             GameManager.Instance.UpdateGameMode(GameManager.GameMode.CombatLoot);
 
             UiManager.Instance.SendLoot(ScrapLootForCurrentCombat, ItemsLootForCurrentCombat, NewChipLootForCurrentCombat);
+        }
+        else
+        {
+            GameManager.Instance.UpdateGameMode(GameManager.GameMode.Roaming);
         }
 
         Reset();

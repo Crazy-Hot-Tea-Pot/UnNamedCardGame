@@ -78,12 +78,8 @@ public class Gear : MonoBehaviour, IPointerClickHandler, ICanvasRaycastFilter
 
         if (polygonCollider.OverlapPoint(worldPoint))
         {
-            Debug.Log("Button clicked within Polygon Collider!");
+            Debug.Log("Button clicked within Polygon Collider of "+this.gameObject.name);
             PerformButtonAction();
-        }
-        else
-        {
-            Debug.Log("Click outside the clickable area!");
         }
     }
 
