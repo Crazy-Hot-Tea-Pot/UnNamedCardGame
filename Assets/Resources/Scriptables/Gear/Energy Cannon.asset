@@ -14,10 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ItemTeir: 0
   itemName: Energy Cannon
-  itemDescription: "Spend 10 Energy, do 2 Damage, and apply \u201CStun\u201D  when
-    the enemy is below 50% health."
+  itemDescription: "Spend 10 Energy, do 4 Damage, and apply \u201CDrained\u201D 
+    when the enemy is below 50% health."
   itemImage: {fileID: 0}
   itemType: 0
-  itemEffects: []
-  ScrapWorth: 0
+  itemEffects:
+  - {fileID: 11400000, guid: 43de31146a04d5f49aba2ec9165193dd, type: 2}
   ItemRarityWeight: 0.15
+  valueIncreaseBy: 0000000002000000030000000400000005000000
+  energyCostIncreaseBy: 0000000002000000030000000400000005000000
