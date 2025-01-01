@@ -71,6 +71,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Settings"",
+                    ""type"": ""Button"",
+                    ""id"": ""f4e8738c-287f-4626-bdd7-9e28edb997c2"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -137,6 +146,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Enteract"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d09c1819-400c-4350-8ebe-d541686fe13c"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Settings"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -456,6 +476,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_Inventory = m_Player.FindAction("Inventory", throwIfNotFound: true);
         m_Player_DropItem = m_Player.FindAction("DropItem", throwIfNotFound: true);
         m_Player_Enteract = m_Player.FindAction("Enteract", throwIfNotFound: true);
+        m_Player_Settings = m_Player.FindAction("Settings", throwIfNotFound: true);
         // Camera Controls
         m_CameraControls = asset.FindActionMap("Camera Controls", throwIfNotFound: true);
         m_CameraControls_Look = m_CameraControls.FindAction("Look", throwIfNotFound: true);
@@ -536,6 +557,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Inventory;
     private readonly InputAction m_Player_DropItem;
     private readonly InputAction m_Player_Enteract;
+    private readonly InputAction m_Player_Settings;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -545,6 +567,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @Inventory => m_Wrapper.m_Player_Inventory;
         public InputAction @DropItem => m_Wrapper.m_Player_DropItem;
         public InputAction @Enteract => m_Wrapper.m_Player_Enteract;
+        public InputAction @Settings => m_Wrapper.m_Player_Settings;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -569,6 +592,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Enteract.started += instance.OnEnteract;
             @Enteract.performed += instance.OnEnteract;
             @Enteract.canceled += instance.OnEnteract;
+            @Settings.started += instance.OnSettings;
+            @Settings.performed += instance.OnSettings;
+            @Settings.canceled += instance.OnSettings;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -588,6 +614,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Enteract.started -= instance.OnEnteract;
             @Enteract.performed -= instance.OnEnteract;
             @Enteract.canceled -= instance.OnEnteract;
+            @Settings.started -= instance.OnSettings;
+            @Settings.performed -= instance.OnSettings;
+            @Settings.canceled -= instance.OnSettings;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -768,6 +797,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnInventory(InputAction.CallbackContext context);
         void OnDropItem(InputAction.CallbackContext context);
         void OnEnteract(InputAction.CallbackContext context);
+        void OnSettings(InputAction.CallbackContext context);
     }
     public interface ICameraControlsActions
     {
