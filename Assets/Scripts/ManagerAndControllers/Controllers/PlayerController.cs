@@ -119,7 +119,7 @@ public class PlayerController : MonoBehaviour
             energy = value;
 
             if (energy > maxEnergy)
-                energy = value;
+                energy = maxEnergy;
             else if (energy <= 0)
                 energy = 0;
 
@@ -713,8 +713,10 @@ public class PlayerController : MonoBehaviour
     private void OnClick(InputAction.CallbackContext context)
     {
         if (GameManager.Instance.CurrentGameMode == GameManager.GameMode.Roaming)
+        {
             //Put in Coroutine to cancel out errors
             StartCoroutine(HandleClick());
+        }
     }
     private IEnumerator HandleClick()
     {
@@ -841,7 +843,7 @@ public class PlayerController : MonoBehaviour
         //Reset HealthBar, energy and other stuff for now.
         Health = maxHealth;
         Energy = maxEnergy;
-        GainScrap(200);
+        //GainScrap(200);
 
         GameManager.Instance.EndCombat();
 

@@ -5,13 +5,15 @@ using UnityEngine;
 public class ItemEditor : Editor
 {
     private SerializedProperty valueIncreaseBy;
-    private SerializedProperty energyCostIncreaseBy;
+    private SerializedProperty energyCostDecreaseBy;
+    private SerializedProperty scrapValue;
 
     private void OnEnable()
     {
         // Cache the serialized properties
         valueIncreaseBy = serializedObject.FindProperty("valueIncreaseBy");
-        energyCostIncreaseBy = serializedObject.FindProperty("energyCostIncreaseBy");
+        energyCostDecreaseBy = serializedObject.FindProperty("energyCostDecreaseBy");
+        scrapValue = serializedObject.FindProperty("scrapValue");
     }
 
     public override void OnInspectorGUI()
@@ -20,14 +22,19 @@ public class ItemEditor : Editor
         serializedObject.Update();
 
         // Draw default inspector for other fields
-        DrawPropertiesExcluding(serializedObject, "valueIncreaseBy", "energyCostIncreaseBy");
+        DrawPropertiesExcluding(serializedObject, "valueIncreaseBy", "energyCostDecreaseBy", "scrapValue");
 
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Tier values to increase by", EditorStyles.boldLabel);
 
         // Display the Tier Values as the enum names
         DrawTierList("Damage/Shield Increase", valueIncreaseBy);
-        DrawTierList("Energy Cost Increase", energyCostIncreaseBy);
+
+        EditorGUILayout.LabelField("Tier values to Decrease by", EditorStyles.boldLabel);
+        DrawTierList("Energy Cost Decrease", energyCostDecreaseBy);
+
+        EditorGUILayout.LabelField("Scale Value for each Teir", EditorStyles.boldLabel);
+        DrawTierList("Scrap Value", scrapValue);
 
         // Apply changes
         serializedObject.ApplyModifiedProperties();

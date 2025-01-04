@@ -11,8 +11,8 @@ public class DefenseEffect : ItemEffect
     {
         int adjustedShieldAmount = baseShieldAmount + item.GetValueIncreaseBy();
 
-        // increase for energy cost
-        int adjustedEnergyCost = energyCost + item.GetEnergyCostIncreaseBy();
+        // decrease for energy cost
+        int adjustedEnergyCost = energyCost - item.GetEnergyCostDecreaseBy();
 
         if (player.SpendEnergy(adjustedEnergyCost))
         {

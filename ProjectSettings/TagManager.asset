@@ -12,6 +12,8 @@ TagManager:
   - CameraModeIndicator
   - DataManager
   - UiManager
+  - Card
+  - GlobalVolume
   layers:
   - Default
   - TransparentFX

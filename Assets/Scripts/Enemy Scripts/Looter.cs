@@ -80,6 +80,7 @@ public class Looter : Enemy
         base.CombatStart();
         UpdateIntentUI();        
     }
+
     protected override Intent GetNextIntent()
     {
         if (swipeCount < 3)

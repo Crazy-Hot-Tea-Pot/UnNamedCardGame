@@ -13,7 +13,7 @@ public class SkillChip : NewChip
         } 
     }
 
-    public override void OnChipPlayed(PlayerController player, Enemy target)
+    public override void OnChipPlayed(PlayerController player, Enemy target = null)
     {
         base.OnChipPlayed(player,target);
 

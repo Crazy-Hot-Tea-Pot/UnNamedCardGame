@@ -37,13 +37,15 @@ public class UiManager : MonoBehaviour
     public GameObject InventoryUI;
     public GameObject TerminalUI;
     public GameObject LootUI;
+    public GameObject SettingsUI;
 
     private UiController currentController;
     private static UiManager instance;
 
     void OnEnable()
     {
-        playerInputActions.Player.Inventory.performed += ToggleInventory; 
+        playerInputActions.Player.Inventory.performed += ToggleInventory;
+        playerInputActions.Player.Settings.performed += ToggleSettings;
     }
     void Awake()
     {
@@ -182,6 +184,35 @@ public class UiManager : MonoBehaviour
         GetCurrentController<LootUiController>().UpdateLootScreen();
     }
     #endregion
+    #region SettingUI
+    /// <summary>
+    /// Opens the settings UI
+    /// </summary>
+    /// <param name="context"></param>
+    public void ToggleSettings(InputAction.CallbackContext context)
+    {
+        if (context.performed && GameManager.Instance.CurrentGameMode == GameManager.GameMode.Roaming)
+        {
+            if (CurrentUI.name == InventoryUI.name)
+            {
+                SwitchScreen(RoamingAndCombatUI);
+            }
+            else
+            {
+                SwitchScreen(SettingsUI);
+            }
+        }
+
+    }
+
+    /// <summary>
+    /// Closes the settings UI on a button click
+    /// </summary>
+    public void CloseSettingsOnClick()
+    {
+        SwitchScreen(RoamingAndCombatUI);
+    }
+    #endregion
     /// <summary>
     /// Get Current controller for UI.
     /// </summary>
@@ -289,5 +320,6 @@ public class UiManager : MonoBehaviour
     void OnDisable()
     {
         playerInputActions.Player.Inventory.performed -= ToggleInventory;
+        playerInputActions.Player.Settings.performed -= ToggleSettings;
     }
 }
