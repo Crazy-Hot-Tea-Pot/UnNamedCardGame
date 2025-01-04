@@ -73,7 +73,10 @@ public class Item : ScriptableObject
     public List<int> valueIncreaseBy = new() { 0, 2, 3, 4, 5 };
 
     [Tooltip("How much to increase Energy By for each Teir")]
-    public List<int> energyCostIncreaseBy = new() { 0, 2, 3, 4, 5 };
+    public List<int> energyCostDecreaseBy = new() { 0, 2, 3, 4, 5 };
+
+    [Tooltip("How much scrap value for each Teir")]
+    public List<int> scrapValue = new() { 0, 1, 2, 3, 4, 5 };
 
     private bool isEquipped = false;
 
@@ -105,31 +108,32 @@ public class Item : ScriptableObject
         }
     }   
 
-    public int GetEnergyCostIncreaseBy()
+    public int GetEnergyCostDecreaseBy()
     {
         int tempReturnValue = 0;
 
         switch (ItemTeir)
         {
             case Teir.Base:
-                tempReturnValue = energyCostIncreaseBy[(int)Teir.Base];
+                tempReturnValue = energyCostDecreaseBy[(int)Teir.Base];
                 break;
             case Teir.Bronze:
-                tempReturnValue = energyCostIncreaseBy[(int)Teir.Bronze];
+                tempReturnValue = energyCostDecreaseBy[(int)Teir.Bronze];
             break;
             case Teir.Silver:
-                tempReturnValue = energyCostIncreaseBy[(int)Teir.Silver];
+                tempReturnValue = energyCostDecreaseBy[(int)Teir.Silver];
                 break;
             case Teir.Gold:
-                tempReturnValue = energyCostIncreaseBy[(int)Teir.Gold];
+                tempReturnValue = energyCostDecreaseBy[(int)Teir.Gold];
                 break;
             case Teir.Platinum:
-                tempReturnValue = energyCostIncreaseBy[(int)Teir.Platinum];
+                tempReturnValue = energyCostDecreaseBy[(int)Teir.Platinum];
                 break;
         }
 
         return tempReturnValue;
     }
+
     public int GetValueIncreaseBy()
     {
         int tempReturnValue = 0;
@@ -150,6 +154,35 @@ public class Item : ScriptableObject
                 break;
             case Teir.Platinum:
                 tempReturnValue = valueIncreaseBy[(int)Teir.Platinum];
+                break;
+        }
+
+        return tempReturnValue;
+    }
+
+    public int GetScrapValue()
+    {
+        int tempReturnValue = 0;
+
+        switch (ItemTeir)
+        {
+            case Teir.Base:
+                tempReturnValue = scrapValue[(int)Teir.Base];
+                break;
+            case Teir.Bronze:
+                tempReturnValue = scrapValue[(int)Teir.Bronze];
+                break;
+            case Teir.Silver:
+                tempReturnValue = scrapValue[(int)Teir.Silver];
+                break;
+            case Teir.Gold:
+                tempReturnValue = scrapValue[(int)Teir.Gold];
+                break;
+            case Teir.Platinum:
+                tempReturnValue = scrapValue[(int)Teir.Platinum];
+                break;
+            default:
+                tempReturnValue = 100;
                 break;
         }
 

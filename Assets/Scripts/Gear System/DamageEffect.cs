@@ -11,8 +11,9 @@ public class DamageEffect : ItemEffect
     public override void Activate(PlayerController player, Item item, Enemy enemy)
     {
         int adjustedDamage = baseDamage + item.GetValueIncreaseBy();
-        // increase for energy cost
-        int adjustedEnergyCost = energyCost + item.GetEnergyCostIncreaseBy();
+
+        // decrease for energy cost
+        int adjustedEnergyCost = energyCost - item.GetEnergyCostDecreaseBy();
 
         if (player.SpendEnergy(adjustedEnergyCost))
         {
