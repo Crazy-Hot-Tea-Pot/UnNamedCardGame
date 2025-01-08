@@ -312,14 +312,12 @@ public class Enemy : MonoBehaviour
     }
     public virtual void Update()
     {
+
     }
+
     /// <summary>
-    /// Current CombatEnemies turn to act.
+    /// Initialize enemy
     /// </summary>
-    public virtual void MyTurn()
-    {
-        StartTurn();
-    }
     public virtual void Initialize()
     {
         CurrentHP = maxHP;
@@ -328,110 +326,6 @@ public class Enemy : MonoBehaviour
         CombatController = GameObject.FindGameObjectWithTag("CombatController").GetComponent<CombatController>();
         enemyTarget = GameObject.FindGameObjectWithTag("Player");
 
-    }
-
-   /// <summary>
-   /// Is called when enemy is attacked by Player.
-   /// </summary>
-   /// <param name="damage"></param>
-    public virtual void TakeDamage(int damage)
-    {
-        // Plays sound of taking damage
-        SoundManager.PlayFXSound(SoundFX.DamageTaken, this.gameObject.transform);
-
-        // if has shield
-        if (Shield > 0)
-        {
-            if (damage >= Shield)
-            {
-                damage -= Shield;
-                Shield = 0;
-                Debug.Log("Enemy " + name + "Shield destroyed.");
-            }
-            else
-            {
-                // Reduce the shield by the damage amount
-                Shield -= damage;
-                // No remaining damage to apply to HP
-                damage = 0;
-            }
-        }
-        CurrentHP -= damage;
-
-        DisplayDamageTaken(damage);
-    }    
-
-    /// <summary>
-    /// Call when enemy die.
-    /// </summary>
-    public virtual void Die()
-    {
-        SoundManager.PlayFXSound(SoundFX.EnemyDefeated,this.gameObject.transform);
-
-        Debug.Log($"{enemyName} has been defeated!");
-
-        CombatController.LeaveCombat(this.gameObject, DroppedScrap, DroppedChips, DroppedItems);        
-
-        EnemyManager.Instance.RemoveEnemy(this.gameObject);
-    }
-
-    /// <summary>
-    /// Give enemy shield.
-    /// </summary>
-    /// <param name="shieldAmount"></param>
-    public virtual void ApplyShield(int shieldAmount)
-    {
-        //Restore ShieldBar
-        Shield += shieldAmount;
-
-        Debug.Log("Shield Restored: " + shield);
-    }
-
-    /// <summary>
-    /// Update UI to display next intent
-    /// </summary>
-    public virtual void UpdateIntentUI()
-    {
-        var nextIntent = GetNextIntent();
-        thisEnemyUI.UpdateIntent(nextIntent);
-    }
-   
-    /// <summary>
-    /// Base Perform Intent.
-    /// Make sure the base is run after you perform an action.
-    /// </summary>
-    protected virtual void PerformIntent()
-    {
-        if (this.gameObject != null)
-            CombatController.EndTurn(this.gameObject);
-    }
-
-    /// <summary>
-    /// Display damage taken in game.
-    /// </summary>
-    /// <param name="damage"></param>
-    protected virtual void DisplayDamageTaken(int damage)
-    {
-        // Instantiate the damage text prefab
-        // Calculate the position in front of the object
-        Vector3 forwardPosition = this.gameObject.transform.position + this.gameObject.transform.forward * 2f + Vector3.up * 1f;
-
-        // Instantiate the damage indicator at the calculated position
-        GameObject damageIndicator = Instantiate(damageTextPrefab, forwardPosition, Quaternion.identity);
-
-        // Set the text to display the damage amount
-        TextMeshPro textMesh = damageIndicator.GetComponent<TextMeshPro>();
-        textMesh.text = $"-{damage}";
-
-        // Ensure the text faces the camera
-        damageIndicator.transform.LookAt(Camera.main.transform);
-        damageIndicator.transform.Rotate(0, 180, 0); // Correct for backward text
-    }
-
-    protected virtual Intent GetNextIntent()
-    {
-        // Default implementation, overridden in derived classes
-        return new Intent("Unknown", Color.gray);
     }
 
     #region Combat
@@ -481,16 +375,129 @@ public class Enemy : MonoBehaviour
         this.gameObject.transform.LookAt(EnemyTarget.transform);
 
         //Check if Player is in range
-        if (DistanceToPlayer <= AttackRange)
-        {
+        //if (DistanceToPlayer <= AttackRange)
+        //{
             agent.ResetPath();
             PerformIntent();
-        }
-        else
+        //}
+        //else
+        //{
+        //    // move to Player
+        //    agent.SetDestination(EnemyTarget.transform.position);
+        //}
+    }
+
+    /// <summary>
+    /// Is called when enemy is attacked by Player.
+    /// </summary>
+    /// <param name="damage"></param>
+    public virtual void TakeDamage(int damage)
+    {
+        // Plays sound of taking damage
+        SoundManager.PlayFXSound(SoundFX.DamageTaken, this.gameObject.transform);
+
+        // if has shield
+        if (Shield > 0)
         {
-            // move to Player
-            agent.SetDestination(EnemyTarget.transform.position);
+            if (damage >= Shield)
+            {
+                damage -= Shield;
+                Shield = 0;
+                Debug.Log("Enemy " + name + "Shield destroyed.");
+            }
+            else
+            {
+                // Reduce the shield by the damage amount
+                Shield -= damage;
+                // No remaining damage to apply to HP
+                damage = 0;
+            }
         }
+        CurrentHP -= damage;
+
+        DisplayDamageTaken(damage);
+    }
+
+    /// <summary>
+    /// Current CombatEnemies turn to act.
+    /// </summary>
+    public virtual void MyTurn()
+    {
+        StartTurn();
+    }
+
+    /// <summary>
+    /// Call when enemy die.
+    /// </summary>
+    public virtual void Die()
+    {
+        SoundManager.PlayFXSound(SoundFX.EnemyDefeated, this.gameObject.transform);
+
+        Debug.Log($"{enemyName} has been defeated!");
+
+        CombatController.LeaveCombat(this.gameObject, DroppedScrap, DroppedChips, DroppedItems);
+
+        EnemyManager.Instance.RemoveEnemy(this.gameObject);
+    }
+
+    /// <summary>
+    /// Give enemy shield.
+    /// </summary>
+    /// <param name="shieldAmount"></param>
+    public virtual void ApplyShield(int shieldAmount)
+    {
+        //Restore ShieldBar
+        Shield += shieldAmount;
+
+        Debug.Log("Shield Restored: " + shield);
+    }
+
+    /// <summary>
+    /// Update UI to display next intent
+    /// </summary>
+    public virtual void UpdateIntentUI()
+    {
+        var nextIntent = GetNextIntent();
+        thisEnemyUI.UpdateIntent(nextIntent);
+    }
+
+    /// <summary>
+    /// Base Perform Intent.
+    /// Make sure the base is run after you perform an action.
+    /// </summary>
+    protected virtual void PerformIntent()
+    {
+        if (this.gameObject != null)
+            CombatController.EndTurn(this.gameObject);
+    }
+
+    /// <summary>
+    /// Display damage taken in game.
+    /// </summary>
+    /// <param name="damage"></param>
+    protected virtual void DisplayDamageTaken(int damage)
+    {
+        // Instantiate the damage text prefab
+        // Calculate the position in front of the object
+        Vector3 forwardPosition = this.gameObject.transform.position + this.gameObject.transform.forward * 2f + Vector3.up * 1f;
+
+        // Instantiate the damage indicator at the calculated position
+        GameObject damageIndicator = Instantiate(damageTextPrefab, forwardPosition, Quaternion.identity);
+
+        // Set the text to display the damage amount
+        TextMeshPro textMesh = damageIndicator.GetComponent<TextMeshPro>();
+        textMesh.text = $"-{damage}";
+
+        // Ensure the text faces the camera
+        damageIndicator.transform.LookAt(Camera.main.transform);
+        damageIndicator.transform.Rotate(0, 180, 0); // Correct for backward text
+    }
+
+
+    protected virtual Intent GetNextIntent()
+    {
+        // Default implementation, overridden in derived classes
+        return new Intent("Unknown", Color.gray);
     }
 
     #endregion
