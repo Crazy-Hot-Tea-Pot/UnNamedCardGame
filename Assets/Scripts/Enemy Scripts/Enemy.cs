@@ -387,6 +387,9 @@ public class Enemy : MonoBehaviour
         Debug.Log("Shield Restored: " + shield);
     }
 
+    /// <summary>
+    /// Update UI to display next intent
+    /// </summary>
     public virtual void UpdateIntentUI()
     {
         var nextIntent = GetNextIntent();
@@ -438,6 +441,7 @@ public class Enemy : MonoBehaviour
     /// </summary>
     public virtual void CombatStart()
     {
+        UpdateIntentUI();
     }
 
     /// <summary>

@@ -77,8 +77,7 @@ public class Looter : Enemy
 
     public override void CombatStart()
     {
-        base.CombatStart();
-        UpdateIntentUI();        
+        base.CombatStart();               
     }
 
     protected override Intent GetNextIntent()
