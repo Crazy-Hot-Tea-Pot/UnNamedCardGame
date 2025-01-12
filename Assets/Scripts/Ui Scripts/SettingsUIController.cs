@@ -44,29 +44,53 @@ public class SettingsUIController : UiController
     private Button RestoreDefaultsbtn;
 
     //A bool for title screen
-    private bool miniSkip;
+    public bool miniSkip = false;
+    private GameObject titleScreenUI;
 
     // Start is called before the first frame update
     void Start()
     {
-        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Title")
-        {
-            GameObject.Find("Canvas").transform.Find("ButtonPanel").transform.Find("OptionsButton").GetComponent<Button>().onClick.AddListener(SkipMiniMenu);
-        }
-        miniSkip = false;
         //Menu Containers
         largeSettingMenu = this.gameObject.transform.Find("OptionsScreen").gameObject;
         smallSettingMenu = this.gameObject.transform.Find("ShortMenu").gameObject;
-        //Find buttons and add listeners
-        Optionsbtn = this.gameObject.transform.Find("ShortMenu").Find("Optionsbtn").GetComponent<Button>();
-        Optionsbtn.onClick.AddListener(Options);
-        Continuebtn = this.gameObject.transform.Find("ShortMenu").Find("Continuebtn").GetComponent<Button>();
-        Continuebtn.onClick.AddListener(Continue);
-        if(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name != "Title")
+
+
+        //Buttons for tabs
+        VideoTabbtn = this.gameObject.transform.Find("OptionsScreen").Find("VideoSettingsbtn").GetComponent<Button>();
+        VideoTabbtn.onClick.RemoveAllListeners();
+        VideoTabbtn.onClick.AddListener(OpenVideoSettingsTab);
+        AudioTabbtn = this.gameObject.transform.Find("OptionsScreen").Find("Audiobtn").GetComponent<Button>();
+        AudioTabbtn.onClick.RemoveAllListeners();
+        AudioTabbtn.onClick.AddListener(OpenAudioSettingsTab);
+        Applybtn = this.gameObject.transform.Find("OptionsScreen").Find("Applybtn").GetComponent<Button>();
+        Applybtn.onClick.RemoveAllListeners();
+        Applybtn.onClick.AddListener(ApplySettings);
+        Discardbtn = this.gameObject.transform.Find("OptionsScreen").Find("Discardbtn").GetComponent<Button>();
+        Discardbtn.onClick.RemoveAllListeners();
+        Discardbtn.onClick.AddListener(DiscardSettings);
+        RestoreDefaultsbtn = this.gameObject.transform.Find("OptionsScreen").Find("Defaultsbtn").GetComponent<Button>();
+        RestoreDefaultsbtn.onClick.RemoveAllListeners();
+        RestoreDefaultsbtn.onClick.AddListener(RestoreDefaults);
+
+        //If title screen skip mini menu
+        if (miniSkip)
         {
+            SkipMiniMenu();
+        }
+        else
+        {
+            //Find buttons and add listeners
+            Optionsbtn = this.gameObject.transform.Find("ShortMenu").Find("Optionsbtn").GetComponent<Button>();
+            Optionsbtn.onClick.RemoveAllListeners();
+            Optionsbtn.onClick.AddListener(Options);
+            Continuebtn = this.gameObject.transform.Find("ShortMenu").Find("Continuebtn").GetComponent<Button>();
+            Continuebtn.onClick.RemoveAllListeners();
+            Continuebtn.onClick.AddListener(Continue);
             Exitbtn = this.gameObject.transform.Find("ShortMenu").Find("Exitbtn").GetComponent<Button>();
+            Exitbtn.onClick.RemoveAllListeners();
             Exitbtn.onClick.AddListener(Exit);
             MainMenubtn = this.gameObject.transform.Find("ShortMenu").Find("MainMenubtn").GetComponent<Button>();
+            MainMenubtn.onClick.AddListener(MainMenu);
             MainMenubtn.onClick.AddListener(MainMenu);
         }
     }
@@ -82,11 +106,15 @@ public class SettingsUIController : UiController
     /// </summary>
     public void Options()
     {
-        //If the larger UI then close options
+        //If the larger UI is open then close options
         if(largeSettingMenu.activeSelf)
         {
             largeSettingMenu.SetActive(false);
-            smallSettingMenu.SetActive(true);
+            //If we aren't skipping main menu open it again
+            if (miniSkip == false)
+            {
+                smallSettingMenu.SetActive(true);
+            }
         }
         //If the smaller UI then open larger options
         else if (smallSettingMenu.activeSelf)
@@ -97,14 +125,19 @@ public class SettingsUIController : UiController
 
             //Buttons for tabs
             VideoTabbtn = this.gameObject.transform.Find("OptionsScreen").Find("VideoSettingsbtn").GetComponent<Button>();
+            VideoTabbtn.onClick.RemoveAllListeners();
             VideoTabbtn.onClick.AddListener(OpenVideoSettingsTab);
             AudioTabbtn = this.gameObject.transform.Find("OptionsScreen").Find("Audiobtn").GetComponent<Button>();
+            AudioTabbtn.onClick.RemoveAllListeners();
             AudioTabbtn.onClick.AddListener(OpenAudioSettingsTab);
             Applybtn = this.gameObject.transform.Find("OptionsScreen").Find("Applybtn").GetComponent<Button>();
+            Applybtn.onClick.RemoveAllListeners();
             Applybtn.onClick.AddListener(ApplySettings);
             Discardbtn = this.gameObject.transform.Find("OptionsScreen").Find("Discardbtn").GetComponent<Button>();
+            Discardbtn.onClick.RemoveAllListeners();
             Discardbtn.onClick.AddListener(DiscardSettings);
             RestoreDefaultsbtn = this.gameObject.transform.Find("OptionsScreen").Find("Defaultsbtn").GetComponent<Button>();
+            RestoreDefaultsbtn.onClick.RemoveAllListeners();
             RestoreDefaultsbtn.onClick.AddListener(RestoreDefaults);
         }
     }
@@ -382,11 +415,19 @@ public class SettingsUIController : UiController
         DiscardSettings();
     }
 
+    /// <summary>
+    /// Return to the first menu
+    /// </summary>
     public void ReturnToMiniMenu()
     {
+        //Skip this menu if applicable
         if(miniSkip)
         {
+            miniSkip = false;
+            Debug.Log(miniSkip);
+            titleScreenUI.SetActive(true);
             largeSettingMenu.SetActive(false);
+            UiManager.Instance.CloseSettingsOnClickTitle();
         }
         else
         {
@@ -397,7 +438,16 @@ public class SettingsUIController : UiController
 
     public void SkipMiniMenu()
     {
-        miniSkip = true;
+        //For some reason it is running skip menu way too much
+        try
+        {
+            titleScreenUI = GameObject.Find("Canvas");
+            titleScreenUI.SetActive(false);
+        }
+        catch
+        {
+            Debug.Log("Not Title");
+        }
         largeSettingMenu.SetActive(true);
         smallSettingMenu.SetActive(false);
     }
@@ -408,6 +458,7 @@ public class SettingsUIController : UiController
     public void MainMenu()
     {
         smallSettingMenu.SetActive(false);
+        Destroy(UiManager.Instance.CurrentUI);
         UnityEngine.SceneManagement.SceneManager.LoadScene("Title");
     }
 

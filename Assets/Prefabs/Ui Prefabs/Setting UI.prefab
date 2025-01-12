@@ -1577,6 +1577,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: f24c8b93bc042d444aac10dfe41d0261, type: 2}
   VolumeDefaults:
   - {fileID: 11400000, guid: b6af5bd904a2f1f44b9028a1153c5761, type: 2}
+  miniSkip: 0
 --- !u!1 &1404316045857668505
 GameObject:
   m_ObjectHideFlags: 0
