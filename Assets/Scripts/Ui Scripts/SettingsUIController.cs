@@ -42,6 +42,7 @@ public class SettingsUIController : UiController
     private Button Applybtn;
     private Button Discardbtn;
     private Button RestoreDefaultsbtn;
+    private Button BackBtn;
 
     //A bool for title screen
     public bool miniSkip = false;
@@ -62,24 +63,42 @@ public class SettingsUIController : UiController
         AudioTabbtn = this.gameObject.transform.Find("OptionsScreen").Find("Audiobtn").GetComponent<Button>();
         AudioTabbtn.onClick.RemoveAllListeners();
         AudioTabbtn.onClick.AddListener(OpenAudioSettingsTab);
+
+        //Buttons for applying,discard and restore defaults
         Applybtn = this.gameObject.transform.Find("OptionsScreen").Find("Applybtn").GetComponent<Button>();
         Applybtn.onClick.RemoveAllListeners();
         Applybtn.onClick.AddListener(ApplySettings);
+        //Start inactive
+        Applybtn.gameObject.SetActive(false);
         Discardbtn = this.gameObject.transform.Find("OptionsScreen").Find("Discardbtn").GetComponent<Button>();
         Discardbtn.onClick.RemoveAllListeners();
         Discardbtn.onClick.AddListener(DiscardSettings);
+        //Start inactive
+        Discardbtn.gameObject.SetActive(false);
         RestoreDefaultsbtn = this.gameObject.transform.Find("OptionsScreen").Find("Defaultsbtn").GetComponent<Button>();
         RestoreDefaultsbtn.onClick.RemoveAllListeners();
         RestoreDefaultsbtn.onClick.AddListener(RestoreDefaults);
+        //start inactive
+        RestoreDefaultsbtn.gameObject.SetActive(false);
+
+        //Back button
+        BackBtn = this.gameObject.transform.Find("OptionsScreen").Find("Backbtn").GetComponent<Button>();
+        BackBtn.onClick.RemoveAllListeners();
+        BackBtn.onClick.AddListener(ReturnToMiniMenu);
 
         //If title screen skip mini menu
         if (miniSkip)
         {
             SkipMiniMenu();
+            //Pause time
+            UnityEngine.Time.timeScale = 0;
         }
         else
         {
-            //Find buttons and add listeners
+            //Pause time
+            UnityEngine.Time.timeScale = 0;
+
+            //Find buttons and add listeners and disable them
             Optionsbtn = this.gameObject.transform.Find("ShortMenu").Find("Optionsbtn").GetComponent<Button>();
             Optionsbtn.onClick.RemoveAllListeners();
             Optionsbtn.onClick.AddListener(Options);
@@ -105,9 +124,9 @@ public class SettingsUIController : UiController
     /// Open and close the options menu
     /// </summary>
     public void Options()
-    {
+    {    
         //If the larger UI is open then close options
-        if(largeSettingMenu.activeSelf)
+        if (largeSettingMenu.activeSelf)
         {
             largeSettingMenu.SetActive(false);
             //If we aren't skipping main menu open it again
@@ -130,15 +149,23 @@ public class SettingsUIController : UiController
             AudioTabbtn = this.gameObject.transform.Find("OptionsScreen").Find("Audiobtn").GetComponent<Button>();
             AudioTabbtn.onClick.RemoveAllListeners();
             AudioTabbtn.onClick.AddListener(OpenAudioSettingsTab);
+
+            //Buttons for applying,discard and restore defaults
             Applybtn = this.gameObject.transform.Find("OptionsScreen").Find("Applybtn").GetComponent<Button>();
             Applybtn.onClick.RemoveAllListeners();
             Applybtn.onClick.AddListener(ApplySettings);
+            //make active
+            Applybtn.gameObject.SetActive(false);
             Discardbtn = this.gameObject.transform.Find("OptionsScreen").Find("Discardbtn").GetComponent<Button>();
             Discardbtn.onClick.RemoveAllListeners();
             Discardbtn.onClick.AddListener(DiscardSettings);
+            //make active
+            Discardbtn.gameObject.SetActive(false);
             RestoreDefaultsbtn = this.gameObject.transform.Find("OptionsScreen").Find("Defaultsbtn").GetComponent<Button>();
             RestoreDefaultsbtn.onClick.RemoveAllListeners();
             RestoreDefaultsbtn.onClick.AddListener(RestoreDefaults);
+            //make active
+            RestoreDefaultsbtn.gameObject.SetActive(false);
         }
     }
 
@@ -148,6 +175,8 @@ public class SettingsUIController : UiController
     public void Continue()
     {
         UiManager.Instance.CloseSettingsOnClick();
+        //Pause time
+        UnityEngine.Time.timeScale = 1;
     }
 
     /// <summary>
@@ -169,6 +198,14 @@ public class SettingsUIController : UiController
         }
 
         setVolumeValues();
+
+        //Enable buttons
+        RestoreDefaultsbtn.gameObject.SetActive(true);
+        Applybtn.gameObject.SetActive(true);
+        Discardbtn.gameObject.SetActive(true);
+
+        //Disable back button
+        BackBtn.gameObject.SetActive(false);
     }
 
     ///<summary>
@@ -186,6 +223,14 @@ public class SettingsUIController : UiController
         {
             audioSettingTab.SetActive(true);
         }
+
+        //Enable buttons
+        RestoreDefaultsbtn.enabled = true;
+        Applybtn.enabled = true;
+        Discardbtn.enabled = true;
+
+        //Disable back button
+        BackBtn.enabled = false;
     }
 
     /// <summary>
@@ -434,6 +479,7 @@ public class SettingsUIController : UiController
             largeSettingMenu.SetActive(false);
             smallSettingMenu.SetActive(true);
         }
+        UnityEngine.Time.timeScale = 1;
     }
 
     public void SkipMiniMenu()
@@ -453,7 +499,7 @@ public class SettingsUIController : UiController
     }
 
     /// <summary>
-    /// This might need to be removed
+    /// Opens the main menu
     /// </summary>
     public void MainMenu()
     {

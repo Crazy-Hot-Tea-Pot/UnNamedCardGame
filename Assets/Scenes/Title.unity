@@ -278,7 +278,6 @@ MonoBehaviour:
   TerminalUI: {fileID: 6349382813320215569, guid: cfbd80ae571d42d43a53c68c995e54ac, type: 3}
   LootUI: {fileID: 1381671455956049504, guid: 596489b2d96bc5641b385a1185919f3b, type: 3}
   SettingsUI: {fileID: 1381671455956049504, guid: 5ff2f4d6c2d83e545afa0ad6733bfc27, type: 3}
-  TitleUI: {fileID: 3985311167522654142, guid: 507bfc5a62c4d4c4a8e3562989f01d93, type: 3}
 --- !u!224 &684417308
 RectTransform:
   m_ObjectHideFlags: 0
