@@ -468,7 +468,10 @@ public class Enemy : MonoBehaviour
     protected virtual void PerformIntent()
     {
         if (this.gameObject != null)
+        {
             CombatController.EndTurn(this.gameObject);
+            UpdateIntentUI();
+        }
     }
 
     /// <summary>
