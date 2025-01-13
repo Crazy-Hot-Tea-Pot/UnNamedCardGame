@@ -51,32 +51,43 @@ public class SettingsUIController : UiController
     // Start is called before the first frame update
     void Start()
     {
+        //At start we need to find a series of containers for the ui and some buttons that are now visible
+
         //Menu Containers
         largeSettingMenu = this.gameObject.transform.Find("OptionsScreen").gameObject;
         smallSettingMenu = this.gameObject.transform.Find("ShortMenu").gameObject;
 
-
+        //When adding buttons remove all listeners for when we go to main menu and back to in game otherwise we could have alot of listeners
         //Buttons for tabs
         VideoTabbtn = this.gameObject.transform.Find("OptionsScreen").Find("VideoSettingsbtn").GetComponent<Button>();
         VideoTabbtn.onClick.RemoveAllListeners();
+        //Add a button for opening video settings
         VideoTabbtn.onClick.AddListener(OpenVideoSettingsTab);
         AudioTabbtn = this.gameObject.transform.Find("OptionsScreen").Find("Audiobtn").GetComponent<Button>();
         AudioTabbtn.onClick.RemoveAllListeners();
+        //Add a button for opening audio settings
         AudioTabbtn.onClick.AddListener(OpenAudioSettingsTab);
 
-        //Buttons for applying,discard and restore defaults
+        //Button for applying
         Applybtn = this.gameObject.transform.Find("OptionsScreen").Find("Applybtn").GetComponent<Button>();
         Applybtn.onClick.RemoveAllListeners();
+        //Add a button to apply settings
         Applybtn.onClick.AddListener(ApplySettings);
         //Start inactive
         Applybtn.gameObject.SetActive(false);
+
+        //Button for discarding
         Discardbtn = this.gameObject.transform.Find("OptionsScreen").Find("Discardbtn").GetComponent<Button>();
         Discardbtn.onClick.RemoveAllListeners();
+        //Add a button to discard settings
         Discardbtn.onClick.AddListener(DiscardSettings);
         //Start inactive
         Discardbtn.gameObject.SetActive(false);
+
+        //Button for restoring defaults
         RestoreDefaultsbtn = this.gameObject.transform.Find("OptionsScreen").Find("Defaultsbtn").GetComponent<Button>();
         RestoreDefaultsbtn.onClick.RemoveAllListeners();
+        //Add a button to restore defaults
         RestoreDefaultsbtn.onClick.AddListener(RestoreDefaults);
         //start inactive
         RestoreDefaultsbtn.gameObject.SetActive(false);
@@ -84,12 +95,14 @@ public class SettingsUIController : UiController
         //Back button
         BackBtn = this.gameObject.transform.Find("OptionsScreen").Find("Backbtn").GetComponent<Button>();
         BackBtn.onClick.RemoveAllListeners();
+        //Add a button to return to mini menu
         BackBtn.onClick.AddListener(ReturnToMiniMenu);
 
         //If title screen skip mini menu
         if (miniSkip)
         {
             SkipMiniMenu();
+
             //Pause time
             UnityEngine.Time.timeScale = 0;
         }
@@ -98,18 +111,25 @@ public class SettingsUIController : UiController
             //Pause time
             UnityEngine.Time.timeScale = 0;
 
-            //Find buttons and add listeners and disable them
+            //Find the options button
             Optionsbtn = this.gameObject.transform.Find("ShortMenu").Find("Optionsbtn").GetComponent<Button>();
             Optionsbtn.onClick.RemoveAllListeners();
+            //Add a button for options
             Optionsbtn.onClick.AddListener(Options);
+            //Find the button for continue
             Continuebtn = this.gameObject.transform.Find("ShortMenu").Find("Continuebtn").GetComponent<Button>();
             Continuebtn.onClick.RemoveAllListeners();
+            //Make the button for continue functional
             Continuebtn.onClick.AddListener(Continue);
+            //Find the exit button
             Exitbtn = this.gameObject.transform.Find("ShortMenu").Find("Exitbtn").GetComponent<Button>();
             Exitbtn.onClick.RemoveAllListeners();
+            //Make the exit button functional
             Exitbtn.onClick.AddListener(Exit);
+            //Find the main menu button
             MainMenubtn = this.gameObject.transform.Find("ShortMenu").Find("MainMenubtn").GetComponent<Button>();
-            MainMenubtn.onClick.AddListener(MainMenu);
+            //Add the Main menu button
+            MainMenubtn.onClick.RemoveAllListeners();
             MainMenubtn.onClick.AddListener(MainMenu);
         }
     }
@@ -138,14 +158,16 @@ public class SettingsUIController : UiController
         //If the smaller UI then open larger options
         else if (smallSettingMenu.activeSelf)
         {
+            //Open the large menu
             largeSettingMenu.SetActive(true);
+            //Close the small menu
             smallSettingMenu.SetActive(false);
 
-
-            //Buttons for tabs
+            //Buttons for video tab
             VideoTabbtn = this.gameObject.transform.Find("OptionsScreen").Find("VideoSettingsbtn").GetComponent<Button>();
             VideoTabbtn.onClick.RemoveAllListeners();
             VideoTabbtn.onClick.AddListener(OpenVideoSettingsTab);
+            //Buttons for audio tab
             AudioTabbtn = this.gameObject.transform.Find("OptionsScreen").Find("Audiobtn").GetComponent<Button>();
             AudioTabbtn.onClick.RemoveAllListeners();
             AudioTabbtn.onClick.AddListener(OpenAudioSettingsTab);
@@ -184,7 +206,7 @@ public class SettingsUIController : UiController
     /// </summary>
     public void OpenVideoSettingsTab()
     {
-        //Find the settings tab
+        //Find the settings tabs
         videoSettingTab = VideoTabbtn.transform.parent.Find("VideoSettingsTab").gameObject;
         AudioTabbtn.transform.parent.Find("AudioSettingsTab").gameObject.SetActive(false);
         //Open/Close tab
@@ -197,6 +219,7 @@ public class SettingsUIController : UiController
             videoSettingTab.SetActive(true);
         }
 
+        //Set the values
         setVolumeValues();
 
         //Enable buttons
