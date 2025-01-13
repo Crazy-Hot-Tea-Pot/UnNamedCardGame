@@ -2,9 +2,22 @@
 public class DataSettings
 {
     //How many saves the Player can make.
-    public int MaxAutoSave = 5;
+    public int MaxAutoSave
+    {
+        get
+        {
+            return maxAutoSave;
+        }
+        set
+        {
+            maxAutoSave = value;
+        }
+    }
 
+    private int maxAutoSave;
     //Constructor
-    public DataSettings() { }
+    public DataSettings() {
+        MaxAutoSave = 5;
+    }
 }
 

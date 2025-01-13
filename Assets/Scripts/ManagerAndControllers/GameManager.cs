@@ -66,8 +66,15 @@ public class GameManager : MonoBehaviour
 
     public Levels CurrentLevel
     {
-        get;
-        private set;
+        get
+        {
+            return currentLevel;
+        }
+        private set
+        {
+            currentLevel = value;
+
+        }
     }
     public Levels PreviousScene
     {
@@ -77,6 +84,9 @@ public class GameManager : MonoBehaviour
 
     [SerializeField]
     private GameMode currentGameMode;
+
+    [SerializeField]
+    private Levels currentLevel;
 
     private Levels targetScene;
 

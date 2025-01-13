@@ -4,6 +4,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class UiManager : MonoBehaviour
 {
@@ -189,7 +190,7 @@ public class UiManager : MonoBehaviour
     /// Opens the settings UI
     /// </summary>
     /// <param name="context"></param>
-    public void ToggleSettings(InputAction.CallbackContext context)
+    private void ToggleSettings(InputAction.CallbackContext context)
     {
         if (context.performed && GameManager.Instance.CurrentGameMode == GameManager.GameMode.Roaming)
         {
@@ -203,6 +204,13 @@ public class UiManager : MonoBehaviour
             }
         }
 
+    }
+    /// <summary>
+    /// Toggle settings at Title.
+    /// </summary>
+    private void ToggleSettingsAtTitle()
+    {
+        Debug.Log("Settings at Title");
     }
 
     /// <summary>
@@ -234,6 +242,13 @@ public class UiManager : MonoBehaviour
         switch (GameManager.Instance.CurrentGameMode)
         {
             case GameManager.GameMode.Title:
+                //Find options button on title
+                GameObject testfind = GameObject.Find("Options Button");
+                // Add listener to options button to call method. You will add the code to this method that is called to bring up settings at title
+                // After your done you can remove the testfind var as i just did it for testing.
+                //replace with this line GameObject.Find("Options Button").GetComponent<Button>().onClick.AddListener(ToggleSettingsAtTitle);
+                testfind.GetComponent<Button>().onClick.AddListener(ToggleSettingsAtTitle);
+                break;
             case GameManager.GameMode.Loading:
             case GameManager.GameMode.Settings:
             case GameManager.GameMode.Credits:
@@ -305,6 +320,10 @@ public class UiManager : MonoBehaviour
 
     private void SceneChange(Levels newLevel)
     {
+        switch (newLevel)
+        {
+
+        }
     }    
 
     private void OnDestroy()

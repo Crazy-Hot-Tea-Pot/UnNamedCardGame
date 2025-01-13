@@ -84,14 +84,21 @@ public class SettingsManager : MonoBehaviour
             Destroy(gameObject);  // Destroy duplicates
         }
     }
+
+    void Start()
+    {
+        GameManager.Instance.OnSceneChange += SceneChange;
+    }
     /// <summary>
-    /// Initialize All settings
+    /// Initialize All settings by calling the default constructor.
     /// </summary>
     void InitializeSettings()
     {
         cameraSettings = new CameraSettings();
         soundSettings = new SoundSettings();
         dataSettings = new DataSettings();
+
+        //TODO change this to call the constructor if dataManager has settings.
         videoSettings = new VideoSettings();
     }
 
@@ -110,4 +117,21 @@ public class SettingsManager : MonoBehaviour
 
     }
 
+    private void SceneChange(Levels newLevel)
+    {
+        switch (newLevel)
+        {
+            case Levels.Title:
+
+                break;
+        }
+    }
+    void OnDestroy()
+    {
+        // Unsubscribe to avoid memory leaks
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.OnSceneChange -= SceneChange;
+        }
+    }
 }

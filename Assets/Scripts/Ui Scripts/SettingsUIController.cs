@@ -4,12 +4,15 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using TMPro;
 
 public class SettingsUIController : UiController
 {
     //First Layer Settings Buttons
     private Button Optionsbtn;
     private Button Continuebtn;
+    private Button Exitbtn;
+    private Button MainMenubtn;
 
     //Buttons for tabs
     private Button VideoTabbtn;
@@ -28,8 +31,12 @@ public class SettingsUIController : UiController
     public List<VolumeProfile> VolumeDefaults;
 
     //Buttons for video settings
-    private Slider Brightneslide;
+    private Slider GammaSlider;
+    private Slider GainSlider;
     private Toggle bloomOn;
+    private TMP_Dropdown resolutionDropDown;
+    private TMP_Dropdown aspectDropDown;
+    private Toggle windowedOn;
 
     //Apply&Discard buttons
     private Button Applybtn;
@@ -55,6 +62,13 @@ public class SettingsUIController : UiController
         Optionsbtn.onClick.AddListener(Options);
         Continuebtn = this.gameObject.transform.Find("ShortMenu").Find("Continuebtn").GetComponent<Button>();
         Continuebtn.onClick.AddListener(Continue);
+        if(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name != "Title")
+        {
+            Exitbtn = this.gameObject.transform.Find("ShortMenu").Find("Exitbtn").GetComponent<Button>();
+            Exitbtn.onClick.AddListener(Exit);
+            MainMenubtn = this.gameObject.transform.Find("ShortMenu").Find("MainMenubtn").GetComponent<Button>();
+            MainMenubtn.onClick.AddListener(MainMenu);
+        }
     }
 
     // Update is called once per frame
@@ -146,23 +160,28 @@ public class SettingsUIController : UiController
     /// </summary>
     public void setVolumeValues()
     {
-            Brightneslide = videoSettingTab.transform.Find("BrightnessSlider").GetComponent<Slider>();
-            Brightneslide.enabled = true;
+        #region VolumProfileAdjustments
+            GammaSlider = videoSettingTab.transform.Find("GammaSlider").GetComponent<Slider>();
+            GammaSlider.enabled = true;
             bloomOn = videoSettingTab.transform.Find("ToggleBloom").GetComponent<Toggle>();
             bloomOn.enabled = true;
+            GainSlider = videoSettingTab.transform.Find("GainSlider").GetComponent<Slider>();
+            GainSlider.enabled = true;
 
             //Set values
             //Try to get the variable for gain
             if (VolumeSettings[0].TryGet(out LiftGammaGain gainSettings))
             {
-                //Set brightness to meet this value. W represents the value of the intensity and we add +0.5f so it's usable as this value uses negative values but sliders don't.
-                Brightneslide.value = gainSettings.gamma.value.w + 0.5f;
+                //Set gamma to meet this value. W represents the value of the intensity and we add +0.5f so it's usable as this value uses negative values but sliders don't.
+                GammaSlider.value = gainSettings.gamma.value.w + 0.5f;
+                //Repeat the same process for gain
+                GainSlider.value = gainSettings.gain.value.w + 0.5f;
             }
             //If this value doesn't exist
             else
             {
                 Debug.Log("There is no gain");
-                Brightneslide.enabled = false;
+                GammaSlider.enabled = false;
             }
 
             //Enable and disable bloom check
@@ -176,6 +195,56 @@ public class SettingsUIController : UiController
                 Debug.Log("There is no bloom");
                 bloomOn.enabled = false;
             }
+        #endregion
+        #region UnitySettingsChange
+        aspectDropDown = videoSettingTab.transform.Find("AspectDropDown").GetComponent<TMP_Dropdown>();
+        ////aspectDropDown.enabled = true;
+        resolutionDropDown = videoSettingTab.transform.Find("ResolutionDropDown").GetComponent<TMP_Dropdown>();
+        //resolutionDropDown.enabled = true;
+        windowedOn = videoSettingTab.transform.Find("ToggleWindowed").GetComponent<Toggle>();
+        windowedOn.enabled = true;
+
+        //Screen resolution
+        if (UnityEngine.Screen.currentResolution.width == 1920 && UnityEngine.Screen.currentResolution.height == 1080)
+        {
+            resolutionDropDown.value = 0;
+            Debug.Log("1920x1080");
+        }
+        else if (UnityEngine.Screen.currentResolution.width == 1366 && UnityEngine.Screen.currentResolution.height == 763)
+        {
+            resolutionDropDown.value = 1;
+            Debug.Log("1366x763");
+        }
+        else if (UnityEngine.Screen.currentResolution.width == 2560 && UnityEngine.Screen.currentResolution.height == 1440)
+        {
+            resolutionDropDown.value = 2;
+            Debug.Log("2560x1440");
+        }
+        else if (UnityEngine.Screen.currentResolution.width == 3840 && UnityEngine.Screen.currentResolution.height == 2160)
+        {
+            resolutionDropDown.value = 3;
+            Debug.Log("3840x2160");
+        }
+        else
+        {
+            resolutionDropDown.value = 0;
+            UnityEngine.Screen.SetResolution(1920, 1080, FullScreenMode.FullScreenWindow);
+            Debug.Log("We don't know");
+        }
+
+        //Check if windowed and assign the toggle to match
+        if (UnityEngine.Screen.fullScreenMode.Equals(FullScreenMode.FullScreenWindow))
+        {
+            windowedOn.isOn = false;
+            Debug.Log("Full screen");
+        }
+        else
+        {
+            windowedOn.isOn = true;
+            Debug.Log("Windowed");
+        }
+
+        #endregion
     }
 
     //If we are applying settings
@@ -187,7 +256,9 @@ public class SettingsUIController : UiController
                 if (levelProfile.TryGet(out LiftGammaGain gainSettings))
                 {
                     //Set brightness to meet the new value. W represents the value of the intensity and we add +0.5f so it's usable as this value uses negative values but sliders don't.
-                    gainSettings.gamma.value += new Vector4(0, 0, 0, Brightneslide.value - 0.5f);
+                    gainSettings.gamma.value += new Vector4(0, 0, 0, GammaSlider.value - 0.5f);
+                    //Repeat the same process for gain
+                    gainSettings.gain.value += new Vector4(0, 0, 0, GainSlider.value - 0.5f);
                 }
                 //If this value doesn't exist
                 else
@@ -207,7 +278,47 @@ public class SettingsUIController : UiController
                 }
             }
 
-            Debug.Log("Graphics settings applied");
+        //Apply Unity Settings
+        //Check if windowed and assign the toggle to match
+        if(windowedOn.isOn == false)
+        {
+            //Sets full screen
+            UnityEngine.Screen.fullScreen = true;
+            Debug.Log("Full screen");
+        }
+        else
+        {
+            //Sets windowed
+            UnityEngine.Screen.fullScreen = false;
+            Debug.Log("Windowed");
+        }
+
+
+        //Screen resolution
+        if (resolutionDropDown.value == 0)
+        {
+            UnityEngine.Screen.SetResolution(1920, 1080, !windowedOn.isOn);
+            Debug.Log("1920x1080");
+        }
+        else if (resolutionDropDown.value == 1)
+        {
+            UnityEngine.Screen.SetResolution(1366, 763, !windowedOn.isOn);
+            Debug.Log("1366x763");
+        }
+        else if (resolutionDropDown.value == 2)
+        {
+
+            UnityEngine.Screen.SetResolution(2560, 1440, !windowedOn.isOn);
+            Debug.Log("2560x1440");
+        }
+        else if (resolutionDropDown.value == 3)
+        {
+
+            UnityEngine.Screen.SetResolution(3840, 2160, !windowedOn.isOn);
+            Debug.Log("3840x2160");
+        }
+
+        Debug.Log("Graphics settings applied");
             Options();
             ReturnToMiniMenu();
     }
@@ -234,10 +345,13 @@ public class SettingsUIController : UiController
                 //Try to get the variable for gain
                 if (VolumeSettings[i].TryGet(out LiftGammaGain gainSettings))
                 {
+                    //Get the defaults
                     if(VolumeDefaults[i].TryGet(out LiftGammaGain gainDefaults))
                     {
-                        //Set brightness to meet the new value. W represents the value of the intensity and we add +0.5f so it's usable as this value uses negative values but sliders don't.
+                        //Set gain equal to the defult profile in the same column of the list
                         gainSettings.gamma.value = gainDefaults.gamma.value;
+                        //Repeat for gain
+                        gainSettings.gain.value = gainDefaults.gain.value;
                     }
                 }
                 //If this value doesn't exist
@@ -286,5 +400,22 @@ public class SettingsUIController : UiController
         miniSkip = true;
         largeSettingMenu.SetActive(true);
         smallSettingMenu.SetActive(false);
+    }
+
+    /// <summary>
+    /// This might need to be removed
+    /// </summary>
+    public void MainMenu()
+    {
+        smallSettingMenu.SetActive(false);
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Title");
+    }
+
+    /// <summary>
+    /// Exit the game
+    /// </summary>
+    public void Exit()
+    {
+        Application.Quit();
     }
 }
