@@ -131,6 +131,12 @@ public class CombatController : MonoBehaviour
             turnQueue.Enqueue(enemy);
         }
 
+        //Call start combat for each enemy
+        foreach(var enemy in CombatEnemies)
+        {
+            enemy.GetComponent<Enemy>().CombatStart();
+        }
+
         // Enable the end-turn button
         UiManager.Instance.EndTurnButtonVisibility(true);
 
