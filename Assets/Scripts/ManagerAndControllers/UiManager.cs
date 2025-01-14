@@ -242,6 +242,10 @@ public class UiManager : MonoBehaviour
         switch (GameManager.Instance.CurrentGameMode)
         {
             case GameManager.GameMode.Title:
+                //Delete current UI from scene
+                if (CurrentUI != null)
+                    Destroy(CurrentUI);
+
                 //Find options button on title
                 GameObject testfind = GameObject.Find("Options Button");
                 // Add listener to options button to call method. You will add the code to this method that is called to bring up settings at title
@@ -250,6 +254,10 @@ public class UiManager : MonoBehaviour
                 testfind.GetComponent<Button>().onClick.AddListener(ToggleSettingsAtTitle);
                 break;
             case GameManager.GameMode.Loading:
+                //Delete current UI from scene
+                if (CurrentUI != null)
+                    Destroy(CurrentUI);
+                break;
             case GameManager.GameMode.Settings:
             case GameManager.GameMode.Credits:
                 break;
