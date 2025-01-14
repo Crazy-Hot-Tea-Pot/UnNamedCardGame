@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   chipRarity: 1
   chipName: Well Structured
-  description: Gaint 3 "Galvanize"
+  description: Gain 3 "Galvanize"
   chipImage: {fileID: 21300000, guid: edd3225069b27f048b025ff10d70e805, type: 3}
   canBeUpgraded: 1
   costToUpgrade: 150

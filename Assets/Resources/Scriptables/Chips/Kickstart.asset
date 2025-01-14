@@ -14,11 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   chipRarity: 0
   chipName: KickStart
-  description: Refresh 50% of your MaximumEnergy.
+  description: Refresh 50% of your Maximum Energy.
   chipImage: {fileID: 21300000, guid: 3b1cf6d66c7134f49922c45c119c6ac6, type: 3}
   canBeUpgraded: 0
   costToUpgrade: 0
   ChipTip: Play this to regain half of your spent energy.
   ChipRareityWeight: 0.5
   hitAllTargets: 0
+  chipType: 3
   specialEffect: {fileID: 11400000, guid: 1dd312cc89377b04689b11707889cc1a, type: 2}
