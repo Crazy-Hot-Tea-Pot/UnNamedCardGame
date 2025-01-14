@@ -311,11 +311,12 @@ public class UiManager : MonoBehaviour
     }
     private void StartCombat()
     {
-        
+        GetCurrentController<RoamingAndCombatUiController>().SwitchMode(true);
     }
 
     private void EndCombat()
     {
+        GetCurrentController<RoamingAndCombatUiController>().SwitchMode(false);
     }
 
     private void SceneChange(Levels newLevel)

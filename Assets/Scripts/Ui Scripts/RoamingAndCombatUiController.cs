@@ -33,7 +33,8 @@ public class RoamingAndCombatUiController : UiController
     public Gear Equipment;
 
     [Header("Combat Mode Stuff")]
-    public PlayerHandContainer PlayerHandContainer;
+    public GameObject PlayerHandContainer;
+    public GameObject EnergyAndGearContainer;
     public GameObject EndTurn;
     public Button EndTurnButton;
 
@@ -43,6 +44,7 @@ public class RoamingAndCombatUiController : UiController
         EndTurnButton.onClick.AddListener(() => GameObject.FindGameObjectWithTag("CombatController").GetComponent<CombatController>().EndTurn(GameObject.FindGameObjectWithTag("Player")));
         
         EndTurn.SetActive(false);
+        PlayerHandContainer.SetActive(false);
         CameraIndicator.SetActive(false);
 
         PlayerController player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
@@ -68,8 +70,8 @@ public class RoamingAndCombatUiController : UiController
     /// </summary>
     public IEnumerator RedrawPlayerHand()
     {
-        if(PlayerHandContainer.PanelIsVisible)
-            PlayerHandContainer.TogglePanel();
+        if(PlayerHandContainer.GetComponent<PlayerHandContainer>().PanelIsVisible)
+            PlayerHandContainer.GetComponent<PlayerHandContainer>().TogglePanel();
 
         yield return new WaitForSeconds(1f);
 
@@ -77,8 +79,8 @@ public class RoamingAndCombatUiController : UiController
 
         yield return new WaitForSeconds(1f);
 
-        if (!PlayerHandContainer.PanelIsVisible && ChipManager.Instance.PlayerHand.Count != 0)
-            PlayerHandContainer.TogglePanel();
+        if (!PlayerHandContainer.GetComponent<PlayerHandContainer>().PanelIsVisible && ChipManager.Instance.PlayerHand.Count != 0)
+            PlayerHandContainer.GetComponent<PlayerHandContainer>().TogglePanel();
     }
 
     public void ChangeEndButtonVisibility(bool visibility)
@@ -139,6 +141,16 @@ public class RoamingAndCombatUiController : UiController
         StopCoroutine(FillEnergyOverTime(tempTargetFillAmount));
 
         StartCoroutine(FillEnergyOverTime(tempTargetFillAmount));
+    }
+
+    /// <summary>
+    /// switch UI Modes
+    /// </summary>
+    /// <param name="CombatMode"></param>
+    public void SwitchMode(bool CombatMode)
+    {
+        PlayerHandContainer.SetActive(CombatMode);
+        EnergyAndGearContainer.GetComponent<Animator>().SetBool("Visible", CombatMode);
     }
 
     private IEnumerator UpdateHealthOverTime(float targetFillAmount)
