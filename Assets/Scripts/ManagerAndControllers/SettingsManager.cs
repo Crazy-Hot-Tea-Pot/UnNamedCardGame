@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.IO;
+using UnityEngine;
 using UnityEngine.Rendering;
 
 /// <summary>
@@ -6,23 +7,12 @@ using UnityEngine.Rendering;
 /// </summary>
 public class SettingsManager : MonoBehaviour
 {
-    [Header("Settings")]
-    [SerializeField]
-    private CameraSettings cameraSettings;
+    public static SettingsManager Instance
+    {
+        get;
+        private set;
+    }
 
-    [SerializeField]
-    private SoundSettings soundSettings;
-
-    [SerializeField]
-    private DataSettings dataSettings;
-
-    [SerializeField]
-    private VideoSettings videoSettings;
-
-    public static SettingsManager Instance {
-        get; 
-        private set; }
-    
     public CameraSettings CameraSettings
     {
         get
@@ -58,6 +48,7 @@ public class SettingsManager : MonoBehaviour
             dataSettings = value;
         }
     }
+
     public VideoSettings VideoSettings
     {
         get
@@ -70,6 +61,37 @@ public class SettingsManager : MonoBehaviour
         }
     }
 
+    public SettingsData CurrentSettingsData
+    {
+        get
+        {
+            return currentSettingsData;
+        }
+        set
+        {
+            currentSettingsData = value;
+        }
+    }
+
+    [Header("Settings")]
+    [SerializeField]
+    private CameraSettings cameraSettings;
+
+    [SerializeField]
+    private SoundSettings soundSettings;
+
+    [SerializeField]
+    private DataSettings dataSettings;
+
+    [SerializeField]
+    private VideoSettings videoSettings;
+
+    [SerializeField]
+    private string saveDirectory;
+
+    [SerializeField]
+    private SettingsData currentSettingsData;
+
     void Awake()
     {
         // Check if another instance of the SettingsManager exists
@@ -77,23 +99,42 @@ public class SettingsManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);  // Keep this object between scenes
+
+            //Save Directory
+            saveDirectory = Path.Combine(Application.dataPath, "Settings");
+
+            if (!Directory.Exists(saveDirectory))
+            {
+                Directory.CreateDirectory(saveDirectory);
+            }
+
+            //Initialize all Settings
             InitializeSettings();
         }
         else
         {
             Destroy(gameObject);  // Destroy duplicates
         }
+
+        CurrentSettingsData = new SettingsData();
     }
 
     void Start()
     {
+
+
         GameManager.Instance.OnSceneChange += SceneChange;
+
+        CurrentSettingsData.VidoeData.test = "video settins saved";
     }
+
     /// <summary>
     /// Initialize All settings by calling the default constructor.
     /// </summary>
     void InitializeSettings()
     {
+        LoadSettings();
+
         cameraSettings = new CameraSettings();
         soundSettings = new SoundSettings();
         dataSettings = new DataSettings();
@@ -107,14 +148,29 @@ public class SettingsManager : MonoBehaviour
     /// </summary>
     public void LoadSettings()
     {
+        string saveFilePath = Path.Combine(saveDirectory, $"Settings.json");
 
+        if (!File.Exists(saveFilePath))
+        {
+            Debug.LogWarning($"Save file not found: Settings");
+            return;
+        }
+
+        string json = File.ReadAllText(saveFilePath);
+        SettingsData loadedData = JsonUtility.FromJson<SettingsData>(json);
     }
     /// <summary>
     /// Save all settings
     /// </summary>
     public void SaveSettings()
     {
+        string saveFilePath = Path.Combine(saveDirectory, $"Settings.json");
 
+        string json = JsonUtility.ToJson(CurrentSettingsData, true);
+
+        File.WriteAllText(saveFilePath, json);
+
+        Debug.Log($"Settings saved successfully: {saveFilePath}");
     }
 
     private void SceneChange(Levels newLevel)
@@ -126,6 +182,7 @@ public class SettingsManager : MonoBehaviour
                 break;
         }
     }
+
     void OnDestroy()
     {
         // Unsubscribe to avoid memory leaks
@@ -133,5 +190,7 @@ public class SettingsManager : MonoBehaviour
         {
             GameManager.Instance.OnSceneChange -= SceneChange;
         }
+
+        SaveSettings();
     }
 }

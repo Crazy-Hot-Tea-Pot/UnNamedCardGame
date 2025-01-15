@@ -351,12 +351,12 @@ public class SettingsUIController : UiController
     //If we are applying settings
     public void ApplySettings()
     {
-            foreach (VolumeProfile levelProfile in VolumeSettings)
+        foreach (VolumeProfile levelProfile in VolumeSettings)
+        {
+            //Try to get the variable for gain
+            if (levelProfile.TryGet(out LiftGammaGain gainSettings))
             {
-                //Try to get the variable for gain
-                if (levelProfile.TryGet(out LiftGammaGain gainSettings))
-                {
-                    //Set brightness to meet the new value. W represents the value of the intensity and we add +0.5f so it's usable as this value uses negative values but sliders don't.
+                //Set brightness to meet the new value. W represents the value of the intensity and we add +0.5f so it's usable as this value uses negative values but sliders don't.
                     gainSettings.gamma.value += new Vector4(0, 0, 0, GammaSlider.value - 0.5f);
                     //Repeat the same process for gain
                     gainSettings.gain.value += new Vector4(0, 0, 0, GainSlider.value - 0.5f);
@@ -370,7 +370,9 @@ public class SettingsUIController : UiController
                 //Enable and disable bloom check
                 if (levelProfile.TryGet(out Bloom bloomSettings))
                 {
-                    bloomSettings.active = bloomOn.isOn;
+                //SettingsManager.Instance.VideoSettings.DisableBloom();
+                //SettingsManager.Instance.VideoSettings.EnabledBloom();
+                bloomSettings.active = bloomOn.isOn;
                 }
                 //If there is no bloom
                 else
