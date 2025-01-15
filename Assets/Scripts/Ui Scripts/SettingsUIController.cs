@@ -24,11 +24,11 @@ public class SettingsUIController : UiController
     private GameObject videoSettingTab;
     private GameObject audioSettingTab;
 
-    //Global Volume Component profile list
-    public List<VolumeProfile> VolumeSettings;
+    ////Global Volume Component profile list
+    //public List<VolumeProfile> VolumeSettings;
 
-    //Global Volume Component Defaults list
-    public List<VolumeProfile> VolumeDefaults;
+    ////Global Volume Component Defaults list
+    //public List<VolumeProfile> VolumeDefaults;
 
     //Buttons for video settings
     private Slider GammaSlider;
@@ -271,7 +271,7 @@ public class SettingsUIController : UiController
 
             //Set values
             //Try to get the variable for gain
-            if (VolumeSettings[0].TryGet(out LiftGammaGain gainSettings))
+            if (SettingsManager.Instance.VolumeSettings[0].TryGet(out LiftGammaGain gainSettings))
             {
                 //Set gamma to meet this value. W represents the value of the intensity and we add +0.5f so it's usable as this value uses negative values but sliders don't.
                 GammaSlider.value = gainSettings.gamma.value.w + 0.5f;
@@ -286,7 +286,7 @@ public class SettingsUIController : UiController
             }
 
             //Enable and disable bloom check
-            if (VolumeSettings[0].TryGet(out Bloom bloomSettings))
+            if (SettingsManager.Instance.VolumeSettings[0].TryGet(out Bloom bloomSettings))
             {
                 bloomOn.isOn = bloomSettings.active;
             }
@@ -351,15 +351,17 @@ public class SettingsUIController : UiController
     //If we are applying settings
     public void ApplySettings()
     {
-        foreach (VolumeProfile levelProfile in VolumeSettings)
-        {
-            //Try to get the variable for gain
-            if (levelProfile.TryGet(out LiftGammaGain gainSettings))
+            foreach (VolumeProfile levelProfile in SettingsManager.Instance.VolumeSettings)
             {
-                //Set brightness to meet the new value. W represents the value of the intensity and we add +0.5f so it's usable as this value uses negative values but sliders don't.
-                    gainSettings.gamma.value += new Vector4(0, 0, 0, GammaSlider.value - 0.5f);
-                    //Repeat the same process for gain
-                    gainSettings.gain.value += new Vector4(0, 0, 0, GainSlider.value - 0.5f);
+                //Try to get the variable for gain
+                if (levelProfile.TryGet(out LiftGammaGain gainSettings))
+                {
+                    //Save the gain and gamma
+                    SettingsManager.Instance.VideoSettings.SetandSaveGainandGamma(gainSettings, GammaSlider.value, GainSlider.value);
+                    ////Set brightness to meet the new value. W represents the value of the intensity and we add +0.5f so it's usable as this value uses negative values but sliders don't.
+                    //gainSettings.gamma.value += new Vector4(0, 0, 0, GammaSlider.value - 0.5f);
+                    ////Repeat the same process for gain
+                    //gainSettings.gain.value += new Vector4(0, 0, 0, GainSlider.value - 0.5f);
                 }
                 //If this value doesn't exist
                 else
@@ -370,9 +372,15 @@ public class SettingsUIController : UiController
                 //Enable and disable bloom check
                 if (levelProfile.TryGet(out Bloom bloomSettings))
                 {
-                //SettingsManager.Instance.VideoSettings.DisableBloom();
-                //SettingsManager.Instance.VideoSettings.EnabledBloom();
-                bloomSettings.active = bloomOn.isOn;
+                    if(bloomOn.isOn)
+                    {
+                        SettingsManager.Instance.VideoSettings.DisableBloom(bloomSettings);
+                    }
+                    else
+                    {
+                        SettingsManager.Instance.VideoSettings.EnabledBloom(bloomSettings);
+                    }
+                    //bloomSettings.active = bloomOn.isOn;
                 }
                 //If there is no bloom
                 else
@@ -386,40 +394,43 @@ public class SettingsUIController : UiController
         if(windowedOn.isOn == false)
         {
             //Sets full screen
-            UnityEngine.Screen.fullScreen = true;
+            SettingsManager.Instance.VideoSettings.IsFullScreen(true);
+            //UnityEngine.Screen.fullScreen = true;
             Debug.Log("Full screen");
         }
         else
         {
             //Sets windowed
-            UnityEngine.Screen.fullScreen = false;
+            SettingsManager.Instance.VideoSettings.IsFullScreen(false);
+            //UnityEngine.Screen.fullScreen = false;
             Debug.Log("Windowed");
         }
 
 
         //Screen resolution
-        if (resolutionDropDown.value == 0)
-        {
-            UnityEngine.Screen.SetResolution(1920, 1080, !windowedOn.isOn);
-            Debug.Log("1920x1080");
-        }
-        else if (resolutionDropDown.value == 1)
-        {
-            UnityEngine.Screen.SetResolution(1366, 763, !windowedOn.isOn);
-            Debug.Log("1366x763");
-        }
-        else if (resolutionDropDown.value == 2)
-        {
+        SettingsManager.Instance.VideoSettings.SetandSaveResolution(resolutionDropDown.value);
+        //if (resolutionDropDown.value == 0)
+        //{
+        //    UnityEngine.Screen.SetResolution(1920, 1080, !windowedOn.isOn);
+        //    Debug.Log("1920x1080");
+        //}
+        //else if (resolutionDropDown.value == 1)
+        //{
+        //    UnityEngine.Screen.SetResolution(1366, 763, !windowedOn.isOn);
+        //    Debug.Log("1366x763");
+        //}
+        //else if (resolutionDropDown.value == 2)
+        //{
 
-            UnityEngine.Screen.SetResolution(2560, 1440, !windowedOn.isOn);
-            Debug.Log("2560x1440");
-        }
-        else if (resolutionDropDown.value == 3)
-        {
+        //    UnityEngine.Screen.SetResolution(2560, 1440, !windowedOn.isOn);
+        //    Debug.Log("2560x1440");
+        //}
+        //else if (resolutionDropDown.value == 3)
+        //{
 
-            UnityEngine.Screen.SetResolution(3840, 2160, !windowedOn.isOn);
-            Debug.Log("3840x2160");
-        }
+        //    UnityEngine.Screen.SetResolution(3840, 2160, !windowedOn.isOn);
+        //    Debug.Log("3840x2160");
+        //}
 
         Debug.Log("Graphics settings applied");
             Options();
@@ -440,16 +451,16 @@ public class SettingsUIController : UiController
     public void RestoreDefaults()
     {
         ApplySettings();
-        if (VolumeSettings.Count == VolumeDefaults.Count)
+        if (SettingsManager.Instance.VolumeSettings.Count == SettingsManager.Instance.VolumeDefaults.Count)
         {
             //Run through the list of settings
-            for (int i = 0; i < VolumeSettings.Count; i++)
+            for (int i = 0; i < SettingsManager.Instance.VolumeSettings.Count; i++)
             {
                 //Try to get the variable for gain
-                if (VolumeSettings[i].TryGet(out LiftGammaGain gainSettings))
+                if (SettingsManager.Instance.VolumeSettings[i].TryGet(out LiftGammaGain gainSettings))
                 {
                     //Get the defaults
-                    if(VolumeDefaults[i].TryGet(out LiftGammaGain gainDefaults))
+                    if(SettingsManager.Instance.VolumeDefaults[i].TryGet(out LiftGammaGain gainDefaults))
                     {
                         //Set gain equal to the defult profile in the same column of the list
                         gainSettings.gamma.value = gainDefaults.gamma.value;
@@ -464,9 +475,9 @@ public class SettingsUIController : UiController
                 }
 
                 //Enable and disable bloom check
-                if (VolumeSettings[i].TryGet(out Bloom bloomSettings))
+                if (SettingsManager.Instance.VolumeSettings[i].TryGet(out Bloom bloomSettings))
                 {
-                    if(VolumeDefaults[i].TryGet(out Bloom bloomDefaults))
+                    if(SettingsManager.Instance.VolumeDefaults[i].TryGet(out Bloom bloomDefaults))
                     {
                         bloomSettings.active = bloomDefaults.IsActive();
                     }

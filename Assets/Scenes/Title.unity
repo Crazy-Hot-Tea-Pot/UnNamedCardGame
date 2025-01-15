@@ -2360,16 +2360,16 @@ MonoBehaviour:
     boarderMouseMovement: 0
   soundSettings:
     SFXVolume: 100
-  videoSettings:
-    Resolution: {x: 0, y: 0}
-    FullscreenMode: 0
-    VSyncEnabled: 0
-    GraphicsQuality: 0
-    TargetFrameRate: 0
-    AntiAliasingLevel: 0
-    ShadowQuality: 0
-    TextureQuality: 0
-    BloomEnabled: 0
+  saveDirectory: 
+  currentSettingsData:
+    VidoeData:
+      resolution: 0
+      bloom: 0
+      windowedMode: 0
+  VolumeSettings:
+  - {fileID: 11400000, guid: f24c8b93bc042d444aac10dfe41d0261, type: 2}
+  VolumeDefaults:
+  - {fileID: 11400000, guid: b6af5bd904a2f1f44b9028a1153c5761, type: 2}
 --- !u!222 &8436623260632989982
 CanvasRenderer:
   m_ObjectHideFlags: 0

@@ -1,5 +1,7 @@
 {
     "VidoeData": {
-        "test": "video settins saved"
+        "resolution": 0,
+        "bloom": false,
+        "windowedMode": false
     }
 }

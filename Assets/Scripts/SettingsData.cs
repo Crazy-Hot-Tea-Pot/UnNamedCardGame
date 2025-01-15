@@ -11,7 +11,15 @@ public class SettingsData
     [System.Serializable]
     public class WriteVideoFileData
     {
-        public string test;
+        public int resolution;
+
+        //Create setting for vector4
+        //public Vector4 gain;
+        //public Vector4 gamma;
+
+        public bool bloom;
+
+        public bool windowedMode;
     }
 
     public WriteVideoFileData VidoeData;
@@ -19,5 +27,6 @@ public class SettingsData
     public SettingsData()
     {
         VidoeData = new WriteVideoFileData();
+
     }
 }

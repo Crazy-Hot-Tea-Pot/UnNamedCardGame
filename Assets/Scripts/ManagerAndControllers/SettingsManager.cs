@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -92,6 +93,15 @@ public class SettingsManager : MonoBehaviour
     [SerializeField]
     private SettingsData currentSettingsData;
 
+    [Header("SettingsUIControllerProfiles")]
+    //Global Volume Component profile list
+    [SerializeField]
+    public List<VolumeProfile> VolumeSettings;
+
+    //Global Volume Component Defaults list
+    [SerializeField]
+    public List<VolumeProfile> VolumeDefaults;
+
     void Awake()
     {
         // Check if another instance of the SettingsManager exists
@@ -125,7 +135,7 @@ public class SettingsManager : MonoBehaviour
 
         GameManager.Instance.OnSceneChange += SceneChange;
 
-        CurrentSettingsData.VidoeData.test = "video settins saved";
+        //CurrentSettingsData.VidoeData.test = "video settins saved";
     }
 
     /// <summary>
@@ -140,7 +150,7 @@ public class SettingsManager : MonoBehaviour
         dataSettings = new DataSettings();
 
         //TODO change this to call the constructor if dataManager has settings.
-        videoSettings = new VideoSettings();
+        videoSettings = new VideoSettings(CurrentSettingsData.VidoeData);
     }
 
     /// <summary>
