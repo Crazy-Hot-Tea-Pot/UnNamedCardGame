@@ -94,7 +94,7 @@ public class CameraController : MonoBehaviour
     [Header("Things to make change from camera settings later")]
     public bool AllowBoarderMovement;
 
-    private float baseCameraSpeed;
+    private float baseCameraSpeed = SettingsManager.Instance.CameraSettings.CameraSpeed;
 
     public float CurrentCameraSpeed
     {
@@ -199,11 +199,7 @@ public class CameraController : MonoBehaviour
         RotationCamera.m_XAxis.m_MaxSpeed = rotationSensitivity * 300;
         RotationCamera.m_YAxis.m_MaxSpeed = rotationSensitivity * 2;
 
-        //Set Base cameraSpeed;
-        baseCameraSpeed = SettingsManager.Instance.CameraSettings.cameraSpeed;
-
         CurrentCameraSpeed = baseCameraSpeed;
-
     }
 
     void Update()

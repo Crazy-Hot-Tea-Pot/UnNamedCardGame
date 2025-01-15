@@ -1,6 +1,8 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using static SettingsData;
 
 [System.Serializable]
 public class VideoSettings
@@ -78,10 +80,15 @@ public class VideoSettings
         }
     }
 
+    [SerializeField]
     private int resolution;
+    [SerializeField]
     private bool screenMode;
+    [SerializeField]
     private Vector4 currentGain;
+    [SerializeField]
     private Vector4 currentGamma;
+    [SerializeField]
     private bool bloom;
 
     /// <summary>
@@ -92,19 +99,30 @@ public class VideoSettings
     {
         ApplySettingsFromSave(VideoFileData);
     }
+
     /// <summary>
-    ///What happens when we start (This is really a copy of SettingsUIController apply method without UI stuff)
+    /// What happens when we start (This is really a copy of SettingsUIController apply method without UI stuff)
     /// </summary>
     /// <param name="videoFileData"></param>
     public void ApplySettingsFromSave(SettingsData.WriteVideoFileData videoFileData)
     {
+        //Added this so you would know to load default values or load what the data has.
+        if (videoFileData.SettingsEdited)
+        {
+
+        }
+        else
+        {
+
+        }
         foreach (VolumeProfile levelProfile in SettingsManager.Instance.VolumeSettings)
         {
             //Try to get the variable for gain
             if (levelProfile.TryGet(out LiftGammaGain gainSettings))
             {
                 //Save the gain and gamma
-                //SettingsManager.Instance.VideoSettings.SetandSaveGainandGamma(gainSettings, videoFileData.gamma, videoFileData.gamma);
+                //THIS I WROTE METHODS TO RETURN GAIN AND GAMMA AS VECTOR4
+                //SettingsManager.Instance.VideoSettings.SetandSaveGainandGamma(gainSettings, videoFileData.Gain, videoFileData.Gamma);
             }
             //If this value doesn't exist
             else
@@ -154,11 +172,11 @@ public class VideoSettings
         SetandSaveResolution(videoFileData.resolution);
 
     }
+
     #region ProfileSettings
 
     /// <summary>
     /// Enabled bloom in graphics.
-    /// TODO Add code to enable bloom.
     /// </summary>
     /// <param name="CurrentBloom">Volume bloom to apply to</param>
     public void EnabledBloom(Bloom CurrentBloom)
@@ -171,7 +189,6 @@ public class VideoSettings
 
     /// <summary>
     /// Disable bloom in graphics.
-    /// TODO add code to disable bloom.
     /// </summary>
     ///<param name="CurrentBloom">Volume bloom to apply to</param>
     public void DisableBloom(Bloom CurrentBloom)
@@ -245,6 +262,29 @@ public class VideoSettings
             UnityEngine.Screen.SetResolution(3840, 2160, ScreenMode);
             Debug.Log("3840x2160");
         }
+    }
+
+    /// <summary>
+    /// Return all data in here for saving.
+    /// </summary>
+    /// <returns></returns>
+    public WriteVideoFileData GetDataToWrite()
+    {
+        return new WriteVideoFileData
+        {
+            SettingsEdited = true,
+            resolution = Resolution,
+            gainX = CurrentGain.x,
+            gainY = CurrentGain.y,
+            gainZ = CurrentGain.z,
+            gainW = CurrentGain.w,
+            gammaX = CurrentGamma.x,
+            gammaY = CurrentGamma.y,
+            gammaZ = CurrentGamma.z,
+            gammaW = CurrentGamma.w,
+            bloom = BloomEnabled,
+            windowedMode = ScreenMode
+        };
     }
 
     #endregion

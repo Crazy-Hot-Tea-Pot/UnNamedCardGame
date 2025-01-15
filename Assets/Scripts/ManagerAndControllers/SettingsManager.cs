@@ -90,7 +90,6 @@ public class SettingsManager : MonoBehaviour
     [SerializeField]
     private string saveDirectory;
 
-    [SerializeField]
     private SettingsData currentSettingsData;
 
     [Header("SettingsUIControllerProfiles")]
@@ -132,10 +131,8 @@ public class SettingsManager : MonoBehaviour
     void Start()
     {
 
-
         GameManager.Instance.OnSceneChange += SceneChange;
-
-        //CurrentSettingsData.VidoeData.test = "video settins saved";
+       
     }
 
     /// <summary>
@@ -145,12 +142,11 @@ public class SettingsManager : MonoBehaviour
     {
         LoadSettings();
 
-        cameraSettings = new CameraSettings();
-        soundSettings = new SoundSettings();
-        dataSettings = new DataSettings();
+        CameraSettings = new CameraSettings(CurrentSettingsData.DataForCameraSettings);
+        SoundSettings = new SoundSettings(CurrentSettingsData.DataForSoundSettings);
+        DataSettings = new DataSettings(CurrentSettingsData.DataForDataSettings);
 
-        //TODO change this to call the constructor if dataManager has settings.
-        videoSettings = new VideoSettings(CurrentSettingsData.VidoeData);
+        VideoSettings = new VideoSettings(CurrentSettingsData.VideoData);
     }
 
     /// <summary>
@@ -168,12 +164,20 @@ public class SettingsManager : MonoBehaviour
 
         string json = File.ReadAllText(saveFilePath);
         SettingsData loadedData = JsonUtility.FromJson<SettingsData>(json);
+
+        CurrentSettingsData = loadedData;
+        //CurrentSettingsData.VideoData = loadedData.VideoData;
     }
     /// <summary>
     /// Save all settings
     /// </summary>
     public void SaveSettings()
     {
+        CurrentSettingsData.VideoData = VideoSettings.GetDataToWrite();
+        CurrentSettingsData.DataForCameraSettings = CameraSettings.GetDataToWrite();
+        CurrentSettingsData.DataForDataSettings = DataSettings.GetDataToWrite();
+        CurrentSettingsData.DataForSoundSettings = SoundSettings.GetDataToWrite();
+
         string saveFilePath = Path.Combine(saveDirectory, $"Settings.json");
 
         string json = JsonUtility.ToJson(CurrentSettingsData, true);
