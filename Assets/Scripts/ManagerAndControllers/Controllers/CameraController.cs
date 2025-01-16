@@ -250,9 +250,6 @@ public class CameraController : MonoBehaviour
         // Convert the screen position to a world position at a specified distance from the camera
         Vector3 worldPosition = Camera.main.ScreenToWorldPoint(new Vector3(mouseScreenPosition.x, mouseScreenPosition.y, distanceFromCamera));
 
-        // Move the lookAtTarget to the calculated world position
-       // freeLook.transform.position = worldPosition;
-
         // Smoothly move the lookAtTarget to the calculated world position based on sensitivity
         freeLook.transform.position = Vector3.Lerp(freeLook.transform.position, worldPosition, freeCameraLookSensitivity * Time.deltaTime);
 
@@ -262,11 +259,21 @@ public class CameraController : MonoBehaviour
         // Only apply movement in Free mode
         if (currentCamera == CameraState.Free)
         {
-            // Calculate movement direction using WASD input
-            Vector3 moveDirection = new Vector3(moveInput.x, 0, moveInput.y) * CurrentCameraSpeed * Time.deltaTime;
+            // Handle forward/backward movement (W/S) based on the camera's forward vector
+            Vector3 forwardMovement = freeCamera.transform.forward * moveInput.y;
 
-            // Move freeCamera based on its orientation
-            freeCamera.transform.position += freeCamera.transform.TransformDirection(moveDirection);
+            // Handle lateral movement (A/D) based on the world space right vector
+            Vector3 lateralMovement = freeCamera.transform.right * moveInput.x;
+
+            // Combine movements and ignore vertical movement (Y-axis)
+            Vector3 moveDirection = forwardMovement + lateralMovement;
+            moveDirection.y = 0;
+
+            // Move the camera's position
+            freeCamera.transform.position += moveDirection * CurrentCameraSpeed * Time.deltaTime;
+
+            // Move the LookAtTarget (freeLook) to maintain its relative position to the camera
+            freeLook.transform.position += lateralMovement * CurrentCameraSpeed * Time.deltaTime;
         }
     }
     /// <summary>
