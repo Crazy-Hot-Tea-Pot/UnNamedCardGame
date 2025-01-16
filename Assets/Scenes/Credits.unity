@@ -753,54 +753,13 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '<size=500%>Thanks for playing</size>
-
-
-    Director: Adam Airhart
-
-
-
-    Lead
-    Designer: Adam
-
-
-
-    Lead Writer: Adnen
-
-
-
-    Art Director: Adrien
-
-
-
-    Level
-    Designer: Adrien
-
-
-
-    Concept Artist: Adrien
-
-
-
-    Lead Animator: Toma Ikomi
-
-
-
-    Lead
-    Environmental Artist: Rish
-
-
-    Programmers: Jayce Lovell, Sebastian Anderson
-
-
-
-    Music:
-    Lay
-
-
-
-
-    <size=50%><u>Press ESC to go back to title.</u></size>'
+  m_text: "<size=500%>Thanks for playing</size>\n\nAdam Airhart - ProJect Lead, ProJect
+    Managment, Game Design\r\n\nAdelie Rosenthal-Wang - UI Artist, Shader Programming
+    (tentative)\r\n\nAdnan KasuJJa - Game Design, Story\r\n\nAdrien Patenaude - Lead
+    Artist, Level Design\r\n\nJayce Lovell - Tools Programmer \r\n\nLay Ndiaye -
+    Audio/Sound Design, Game Design, Story \r\n\nRish Vimalanathan - 3D Modeller,
+    Artist\r\n\nSebastian Anderson - Programming\r\n\nToma Ikomi - 3D Modeller, Artist,
+    Animator\n\n\n\n<size=50%><u>Press ESC to go back to title.</u></size>"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
   m_sharedMaterial: {fileID: 2140032, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
@@ -827,7 +786,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 26.1
+  m_fontSize: 28.85
   m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 1
