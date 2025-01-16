@@ -10,6 +10,7 @@ using static GameData;
 public class TitleController : MonoBehaviour
 {
     [Header("Buttons")]
+    public GameObject ButtonPanel;
     public Button PlayButton;
     public Button ResumeButton;
     public Button OptionsButton;
@@ -130,5 +131,10 @@ public class TitleController : MonoBehaviour
             if (latestSave == null || save.TimeStamp > latestSave.TimeStamp)
                 latestSave = save;
         }
+    }
+    [ContextMenu("Bring in Buttons")]
+    private void BringInButtons()
+    {
+        ButtonPanel.GetComponent<Animator>().SetTrigger("BringInButtons");
     }
 }
