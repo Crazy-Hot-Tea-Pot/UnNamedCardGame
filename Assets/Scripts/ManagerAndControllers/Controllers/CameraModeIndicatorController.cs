@@ -72,7 +72,6 @@ public class CameraModeIndicatorController : MonoBehaviour
         switch (state)
         {
             case CameraController.CameraState.Default:
-            case CameraController.CameraState.Combat:
                 StartCoroutine(SwitchImage(DefaultCameraImage));
                 break;
             case CameraController.CameraState.Rotation:

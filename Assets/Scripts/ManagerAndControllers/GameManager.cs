@@ -161,7 +161,6 @@ public class GameManager : MonoBehaviour
         {
             case Levels.Title:
             case Levels.Loading:
-            case Levels.Credits:
                 break;
             default:
                 DataManager.Instance.CurrentGameData.Level = level;
@@ -211,9 +210,6 @@ public class GameManager : MonoBehaviour
                     break;
                 case Levels.Settings:
                     CurrentGameMode = GameMode.Settings;
-                    break;
-                case Levels.Credits:
-                    CurrentGameMode = GameMode.Credits;
                     break;
                 default:
                     CurrentGameMode = GameMode.Roaming;

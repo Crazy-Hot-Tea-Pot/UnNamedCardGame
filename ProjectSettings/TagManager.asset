@@ -14,7 +14,6 @@ TagManager:
   - UiManager
   - Card
   - GlobalVolume
-  - CombatZone
   layers:
   - Default
   - TransparentFX
@@ -24,7 +23,7 @@ TagManager:
   - UI
   - Player
   - Ground
-  - Enemy
+  - 
   - 
   - 
   - 

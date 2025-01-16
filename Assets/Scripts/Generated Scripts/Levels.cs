@@ -13,5 +13,4 @@ public enum Levels
     Loading,
     WorkShop,
     Settings,
-    Credits,
 }
