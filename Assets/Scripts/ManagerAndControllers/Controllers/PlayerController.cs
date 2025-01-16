@@ -787,6 +787,11 @@ public class PlayerController : MonoBehaviour
         // Update the last click time
         lastClickTime = currentTime;
     }
+
+    public void MovePlayerToPosition(Vector3 TargetPosition)
+    {
+        agent.SetDestination(TargetPosition);
+    }
     #endregion
 
     #region Combat

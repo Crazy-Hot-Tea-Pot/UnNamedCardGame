@@ -86,7 +86,6 @@ public class RoamingAndCombatUiController : UiController
     public void ChangeEndButtonVisibility(bool visibility)
     {
         EndTurn.SetActive(visibility);
-        Debug.Log("Setting Button to " + visibility);
     }
 
     /// <summary>

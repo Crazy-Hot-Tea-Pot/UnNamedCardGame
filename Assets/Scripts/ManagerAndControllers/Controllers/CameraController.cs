@@ -34,6 +34,7 @@ public class CameraController : MonoBehaviour
         Rotation,
         Free,
         BorderMovement,
+        Combat,
         FirstPerson
     }
 
@@ -46,6 +47,7 @@ public class CameraController : MonoBehaviour
     public CinemachineVirtualCamera freeCamera;
     public CinemachineVirtualCamera BorderCamera;
     public CinemachineVirtualCamera FirstPersonCamera;
+    public CinemachineVirtualCamera CombatCamera;
        
     public CameraState CurrentCamera
     {
@@ -53,7 +55,7 @@ public class CameraController : MonoBehaviour
         {
             return currentCamera;  
         }
-        set
+        private set
         {
             previousCamera = currentCamera;           
 
@@ -142,7 +144,7 @@ public class CameraController : MonoBehaviour
 
     void Awake()
     {
-        playerInputActions = new PlayerInputActions();
+        playerInputActions = new PlayerInputActions();        
     }
 
     void OnEnable()
@@ -163,7 +165,7 @@ public class CameraController : MonoBehaviour
             {
                 if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask2))
                 {
-                    if (hit.collider.CompareTag("Ground"))
+                    if (hit.collider.CompareTag("Ground") && GameManager.Instance.CurrentGameMode == GameManager.GameMode.Roaming)
                     {
                         OnResetCamera();
                     }
@@ -204,6 +206,9 @@ public class CameraController : MonoBehaviour
 
         CurrentCameraSpeed = baseCameraSpeed;
 
+        GameManager.Instance.OnStartCombat += StartCombat;
+        GameManager.Instance.OnEndCombat += EndCombat;
+
     }
 
     void Update()
@@ -224,6 +229,11 @@ public class CameraController : MonoBehaviour
         }
     }
 
+    public void UpdateCombatCamera(GameObject CombatCamera)
+    {
+        this.CombatCamera = CombatCamera.GetComponent<CinemachineVirtualCamera>();
+        
+    }
     /// <summary>
     /// ControlMovement for Free Camera
     /// </summary>
@@ -240,9 +250,6 @@ public class CameraController : MonoBehaviour
         // Convert the screen position to a world position at a specified distance from the camera
         Vector3 worldPosition = Camera.main.ScreenToWorldPoint(new Vector3(mouseScreenPosition.x, mouseScreenPosition.y, distanceFromCamera));
 
-        // Move the lookAtTarget to the calculated world position
-       // freeLook.transform.position = worldPosition;
-
         // Smoothly move the lookAtTarget to the calculated world position based on sensitivity
         freeLook.transform.position = Vector3.Lerp(freeLook.transform.position, worldPosition, freeCameraLookSensitivity * Time.deltaTime);
 
@@ -252,11 +259,21 @@ public class CameraController : MonoBehaviour
         // Only apply movement in Free mode
         if (currentCamera == CameraState.Free)
         {
-            // Calculate movement direction using WASD input
-            Vector3 moveDirection = new Vector3(moveInput.x, 0, moveInput.y) * CurrentCameraSpeed * Time.deltaTime;
+            // Handle forward/backward movement (W/S) based on the camera's forward vector
+            Vector3 forwardMovement = freeCamera.transform.forward * moveInput.y;
 
-            // Move freeCamera based on its orientation
-            freeCamera.transform.position += freeCamera.transform.TransformDirection(moveDirection);
+            // Handle lateral movement (A/D) based on the world space right vector
+            Vector3 lateralMovement = freeCamera.transform.right * moveInput.x;
+
+            // Combine movements and ignore vertical movement (Y-axis)
+            Vector3 moveDirection = forwardMovement + lateralMovement;
+            moveDirection.y = 0;
+
+            // Move the camera's position
+            freeCamera.transform.position += moveDirection * CurrentCameraSpeed * Time.deltaTime;
+
+            // Move the LookAtTarget (freeLook) to maintain its relative position to the camera
+            freeLook.transform.position += lateralMovement * CurrentCameraSpeed * Time.deltaTime;
         }
     }
     /// <summary>
@@ -329,6 +346,9 @@ public class CameraController : MonoBehaviour
         freeCamera.Priority = 0;
         BorderCamera.Priority = 0;
         FirstPersonCamera.Priority = 0;
+
+        if(CombatCamera!=null)
+            CombatCamera.Priority = 0;
         
         switch (state)
         {
@@ -347,6 +367,9 @@ public class CameraController : MonoBehaviour
                 break;
             case CameraState.FirstPerson:
                 FirstPersonCamera.Priority = 10;
+                break;
+            case CameraState.Combat:
+                CombatCamera.Priority = 10;
                 break;
             default:
                 DefaultCamera.Priority = 10;
@@ -377,7 +400,16 @@ public class CameraController : MonoBehaviour
         CurrentCameraSpeed = baseCameraSpeed;
     }
 
+    private void StartCombat()
+    {
+        SwitchCamera(CameraState.Combat);
+    }
+    private void EndCombat()
+    {
+        SwitchCamera(CameraState.Default);
 
+        this.CombatCamera = null;
+    }
     void OnDisable()
     {
 
