@@ -53,11 +53,11 @@ public class UiManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+            DontDestroyOnLoad(this.gameObject);
         }
         else
         {
-            Destroy(gameObject);
+            Destroy(this.gameObject);
         }
 
         // assign Player Input class
@@ -344,7 +344,10 @@ public class UiManager : MonoBehaviour
     }
     void OnDisable()
     {
-        playerInputActions.Player.Inventory.performed -= ToggleInventory;
-        playerInputActions.Player.Settings.performed -= ToggleSettings;
+        if (playerInputActions != null)
+        {
+            playerInputActions.Player.Inventory.performed -= ToggleInventory;
+            playerInputActions.Player.Settings.performed -= ToggleSettings;
+        }
     }
 }
