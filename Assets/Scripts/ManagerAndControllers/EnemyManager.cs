@@ -25,7 +25,7 @@ public class EnemyManager : MonoBehaviour
         {
             return combatEnemies;
         }
-        set
+        private set
         {
             combatEnemies = value;
         }
@@ -63,14 +63,16 @@ public class EnemyManager : MonoBehaviour
     {
         
     }
+
     /// <summary>
-    /// Add Enemy to enimes list.
+    /// Add Enemy to Combat Enimes list.
     /// </summary>
     /// <param name="enemy"></param>
-    public void AddEnemy(GameObject enemy)
+    public void AddCombatEnemy(GameObject enemy)
     {
         CombatEnemies.Add(enemy);
     }
+
     /// <summary>
     /// Remove defeated enemy from game.
     /// </summary>
@@ -82,16 +84,19 @@ public class EnemyManager : MonoBehaviour
         
         Destroy(enemy);
     }
+
     private void GetAllEnemiesInLevel()
     {
         CombatEnemies.Clear();
         EnemiesInLevel.Clear();
         EnemiesInLevel.AddRange(GameObject.FindGameObjectsWithTag("Enemy"));
     }
+
     private void StartCombat()
     {
 
     }
+
     private void EndCombat()
     {
         CombatEnemies.Clear();

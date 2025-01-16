@@ -329,10 +329,7 @@ public class UiManager : MonoBehaviour
 
     private void SceneChange(Levels newLevel)
     {
-        switch (newLevel)
-        {
 
-        }
     }    
 
     private void OnDestroy()
