@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using System.IO;
+using UnityEngine;
 using UnityEngine.Rendering;
 
 /// <summary>
@@ -6,23 +8,12 @@ using UnityEngine.Rendering;
 /// </summary>
 public class SettingsManager : MonoBehaviour
 {
-    [Header("Settings")]
-    [SerializeField]
-    private CameraSettings cameraSettings;
+    public static SettingsManager Instance
+    {
+        get;
+        private set;
+    }
 
-    [SerializeField]
-    private SoundSettings soundSettings;
-
-    [SerializeField]
-    private DataSettings dataSettings;
-
-    [SerializeField]
-    private VideoSettings videoSettings;
-
-    public static SettingsManager Instance {
-        get; 
-        private set; }
-    
     public CameraSettings CameraSettings
     {
         get
@@ -58,6 +49,7 @@ public class SettingsManager : MonoBehaviour
             dataSettings = value;
         }
     }
+
     public VideoSettings VideoSettings
     {
         get
@@ -70,6 +62,45 @@ public class SettingsManager : MonoBehaviour
         }
     }
 
+    public SettingsData CurrentSettingsData
+    {
+        get
+        {
+            return currentSettingsData;
+        }
+        set
+        {
+            currentSettingsData = value;
+        }
+    }
+
+    [Header("Settings")]
+    [SerializeField]
+    private CameraSettings cameraSettings;
+
+    [SerializeField]
+    private SoundSettings soundSettings;
+
+    [SerializeField]
+    private DataSettings dataSettings;
+
+    [SerializeField]
+    private VideoSettings videoSettings;
+
+    [SerializeField]
+    private string saveDirectory;
+
+    private SettingsData currentSettingsData;
+
+    [Header("SettingsUIControllerProfiles")]
+    //Global Volume Component profile list
+    [SerializeField]
+    public List<VolumeProfile> VolumeSettings;
+
+    //Global Volume Component Defaults list
+    [SerializeField]
+    public List<VolumeProfile> VolumeDefaults;
+
     void Awake()
     {
         // Check if another instance of the SettingsManager exists
@@ -77,29 +108,45 @@ public class SettingsManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);  // Keep this object between scenes
+
+            //Save Directory
+            saveDirectory = Path.Combine(Application.dataPath, "Settings");
+
+            if (!Directory.Exists(saveDirectory))
+            {
+                Directory.CreateDirectory(saveDirectory);
+            }
+
+            CurrentSettingsData = new SettingsData();
+
+            //Initialize all Settings
             InitializeSettings();
         }
         else
         {
             Destroy(gameObject);  // Destroy duplicates
-        }
+        }       
     }
 
     void Start()
     {
+
         GameManager.Instance.OnSceneChange += SceneChange;
+
     }
+
     /// <summary>
     /// Initialize All settings by calling the default constructor.
     /// </summary>
     void InitializeSettings()
     {
-        cameraSettings = new CameraSettings();
-        soundSettings = new SoundSettings();
-        dataSettings = new DataSettings();
+        LoadSettings();
 
-        //TODO change this to call the constructor if dataManager has settings.
-        videoSettings = new VideoSettings();
+        CameraSettings = new CameraSettings(CurrentSettingsData.DataForCameraSettings);
+        SoundSettings = new SoundSettings(CurrentSettingsData.DataForSoundSettings);
+        DataSettings = new DataSettings(CurrentSettingsData.DataForDataSettings);
+
+        VideoSettings = new VideoSettings(CurrentSettingsData.VideoData);
     }
 
     /// <summary>
@@ -107,14 +154,37 @@ public class SettingsManager : MonoBehaviour
     /// </summary>
     public void LoadSettings()
     {
+        string saveFilePath = Path.Combine(saveDirectory, $"Settings.json");
 
+        if (!File.Exists(saveFilePath))
+        {
+            Debug.LogWarning($"Save file not found: Settings");
+            return;
+        }
+
+        string json = File.ReadAllText(saveFilePath);
+        SettingsData loadedData = JsonUtility.FromJson<SettingsData>(json);
+
+        CurrentSettingsData = loadedData;
+        //CurrentSettingsData.VideoData = loadedData.VideoData;
     }
     /// <summary>
     /// Save all settings
     /// </summary>
     public void SaveSettings()
     {
+        CurrentSettingsData.VideoData = VideoSettings.GetDataToWrite();
+        CurrentSettingsData.DataForCameraSettings = CameraSettings.GetDataToWrite();
+        CurrentSettingsData.DataForDataSettings = DataSettings.GetDataToWrite();
+        CurrentSettingsData.DataForSoundSettings = SoundSettings.GetDataToWrite();
 
+        string saveFilePath = Path.Combine(saveDirectory, $"Settings.json");
+
+        string json = JsonUtility.ToJson(CurrentSettingsData, true);
+
+        File.WriteAllText(saveFilePath, json);
+
+        Debug.Log($"Settings saved successfully: {saveFilePath}");
     }
 
     private void SceneChange(Levels newLevel)
@@ -126,6 +196,7 @@ public class SettingsManager : MonoBehaviour
                 break;
         }
     }
+
     void OnDestroy()
     {
         // Unsubscribe to avoid memory leaks
@@ -133,5 +204,7 @@ public class SettingsManager : MonoBehaviour
         {
             GameManager.Instance.OnSceneChange -= SceneChange;
         }
+
+        SaveSettings();
     }
 }

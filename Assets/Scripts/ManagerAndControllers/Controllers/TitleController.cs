@@ -49,11 +49,16 @@ public class TitleController : MonoBehaviour
         SoundManager.PlayFXSound(SoundFX.MenuSelectionSound);
     }
 
+    public void Credits()
+    {
+        GameManager.Instance.RequestScene(Levels.Credits);
+    }
+
     /// <summary>
     /// Start a new game.
     /// Set Default Player Stats
     /// </summary>
-   private void StartGame()
+    private void StartGame()
    {
         GameData startData = new GameData();
 

@@ -6,8 +6,9 @@ using UnityEngine.InputSystem;
 
 public class CreditsController : MonoBehaviour
 {
-    public TMP_Text m_TextComponent;    
+    public TMP_Text m_TextComponent;
 
+    [Range(0.000f,0.100f)]
     public float revealSpeed = 0.05f; 
     public int wordsPerCycle = 1;
     public bool Wordmode;

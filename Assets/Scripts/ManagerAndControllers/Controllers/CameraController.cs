@@ -214,7 +214,7 @@ public class CameraController : MonoBehaviour
         RotationCamera.m_YAxis.m_MaxSpeed = rotationSensitivity * 2;
 
         //Set Base cameraSpeed;
-        baseCameraSpeed = SettingsManager.Instance.CameraSettings.cameraSpeed;
+        baseCameraSpeed = SettingsManager.Instance.CameraSettings.CameraSpeed;
 
         CurrentCameraSpeed = baseCameraSpeed;
 
