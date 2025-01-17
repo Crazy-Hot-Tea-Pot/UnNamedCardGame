@@ -273,6 +273,7 @@ MonoBehaviour:
   - {fileID: 6835000082307060844, guid: 371ef51de7d326049a99e9bc62f20284, type: 3}
   - {fileID: 6349382813320215569, guid: cfbd80ae571d42d43a53c68c995e54ac, type: 3}
   - {fileID: 1381671455956049504, guid: 596489b2d96bc5641b385a1185919f3b, type: 3}
+  - {fileID: 1381671455956049504, guid: 5ff2f4d6c2d83e545afa0ad6733bfc27, type: 3}
   RoamingAndCombatUI: {fileID: 2605184496312659243, guid: 3fb4564ae17676e449e6d4efa9998cba, type: 3}
   InventoryUI: {fileID: 6835000082307060844, guid: 371ef51de7d326049a99e9bc62f20284, type: 3}
   TerminalUI: {fileID: 6349382813320215569, guid: cfbd80ae571d42d43a53c68c995e54ac, type: 3}
@@ -2311,17 +2312,21 @@ MonoBehaviour:
     cameraSpeed: 3
     boarderMouseMovement: 0
   soundSettings:
-    SFXVolume: 100
+    bgmVolume: 0
+    sfxVolume: 0
+    bgmMute: 0
+    sfxMute: 0
+  dataSettings:
+    maxAutoSave: 0
   videoSettings:
-    Resolution: {x: 0, y: 0}
-    FullscreenMode: 0
-    VSyncEnabled: 0
-    GraphicsQuality: 0
-    TargetFrameRate: 0
-    AntiAliasingLevel: 0
-    ShadowQuality: 0
-    TextureQuality: 0
-    BloomEnabled: 0
+    resolution: 0
+    screenMode: 0
+    currentGain: {x: 0, y: 0, z: 0, w: 0}
+    currentGamma: {x: 0, y: 0, z: 0, w: 0}
+    bloom: 0
+  saveDirectory: 
+  VolumeSettings: []
+  VolumeDefaults: []
 --- !u!224 &8228663367382281603
 RectTransform:
   m_ObjectHideFlags: 0
