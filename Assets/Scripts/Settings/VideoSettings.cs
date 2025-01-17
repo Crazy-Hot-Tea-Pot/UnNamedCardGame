@@ -95,26 +95,26 @@ public class VideoSettings
     /// Default contructor for video settings.
     /// Have to apply the volumes in this constructor.
     /// </summary>
-    public VideoSettings(SettingsData.WriteVideoFileData VideoFileData)
+    public VideoSettings(WriteVideoFileData VideoFileData)
     {
-        ApplySettingsFromSave(VideoFileData);
+        //Added this so you would know to load default values or load what the data has.
+        if (VideoFileData.SettingsEdited)
+        {
+            //Load values from VideoFileData
+        }
+        else
+        {
+            //set default values
+        }
+        //ApplySettingsFromSave(VideoFileData);
     }
 
     /// <summary>
     /// What happens when we start (This is really a copy of SettingsUIController apply method without UI stuff)
     /// </summary>
     /// <param name="videoFileData"></param>
-    public void ApplySettingsFromSave(SettingsData.WriteVideoFileData videoFileData)
+    public void ApplySettingsFromSave(WriteVideoFileData videoFileData)
     {
-        //Added this so you would know to load default values or load what the data has.
-        if (videoFileData.SettingsEdited)
-        {
-
-        }
-        else
-        {
-
-        }
         foreach (VolumeProfile levelProfile in SettingsManager.Instance.VolumeSettings)
         {
             //Try to get the variable for gain

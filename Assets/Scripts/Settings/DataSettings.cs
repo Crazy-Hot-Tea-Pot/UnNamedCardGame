@@ -19,13 +19,14 @@ public class DataSettings
 
     [SerializeField]
     private int maxAutoSave;
+
     //Constructor
     public DataSettings(DataSettingsData data) {
 
         if(data.SettingsEdited)
-            MaxAutoSave = 5;
+            MaxAutoSave = data.MaxAutoSaves;
         else
-            MaxAutoSave=data.MaxAutoSaves;
+            MaxAutoSave = 5;        
     }
 
     /// <summary>

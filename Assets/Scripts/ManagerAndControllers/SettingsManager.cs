@@ -117,15 +117,15 @@ public class SettingsManager : MonoBehaviour
                 Directory.CreateDirectory(saveDirectory);
             }
 
+            CurrentSettingsData = new SettingsData();
+
             //Initialize all Settings
             InitializeSettings();
         }
         else
         {
             Destroy(gameObject);  // Destroy duplicates
-        }
-
-        CurrentSettingsData = new SettingsData();
+        }        
     }
 
     void Start()

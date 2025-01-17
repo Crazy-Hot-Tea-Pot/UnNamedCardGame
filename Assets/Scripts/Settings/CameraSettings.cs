@@ -42,13 +42,13 @@ public class CameraSettings
 
         if (data.SettingsEdited)
         {
-            CameraSpeed = 3f;
-            BoarderMouseMovement = false;
+            cameraSpeed = data.CameraSpeed;
+            BoarderMouseMovement = data.BoarderMouseMovement;            
         }
         else
         {
-            cameraSpeed = data.CameraSpeed;
-            BoarderMouseMovement = data.BoarderMouseMovement;
+            CameraSpeed = 3f;
+            BoarderMouseMovement = false;
         }
     }
 
