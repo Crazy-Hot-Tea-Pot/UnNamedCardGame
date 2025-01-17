@@ -196,8 +196,9 @@ public class GameManager : MonoBehaviour
         // Update the CurrentLevel based on the loaded level
         if (System.Enum.TryParse(scene.name, out Levels loadedScene))
         {
-            // Track the previous level
-            PreviousScene = CurrentLevel;
+            if(CurrentLevel!=Levels.Loading && CurrentLevel != Levels.Credits)
+                // Track the previous level
+                PreviousScene = CurrentLevel;
 
             CurrentLevel = loadedScene;
 

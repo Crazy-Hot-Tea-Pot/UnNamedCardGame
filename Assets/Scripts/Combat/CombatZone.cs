@@ -47,6 +47,9 @@ public class CombatZone : MonoBehaviour
     public GameObject CameraTarget;
 
     private Transform playerPosition;
+    private CameraController MainCamera;
+    private PlayerController Player;
+    private CombatController CombatController;
 
     void OnValidate()
     {
@@ -100,6 +103,10 @@ public class CombatZone : MonoBehaviour
 
         // Deactivate positions
         PlayerPosition.SetActive(false);
+
+        MainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>();
+        Player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        CombatController = GameObject.FindGameObjectWithTag("CombatController").GetComponent<CombatController>();
     }
 
     // Update is called once per frame
@@ -111,6 +118,7 @@ public class CombatZone : MonoBehaviour
     public void PlayerEnteredCombatZone()
     {
         Debug.Log("Player entered the combat zone.");
+        
 
         combatMaterial = CombatAreaRender.material = new Material(CombatAreaRender.material);
 
@@ -138,11 +146,13 @@ public class CombatZone : MonoBehaviour
             }
         }
 
-        GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().MovePlayerToPosition(playerPosition.position);
+        Player.MovePlayerToPosition(playerPosition.position);
 
-        GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>().UpdateCombatCamera(CombatCameraPosition);
 
-        GameObject.FindGameObjectWithTag("CombatController").GetComponent<CombatController>().StartCombat(this.gameObject);
+        MainCamera.UpdateCombatCamera(CombatCameraPosition);
+
+
+        CombatController.StartCombat(this.gameObject);
     }
     /// <summary>
     /// Sav combat zone settings
@@ -218,5 +228,4 @@ public class CombatZone : MonoBehaviour
             Gizmos.DrawSphere(CombatCameraPosition.transform.position, 0.5f);
         }
     }
-
 }

@@ -48,7 +48,8 @@ public class RoamingAndCombatUiController : UiController
         CameraIndicator.SetActive(false);
 
         PlayerController player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
-        if (player == null)
+
+        if (player != null)
         {
             UpdateHealth(player.Health, player.MaxHealth);
             UpdateShield(player.Shield, player.MaxShield);
@@ -62,7 +63,7 @@ public class RoamingAndCombatUiController : UiController
 
     public override void Initialize()
     {
-        Debug.Log("RoamingAndCombatUiController initialized");      
+        Debug.Log("RoamingAndCombatUiController initialized");        
     }
 
     /// <summary>

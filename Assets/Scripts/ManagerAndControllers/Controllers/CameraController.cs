@@ -2,6 +2,7 @@ using Cinemachine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Build;
 using UnityEngine;
 using UnityEngine.InputSystem;
 public class CameraController : MonoBehaviour
@@ -47,8 +48,19 @@ public class CameraController : MonoBehaviour
     public CinemachineVirtualCamera freeCamera;
     public CinemachineVirtualCamera BorderCamera;
     public CinemachineVirtualCamera FirstPersonCamera;
-    public CinemachineVirtualCamera CombatCamera;
-       
+    public CinemachineVirtualCamera CombatCamera
+    {
+        get
+        {
+            return combatCamera;
+        }
+        private set
+        {
+            combatCamera = value;
+        }
+    }
+    private CinemachineVirtualCamera combatCamera;
+
     public CameraState CurrentCamera
     {
         get
@@ -229,11 +241,15 @@ public class CameraController : MonoBehaviour
         }
     }
 
-    public void UpdateCombatCamera(GameObject CombatCamera)
+    /// <summary>
+    /// Set Combat camera
+    /// </summary>
+    /// <param name="CurrentCombatCamera"></param>
+    public void UpdateCombatCamera(GameObject CurrentCombatCamera)
     {
-        this.CombatCamera = CombatCamera.GetComponent<CinemachineVirtualCamera>();
-        
+        CombatCamera = CurrentCombatCamera.GetComponent<CinemachineVirtualCamera>();      
     }
+
     /// <summary>
     /// ControlMovement for Free Camera
     /// </summary>
@@ -402,13 +418,22 @@ public class CameraController : MonoBehaviour
 
     private void StartCombat()
     {
+        if (CombatCamera == null)
+        {
+            Debug.Log("Why are you null!!");
+            Debug.Log(CombatCamera.transform.position);
+            Debug.Log(this.gameObject.name);
+            Debug.Log(this.gameObject.transform.position);
+            Debug.Log("why are you null");
+        }
+
         SwitchCamera(CameraState.Combat);
     }
     private void EndCombat()
     {
         SwitchCamera(CameraState.Default);
 
-        this.CombatCamera = null;
+        CombatCamera = null;
     }
     void OnDisable()
     {
@@ -418,6 +443,9 @@ public class CameraController : MonoBehaviour
 
         playerInputActions.CameraControls.IncreaseCameraSpeed.performed -= OnIncreaseCameraSpeed;
         playerInputActions.CameraControls.IncreaseCameraSpeed.canceled -= OnResetCameraSpeed;
+
+        GameManager.Instance.OnStartCombat -= StartCombat;
+        GameManager.Instance.OnEndCombat -= EndCombat;
 
     }
 }

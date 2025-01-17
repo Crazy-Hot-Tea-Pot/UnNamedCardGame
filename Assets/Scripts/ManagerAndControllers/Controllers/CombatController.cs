@@ -236,7 +236,6 @@ public class CombatController : MonoBehaviour
 
         if (CurrentCombadant == Player)
         {
-            Debug.Log("Player Turn");
 
             UiManager.Instance.EndTurnButtonInteractable(true);
 
@@ -246,7 +245,6 @@ public class CombatController : MonoBehaviour
         }
         else if (CombatEnemies.Contains(CurrentCombadant))
         {
-            Debug.Log("Enemy " + CurrentCombadant.name + " turn.");
 
             CurrentCombadant.GetComponent<Enemy>().MyTurn();
         }

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8166769160537469582}
   - component: {fileID: 2936787842314212342}
   - component: {fileID: 6471582461536715584}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Target Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -202,7 +202,7 @@ GameObject:
   - component: {fileID: 7275581635128340530}
   - component: {fileID: 1876135491628719298}
   - component: {fileID: 3419500869265954236}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Garbage bot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -459,9 +459,53 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 996272974041848621, guid: b845a22ad60f6954ab4cdc7901576242, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2554812336669711024, guid: b845a22ad60f6954ab4cdc7901576242, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3725788166322361622, guid: b845a22ad60f6954ab4cdc7901576242, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5268760087186665007, guid: b845a22ad60f6954ab4cdc7901576242, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5999033585686323767, guid: b845a22ad60f6954ab4cdc7901576242, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6388239274412779569, guid: b845a22ad60f6954ab4cdc7901576242, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6488430225359736191, guid: b845a22ad60f6954ab4cdc7901576242, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6649264294314104044, guid: b845a22ad60f6954ab4cdc7901576242, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7486151757647826200, guid: b845a22ad60f6954ab4cdc7901576242, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8398928584233296438, guid: b845a22ad60f6954ab4cdc7901576242, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 8622234643699543731, guid: b845a22ad60f6954ab4cdc7901576242, type: 3}
       propertyPath: m_Name
       value: EnemyCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 8622234643699543731, guid: b845a22ad60f6954ab4cdc7901576242, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
