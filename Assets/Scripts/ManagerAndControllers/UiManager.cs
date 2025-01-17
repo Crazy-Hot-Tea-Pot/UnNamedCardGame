@@ -210,8 +210,7 @@ public class UiManager : MonoBehaviour
     /// </summary>
     private void ToggleSettingsAtTitle()
     {
-        SettingsUI.transform.GetComponent<SettingsUIController>().miniSkip = true;
-        SwitchScreen(SettingsUI);
+        Debug.Log("Settings at Title");
     }
 
     /// <summary>
@@ -220,12 +219,6 @@ public class UiManager : MonoBehaviour
     public void CloseSettingsOnClick()
     {
         SwitchScreen(RoamingAndCombatUI);
-    }
-
-    public void CloseSettingsOnClickTitle()
-    {
-        Destroy(CurrentUI);
-        SettingsUI.transform.GetComponent<SettingsUIController>().miniSkip = false;
     }
     #endregion
     /// <summary>
@@ -249,11 +242,22 @@ public class UiManager : MonoBehaviour
         switch (GameManager.Instance.CurrentGameMode)
         {
             case GameManager.GameMode.Title:
-                //Find options button on title and add a listener
-                GameObject.Find("Options Button").GetComponent<Button>().onClick.RemoveAllListeners();
-                GameObject.Find("Options Button").GetComponent<Button>().onClick.AddListener(ToggleSettingsAtTitle);
+                //Delete current UI from scene
+                if (CurrentUI != null)
+                    Destroy(CurrentUI);
+
+                //Find options button on title
+                GameObject testfind = GameObject.Find("Options Button");
+                // Add listener to options button to call method. You will add the code to this method that is called to bring up settings at title
+                // After your done you can remove the testfind var as i just did it for testing.
+                //replace with this line GameObject.Find("Options Button").GetComponent<Button>().onClick.AddListener(ToggleSettingsAtTitle);
+                testfind.GetComponent<Button>().onClick.AddListener(ToggleSettingsAtTitle);
                 break;
             case GameManager.GameMode.Loading:
+                //Delete current UI from scene
+                if (CurrentUI != null)
+                    Destroy(CurrentUI);
+                break;
             case GameManager.GameMode.Settings:
             case GameManager.GameMode.Credits:
                 break;
@@ -315,11 +319,12 @@ public class UiManager : MonoBehaviour
     }
     private void StartCombat()
     {
-        
+        GetCurrentController<RoamingAndCombatUiController>().SwitchMode(true);
     }
 
     private void EndCombat()
     {
+        GetCurrentController<RoamingAndCombatUiController>().SwitchMode(false);
     }
 
     private void SceneChange(Levels newLevel)

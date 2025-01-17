@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static GameData;
 //using static UnityEditor.Progress;
 
 public class TitleController : MonoBehaviour
