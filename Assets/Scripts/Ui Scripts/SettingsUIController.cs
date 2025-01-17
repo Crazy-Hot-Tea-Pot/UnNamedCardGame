@@ -24,11 +24,11 @@ public class SettingsUIController : UiController
     private GameObject videoSettingTab;
     private GameObject audioSettingTab;
 
-    //Global Volume Component profile list
-    public List<VolumeProfile> VolumeSettings;
+    ////Global Volume Component profile list
+    //public List<VolumeProfile> VolumeSettings;
 
-    //Global Volume Component Defaults list
-    public List<VolumeProfile> VolumeDefaults;
+    ////Global Volume Component Defaults list
+    //public List<VolumeProfile> VolumeDefaults;
 
     //Buttons for video settings
     private Slider GammaSlider;
@@ -42,31 +42,94 @@ public class SettingsUIController : UiController
     private Button Applybtn;
     private Button Discardbtn;
     private Button RestoreDefaultsbtn;
+    private Button BackBtn;
 
     //A bool for title screen
-    private bool miniSkip;
+    public bool miniSkip = false;
+    private GameObject titleScreenUI;
 
     // Start is called before the first frame update
     void Start()
     {
-        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Title")
-        {
-            GameObject.Find("Canvas").transform.Find("ButtonPanel").transform.Find("OptionsButton").GetComponent<Button>().onClick.AddListener(SkipMiniMenu);
-        }
-        miniSkip = false;
+        //At start we need to find a series of containers for the ui and some buttons that are now visible
+
         //Menu Containers
         largeSettingMenu = this.gameObject.transform.Find("OptionsScreen").gameObject;
         smallSettingMenu = this.gameObject.transform.Find("ShortMenu").gameObject;
-        //Find buttons and add listeners
-        Optionsbtn = this.gameObject.transform.Find("ShortMenu").Find("Optionsbtn").GetComponent<Button>();
-        Optionsbtn.onClick.AddListener(Options);
-        Continuebtn = this.gameObject.transform.Find("ShortMenu").Find("Continuebtn").GetComponent<Button>();
-        Continuebtn.onClick.AddListener(Continue);
-        if(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name != "Title")
+
+        //When adding buttons remove all listeners for when we go to main menu and back to in game otherwise we could have alot of listeners
+        //Buttons for tabs
+        VideoTabbtn = this.gameObject.transform.Find("OptionsScreen").Find("VideoSettingsbtn").GetComponent<Button>();
+        VideoTabbtn.onClick.RemoveAllListeners();
+        //Add a button for opening video settings
+        VideoTabbtn.onClick.AddListener(OpenVideoSettingsTab);
+        AudioTabbtn = this.gameObject.transform.Find("OptionsScreen").Find("Audiobtn").GetComponent<Button>();
+        AudioTabbtn.onClick.RemoveAllListeners();
+        //Add a button for opening audio settings
+        AudioTabbtn.onClick.AddListener(OpenAudioSettingsTab);
+
+        //Button for applying
+        Applybtn = this.gameObject.transform.Find("OptionsScreen").Find("Applybtn").GetComponent<Button>();
+        Applybtn.onClick.RemoveAllListeners();
+        //Add a button to apply settings
+        Applybtn.onClick.AddListener(ApplySettings);
+        //Start inactive
+        Applybtn.gameObject.SetActive(false);
+
+        //Button for discarding
+        Discardbtn = this.gameObject.transform.Find("OptionsScreen").Find("Discardbtn").GetComponent<Button>();
+        Discardbtn.onClick.RemoveAllListeners();
+        //Add a button to discard settings
+        Discardbtn.onClick.AddListener(DiscardSettings);
+        //Start inactive
+        Discardbtn.gameObject.SetActive(false);
+
+        //Button for restoring defaults
+        RestoreDefaultsbtn = this.gameObject.transform.Find("OptionsScreen").Find("Defaultsbtn").GetComponent<Button>();
+        RestoreDefaultsbtn.onClick.RemoveAllListeners();
+        //Add a button to restore defaults
+        RestoreDefaultsbtn.onClick.AddListener(RestoreDefaults);
+        //start inactive
+        RestoreDefaultsbtn.gameObject.SetActive(false);
+
+        //Back button
+        BackBtn = this.gameObject.transform.Find("OptionsScreen").Find("Backbtn").GetComponent<Button>();
+        BackBtn.onClick.RemoveAllListeners();
+        //Add a button to return to mini menu
+        BackBtn.onClick.AddListener(ReturnToMiniMenu);
+
+        //If title screen skip mini menu
+        if (miniSkip)
         {
+            SkipMiniMenu();
+
+            //Pause time
+            UnityEngine.Time.timeScale = 0;
+        }
+        else
+        {
+            //Pause time
+            UnityEngine.Time.timeScale = 0;
+
+            //Find the options button
+            Optionsbtn = this.gameObject.transform.Find("ShortMenu").Find("Optionsbtn").GetComponent<Button>();
+            Optionsbtn.onClick.RemoveAllListeners();
+            //Add a button for options
+            Optionsbtn.onClick.AddListener(Options);
+            //Find the button for continue
+            Continuebtn = this.gameObject.transform.Find("ShortMenu").Find("Continuebtn").GetComponent<Button>();
+            Continuebtn.onClick.RemoveAllListeners();
+            //Make the button for continue functional
+            Continuebtn.onClick.AddListener(Continue);
+            //Find the exit button
             Exitbtn = this.gameObject.transform.Find("ShortMenu").Find("Exitbtn").GetComponent<Button>();
+            Exitbtn.onClick.RemoveAllListeners();
+            //Make the exit button functional
             Exitbtn.onClick.AddListener(Exit);
+            //Find the main menu button
             MainMenubtn = this.gameObject.transform.Find("ShortMenu").Find("MainMenubtn").GetComponent<Button>();
+            //Add the Main menu button
+            MainMenubtn.onClick.RemoveAllListeners();
             MainMenubtn.onClick.AddListener(MainMenu);
         }
     }
@@ -81,31 +144,50 @@ public class SettingsUIController : UiController
     /// Open and close the options menu
     /// </summary>
     public void Options()
-    {
-        //If the larger UI then close options
-        if(largeSettingMenu.activeSelf)
+    {    
+        //If the larger UI is open then close options
+        if (largeSettingMenu.activeSelf)
         {
             largeSettingMenu.SetActive(false);
-            smallSettingMenu.SetActive(true);
+            //If we aren't skipping main menu open it again
+            if (miniSkip == false)
+            {
+                smallSettingMenu.SetActive(true);
+            }
         }
         //If the smaller UI then open larger options
         else if (smallSettingMenu.activeSelf)
         {
+            //Open the large menu
             largeSettingMenu.SetActive(true);
+            //Close the small menu
             smallSettingMenu.SetActive(false);
 
-
-            //Buttons for tabs
+            //Buttons for video tab
             VideoTabbtn = this.gameObject.transform.Find("OptionsScreen").Find("VideoSettingsbtn").GetComponent<Button>();
+            VideoTabbtn.onClick.RemoveAllListeners();
             VideoTabbtn.onClick.AddListener(OpenVideoSettingsTab);
+            //Buttons for audio tab
             AudioTabbtn = this.gameObject.transform.Find("OptionsScreen").Find("Audiobtn").GetComponent<Button>();
+            AudioTabbtn.onClick.RemoveAllListeners();
             AudioTabbtn.onClick.AddListener(OpenAudioSettingsTab);
+
+            //Buttons for applying,discard and restore defaults
             Applybtn = this.gameObject.transform.Find("OptionsScreen").Find("Applybtn").GetComponent<Button>();
+            Applybtn.onClick.RemoveAllListeners();
             Applybtn.onClick.AddListener(ApplySettings);
+            //make active
+            Applybtn.gameObject.SetActive(false);
             Discardbtn = this.gameObject.transform.Find("OptionsScreen").Find("Discardbtn").GetComponent<Button>();
+            Discardbtn.onClick.RemoveAllListeners();
             Discardbtn.onClick.AddListener(DiscardSettings);
+            //make active
+            Discardbtn.gameObject.SetActive(false);
             RestoreDefaultsbtn = this.gameObject.transform.Find("OptionsScreen").Find("Defaultsbtn").GetComponent<Button>();
+            RestoreDefaultsbtn.onClick.RemoveAllListeners();
             RestoreDefaultsbtn.onClick.AddListener(RestoreDefaults);
+            //make active
+            RestoreDefaultsbtn.gameObject.SetActive(false);
         }
     }
 
@@ -115,6 +197,8 @@ public class SettingsUIController : UiController
     public void Continue()
     {
         UiManager.Instance.CloseSettingsOnClick();
+        //Pause time
+        UnityEngine.Time.timeScale = 1;
     }
 
     /// <summary>
@@ -122,7 +206,7 @@ public class SettingsUIController : UiController
     /// </summary>
     public void OpenVideoSettingsTab()
     {
-        //Find the settings tab
+        //Find the settings tabs
         videoSettingTab = VideoTabbtn.transform.parent.Find("VideoSettingsTab").gameObject;
         AudioTabbtn.transform.parent.Find("AudioSettingsTab").gameObject.SetActive(false);
         //Open/Close tab
@@ -135,7 +219,16 @@ public class SettingsUIController : UiController
             videoSettingTab.SetActive(true);
         }
 
+        //Set the values
         setVolumeValues();
+
+        //Enable buttons
+        RestoreDefaultsbtn.gameObject.SetActive(true);
+        Applybtn.gameObject.SetActive(true);
+        Discardbtn.gameObject.SetActive(true);
+
+        //Disable back button
+        BackBtn.gameObject.SetActive(false);
     }
 
     ///<summary>
@@ -153,6 +246,14 @@ public class SettingsUIController : UiController
         {
             audioSettingTab.SetActive(true);
         }
+
+        //Enable buttons
+        RestoreDefaultsbtn.enabled = true;
+        Applybtn.enabled = true;
+        Discardbtn.enabled = true;
+
+        //Disable back button
+        BackBtn.enabled = false;
     }
 
     /// <summary>
@@ -170,7 +271,7 @@ public class SettingsUIController : UiController
 
             //Set values
             //Try to get the variable for gain
-            if (VolumeSettings[0].TryGet(out LiftGammaGain gainSettings))
+            if (SettingsManager.Instance.VolumeSettings[0].TryGet(out LiftGammaGain gainSettings))
             {
                 //Set gamma to meet this value. W represents the value of the intensity and we add +0.5f so it's usable as this value uses negative values but sliders don't.
                 GammaSlider.value = gainSettings.gamma.value.w + 0.5f;
@@ -185,7 +286,7 @@ public class SettingsUIController : UiController
             }
 
             //Enable and disable bloom check
-            if (VolumeSettings[0].TryGet(out Bloom bloomSettings))
+            if (SettingsManager.Instance.VolumeSettings[0].TryGet(out Bloom bloomSettings))
             {
                 bloomOn.isOn = bloomSettings.active;
             }
@@ -250,15 +351,17 @@ public class SettingsUIController : UiController
     //If we are applying settings
     public void ApplySettings()
     {
-            foreach (VolumeProfile levelProfile in VolumeSettings)
+            foreach (VolumeProfile levelProfile in SettingsManager.Instance.VolumeSettings)
             {
                 //Try to get the variable for gain
                 if (levelProfile.TryGet(out LiftGammaGain gainSettings))
                 {
-                    //Set brightness to meet the new value. W represents the value of the intensity and we add +0.5f so it's usable as this value uses negative values but sliders don't.
-                    gainSettings.gamma.value += new Vector4(0, 0, 0, GammaSlider.value - 0.5f);
-                    //Repeat the same process for gain
-                    gainSettings.gain.value += new Vector4(0, 0, 0, GainSlider.value - 0.5f);
+                    //Save the gain and gamma
+                    SettingsManager.Instance.VideoSettings.SetandSaveGainandGamma(gainSettings, GammaSlider.value, GainSlider.value);
+                    ////Set brightness to meet the new value. W represents the value of the intensity and we add +0.5f so it's usable as this value uses negative values but sliders don't.
+                    //gainSettings.gamma.value += new Vector4(0, 0, 0, GammaSlider.value - 0.5f);
+                    ////Repeat the same process for gain
+                    //gainSettings.gain.value += new Vector4(0, 0, 0, GainSlider.value - 0.5f);
                 }
                 //If this value doesn't exist
                 else
@@ -269,7 +372,15 @@ public class SettingsUIController : UiController
                 //Enable and disable bloom check
                 if (levelProfile.TryGet(out Bloom bloomSettings))
                 {
-                    bloomSettings.active = bloomOn.isOn;
+                    if(bloomOn.isOn)
+                    {
+                        SettingsManager.Instance.VideoSettings.DisableBloom(bloomSettings);
+                    }
+                    else
+                    {
+                        SettingsManager.Instance.VideoSettings.EnabledBloom(bloomSettings);
+                    }
+                    //bloomSettings.active = bloomOn.isOn;
                 }
                 //If there is no bloom
                 else
@@ -283,40 +394,43 @@ public class SettingsUIController : UiController
         if(windowedOn.isOn == false)
         {
             //Sets full screen
-            UnityEngine.Screen.fullScreen = true;
+            SettingsManager.Instance.VideoSettings.IsFullScreen(true);
+            //UnityEngine.Screen.fullScreen = true;
             Debug.Log("Full screen");
         }
         else
         {
             //Sets windowed
-            UnityEngine.Screen.fullScreen = false;
+            SettingsManager.Instance.VideoSettings.IsFullScreen(false);
+            //UnityEngine.Screen.fullScreen = false;
             Debug.Log("Windowed");
         }
 
 
         //Screen resolution
-        if (resolutionDropDown.value == 0)
-        {
-            UnityEngine.Screen.SetResolution(1920, 1080, !windowedOn.isOn);
-            Debug.Log("1920x1080");
-        }
-        else if (resolutionDropDown.value == 1)
-        {
-            UnityEngine.Screen.SetResolution(1366, 763, !windowedOn.isOn);
-            Debug.Log("1366x763");
-        }
-        else if (resolutionDropDown.value == 2)
-        {
+        SettingsManager.Instance.VideoSettings.SetandSaveResolution(resolutionDropDown.value);
+        //if (resolutionDropDown.value == 0)
+        //{
+        //    UnityEngine.Screen.SetResolution(1920, 1080, !windowedOn.isOn);
+        //    Debug.Log("1920x1080");
+        //}
+        //else if (resolutionDropDown.value == 1)
+        //{
+        //    UnityEngine.Screen.SetResolution(1366, 763, !windowedOn.isOn);
+        //    Debug.Log("1366x763");
+        //}
+        //else if (resolutionDropDown.value == 2)
+        //{
 
-            UnityEngine.Screen.SetResolution(2560, 1440, !windowedOn.isOn);
-            Debug.Log("2560x1440");
-        }
-        else if (resolutionDropDown.value == 3)
-        {
+        //    UnityEngine.Screen.SetResolution(2560, 1440, !windowedOn.isOn);
+        //    Debug.Log("2560x1440");
+        //}
+        //else if (resolutionDropDown.value == 3)
+        //{
 
-            UnityEngine.Screen.SetResolution(3840, 2160, !windowedOn.isOn);
-            Debug.Log("3840x2160");
-        }
+        //    UnityEngine.Screen.SetResolution(3840, 2160, !windowedOn.isOn);
+        //    Debug.Log("3840x2160");
+        //}
 
         Debug.Log("Graphics settings applied");
             Options();
@@ -337,16 +451,16 @@ public class SettingsUIController : UiController
     public void RestoreDefaults()
     {
         ApplySettings();
-        if (VolumeSettings.Count == VolumeDefaults.Count)
+        if (SettingsManager.Instance.VolumeSettings.Count == SettingsManager.Instance.VolumeDefaults.Count)
         {
             //Run through the list of settings
-            for (int i = 0; i < VolumeSettings.Count; i++)
+            for (int i = 0; i < SettingsManager.Instance.VolumeSettings.Count; i++)
             {
                 //Try to get the variable for gain
-                if (VolumeSettings[i].TryGet(out LiftGammaGain gainSettings))
+                if (SettingsManager.Instance.VolumeSettings[i].TryGet(out LiftGammaGain gainSettings))
                 {
                     //Get the defaults
-                    if(VolumeDefaults[i].TryGet(out LiftGammaGain gainDefaults))
+                    if(SettingsManager.Instance.VolumeDefaults[i].TryGet(out LiftGammaGain gainDefaults))
                     {
                         //Set gain equal to the defult profile in the same column of the list
                         gainSettings.gamma.value = gainDefaults.gamma.value;
@@ -361,9 +475,9 @@ public class SettingsUIController : UiController
                 }
 
                 //Enable and disable bloom check
-                if (VolumeSettings[i].TryGet(out Bloom bloomSettings))
+                if (SettingsManager.Instance.VolumeSettings[i].TryGet(out Bloom bloomSettings))
                 {
-                    if(VolumeDefaults[i].TryGet(out Bloom bloomDefaults))
+                    if(SettingsManager.Instance.VolumeDefaults[i].TryGet(out Bloom bloomDefaults))
                     {
                         bloomSettings.active = bloomDefaults.IsActive();
                     }
@@ -382,32 +496,51 @@ public class SettingsUIController : UiController
         DiscardSettings();
     }
 
+    /// <summary>
+    /// Return to the first menu
+    /// </summary>
     public void ReturnToMiniMenu()
     {
+        //Skip this menu if applicable
         if(miniSkip)
         {
+            miniSkip = false;
+            Debug.Log(miniSkip);
+            titleScreenUI.SetActive(true);
             largeSettingMenu.SetActive(false);
+            UiManager.Instance.CloseSettingsOnClickTitle();
         }
         else
         {
             largeSettingMenu.SetActive(false);
             smallSettingMenu.SetActive(true);
         }
+        UnityEngine.Time.timeScale = 1;
     }
 
     public void SkipMiniMenu()
     {
-        miniSkip = true;
+        //For some reason it is running skip menu way too much
+        try
+        {
+            titleScreenUI = GameObject.Find("Canvas");
+            titleScreenUI.SetActive(false);
+        }
+        catch
+        {
+            Debug.Log("Not Title");
+        }
         largeSettingMenu.SetActive(true);
         smallSettingMenu.SetActive(false);
     }
 
     /// <summary>
-    /// This might need to be removed
+    /// Opens the main menu
     /// </summary>
     public void MainMenu()
     {
         smallSettingMenu.SetActive(false);
+        Destroy(UiManager.Instance.CurrentUI);
         UnityEngine.SceneManagement.SceneManager.LoadScene("Title");
     }
 
