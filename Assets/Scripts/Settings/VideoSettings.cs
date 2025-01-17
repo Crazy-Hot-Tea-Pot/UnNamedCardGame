@@ -101,12 +101,12 @@ public class VideoSettings
         if (VideoFileData.SettingsEdited)
         {
             //Load values from VideoFileData
+            ApplySettingsFromSave(VideoFileData);
         }
         else
         {
             //set default values
         }
-        //ApplySettingsFromSave(VideoFileData);
     }
 
     /// <summary>
@@ -121,8 +121,7 @@ public class VideoSettings
             if (levelProfile.TryGet(out LiftGammaGain gainSettings))
             {
                 //Save the gain and gamma
-                //THIS I WROTE METHODS TO RETURN GAIN AND GAMMA AS VECTOR4
-                //SettingsManager.Instance.VideoSettings.SetandSaveGainandGamma(gainSettings, videoFileData.Gain, videoFileData.Gamma);
+                SettingsManager.Instance.VideoSettings.SetandSaveGainandGamma(gainSettings, videoFileData.Gain, videoFileData.Gamma);
             }
             //If this value doesn't exist
             else
@@ -208,9 +207,27 @@ public class VideoSettings
     public void SetandSaveGainandGamma(LiftGammaGain currentGainandGamma, float gammaSlider, float gainSlider)
     {
         //Set brightness to meet the new value. W represents the value of the intensity and we add +0.5f so it's usable as this value uses negative values but sliders don't.
-        currentGainandGamma.gamma.value += new Vector4(0, 0, 0, gammaSlider - 0.5f);
+        currentGainandGamma.gamma.value = new Vector4(0, 0, 0, gammaSlider - 0.5f);
         //Repeat the same process for gain
-        currentGainandGamma.gain.value += new Vector4(0, 0, 0, gainSlider - 0.5f);
+        currentGainandGamma.gain.value = new Vector4(0, 0, 0, gainSlider - 0.5f);
+
+        //Actually save
+        CurrentGain = currentGainandGamma.gain.value;
+        CurrentGamma = currentGainandGamma.gamma.value;
+    }
+
+    /// <summary>
+    /// Saves the data for gain and gamma
+    /// </summary>
+    /// <param name="currentGainandGamma"></param>
+    /// <param name="gammaSlider"></param>
+    /// <param name="gainSlider"></param>
+    public void SetandSaveGainandGamma(LiftGammaGain currentGainandGamma, Vector4 gammaSlider, Vector4 gainSlider)
+    {
+        //Set brightness to meet the new value. W represents the value of the intensity and we add +0.5f so it's usable as this value uses negative values but sliders don't.
+        currentGainandGamma.gamma.value = gammaSlider;
+        //Repeat the same process for gain
+        currentGainandGamma.gain.value = gainSlider;
 
         //Actually save
         CurrentGain = currentGainandGamma.gain.value;
