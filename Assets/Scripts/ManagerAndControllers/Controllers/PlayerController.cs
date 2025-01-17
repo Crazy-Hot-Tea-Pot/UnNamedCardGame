@@ -869,4 +869,9 @@ public class PlayerController : MonoBehaviour
     {
         CharacterSpeak("I have a voice.\nI realy do have a voice !!", true, 0.1f, 5f);
     }
+    [ContextMenu("Kill Player")]
+    private void TestPlayerdeath()
+    {
+        DamagePlayerBy(1000);
+    }
 }
