@@ -602,6 +602,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4631986000b07e04895296852031b21d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ButtonPanel: {fileID: 4856688663704418268}
   PlayButton: {fileID: 1014534163834498535}
   ResumeButton: {fileID: 2085399598711015237}
   OptionsButton: {fileID: 7001422712445478700}
