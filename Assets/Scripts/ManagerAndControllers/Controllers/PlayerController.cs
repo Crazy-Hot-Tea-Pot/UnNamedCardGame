@@ -329,7 +329,7 @@ public class PlayerController : MonoBehaviour
     }
     #endregion
 
-    #endregion
+    #endregion    
 
     // Awake is called when instance is being loaded
     void Awake()
@@ -366,8 +366,8 @@ public class PlayerController : MonoBehaviour
 
         // Set animator bools based on detected movement state
         animator.SetBool("IsWalking", isWalking);
-        animator.SetBool("IsRunning", isRunning);
-    }
+        animator.SetBool("IsRunning", isRunning);        
+    }    
 
     /// <summary>
     /// Initialize Player
