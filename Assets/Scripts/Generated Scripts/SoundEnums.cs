@@ -17,6 +17,8 @@ public enum SoundFX
     DisassembleMaintenanceBot,
     DrawingOutTheDeck,
     EnemyDefeated,
+    Footstep,
+    FootstepLoop,
     GalvanizeMainenanceBot,
     MenuSelection,
     MenuSelectionSound,
@@ -24,5 +26,6 @@ public enum SoundFX
     NeutralizeSecurityDroneAlternative,
     Punch,
     RepairMaintenaceBot,
+    Running,
     ShredGarbageBot,
 }
