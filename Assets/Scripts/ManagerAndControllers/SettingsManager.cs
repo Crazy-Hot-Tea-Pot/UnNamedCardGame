@@ -125,7 +125,7 @@ public class SettingsManager : MonoBehaviour
         else
         {
             Destroy(gameObject);  // Destroy duplicates
-        }       
+        }
     }
 
     void Start()
