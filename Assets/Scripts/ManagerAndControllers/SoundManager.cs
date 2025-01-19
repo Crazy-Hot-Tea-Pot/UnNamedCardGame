@@ -8,20 +8,21 @@ public static class SoundManager
     /// <summary>
     /// Adjusts the master volume for the background music.
     /// Call this method after changing sound settings to update volume.
+    /// not needed anymore since added subscriber to settings.
     /// </summary>
-    public static void MasterVolumeChanged()
-    {
-        try
-        {
-            // Find the GameObject named "BgSound" and set its volume based on the settings
-            GameObject.Find("BgSound").GetComponent<AudioSource>().volume = SettingsManager.Instance.SoundSettings.BGMVolume;
-        }
-        catch
-        {
-            // Display error if the background sound GameObject doesn't exist
-            Debug.LogError("BG doesn't Exist.");
-        }
-    }
+    //public static void MasterVolumeChanged()
+    //{
+    //    try
+    //    {
+    //        // Find the GameObject named "BgSound" and set its volume based on the settings
+    //        GameObject.Find("BgSound").GetComponent<AudioSource>().volume = SettingsManager.Instance.SoundSettings.GetBGSoundForComponent();
+    //    }
+    //    catch
+    //    {
+    //        // Display error if the background sound GameObject doesn't exist
+    //        Debug.LogError("BG doesn't Exist.");
+    //    }
+    //}
     /// <summary>
     /// Starts playing background music on a loop.
     /// Volume can be adjusted using the SoundBGVolume component.
@@ -39,7 +40,7 @@ public static class SoundManager
         // Set looping for continuous play
         audioSource.loop = true;
         // Set initial volume
-        audioSource.volume = SettingsManager.Instance.SoundSettings.BGMVolume;
+        audioSource.volume = SettingsManager.Instance.SoundSettings.GetBGSoundForComponent();
         audioSource.Play();
         BackgroundSound.AddComponent<SoundBGVolume>();
     }
@@ -49,6 +50,12 @@ public static class SoundManager
     /// <param name="sound">The specific sound effect to play.</param>
     public static void PlayFXSound(SoundFX sound)
     {
+        //if mute don't bother to spawn sound
+        if (SettingsManager.Instance.SoundSettings.SFXMute)
+        {
+            return;
+        }
+
         // Create a new GameObject for this sound effect
         GameObject soundGameObject = new GameObject("SoundFX");
 
@@ -59,7 +66,7 @@ public static class SoundManager
         soundGameObject.AddComponent<SoundFXLife>().SoundLength = GetAudio(sound).length;
 
         // Configure the volume of the sound effect based on settings
-        audioSource.volume = SettingsManager.Instance.SoundSettings.SFXVolume;
+        audioSource.volume = SettingsManager.Instance.SoundSettings.GetSFXSoundForComponent();
         audioSource.PlayOneShot(GetAudio(sound));                        
     }
     /// <summary>
@@ -78,7 +85,7 @@ public static class SoundManager
         audioSource.spatialBlend = 1.0f;
 
         // Configure the volume of the sound effect based on settings
-        audioSource.volume = SettingsManager.Instance.SoundSettings.SFXVolume;
+        audioSource.volume = SettingsManager.Instance.SoundSettings.GetSFXSoundForComponent();
 
         // Play the sound once using PlayOneShot, so other sounds are not interrupted
         audioSource.PlayOneShot(GetAudio(sound));

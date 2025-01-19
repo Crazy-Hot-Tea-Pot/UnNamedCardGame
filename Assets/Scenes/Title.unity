@@ -2352,7 +2352,7 @@ MonoBehaviour:
     boarderMouseMovement: 0
   soundSettings:
     bgmVolume: 100
-    sfxVolume: 0
+    sfxVolume: 31
     bgmMute: 0
     sfxMute: 0
   dataSettings:
