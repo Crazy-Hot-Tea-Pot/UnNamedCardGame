@@ -89,9 +89,9 @@ MonoBehaviour:
   - soundFX: 19
     audioClip: {fileID: 8300000, guid: 013b9c9d757c9e346afc7f450b174839, type: 3}
   - soundFX: 20
-    audioClip: {fileID: 8300000, guid: d3a380cbcee4e2549b1b3e5ea2b9fa02, type: 3}
+    audioClip: {fileID: 8300000, guid: 87fbca19c8ddb2348b6fcf01abc64470, type: 3}
   - soundFX: 21
-    audioClip: {fileID: 8300000, guid: f5d5487baa4de9848b8765c9b0dbb003, type: 3}
+    audioClip: {fileID: 8300000, guid: 482b648f7635a3643b16807e9824e026, type: 3}
   - soundFX: 22
     audioClip: {fileID: 8300000, guid: 7d302e27a1fdc9e4f8e0bf07411263f7, type: 3}
   - soundFX: 23

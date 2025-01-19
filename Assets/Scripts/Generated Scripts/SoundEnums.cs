@@ -25,7 +25,7 @@ public enum SoundFX
     Footstep5,
     FootstepLoop,
     GalvanizeMainenanceBot,
-    MenuSelection,
+    MenuSelectClick,
     MenuSelectionSound,
     NeutralizeSecurityDrone,
     NeutralizeSecurityDroneAlternative,
