@@ -11,6 +11,26 @@ public class SoundBGVolume : MonoBehaviour
     void Start()
     {
         audioSource = this.GetComponent<AudioSource>();
+
+        // Subscribe to the BGM volume change event
+        if (SettingsManager.Instance?.SoundSettings != null)
+        {
+            SettingsManager.Instance.SoundSettings.OnBGMVolumeChanged += VolumeChange;
+        }
+    }
+
+    private void VolumeChange(float newVolume)
+    {
+        if (newVolume > audioSource.volume)
+        {
+            // Adjust duration as needed
+            RaiseVolume(1f);
+        }
+        else
+        {
+            // Adjust duration and pass the new volume
+            LowerVolume(1f, newVolume);
+        }
     }
 
     /// <summary>
@@ -22,6 +42,7 @@ public class SoundBGVolume : MonoBehaviour
     {
         StartCoroutine(LowerVolumeOverTime(duration, amount));
     }
+
     /// <summary>
     /// Raises the background volume overtime by the amount given.
     /// </summary>
@@ -54,10 +75,19 @@ public class SoundBGVolume : MonoBehaviour
         while (elapsedTime < duration)
         {
             elapsedTime += Time.deltaTime;
-            audioSource.volume = Mathf.Lerp(startVolume, SettingsManager.Instance.SoundSettings.BGMVolume, elapsedTime / duration);
+            audioSource.volume = Mathf.Lerp(startVolume, SettingsManager.Instance.SoundSettings.GetBGSoundForComponent(), elapsedTime / duration);
             yield return new WaitForSeconds(duration);
         }
 
-        audioSource.volume = SettingsManager.Instance.SoundSettings.BGMVolume;
+        audioSource.volume = SettingsManager.Instance.SoundSettings.GetBGSoundForComponent();
+    }
+
+    void OnDestroy()
+    {
+        // Unsubscribe to avoid memory leaks
+        if (SettingsManager.Instance?.SoundSettings != null)
+        {
+            SettingsManager.Instance.SoundSettings.OnBGMVolumeChanged -= VolumeChange;
+        }
     }
 }

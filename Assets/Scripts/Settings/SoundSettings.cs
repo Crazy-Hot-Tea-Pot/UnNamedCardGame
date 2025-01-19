@@ -5,7 +5,14 @@ using static SettingsData;
 [System.Serializable]
 public class SoundSettings
 {
-    //background Volume
+    //Public even for when BGM volume has change for any BGM being played.
+    public event System.Action<float> OnBGMVolumeChanged;
+
+    /// <summary>
+    /// BG volume.
+    /// Do not use this value to apply to components in game.
+    /// use GetBGSoundForComponentsMethod
+    /// </summary>
     public float BGMVolume
     {
         get
@@ -15,10 +22,15 @@ public class SoundSettings
         set
         {
             bgmVolume = value;
+            OnBGMVolumeChanged?.Invoke(GetBGSoundForComponent());
         }
     }
 
-    // Sound Effects Volume
+    /// <summary>
+    /// Sound Effect Volume.
+    /// Do not use this value to apply to components in game.
+    /// use GetSFXSoundForComponent() instead.
+    /// </summary>
     public float SFXVolume
     {
         get
@@ -56,8 +68,10 @@ public class SoundSettings
     }
 
     [SerializeField]
+    [Range(0f, 100f)]
     private float bgmVolume;
     [SerializeField]
+    [Range(0f,100f)]
     private float sfxVolume;
     [SerializeField]
     private bool bgmMute;
@@ -80,6 +94,15 @@ public class SoundSettings
             SFXMute = false;
             BGMMute = false;
         }
+    }
+
+    public float GetSFXSoundForComponent()
+    {
+        return SFXVolume / 100f;
+    }
+    public float GetBGSoundForComponent()
+    {
+        return BGMVolume / 100f;
     }
 
     public SoundSettingsData GetDataToWrite()
