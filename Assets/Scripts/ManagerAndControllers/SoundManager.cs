@@ -30,6 +30,11 @@ public static class SoundManager
     /// <param name="bgSound">The background sound to play.</param>
     public static void StartBackgroundSound(BgSound bgSound)
     {
+        //if mute don't bother to spawn sound
+        if (SettingsManager.Instance.SoundSettings.BGMMute)
+        {
+            return;
+        }
         // Create a new GameObject for background music
         GameObject BackgroundSound = new GameObject("BgSound");
 

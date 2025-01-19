@@ -4,10 +4,14 @@ using UnityEngine;
 
 public class PlayPlayerSoundFromAnimation : MonoBehaviour
 {
+    public List<SoundFX> ListOfFootSteps = new List<SoundFX>();
 
     public void PlayFootStepSound()
     {
-        SoundManager.PlayFXSound(SoundFX.Footstep);
+
+        int randomIndex = Random.Range(0,ListOfFootSteps.Count);
+
+        SoundManager.PlayFXSound(ListOfFootSteps[randomIndex]);
     }
     //public void PlayRunningSound()
     //{
