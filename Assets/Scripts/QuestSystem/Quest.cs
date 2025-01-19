@@ -6,7 +6,8 @@ using UnityEngine.UI;
 
 public class Quest : ScriptableObject
 {
-    public string name;
+    public string questName;
+    public string questDesc;
     public bool complete = false;
 
     public void speaking(TMP_Text speaker, TMP_Text player)
@@ -36,8 +37,8 @@ public class Quest : ScriptableObject
     public virtual void CompleteQuest()
     {
         complete = true;
-        name = name + " (Complete)";
-        Debug.Log("Quest Complete: " + name);
+        questName = questName + " (Complete)";
+        Debug.Log("Quest Complete: " + questName);
     }
 
 }

@@ -73,4 +73,68 @@ public class QuestManager : MonoBehaviour
             }
         }
     }
+
+    /// <summary>
+
+    /// </summary>
+    /// <param name="index"></param>
+    /// <param name="quest"></param>
+    /// <param name="description"></param>
+    public void RetrieveQuestInfo(int index, TMP_Text quest, TMP_Text description)
+    {
+        try
+        {
+            quest.text = questList[index].questName;
+            description.text = questList[index].questDesc;
+        }
+        catch
+        {
+            try
+            {
+                //If there is a value to show as a complete quest show it
+                if (completeList[0] != null)
+                {
+                    quest.text = completeList[0].questName;
+                    description.text = completeList[0].questDesc;
+                }
+            }
+            //If there is only one quest then just hide the other text and make it nothing
+            catch
+            {
+                quest.text = " ";
+                description.text = " ";
+                Debug.Log("That quest doesn't exist at index: " + index);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Retrieve the name and description of a quest based on a given index
+    /// </summary>
+    /// <param name="index"></param>
+    /// <param name="quest"></param>
+    public void RetrieveQuestInfo(int index, TMP_Text quest)
+    {
+        try
+        {
+            quest.text = questList[index].questName;
+        }
+        catch
+        {
+            //If there is a value to show as a complete quest show it
+            try
+            {
+                if (completeList[0] != null)
+                {
+                    quest.text = completeList[0].questName;
+                }
+            }
+            //If there is only one quest then just hide the other text and make it nothing
+            catch
+            {
+                quest.text = " ";
+                Debug.Log("That quest doesn't exist at index: " + index);
+            }
+        }
+    }
 }
