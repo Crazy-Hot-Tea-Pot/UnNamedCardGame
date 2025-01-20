@@ -15,4 +15,4 @@ MonoBehaviour:
   questName: Quest Test
   questDesc: Touch the cube
   complete: 0
-  questEndPosition: {fileID: 3919509163009739391, guid: 716f5234fc0e1514d889e6dffc3cacd5, type: 3}
+  questEndPosition: {fileID: 4999153720102546225, guid: c9caa05b779f7964ab95fcac9ec3fbf9, type: 3}

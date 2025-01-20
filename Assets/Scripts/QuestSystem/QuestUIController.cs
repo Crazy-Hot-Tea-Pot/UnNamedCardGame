@@ -22,8 +22,8 @@ public class QuestUIController : MonoBehaviour
     private GameObject ShowCompleteContainer;
     private Button Activebtn;
 
-    //Animation Speed
-    public float AnimationSpeed;
+    //Animation stuff
+    public Animator animationController;
 
     //Text Variables
     private TMP_Text Quest1;
@@ -151,7 +151,6 @@ public class QuestUIController : MonoBehaviour
         //If the miniLog is closed open it
         if (MiniLogContainer.activeSelf == false)
         {
-
             //Set mini log visible
             MiniLogContainer.SetActive(true);
 
@@ -167,79 +166,27 @@ public class QuestUIController : MonoBehaviour
             {
                 FullLogContainer.SetActive(false);
             }
+
             //Animate it to pull out
-            //while (true)
-            //{
-            //    //If minilogcontainer is not less then or equal to 195
-            //    if (MiniLogContainer.transform.position.x != 231)
-            //    {
-            //        Debug.Log(AnimationSpeed);
-            //         Debug.Log(MiniLogContainer.transform.position);
-            //        //Move the container left by animation speed
-            //        MiniLogContainer.transform.position = new Vector3(MiniLogContainer.transform.position.x - AnimationSpeed, MiniLogContainer.transform.position.y, MiniLogContainer.transform.position.z);
-            //        Debug.Log(MiniLogContainer.transform.position);
-            //    }
-            //    //Reset to correct position if we go to far
-            //    if (MiniLogContainer.transform.position.x < 231)
-            //    {
-            //        //Move it to 195
-            //        MiniLogContainer.transform.position = new Vector3(231, MiniLogContainer.transform.position.y, MiniLogContainer.transform.position.z);
-            //    }
-            //    if (MiniLogContainer.transform.position.x == 231)
-            //    {
-            //        break;
-            //    }
+            animationController.SetTrigger("Push");
 
-            //    //Animate the button
-            //    if (OpenLogbtn.gameObject.transform.position.x != -416)
-            //    {
-            //        //Move left by animation speed
-            //        OpenLogbtn.gameObject.transform.position = new Vector3(OpenLogbtn.gameObject.transform.position.x - AnimationSpeed, OpenLogbtn.gameObject.transform.position.y, OpenLogbtn.gameObject.transform.position.z);
-            //    }
-            //    //If the button is moved to far reset it
-            //    if (OpenLogbtn.gameObject.transform.position.x < -416)
-            //    {
-            //        OpenLogbtn.gameObject.transform.position = new Vector3(-416, OpenLogbtn.gameObject.transform.position.y, OpenLogbtn.transform.position.z);
-            //    }
-            //    if (OpenLogbtn.gameObject.transform.position.x == -416)
-            //    {
-            //        break;
-            //    }
-            //}
-
-            }
+        }
         //If open close it
         else if(MiniLogContainer.activeSelf == true)
         {
-            ////Animate it to push in
+            //Animate it to push in
+            animationController.SetTrigger("Pull");
 
-            //    //Animate the button
-            //    if (OpenLogbtn.gameObject.transform.position.x < 839.6284f)
-            //    {
-            //        //Move left by animation speed
-            //        OpenLogbtn.gameObject.transform.position = new Vector3(OpenLogbtn.transform.position.x - AnimationSpeed * 3, OpenLogbtn.gameObject.transform.position.y, OpenLogbtn.gameObject.transform.position.z);
-            //    }
-            //    //If the button is moved to far reset it
-            //    else if (OpenLogbtn.gameObject.transform.position.x == 839.6284f)
-            //    {
-            //        OpenLogbtn.gameObject.transform.position = new Vector3(839.6284f, OpenLogbtn.gameObject.transform.position.y, OpenLogbtn.transform.position.z);
-
-            //    }
-
-            //    //If minilogcontainer is not more then or equal to 1495
-            //    if (MiniLogContainer.transform.position.x < 1495)
-            //    {
-            //        //Move the container right by animation speed * 3
-            //        MiniLogContainer.transform.position = new Vector3(MiniLogContainer.transform.position.x - AnimationSpeed * 3, MiniLogContainer.transform.position.y, MiniLogContainer.transform.position.z);
-            //    }
-            //    //When in position  hide it
-            //    else if (MiniLogContainer.transform.position.x == 1495)
-            //    {
-            MiniLogContainer.SetActive(false);
-            //    }
-
+            StartCoroutine(WaitForMinilogContainerDIsable(1.5f));
 
         }
+    }
+
+    public IEnumerator WaitForMinilogContainerDIsable(float time)
+    {
+        yield return new WaitForSeconds(time);
+        //Deactivate done in animator
+        MiniLogContainer.SetActive(false);
     }
 
     public void GenerateQuestLog(GameObject logContainer)

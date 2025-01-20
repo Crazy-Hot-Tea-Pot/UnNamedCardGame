@@ -4909,7 +4909,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 140, y: 429}
+  m_AnchoredPosition: {x: 1438, y: 429}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4912866778509756627
@@ -6685,6 +6685,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5808588970992551380}
   - component: {fileID: 5372569130457890613}
+  - component: {fileID: 2568784770593054324}
   m_Layer: 5
   m_Name: MiniBarSettingAndUi
   m_TagString: Untagged
@@ -6704,10 +6705,10 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 8815836900333618653}
   - {fileID: 2614090756779289962}
   - {fileID: 7378155911681319482}
   - {fileID: 3336700517676053301}
-  - {fileID: 8815836900333618653}
   - {fileID: 4178695451658960547}
   - {fileID: 7837789029578305269}
   m_Father: {fileID: 8304227354494521281}
@@ -6729,7 +6730,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d2ac7784903caf4199e7f5c58ca699a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AnimationSpeed: 1
+  animationController: {fileID: 2568784770593054324}
+--- !u!95 &2568784770593054324
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9157549215000044096}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 13a9ad186bc93e14b968fc980881967b, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &9192310109652365090
 GameObject:
   m_ObjectHideFlags: 0
