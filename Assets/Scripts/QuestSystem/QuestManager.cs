@@ -27,6 +27,9 @@ public class QuestManager : MonoBehaviour
     private TMP_Text textSpeaker;
     private TMP_Text textPlayer;
 
+    //Validates Quest Complete
+    public string nameTemp;
+
     private void Awake()
     {
         if(Instance == null)
@@ -82,6 +85,7 @@ public class QuestManager : MonoBehaviour
     /// <param name="description"></param>
     public void RetrieveQuestInfo(int index, TMP_Text quest, TMP_Text description)
     {
+        //For some reason not having two try catches just will return null even with a != null check 
         try
         {
             quest.text = questList[index].questName;
@@ -94,8 +98,18 @@ public class QuestManager : MonoBehaviour
                 //If there is a value to show as a complete quest show it
                 if (completeList[0] != null)
                 {
-                    quest.text = completeList[0].questName;
-                    description.text = completeList[0].questDesc;
+                    //Name temp is a check that makes sure we aren't repeating quests this system can't check for repeats out of order but I don't think the program should ever do that
+                    if (nameTemp != completeList[0].questName)
+                    {
+                        nameTemp = completeList[0].questName;
+                        quest.text = completeList[0].questName;
+                        description.text = completeList[0].questDesc;
+                    }
+                    else
+                    {
+                        quest.text = " ";
+                        description.text = " ";
+                    }
                 }
             }
             //If there is only one quest then just hide the other text and make it nothing
@@ -126,7 +140,16 @@ public class QuestManager : MonoBehaviour
             {
                 if (completeList[0] != null)
                 {
-                    quest.text = completeList[0].questName;
+                    //Name temp is a check that makes sure we aren't repeating quests this system can't check for repeats out of order but I don't think the program should ever do that
+                    if (nameTemp != completeList[0].questName)
+                    {
+                        nameTemp = completeList[0].questName;
+                        quest.text = completeList[0].questName;
+                    }
+                    else
+                    {
+                        quest.text = " ";
+                    }
                 }
             }
             //If there is only one quest then just hide the other text and make it nothing

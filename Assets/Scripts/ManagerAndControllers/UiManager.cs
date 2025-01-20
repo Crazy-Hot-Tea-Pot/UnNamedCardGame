@@ -204,6 +204,23 @@ public class UiManager : MonoBehaviour
         }
 
     }
+
+    /// <summary>
+    /// Override for open settings ui
+    ///If settings breaks it's 10000% this but I think it's working
+    /// </summary>
+    /// <param name="context"></param>
+    public void ToggleSettings()
+    {
+        if (CurrentUI.name == InventoryUI.name)
+        {
+            SwitchScreen(RoamingAndCombatUI);
+        }
+        else
+        {
+            SwitchScreen(SettingsUI);
+        }
+    }
     /// <summary>
     /// Toggle settings at Title.
     /// </summary>

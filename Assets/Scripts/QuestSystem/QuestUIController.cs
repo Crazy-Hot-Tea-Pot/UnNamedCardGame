@@ -45,8 +45,12 @@ public class QuestUIController : MonoBehaviour
         OpenLogbtn.onClick.RemoveAllListeners();
         //Add a listener for openMinILog
         OpenLogbtn.onClick.AddListener(OpenMiniLog);
-
-        OpenSettingsbtn = QuestUIContanier.transform.Find("OpenLogbtn").GetComponent<Button>();
+        //Options menu button
+        OpenSettingsbtn = QuestUIContanier.transform.Find("OpenSettingsbtn").GetComponent<Button>();
+        //Remove any listeners
+        OpenSettingsbtn.onClick.RemoveAllListeners();
+        //Find the method we need in settingsuicontroller and call it
+        OpenSettingsbtn.onClick.AddListener(UiManager.Instance.ToggleSettings);
         MiniLogContainer = QuestUIContanier.transform.Find("MiniLog").gameObject;
         //Disable MiniLogContainer
         MiniLogContainer.SetActive(false);
@@ -111,7 +115,7 @@ public class QuestUIController : MonoBehaviour
 
             //Find the text box for scroll content
             TMP_Text textBox;
-            textBox = ShowCompleteContainer.transform.Find("Scroll View").gameObject.transform.Find("Viewport").gameObject.transform.Find("Content").GetComponent<TMP_Text>();
+            textBox = ShowCompleteContainer.transform.Find("Scroll View").gameObject.transform.Find("Viewport").gameObject.transform.Find("Content").gameObject.transform.Find("Text (TMP)").GetComponent<TMP_Text>();
             //Clear the text box in content
             textBox.text = " ";
 
@@ -243,6 +247,8 @@ public class QuestUIController : MonoBehaviour
         //Generate log for mini log
         if(logContainer == MiniLogContainer)
         {
+            //A variable in quest manager to stop repeating quests it causes problems if we shift pannels between mini and full log so it must be cleared
+            QuestManager.Instance.nameTemp = " ";
             //Add a container for quest one
             Quest1 = logContainer.transform.Find("Quest1").GetComponent<TMP_Text>();
             QuestManager.Instance.RetrieveQuestInfo(0, Quest1);
@@ -253,6 +259,8 @@ public class QuestUIController : MonoBehaviour
         }
         else if (logContainer == FullLogContainer)
         {
+            //A variable in quest manager to stop repeating quests it causes problems if we shift pannels between mini and full log so it must be cleared
+            QuestManager.Instance.nameTemp = " ";
             //Add a container for quest one
             Quest1 = logContainer.transform.Find("Quest1").GetComponent<TMP_Text>();
             Quest1Desc = logContainer.transform.Find("Quest1LongDescription").GetComponent<TMP_Text>();
