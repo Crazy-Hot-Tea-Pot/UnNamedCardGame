@@ -23,6 +23,31 @@ public static class SoundManager
     //        Debug.LogError("BG doesn't Exist.");
     //    }
     //}
+
+    /// <summary>
+    /// Change background sound.
+    /// </summary>
+    /// <param name="bgSound">New sound</param>
+    public static void ChangeBackground(BgSound bgSound)
+    {
+        if (SettingsManager.Instance.SoundSettings.BGMMute)
+            return;
+
+        //Delete old sound
+        GameObject.Destroy(GameObject.Find("BgSound"));
+
+
+        StartBackgroundSound(bgSound);
+    }
+
+    /// <summary>
+    /// Change pitch of background sound
+    /// </summary>
+    /// <param name="Pitch">Is a float between 0 and 1.</param>
+    public static void ChangeBackgroundPitch(float Pitch)
+    {
+        GameObject.Find("BgSound").GetComponent<AudioSource>().pitch = Pitch;
+    }
     /// <summary>
     /// Starts playing background music on a loop.
     /// Volume can be adjusted using the SoundBGVolume component.
