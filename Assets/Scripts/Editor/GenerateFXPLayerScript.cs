@@ -11,7 +11,6 @@ public class GenerateFXPLayerScript
     [MenuItem("Tools/Generate FXPlayerToLinkAnimation Script")]
     public static void GenerateFXPlayerScript()
     {
-        // Path to SoundEnums file
         string enumFilePath = "Assets/Scripts/Generated Scripts/SoundEnums.cs";
         string outputScriptPath = "Assets/Scripts/Generated Scripts/FXPlayerToLinkAnimation.cs";
 
@@ -21,36 +20,42 @@ public class GenerateFXPLayerScript
 
         if (soundFXNames == null || soundFXNames.Count == 0)
         {
-            Debug.LogError("SoundFX enum not found or empty. Ensure it's generated and located at: " + enumFilePath);
+            Debug.LogError("SoundFX enum not found or empty.");
             return;
         }
 
         Debug.Log($"Parsed SoundFX names: {string.Join(", ", soundFXNames)}");
 
-        // Read existing FXPlayerToLinkAnimation script (if it exists)
+        // Read existing script (if available)
         StringBuilder outputBuilder = new StringBuilder();
         bool scriptExists = File.Exists(outputScriptPath);
         string[] existingScript = scriptExists ? File.ReadAllLines(outputScriptPath) : null;
 
-        // Analyze existing methods
-        var existingMethods = ParseExistingMethods(existingScript);
+        var preservedContent = ParseExistingContentWithCustomCode(existingScript);
 
-        // Generate the new script content
+        // Start writing the new script
         outputBuilder.AppendLine("using UnityEngine;");
         outputBuilder.AppendLine();
         outputBuilder.AppendLine("public class FXPlayerToLinkAnimation : MonoBehaviour");
         outputBuilder.AppendLine("{");
 
+        // Add preserved custom methods or content
+        foreach (var line in preservedContent["custom"])
+        {
+            outputBuilder.AppendLine(line);
+        }
+
+        // Add methods for each SoundFX
         foreach (string sound in soundFXNames)
         {
-            if (existingMethods.ContainsKey(sound))
+            if (preservedContent["methods"].Exists(m => m.Contains($"PlaySound_{sound}")))
             {
-                // Preserve existing method
-                outputBuilder.AppendLine(existingMethods[sound]);
+                // Preserve existing PlaySound_<SoundName> methods
+                outputBuilder.AppendLine(preservedContent["methods"].Find(m => m.Contains($"PlaySound_{sound}")));
             }
             else
             {
-                // Add new method
+                // Add a new method
                 outputBuilder.AppendLine($"    public void PlaySound_{sound}()");
                 outputBuilder.AppendLine("    {");
                 outputBuilder.AppendLine($"        SoundManager.PlayFXSound(SoundFX.{sound});");
@@ -58,19 +63,9 @@ public class GenerateFXPLayerScript
             }
         }
 
-        // Optionally, handle methods for removed sounds
-        foreach (var removedMethod in existingMethods.Keys)
-        {
-            if (!soundFXNames.Contains(removedMethod))
-            {
-                outputBuilder.AppendLine($"    // WARNING: Method PlaySound_{removedMethod}() is no longer linked to any sound.");
-                outputBuilder.AppendLine($"    // public void PlaySound_{removedMethod}() {{ /* Legacy code */ }}");
-            }
-        }
-
         outputBuilder.AppendLine("}");
 
-        // Write the script to the output file
+        // Write the script
         File.WriteAllText(outputScriptPath, outputBuilder.ToString());
         AssetDatabase.Refresh();
 
@@ -79,8 +74,8 @@ public class GenerateFXPLayerScript
 
     private static HashSet<string> ParseEnumValues(string[] lines, string enumName)
     {
+        var values = new HashSet<string>();
         bool inEnum = false;
-        HashSet<string> values = new HashSet<string>();
 
         foreach (string line in lines)
         {
@@ -93,7 +88,7 @@ public class GenerateFXPLayerScript
             if (inEnum)
             {
                 if (line.Contains("}")) break; // End of enum
-                string value = line.Trim().Split(',')[0].Trim(); // Get value before comma
+                string value = line.Trim().Split(',')[0].Trim(); // Get the value before the comma
                 if (!string.IsNullOrEmpty(value) && Regex.IsMatch(value, @"^[a-zA-Z_]\w*$"))
                 {
                     values.Add(value);
@@ -104,38 +99,51 @@ public class GenerateFXPLayerScript
         return values;
     }
 
-    private static Dictionary<string, string> ParseExistingMethods(string[] scriptLines)
+    private static Dictionary<string, List<string>> ParseExistingContentWithCustomCode(string[] scriptLines)
     {
-        if (scriptLines == null) return new Dictionary<string, string>();
+        var preservedContent = new Dictionary<string, List<string>> {
+            { "custom", new List<string>() },
+            { "methods", new List<string>() }
+        };
 
-        Dictionary<string, string> methods = new Dictionary<string, string>();
-        StringBuilder currentMethod = new StringBuilder();
-        string methodName = null;
+        if (scriptLines == null) return preservedContent;
+
+        StringBuilder currentContent = new StringBuilder();
+        bool insideCustomCode = false;
 
         foreach (string line in scriptLines)
         {
-            if (line.TrimStart().StartsWith("public void PlaySound_"))
+            // Detect custom methods or sections
+            if (line.Contains("// START CUSTOM"))
             {
-                // Extract method name
-                var match = Regex.Match(line, @"PlaySound_(\w+)\(");
-                if (match.Success) methodName = match.Groups[1].Value;
+                insideCustomCode = true;
+                currentContent.AppendLine(line);
+                continue;
             }
 
-            if (methodName != null)
+            if (line.Contains("// END CUSTOM"))
             {
-                currentMethod.AppendLine(line);
+                insideCustomCode = false;
+                currentContent.AppendLine(line);
+                preservedContent["custom"].Add(currentContent.ToString());
+                currentContent.Clear();
+                continue;
+            }
 
-                // End of method
-                if (line.Contains("}"))
-                {
-                    methods[methodName] = currentMethod.ToString();
-                    currentMethod.Clear();
-                    methodName = null;
-                }
+            if (insideCustomCode)
+            {
+                currentContent.AppendLine(line);
+                continue;
+            }
+
+            // Detect PlaySound methods
+            if (line.TrimStart().StartsWith("public void PlaySound_"))
+            {
+                preservedContent["methods"].Add(line.Trim());
             }
         }
 
-        return methods;
+        return preservedContent;
     }
 #endif
 }
