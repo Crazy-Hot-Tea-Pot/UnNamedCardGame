@@ -24,6 +24,8 @@ public class TitleController : MonoBehaviour
     {
         VersionText.SetText("Version: " + Application.version);
 
+        SoundManager.StartBackgroundSound(BgSound.MainMenuAmbient);
+
         // Add listeners to buttons
         PlayButton.onClick.AddListener(StartGame);
         ResumeButton.onClick.AddListener(ResumeGame);

@@ -47,6 +47,8 @@ MonoBehaviour:
   soundBGArray:
   - bgSound: 0
     audioClip: {fileID: 8300000, guid: 32f3214d11061a945bdfbef177f18b12, type: 3}
+  - bgSound: 1
+    audioClip: {fileID: 8300000, guid: 8ccad41dedb4910419b8325c84412c5c, type: 3}
   soundFXClipArray:
   - soundFX: 0
     audioClip: {fileID: 8300000, guid: ca72db05c69c0404dafa3bcfde6e97cc, type: 3}

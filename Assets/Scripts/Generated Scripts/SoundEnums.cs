@@ -1,6 +1,7 @@
 public enum BgSound
 {
     Background,
+    MainMenuAmbient,
 }
 
 public enum SoundFX
