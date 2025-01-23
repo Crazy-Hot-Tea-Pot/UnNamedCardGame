@@ -92,6 +92,8 @@ public class QuestManagerEditor : EditorWindow
                     currentQuest.questEndPosition = (GameObject)AssetDatabase.LoadAssetAtPath("Assets/Prefabs/Ui Prefabs/QuestObjects/QuestMarker.prefab", typeof(GameObject));
 
                     Instantiate(currentQuest.questEndPosition);
+
+                    EditorUtility.SetDirty(currentQuest);
                 }
                 catch
                 {
