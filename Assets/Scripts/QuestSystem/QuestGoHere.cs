@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "QuestGoHere", menuName = "Quest/QuestSystem/GoHere")]
+[CreateAssetMenu(fileName = "QuestGoHere", menuName = "Quest/GoHere")]
 public class QuestGoHere : Quest
 {
     [Tooltip("The position of the player when this quest object is complete")]
