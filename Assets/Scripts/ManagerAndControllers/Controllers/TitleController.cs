@@ -22,9 +22,7 @@ public class TitleController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        VersionText.SetText("Version: " + Application.version);
-
-        SoundManager.StartBackgroundSound(BgSound.MainMenuAmbient);
+        VersionText.SetText("Version: " + Application.version);      
 
         // Add listeners to buttons
         PlayButton.onClick.AddListener(StartGame);

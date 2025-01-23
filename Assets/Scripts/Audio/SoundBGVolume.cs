@@ -12,6 +12,8 @@ public class SoundBGVolume : MonoBehaviour
     {
         audioSource = this.GetComponent<AudioSource>();
 
+        audioSource.volume = SettingsManager.Instance.SoundSettings.GetBGSoundForComponent();
+
         // Subscribe to the BGM volume change event
         if (SettingsManager.Instance?.SoundSettings != null)
         {
