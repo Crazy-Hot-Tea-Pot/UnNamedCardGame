@@ -86,15 +86,7 @@ public class SoundAssetEditor : Editor
         {
             Debug.LogWarning("No audio source available for preview or audio clip is null.");
         }
-    }
-
-    [MenuItem("Tools/Update Sounds")]
-    private static void UpdateSoundAssets()
-    {
-        var soundAsset = AssetDatabase.LoadAssetAtPath<SoundAsset>("PathToSoundAsset");
-        var editor = CreateEditor(soundAsset) as SoundAssetEditor;
-        editor?.PopulateSoundArrays(soundAsset);
-    }
+    }    
 
     /// <summary>
     /// Gets sounds from resource folders and generates a script with enums.
