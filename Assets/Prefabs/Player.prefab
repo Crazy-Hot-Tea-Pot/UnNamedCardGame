@@ -2035,6 +2035,7 @@ MonoBehaviour:
   runSpeed: 7
   runThreshold: 5
   doubleClickTime: 0.5
+  SoundWhenPlayerClicks: 7
 --- !u!136 &613447968063264353
 CapsuleCollider:
   m_ObjectHideFlags: 0
