@@ -328,9 +328,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1edccfd35e5a3e498b14e5939a9ba6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  questList:
-  - {fileID: 11400000, guid: f89ebb2e668c8b54cab276deed974b46, type: 2}
-  - {fileID: 11400000, guid: 93c2839a02b077b4d8bb7da8779820a0, type: 2}
+  questList: []
   completeList: []
   nameTemp: 
 --- !u!4 &829852518
