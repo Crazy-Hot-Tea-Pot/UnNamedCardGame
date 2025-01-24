@@ -1,4 +1,5 @@
 
+using System.Collections.Generic;
 using UnityEngine;
 
 public class SecurityDrone : Enemy
@@ -58,12 +59,18 @@ public class SecurityDrone : Enemy
     public override void Start()
     {
         EnemyName = "Security Drone";
-        maxHP = 10;
+
+        DroppedChips.Clear();
+
+        //Add Common Chips Todrop
+        DroppedChips = ChipManager.Instance.GetChipsByRarity(NewChip.ChipRarity.Common);
 
         base.Start();
     }
     protected override void PerformIntent()
     {
+        UpdateIntentUI();
+
         IntentsPerformed++;
 
        if(IntentsPerformed > 5 && NumberOfAlertDrones < 3)
@@ -82,7 +89,21 @@ public class SecurityDrone : Enemy
        base.PerformIntent();
 
     }
-
+    protected override Intent GetNextIntent()
+    {
+        if (IntentsPerformed > 5 && NumberOfAlertDrones < 3)
+        {
+            return new Intent("Alert", Color.blue, 0, "Summons another Security Drone");
+        }
+        else if (Random.Range(1, 11) <= 3)
+        {
+            return new Intent("Neutralize", Color.red, 7, "Deals damage and applies Drained");
+        }
+        else
+        {
+            return new Intent("Ram", Color.red, 12, "Deals heavy damage");
+        }
+    }
     /// <summary>
     /// Deals 12 Damage.
     /// Has a 70% chance of being called.
@@ -152,23 +173,6 @@ public class SecurityDrone : Enemy
             }
         }
     }
-    /// <summary>
-    /// Checks for how many Security Drones are in the combat zone.
-    /// moved as per GDD
-    /// </summary>
-    /// <returns></returns>
-    //private int NumberOfDronesInCombat()
-    //{
-    //    int temp = 0;
-    //    foreach (var combatant in CombatController.Combadants)
-    //    {
-    //        if (combatant.combadant.CompareTag("Enemy") && combatant.combadant.GetComponent<SecurityDrone>() != null)
-    //        {
-    //            temp++;
-    //        }
-    //    }
-    //    return temp;
-    //}
     /// <summary>
     /// Different stuff for Alerted Drone
     /// </summary>
