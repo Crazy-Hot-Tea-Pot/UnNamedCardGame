@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
-//using static UnityEditor.Progress;
 
 public class TitleController : MonoBehaviour
 {
@@ -24,7 +24,6 @@ public class TitleController : MonoBehaviour
 
     private GameData latestSave = null;
 
-    private List<Button> buttons = new List<Button>();
 
     // Start is called before the first frame update
     void Start()
@@ -41,17 +40,11 @@ public class TitleController : MonoBehaviour
         QuitButton.onClick.AddListener(PlayButtonClickSound);
         QuitButton.onClick.AddListener(() => StartCoroutine(Quit()));
 
-        // Add buttons to a list for easier management
-        buttons.Add(PlayButton);
-        buttons.Add(ResumeButton);
-        buttons.Add(OptionsButton);
-        buttons.Add(QuitButton);
-
-        // Add OnSelect listeners for each button
-        foreach (Button button in buttons)
-        {
-            AddOnSelectListener(button);
-        }
+        // Add OnSelect listeners dynamically
+        AddOnSelectListener(PlayButton);
+        AddOnSelectListener(ResumeButton);
+        AddOnSelectListener(OptionsButton);
+        AddOnSelectListener(QuitButton);
 
 
         CheckForSaveData();
@@ -62,7 +55,7 @@ public class TitleController : MonoBehaviour
     /// Plays Sound for when mouse over Button.
     /// 0 references because from inspector.
     /// </summary>
-    public void PlayButtonSound()
+    public void PlaySelectButtonSound()
     {
         SoundManager.PlayFXSound(ButtonSelectSound);
     }
@@ -81,17 +74,27 @@ public class TitleController : MonoBehaviour
     /// </summary>
     private void AddOnSelectListener(Button button)
     {
-        var eventTrigger = button.gameObject.GetComponent<UnityEngine.EventSystems.EventTrigger>() ??
-                           button.gameObject.AddComponent<UnityEngine.EventSystems.EventTrigger>();
+        // Get or add an EventTrigger component
+        EventTrigger trigger = button.gameObject.GetComponent<EventTrigger>() ??
+                               button.gameObject.AddComponent<EventTrigger>();
 
-        UnityEngine.EventSystems.EventTrigger.Entry entry = new UnityEngine.EventSystems.EventTrigger.Entry
+        // Add Select event
+        EventTrigger.Entry selectEntry = new EventTrigger.Entry
         {
-            eventID = UnityEngine.EventSystems.EventTriggerType.Select
+            eventID = EventTriggerType.Select
         };
+        selectEntry.callback.AddListener((eventData) => PlaySelectButtonSound());
+        trigger.triggers.Add(selectEntry);
 
-        entry.callback.AddListener((eventData) => PlayButtonSound());
-        eventTrigger.triggers.Add(entry);
+        // Add PointerEnter event
+        EventTrigger.Entry pointerEnterEntry = new EventTrigger.Entry
+        {
+            eventID = EventTriggerType.PointerEnter
+        };
+        pointerEnterEntry.callback.AddListener((eventData) => PlaySelectButtonSound());
+        trigger.triggers.Add(pointerEnterEntry);
     }
+
 
     /// <summary>
     /// Start a new game.
@@ -192,17 +195,8 @@ public class TitleController : MonoBehaviour
         ButtonPanel.GetComponent<Animator>().SetTrigger("BringInButtons");
     }
 
-    private void OnDestroy()
+    void OnDestroy()
     {
-        // Remove listeners to avoid issues when reloading scenes
-        foreach (Button button in buttons)
-        {
-            button.onClick.RemoveAllListeners();
-            var eventTrigger = button.gameObject.GetComponent<UnityEngine.EventSystems.EventTrigger>();
-            if (eventTrigger != null)
-            {
-                eventTrigger.triggers.Clear();
-            }
-        }
+       
     }
 }

@@ -770,10 +770,7 @@ public class PlayerController : MonoBehaviour
         {
             agent.speed = walkSpeed;
             tempIndicator = RipplePrefab;
-        }
-
-        //PlaySound for click
-        SoundManager.PlayFXSound(SoundWhenPlayerClicks);
+        }        
 
         // Create ripple effect at the click point
         GameObject ClickIndicator = Instantiate(tempIndicator, clickPoint, Quaternion.identity);
