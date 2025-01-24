@@ -6,7 +6,7 @@ using UnityEngine;
 public class QuestGoHere : Quest
 {
     [Tooltip("The position of the player when this quest object is complete")]
-    public GameObject questEndPosition;
+    public string questEndNameForPositionCalc;
 
     private bool canEnd = false;
     //Override the Run quest method
@@ -15,7 +15,7 @@ public class QuestGoHere : Quest
         if (!complete)
         {
 
-            if (questEndPosition == null)
+            if (questEndNameForPositionCalc == null)
             {
                 Debug.Log("Quest has no end position and can not continue. I have completed the quest");
                 CompleteQuest();
@@ -39,11 +39,11 @@ public class QuestGoHere : Quest
 
         try
         {
-            GameObject.Find(questEndPosition.name);
+            GameObject.Find(questEndNameForPositionCalc);
         }
         catch
         {
-            Debug.Log("Could not find " + questEndPosition.name);
+            Debug.Log("Could not find " + questEndNameForPositionCalc);
         }
     }
 

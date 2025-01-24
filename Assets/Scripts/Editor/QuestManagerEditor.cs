@@ -89,10 +89,8 @@ public class QuestManagerEditor : EditorWindow
                     AssetDatabase.CreateAsset(currentQuest = ScriptableObject.CreateInstance<QuestGoHere>(), "Assets/Resources/Scriptables/Quest/" + fileName + ".asset");
                     currentQuest.questName = qName;
                     currentQuest.questDesc = description;
-                    currentQuest.questEndPosition = (GameObject)AssetDatabase.LoadAssetAtPath("Assets/Prefabs/Ui Prefabs/QuestObjects/QuestMarker.prefab", typeof(GameObject));
-
-                    Instantiate(currentQuest.questEndPosition);
-
+                    GameObject questMarker = (GameObject)AssetDatabase.LoadAssetAtPath("Assets/Prefabs/Ui Prefabs/QuestObjects/QuestMarker.prefab", typeof(GameObject));
+                    currentQuest.questEndNameForPositionCalc = Instantiate(questMarker).name;
                     EditorUtility.SetDirty(currentQuest);
                 }
                 catch

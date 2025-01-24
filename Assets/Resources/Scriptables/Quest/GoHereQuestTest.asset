@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a1e6c407d110da04398fa9750617f1b6, type: 3}
-  m_Name: TestQuest
+  m_Name: GoHereQuestTest
   m_EditorClassIdentifier: 
-  questName: Quest Name
-  questDesc: Touch the glowy thing
+  questName: Sparkles!!!
+  questDesc: Go to the sparkles
   complete: 0
-  questEndPosition: {fileID: 8369956245994808513, guid: c9caa05b779f7964ab95fcac9ec3fbf9, type: 3}
+  questEndNameForPositionCalc: QuestMarker(Clone)
