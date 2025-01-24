@@ -37,6 +37,7 @@ public class RoamingAndCombatUiController : UiController
     public GameObject EnergyAndGearContainer;
     public GameObject EndTurn;
     public Button EndTurnButton;
+    public GameObject CombatAnimation;
 
     // Start is called before the first frame update
     void Start()
@@ -93,22 +94,29 @@ public class RoamingAndCombatUiController : UiController
     /// Updates the UI for Player HealthBar
     /// </summary>
     public void UpdateHealth(int currentHealth, int maxHealth)
-    {        
-
+    {
+        // Directly update the health bar
         float targetHealthPercentage = (float)currentHealth / maxHealth;
+        HealthBar.fillAmount = targetHealthPercentage;
+        HealthBar.color = Color.Lerp(lowHealthColor, fullHealthColor, targetHealthPercentage);
 
-        StopCoroutine(UpdateHealthOverTime(targetHealthPercentage));
+        // Update the health text
+        int percentage = Mathf.RoundToInt(targetHealthPercentage * 100);
+        HealthText.SetText($"{percentage}%");
 
-        // Start the coroutine to smoothly update the health bar
-        StartCoroutine(UpdateHealthOverTime(targetHealthPercentage));
+        //float targetHealthPercentage = (float)currentHealth / maxHealth;
+
+        //StopCoroutine(UpdateHealthOverTime(targetHealthPercentage));
+
+        //// Start the coroutine to smoothly update the health bar
+        //StartCoroutine(UpdateHealthOverTime(targetHealthPercentage));
     }   
     
     /// <summary>
     /// Updates the UI for Player ShieldAmount
     /// </summary>
     public void UpdateShield(int Shield, int MaxShield)
-    {        
-
+    {
         if (Shield == 0 && MaxShield == 100)
         {
             ShieldContainer.SetActive(false);
@@ -117,14 +125,28 @@ public class RoamingAndCombatUiController : UiController
         {
             ShieldContainer.SetActive(true);
 
-            // Calculate the target ShieldAmount percentage
-            float shieldPercentage = (float)Shield / (float)MaxShield;
+            float shieldPercentage = (float)Shield / MaxShield;
 
-            StopCoroutine(UpdateShieldOverTime(shieldPercentage,Shield,MaxShield));
-
-            // Start the coroutine to smoothly update the ShieldAmount bar
-            StartCoroutine(UpdateShieldOverTime(shieldPercentage, Shield, MaxShield));
+            // Directly update the shield bar and text
+            ShieldBar.fillAmount = shieldPercentage;
+            ShieldText.SetText($"{Shield}/{MaxShield}");
         }
+        //if (Shield == 0 && MaxShield == 100)
+        //{
+        //    ShieldContainer.SetActive(false);
+        //}
+        //else
+        //{
+        //    ShieldContainer.SetActive(true);
+
+        //    // Calculate the target ShieldAmount percentage
+        //    float shieldPercentage = (float)Shield / (float)MaxShield;
+
+        //    StopCoroutine(UpdateShieldOverTime(shieldPercentage,Shield,MaxShield));
+
+        //    // Start the coroutine to smoothly update the ShieldAmount bar
+        //    StartCoroutine(UpdateShieldOverTime(shieldPercentage, Shield, MaxShield));
+        //}
     }
 
     /// <summary>
@@ -134,13 +156,16 @@ public class RoamingAndCombatUiController : UiController
     /// <param name="maxEnergy"></param>
     public void UpdateEnergy(int currentEnergy, int maxEnergy)
     {
-        // Normalize the energy value to a 0-1 range
-        float tempTargetFillAmount = (float)currentEnergy / maxEnergy;
+        // Directly update the energy bar
+        float energyPercentage = (float)currentEnergy / maxEnergy;
+        EnergyBar.fillAmount = energyPercentage;
+        //// Normalize the energy value to a 0-1 range
+        //float tempTargetFillAmount = (float)currentEnergy / maxEnergy;
 
 
-        StopCoroutine(FillEnergyOverTime(tempTargetFillAmount));
+        //StopCoroutine(FillEnergyOverTime(tempTargetFillAmount));
 
-        StartCoroutine(FillEnergyOverTime(tempTargetFillAmount));
+        //StartCoroutine(FillEnergyOverTime(tempTargetFillAmount));
     }
 
     /// <summary>
@@ -149,10 +174,34 @@ public class RoamingAndCombatUiController : UiController
     /// <param name="CombatMode"></param>
     public void SwitchMode(bool CombatMode)
     {
-        PlayerHandContainer.SetActive(CombatMode);
-        EnergyAndGearContainer.GetComponent<Animator>().SetBool("Visible", CombatMode);
+        if (CombatMode)
+        {
+            StartCoroutine(EnableCombatMode());
+        }
+        else
+        {
+            // Directly disable Combat UI without delay
+            PlayerHandContainer.SetActive(false);
+            EnergyAndGearContainer.GetComponent<Animator>().SetBool("Visible", false);
+        }
     }
+    /// <summary>
+    /// play combat entrance animation and then continue.
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator EnableCombatMode()
+    {
+        // Show CombatAnimation and wait
+        CombatAnimation.SetActive(true);
+        yield return new WaitForSeconds(2f);
 
+        // Proceed with enabling combat UI
+        PlayerHandContainer.SetActive(true);
+        EnergyAndGearContainer.GetComponent<Animator>().SetBool("Visible", true);
+
+        // Hide CombatAnimation if it's temporary
+        CombatAnimation.SetActive(false);
+    }
     private IEnumerator UpdateHealthOverTime(float targetFillAmount)
     {
         // While the bar is not at the target fill amount, update it
