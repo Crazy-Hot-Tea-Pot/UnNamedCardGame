@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6769523990531121198}
   - component: {fileID: 913458041113260109}
   - component: {fileID: 361923170121636217}
-  m_Layer: 5
+  m_Layer: 2
   m_Name: ChipInfo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -99,7 +99,7 @@ GameObject:
   - component: {fileID: 515100882302332975}
   - component: {fileID: 5808483081927737082}
   - component: {fileID: 2969612216005241874}
-  m_Layer: 5
+  m_Layer: 2
   m_Name: Chip Description
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -233,7 +233,7 @@ GameObject:
   - component: {fileID: 8816080097148988850}
   - component: {fileID: 7228689371454012846}
   - component: {fileID: 1428252078310546695}
-  m_Layer: 5
+  m_Layer: 2
   m_Name: ChipName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -369,7 +369,7 @@ GameObject:
   - component: {fileID: 4524096127237530190}
   - component: {fileID: 1051376701429689598}
   - component: {fileID: 7308661907051642745}
-  m_Layer: 5
+  m_Layer: 2
   m_Name: ChipType
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -503,7 +503,7 @@ GameObject:
   - component: {fileID: 3566971382810571934}
   - component: {fileID: 358486340752682310}
   - component: {fileID: 5168639810700702312}
-  m_Layer: 5
+  m_Layer: 2
   m_Name: Background Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
