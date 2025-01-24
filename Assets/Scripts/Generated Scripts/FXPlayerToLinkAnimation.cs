@@ -34,7 +34,7 @@ public class FXPlayerToLinkAnimation : MonoBehaviour
         //If help is less than 35% play another audio
         if (PlayerController.Health <= PlayerController.MaxHealth * 0.35f)
         {
-            //Play extra sound here
+            SoundManager.PlayFXSound(SoundFX.DEFECTION_Glitch);
         }
     }
 

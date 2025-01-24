@@ -15,29 +15,47 @@ public class TitleController : MonoBehaviour
     public Button OptionsButton;
     public Button QuitButton;
 
+    [Header("Button Sounds")]
+    public SoundFX ButtonSelectSound;
+    public SoundFX ButtonClickSound;
+
     [Header("Game Status Info")]
     public TextMeshProUGUI VersionText;
 
     private GameData latestSave = null;
+
+    private List<Button> buttons = new List<Button>();
+
     // Start is called before the first frame update
     void Start()
     {
-        VersionText.SetText("Version: " + Application.version);      
+        VersionText.SetText("Version: " + Application.version);
 
-        // Add listeners to buttons
-        PlayButton.onClick.AddListener(StartGame);
-        ResumeButton.onClick.AddListener(ResumeGame);
-        OptionsButton.onClick.AddListener(OpenOptions);
-        QuitButton.onClick.AddListener(Quit);
+        // Add button click listeners
+        PlayButton.onClick.AddListener(PlayButtonClickSound);
+        PlayButton.onClick.AddListener(() => StartCoroutine(StartGame()));
+        ResumeButton.onClick.AddListener(PlayButtonClickSound);
+        ResumeButton.onClick.AddListener(() => StartCoroutine(ResumeGame()));
+        OptionsButton.onClick.AddListener(PlayButtonClickSound);
+        OptionsButton.onClick.AddListener(() => StartCoroutine(OpenOptions()));
+        QuitButton.onClick.AddListener(PlayButtonClickSound);
+        QuitButton.onClick.AddListener(() => StartCoroutine(Quit()));
+
+        // Add buttons to a list for easier management
+        buttons.Add(PlayButton);
+        buttons.Add(ResumeButton);
+        buttons.Add(OptionsButton);
+        buttons.Add(QuitButton);
+
+        // Add OnSelect listeners for each button
+        foreach (Button button in buttons)
+        {
+            AddOnSelectListener(button);
+        }
+
 
         CheckForSaveData();
 
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     /// <summary>
@@ -46,7 +64,11 @@ public class TitleController : MonoBehaviour
     /// </summary>
     public void PlayButtonSound()
     {
-        SoundManager.PlayFXSound(SoundFX.MenuSelectionSound);
+        SoundManager.PlayFXSound(ButtonSelectSound);
+    }
+    public void PlayButtonClickSound()
+    {
+        SoundManager.PlayFXSound(ButtonClickSound);
     }
 
     public void Credits()
@@ -55,11 +77,32 @@ public class TitleController : MonoBehaviour
     }
 
     /// <summary>
+    /// Adds OnSelect listener to play button sound.
+    /// </summary>
+    private void AddOnSelectListener(Button button)
+    {
+        var eventTrigger = button.gameObject.GetComponent<UnityEngine.EventSystems.EventTrigger>() ??
+                           button.gameObject.AddComponent<UnityEngine.EventSystems.EventTrigger>();
+
+        UnityEngine.EventSystems.EventTrigger.Entry entry = new UnityEngine.EventSystems.EventTrigger.Entry
+        {
+            eventID = UnityEngine.EventSystems.EventTriggerType.Select
+        };
+
+        entry.callback.AddListener((eventData) => PlayButtonSound());
+        eventTrigger.triggers.Add(entry);
+    }
+
+    /// <summary>
     /// Start a new game.
     /// Set Default Player Stats
     /// </summary>
-    private void StartGame()
-   {
+    private IEnumerator StartGame()
+    {
+
+        // Wait for the duration of the sound (or a short delay)
+        yield return new WaitForSeconds(1f);
+
         GameData startData = new GameData();
 
         startData.SaveName = "Beginning";
@@ -97,23 +140,30 @@ public class TitleController : MonoBehaviour
     /// <summary>
     /// Logic for resuming the game.
     /// </summary>
-    private void ResumeGame()
+    private IEnumerator ResumeGame()
     {
+        // Wait for the duration of the sound (or a short delay)
+        yield return new WaitForSeconds(1f);
+
         // Load the save data into the game
         DataManager.Instance.LoadData(latestSave.SaveName);
 
         // Request the scene from GameManager
         GameManager.Instance.RequestScene(latestSave.Level);
     }
-    private void OpenOptions()
+    private IEnumerator OpenOptions()
     {
-
+        // Wait for the duration of the sound (or a short delay)
+        yield return new WaitForSeconds(1f);
     }
     /// <summary>
     /// Quit Game
     /// </summary>
-    private void Quit()
+    private IEnumerator Quit()
     {
+        // Wait for the duration of the sound (or a short delay)
+        yield return new WaitForSeconds(1f);
+
         Application.Quit();
     }
     /// <summary>
@@ -140,5 +190,19 @@ public class TitleController : MonoBehaviour
     private void BringInButtons()
     {
         ButtonPanel.GetComponent<Animator>().SetTrigger("BringInButtons");
+    }
+
+    private void OnDestroy()
+    {
+        // Remove listeners to avoid issues when reloading scenes
+        foreach (Button button in buttons)
+        {
+            button.onClick.RemoveAllListeners();
+            var eventTrigger = button.gameObject.GetComponent<UnityEngine.EventSystems.EventTrigger>();
+            if (eventTrigger != null)
+            {
+                eventTrigger.triggers.Clear();
+            }
+        }
     }
 }

@@ -926,6 +926,8 @@ MonoBehaviour:
   ResumeButton: {fileID: 2085399598711015237}
   OptionsButton: {fileID: 7001422712445478700}
   QuitButton: {fileID: 3720112114893829648}
+  ButtonSelectSound: 26
+  ButtonClickSound: 24
   VersionText: {fileID: 4622310774376628093}
 --- !u!1 &1779277725
 GameObject:
@@ -1303,35 +1305,6 @@ RectTransform:
   m_AnchoredPosition: {x: 1419, y: -943}
   m_SizeDelta: {x: 256, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1972952699365626770
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8814269454113064919}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Delegates:
-  - eventID: 0
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1737010958}
-          m_TargetAssemblyTypeName: TitleController, Assembly-CSharp
-          m_MethodName: PlayButtonSound
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
 --- !u!114 &2085399598711015237
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1498,7 +1471,6 @@ GameObject:
   - component: {fileID: 7310227902147219448}
   - component: {fileID: 7001422712445478700}
   - component: {fileID: 4828427676642590890}
-  - component: {fileID: 7310227902147219449}
   m_Layer: 5
   m_Name: Options Button
   m_TagString: Untagged
@@ -1563,7 +1535,6 @@ GameObject:
   - component: {fileID: 6357788304242780662}
   - component: {fileID: 2085399598711015237}
   - component: {fileID: 5398930493138439233}
-  - component: {fileID: 5076731874302576455}
   m_Layer: 5
   m_Name: Resume Button
   m_TagString: Untagged
@@ -1716,7 +1687,6 @@ GameObject:
   - component: {fileID: 2257024844619670029}
   - component: {fileID: 1014534163834498535}
   - component: {fileID: 5370869368286805171}
-  - component: {fileID: 5601037013291243431}
   m_Layer: 5
   m_Name: Play Button
   m_TagString: Untagged
@@ -1864,35 +1834,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &5076731874302576455
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3770218846542585865}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Delegates:
-  - eventID: 0
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1737010958}
-          m_TargetAssemblyTypeName: TitleController, Assembly-CSharp
-          m_MethodName: PlayButtonSound
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
 --- !u!224 &5183574231475588990
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1960,35 +1901,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_AspectMode: 1
   m_AspectRatio: 1.2935
---- !u!114 &5601037013291243431
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4682802608753219442}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Delegates:
-  - eventID: 0
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1737010958}
-          m_TargetAssemblyTypeName: TitleController, Assembly-CSharp
-          m_MethodName: PlayButtonSound
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
 --- !u!114 &5643746007727564546
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2470,35 +2382,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &7310227902147219449
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3612195163061048610}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Delegates:
-  - eventID: 0
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1737010958}
-          m_TargetAssemblyTypeName: TitleController, Assembly-CSharp
-          m_MethodName: PlayButtonSound
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
 --- !u!222 &7510926716575823585
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2780,7 +2663,6 @@ GameObject:
   - component: {fileID: 2168282031423643569}
   - component: {fileID: 3720112114893829648}
   - component: {fileID: 1634685075101087751}
-  - component: {fileID: 1972952699365626770}
   m_Layer: 5
   m_Name: Quit Button
   m_TagString: Untagged
