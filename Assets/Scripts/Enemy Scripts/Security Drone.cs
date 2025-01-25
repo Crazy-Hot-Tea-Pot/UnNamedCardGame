@@ -1,5 +1,6 @@
 
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class SecurityDrone : Enemy
@@ -55,10 +56,15 @@ public class SecurityDrone : Enemy
             isAlertDrone = value;
         }
     }
-    // Start is called before the first frame update
+
+    /// <summary>
+    /// Start is called before the first frame update
+    /// Any custom drop put in here.
+    /// </summary>
     public override void Start()
     {
-        EnemyName = "Security Drone";
+        if (EnemyName == null)
+            EnemyName = "Security Drone";
 
         DroppedChips.Clear();
 
@@ -69,14 +75,10 @@ public class SecurityDrone : Enemy
     }
     protected override void PerformIntent()
     {
-        UpdateIntentUI();
-
         IntentsPerformed++;
 
-       if(IntentsPerformed > 5 && NumberOfAlertDrones < 3)
-        {
+        if(IntentsPerformed > 5 && NumberOfAlertDrones < 3)
             Alert();
-        }
         else
         {            
             if(Random.Range(1,11) <= 3)
@@ -131,22 +133,33 @@ public class SecurityDrone : Enemy
     /// </summary>
     private void Alert()
     {
-        
-        if (CombatController != null)
+
+        if (CombatController != null && CombatController.CombatArea != null)
         {
             // Loop to find a clear position for the new drone
-            Vector3 spawnOffset;
+            BoxCollider areaCollider = CombatController.CombatArea.GetComponent<BoxCollider>();
+
+            if (areaCollider == null)
+            {
+                Debug.LogWarning("CombatArea does not have a BoxCollider component.");
+                return;
+            }
+
+            Vector3 areaCenter = areaCollider.bounds.center;
+            Vector3 areaSize = areaCollider.bounds.size;
             Vector3 spawnPosition;
             int maxAttempts = 10;
             int attempt = 0;
             bool foundValidPosition = false;
 
-            do {
-                // Calculate a position next to the current drone
-                spawnOffset = new Vector3(Random.Range(-2f, 2f), 0, Random.Range(-2f, 2f));
-                spawnPosition = this.transform.position + spawnOffset;
+            do
+            {
+                // Generate a random position within the CombatArea
+                float x = Random.Range(areaCenter.x - areaSize.x / 2, areaCenter.x + areaSize.x / 2);
+                float z = Random.Range(areaCenter.z - areaSize.z / 2, areaCenter.z + areaSize.z / 2);
+                spawnPosition = new Vector3(x, areaCenter.y, z);
 
-                // Check if there's anything at the spawn position
+                // Check if the position is clear
                 if (Physics.OverlapSphere(spawnPosition, 1f).Length == 0)
                 {
                     foundValidPosition = true;
@@ -158,13 +171,12 @@ public class SecurityDrone : Enemy
 
             if (foundValidPosition)
             {
+                GameObject additionalDrone = Instantiate(this.gameObject, spawnPosition, Quaternion.identity);
+                additionalDrone.GetComponent<SecurityDrone>().IAmAlertDrone();
 
-                GameObject AdditionalSecurityDrone = Instantiate(this.gameObject, spawnPosition, Quaternion.identity);
-                AdditionalSecurityDrone.GetComponent<SecurityDrone>().IAmAlertDrone();
+                CombatController.AddEnemyToCombat(additionalDrone);
+                NumberOfAlertDrones++;
 
-                CombatController.AddEnemyToCombat(AdditionalSecurityDrone);
-
-                //Play Sound
                 SoundManager.PlayFXSound(SoundFX.AlertSecurityDrone);
             }
             else
@@ -172,6 +184,8 @@ public class SecurityDrone : Enemy
                 Debug.LogWarning("Failed to find valid spawn position Jayce -_- fix ya code.\n This is complicated I know but thats what testing is for.");
             }
         }
+        else
+            Debug.LogError("CombatZone Missing!!");
     }
     /// <summary>
     /// Different stuff for Alerted Drone

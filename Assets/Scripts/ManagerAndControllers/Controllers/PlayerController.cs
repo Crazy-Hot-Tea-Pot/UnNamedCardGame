@@ -15,9 +15,6 @@ public class PlayerController : MonoBehaviour
     //Camera in the scene
     private Camera mainCamera;
 
-    //A list of combatEnemies in range for abilites
-    public List<GameObject> abilityRangedEnemies;
-
     // The Select Action from inputAction class.
     private InputAction select;
 
@@ -167,7 +164,6 @@ public class PlayerController : MonoBehaviour
 
     #region Effects
 
-    [SerializeField]
     private List<Effects.StatusEffect> listOfActiveEffects = new List<Effects.StatusEffect>();
 
     public List<Effects.StatusEffect> ListOfActiveEffects
@@ -302,6 +298,27 @@ public class PlayerController : MonoBehaviour
         get
         {
             return GetStacks(Effects.Debuff.Jam);
+        }
+    }
+
+    /// <summary>
+    /// Returns if player is Redirected
+    /// </summary>
+    public bool IsRedirected
+    {
+        get
+        {
+            if(RedirectedStacks>0)
+                return true;
+            else
+                return false;
+        }
+    }
+    public int RedirectedStacks
+    {
+        get
+        {
+            return GetStacks(Effects.Debuff.Redirect);
         }
     }
     #endregion
@@ -557,7 +574,7 @@ public class PlayerController : MonoBehaviour
         AddOrUpdateEffect(debuff, stacks);
     }
     /// <summary>
-    /// Add Special effec tto Player
+    /// Add Special effect to Player
     /// </summary>
     /// <param name="specialEffect"></param>
     public void AddEffect(Effects.SpecialEffects specialEffect)
@@ -821,6 +838,7 @@ public class PlayerController : MonoBehaviour
         RemoveOrReduceEffect(Effects.Debuff.Drained, 1);
         RemoveOrReduceEffect(Effects.Debuff.WornDown, 1);
         RemoveOrReduceEffect(Effects.Debuff.Jam, 1);
+        RemoveOrReduceEffect(Effects.Debuff.Redirect, 1);
     }
 
     /// <summary>

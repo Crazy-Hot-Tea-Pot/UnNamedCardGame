@@ -98,10 +98,15 @@ public class Gear : MonoBehaviour, IPointerClickHandler, ICanvasRaycastFilter
                 throw new NullReferenceException("No Item equipped.");
             else
             {
-                if(CombatController.Target == null)
+                if (CombatController.Target == null)
                     Item.ItemActivate(Player.GetComponent<PlayerController>());
                 else
-                    Item.ItemActivate(Player.GetComponent<PlayerController>(),CombatController.Target.GetComponent<Enemy>());
+                {
+                    if (Player.GetComponent<PlayerController>().IsRedirected)
+                        Item.ItemActivate(Player.GetComponent<PlayerController>(), CombatController.Target.GetComponent<Enemy>());
+                    else
+                        Debug.Log("Player Redirected and can't use items");
+                }
             }
         }
         catch (NullReferenceException ex)
