@@ -122,7 +122,7 @@ public class CombatController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        CombatArea = this.transform.Find("Area").gameObject;
     }
     /// <summary>
     /// Starts combat by initializing combatants and setting up the turn order.
