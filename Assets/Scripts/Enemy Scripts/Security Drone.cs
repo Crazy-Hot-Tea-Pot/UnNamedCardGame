@@ -69,7 +69,9 @@ public class SecurityDrone : Enemy
         DroppedChips.Clear();
 
         //Add Common Chips Todrop
-        DroppedChips = ChipManager.Instance.GetChipsByRarity(NewChip.ChipRarity.Common);
+        var tempChips = ChipManager.Instance.GetChipsByRarity(NewChip.ChipRarity.Common);
+        int tempRandom = Random.Range(1,tempChips.Count);
+        DroppedChips.Add(tempChips[tempRandom]);
 
         base.Start();
     }
@@ -122,7 +124,9 @@ public class SecurityDrone : Enemy
     private void Neutralize()
     {
         // Play Sound
-        SoundManager.PlayFXSound(SoundFX.NeutralizeSecurityDrone);
+        SoundManager.PlayFXSound(SoundFX.NeutralizeSecurityDrone,this.gameObject.transform);
+
+        Debug.Log(this.gameObject.name + " is Neutralizing.");
 
         EnemyTarget.GetComponent<PlayerController>().DamagePlayerBy(7);
         EnemyTarget.GetComponent<PlayerController>().AddEffect(Effects.Debuff.Drained, 1);

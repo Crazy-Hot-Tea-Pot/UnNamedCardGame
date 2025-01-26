@@ -78,7 +78,7 @@ public class Gear : MonoBehaviour, IPointerClickHandler, ICanvasRaycastFilter
 
         if (polygonCollider.OverlapPoint(worldPoint))
         {
-            Debug.Log("Button clicked within Polygon Collider of "+this.gameObject.name);
+            //Debug.Log("Button clicked within Polygon Collider of "+this.gameObject.name);
             PerformButtonAction();
         }
     }
@@ -102,10 +102,7 @@ public class Gear : MonoBehaviour, IPointerClickHandler, ICanvasRaycastFilter
                     Item.ItemActivate(Player.GetComponent<PlayerController>());
                 else
                 {
-                    if (Player.GetComponent<PlayerController>().IsRedirected)
                         Item.ItemActivate(Player.GetComponent<PlayerController>(), CombatController.Target.GetComponent<Enemy>());
-                    else
-                        Debug.Log("Player Redirected and can't use items");
                 }
             }
         }

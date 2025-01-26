@@ -29,8 +29,11 @@ public class RoamingAndCombatUiController : UiController
 
     [Header("Gear")]
     public Gear Armor;
+    public Button ArmorButton;
     public Gear Weapon;
+    public Button WeaponButton;
     public Gear Equipment;
+    public Button EquipmentButton;
 
     [Header("Combat Mode Stuff")]
     public GameObject PlayerHandContainer;
@@ -43,6 +46,7 @@ public class RoamingAndCombatUiController : UiController
     void Start()
     {
         EndTurnButton.onClick.AddListener(() => GameObject.FindGameObjectWithTag("CombatController").GetComponent<CombatController>().EndTurn(GameObject.FindGameObjectWithTag("Player")));
+        EndTurnButton.onClick.AddListener(() => GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().EndTurn());
         
         EndTurn.SetActive(false);
         PlayerHandContainer.SetActive(false);
@@ -80,6 +84,9 @@ public class RoamingAndCombatUiController : UiController
         ChipManager.Instance.RefreshPlayerHand();
 
         yield return new WaitForSeconds(1f);
+
+        if (GameManager.Instance.CurrentGameMode != GameManager.GameMode.Combat)
+            yield break;
 
         if (!PlayerHandContainer.GetComponent<PlayerHandContainer>().PanelIsVisible && ChipManager.Instance.PlayerHand.Count != 0)
             PlayerHandContainer.GetComponent<PlayerHandContainer>().TogglePanel();
@@ -185,6 +192,14 @@ public class RoamingAndCombatUiController : UiController
             EnergyAndGearContainer.GetComponent<Animator>().SetBool("Visible", false);
         }
     }
+
+    public void MakeGearInteractable(bool Interactable)
+    {
+        ArmorButton.interactable = Interactable;
+        WeaponButton.interactable = Interactable;
+        EquipmentButton.interactable = Interactable;
+    }
+
     /// <summary>
     /// play combat entrance animation and then continue.
     /// </summary>

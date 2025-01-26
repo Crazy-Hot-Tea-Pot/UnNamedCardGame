@@ -308,10 +308,14 @@ public class PlayerController : MonoBehaviour
     {
         get
         {
-            if(RedirectedStacks>0)
+            if (RedirectedStacks > 0)
+            {                
                 return true;
+            }
             else
+            {
                 return false;
+            }
         }
     }
     public int RedirectedStacks
@@ -824,6 +828,8 @@ public class PlayerController : MonoBehaviour
 
         //Remove buffs by 1
         RemoveOrReduceEffect(Effects.Buff.Galvanize, 1);
+
+        UiManager.Instance.ChangeStateOfGear(!IsRedirected);
     }
 
     /// <summary>

@@ -368,7 +368,7 @@ public class Enemy : MonoBehaviour
         RemoveEffect(Effects.Buff.Galvanize, 1);        
 
         //Look at Player
-        this.gameObject.transform.LookAt(EnemyTarget.transform);
+        //this.gameObject.transform.LookAt(EnemyTarget.transform);
 
         //Check if Player is in range
         //if (DistanceToPlayer <= AttackRange)

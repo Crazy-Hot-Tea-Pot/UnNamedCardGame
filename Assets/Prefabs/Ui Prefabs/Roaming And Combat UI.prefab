@@ -2285,8 +2285,11 @@ MonoBehaviour:
   ShieldText: {fileID: 8954017566873788731}
   EnergyBar: {fileID: 7976547679242296400}
   Armor: {fileID: 1084128524604350554}
+  ArmorButton: {fileID: 7523677419223079318}
   Weapon: {fileID: 1406315687058442173}
+  WeaponButton: {fileID: 9034493987424856480}
   Equipment: {fileID: 8636655624653224500}
+  EquipmentButton: {fileID: 3884076584343668014}
   PlayerHandContainer: {fileID: 3169442531875478621}
   EnergyAndGearContainer: {fileID: 7010202363461775263}
   EndTurn: {fileID: 6075050591831614587}
