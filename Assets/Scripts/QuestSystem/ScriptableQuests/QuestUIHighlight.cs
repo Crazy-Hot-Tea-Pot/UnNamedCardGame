@@ -8,20 +8,34 @@ public class QuestUIHighlight : Quest
 {
     public Material mat;
     [Header("This will find and utalize a button")]
-    public GameObject UIElement;
+    public string UIElementPath;
+    private GameObject UIElement = null;
 
     public override void RunQuest()
     {
-        //If we have a button to change
-        if (UIElement.GetComponent<Button>() == true)
+        try
         {
-            //Get the image component and apply our material
-            UIElement.GetComponent<Image>().material = mat;
+            //Find the UIElementPath
+            UIElement = GameObject.Find(UIElementPath);
+            Debug.Log(UIElement);
 
-            //Add a button component
-            UIElement.GetComponent<Button>().onClick.RemoveListener(ButtonCheck);
-            UIElement.GetComponent<Button>().onClick.AddListener(ButtonCheck);
+            //If we have a button to change
+            if (UIElement.GetComponent<Button>() == true)
+            {
+                //Get the image component and apply our material
+                UIElement.GetComponent<Image>().material = mat;
+
+                //Add a button component
+                UIElement.GetComponent<Button>().onClick.RemoveListener(ButtonCheck);
+                UIElement.GetComponent<Button>().onClick.AddListener(ButtonCheck);
+            }
+
         }
+        catch
+        {
+
+        }
+
     }
 
     public void ButtonCheck()
