@@ -214,6 +214,7 @@ public class ChipManager : MonoBehaviour
     }
     private void StartCombat()
     {
+        UsedChips.Clear();
         ShufflePlayerDeck();
     }
     private void ShufflePlayerDeck()
@@ -250,9 +251,19 @@ public class ChipManager : MonoBehaviour
     }
     private void SceneChange(Levels newLevel)
     {
+
         switch (newLevel)
         {
+            case Levels.Title:
+                PlayerHand.Clear();
+                PlayerDeck.Clear();
+                UsedChips.Clear();
+
+                break;
             case Levels.Tutorial:
+            case Levels.Level2:
+            case Levels.Level3:
+            case Levels.Level4:
                 ShufflePlayerDeck();
                 break;
         }

@@ -99,6 +99,7 @@ public class CombatController : MonoBehaviour
     private int currentTargetIndex = -1;
     private int roundCounter = 0;
     private GameObject CombatZone;
+    [SerializeField]
     private GameObject combatArea;
 
     void OnEnable()
@@ -122,7 +123,7 @@ public class CombatController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        CombatArea = this.transform.Find("Area").gameObject;
+
     }
     /// <summary>
     /// Starts combat by initializing combatants and setting up the turn order.
