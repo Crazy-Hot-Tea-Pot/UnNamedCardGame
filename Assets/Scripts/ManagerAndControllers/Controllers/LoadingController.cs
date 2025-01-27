@@ -22,6 +22,8 @@ public class LoadingController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //SoundManager.StartBackgroundSound(BgSound.MainMenuAmbient);
+
         targetScene = GameManager.Instance.TargetScene.ToString();
 
         StartCoroutine(LoadSceneAsync(targetScene));

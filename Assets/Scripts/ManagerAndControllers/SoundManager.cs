@@ -3,26 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public static class SoundManager
-{
-
-    /// <summary>
-    /// Adjusts the master volume for the background music.
-    /// Call this method after changing sound settings to update volume.
-    /// not needed anymore since added subscriber to settings.
-    /// </summary>
-    //public static void MasterVolumeChanged()
-    //{
-    //    try
-    //    {
-    //        // Find the GameObject named "BgSound" and set its volume based on the settings
-    //        GameObject.Find("BgSound").GetComponent<AudioSource>().volume = SettingsManager.Instance.SoundSettings.GetBGSoundForComponent();
-    //    }
-    //    catch
-    //    {
-    //        // Display error if the background sound GameObject doesn't exist
-    //        Debug.LogError("BG doesn't Exist.");
-    //    }
-    //}
+{    
 
     /// <summary>
     /// Change background sound.
@@ -48,6 +29,40 @@ public static class SoundManager
     {
         GameObject.Find("BgSound").GetComponent<AudioSource>().pitch = Pitch;
     }
+
+    public static void StartPersistentBackgroundSound(BgSound bgSound)
+    {
+        // Check if a persistent background sound GameObject already exists
+        GameObject existingBGSound = GameObject.Find("BgSound");
+        if (existingBGSound != null)
+        {
+            // Change the clip if a different background sound is requested
+            AudioSource existingAudioSource = existingBGSound.GetComponent<AudioSource>();
+            if (existingAudioSource.clip != GetBGAudio(bgSound))
+            {
+                existingAudioSource.clip = GetBGAudio(bgSound);
+                existingAudioSource.Play();
+            }
+            return;
+        }
+
+        // Create a new GameObject for the persistent background music
+        GameObject persistentBGSound = new GameObject("BgSound");
+
+        // Add an AudioSource component to play the audio
+        AudioSource audioSource = persistentBGSound.AddComponent<AudioSource>();
+        audioSource.clip = GetBGAudio(bgSound);
+        audioSource.loop = true;
+        audioSource.volume = SettingsManager.Instance.SoundSettings.GetBGSoundForComponent();
+        audioSource.Play();
+
+        // Prevent this GameObject from being destroyed on scene load
+        Object.DontDestroyOnLoad(persistentBGSound);
+
+        // Add the SoundBGVolume component for volume control if needed
+        persistentBGSound.AddComponent<SoundBGVolume>();
+    }
+
     /// <summary>
     /// Starts playing background music on a loop.
     /// Volume can be adjusted using the SoundBGVolume component.

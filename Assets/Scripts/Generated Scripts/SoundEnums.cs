@@ -1,6 +1,7 @@
 public enum BgSound
 {
     Background,
+    MainMenuAmbient,
 }
 
 public enum SoundFX
@@ -17,6 +18,7 @@ public enum SoundFX
     Click_Move2,
     DamageTaken,
     Debuff,
+    DEFECTION_Glitch,
     DisassembleMaintenanceBot,
     DrawingOutTheDeck,
     EnemyDefeated,

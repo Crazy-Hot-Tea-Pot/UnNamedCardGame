@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static GameData;
 
 
 public class GameManager : MonoBehaviour
@@ -109,12 +108,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
         Initialize();
-
-        // soundtest
-       //SoundManager.StartBackgroundSound(BgSound.Background);
-
     }
     void Initialize()
     {
@@ -193,6 +187,7 @@ public class GameManager : MonoBehaviour
     /// <param name="mode"></param>
     private void OnSceneLoaded(Scene scene,LoadSceneMode mode)
     {
+        Debug.Log($"Scene loaded: {scene.name}");
         // Update the CurrentLevel based on the loaded level
         if (System.Enum.TryParse(scene.name, out Levels loadedScene))
         {
@@ -218,7 +213,7 @@ public class GameManager : MonoBehaviour
                     break;
                 default:
                     CurrentGameMode = GameMode.Roaming;
-                    SoundManager.StartBackgroundSound(BgSound.Background);
+                    //SoundManager.StartBackgroundSound(BgSound.Background);
                     break;
             }
             

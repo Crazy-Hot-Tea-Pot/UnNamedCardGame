@@ -5,17 +5,88 @@ using System.IO;
 [CustomEditor(typeof(SoundAsset))]
 public class SoundAssetEditor : Editor
 {
+    private int selectedBGIndex = 0;
+    private int selectedFXIndex = 0;
+    private static AudioSource previewAudioSource;
 
     void OnEnable()
     {
         // Automatically regenerate enums
         SoundEnumGenerator.GenerateEnums(); 
 
-        SoundAsset soundAsset = (SoundAsset)target;        
+        SoundAsset soundAsset = (SoundAsset)target;
 
         //Automatically Populate
-        PopulateSoundArrays(soundAsset);
+        //PopulateSoundArrays(soundAsset);
+
+        // Create an AudioSource for previewing sounds if it doesn't exist
+        if (previewAudioSource == null)
+        {
+            GameObject previewObject = new GameObject("AudioPreviewer");
+            previewObject.hideFlags = HideFlags.HideAndDontSave; // Ensure it's hidden and persistent
+            previewAudioSource = previewObject.AddComponent<AudioSource>();
+        }
     }
+
+    public override void OnInspectorGUI()
+    {
+        base.OnInspectorGUI();
+
+        SoundAsset soundAsset = (SoundAsset)target;
+
+        // Background Sound Preview
+        EditorGUILayout.LabelField("Background Sounds", EditorStyles.boldLabel);
+        if (soundAsset.soundBGArray != null && soundAsset.soundBGArray.Length > 0)
+        {
+            string[] bgNames = System.Array.ConvertAll(soundAsset.soundBGArray, s => s.bgSound.ToString());
+            selectedBGIndex = EditorGUILayout.Popup("Select BG Sound", selectedBGIndex, bgNames);
+
+            if (GUILayout.Button("Play Selected BG Sound"))
+            {
+                PlaySound(soundAsset.soundBGArray[selectedBGIndex].audioClip);
+            }
+        }
+        else
+        {
+            EditorGUILayout.HelpBox("No Background Sounds Available", MessageType.Warning);
+        }
+
+        // Sound FX Preview
+        EditorGUILayout.LabelField("Sound FX", EditorStyles.boldLabel);
+        if (soundAsset.soundFXClipArray != null && soundAsset.soundFXClipArray.Length > 0)
+        {
+            string[] fxNames = System.Array.ConvertAll(soundAsset.soundFXClipArray, s => s.soundFX.ToString());
+            selectedFXIndex = EditorGUILayout.Popup("Select FX Sound", selectedFXIndex, fxNames);
+
+            if (GUILayout.Button("Play Selected FX Sound"))
+            {
+                PlaySound(soundAsset.soundFXClipArray[selectedFXIndex].audioClip);
+            }
+        }
+        else
+        {
+            EditorGUILayout.HelpBox("No Sound FX Available", MessageType.Warning);
+        }
+
+        // Manual Update Button
+        if (GUILayout.Button("Manually Update Sound Assets"))
+        {
+            PopulateSoundArrays(soundAsset);
+        }
+    }
+
+    private void PlaySound(AudioClip clip)
+    {
+        if (previewAudioSource != null && clip != null)
+        {
+            previewAudioSource.clip = clip;
+            previewAudioSource.Play();
+        }
+        else
+        {
+            Debug.LogWarning("No audio source available for preview or audio clip is null.");
+        }
+    }    
 
     /// <summary>
     /// Gets sounds from resource folders and generates a script with enums.
@@ -68,4 +139,6 @@ public class SoundAssetEditor : Editor
         EditorUtility.SetDirty(soundAsset);
         Debug.Log("Sound arrays populated successfully.");
     }
+
+
 }
