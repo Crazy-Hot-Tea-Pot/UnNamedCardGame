@@ -161,6 +161,7 @@ public class PlayerController : MonoBehaviour
     // Max time interval for double-click detection
     public float doubleClickTime = 0.3f; 
     private float lastClickTime;
+    public SoundFX SoundWhenPlayerClicks;
 
 
     [Header("Status Effects")]
@@ -769,7 +770,7 @@ public class PlayerController : MonoBehaviour
         {
             agent.speed = walkSpeed;
             tempIndicator = RipplePrefab;
-        }
+        }        
 
         // Create ripple effect at the click point
         GameObject ClickIndicator = Instantiate(tempIndicator, clickPoint, Quaternion.identity);
