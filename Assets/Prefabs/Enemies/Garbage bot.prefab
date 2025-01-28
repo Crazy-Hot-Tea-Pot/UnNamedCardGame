@@ -295,7 +295,9 @@ MonoBehaviour:
   TargetIcon: {fileID: 1794017152557271501}
   playerCamera: {fileID: 0}
   enemyName: 
+  enemyDifficulty: 2
   maxHP: 120
+  listOfActiveEffects: []
   damageTextPrefab: {fileID: 8797586467627540377, guid: adf7e13694cdcc04ab4b930ff94a86cb, type: 3}
   DroppedChips: []
   DroppedItems: []

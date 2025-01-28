@@ -4,5 +4,5 @@
 public class EnemySpawn
 {
     public GameObject enemyPrefab;
-    public int count;
+    public string enemyName;
 }

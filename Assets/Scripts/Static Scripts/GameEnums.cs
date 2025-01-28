@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-public static class GameEnums
+﻿public static class GameEnums
 {
     public enum StoryPathType
     {

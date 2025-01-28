@@ -23,6 +23,9 @@ public class EnemyEditor : Editor
             enemy.SetEnemyName(newName);
         }
 
+        // Add Difficulty Dropdown
+        enemy.Difficulty = (Enemy.EnemyDifficulty)EditorGUILayout.EnumPopup("Difficulty", enemy.Difficulty);
+
         enemy.maxHP = EditorGUILayout.IntField("Max HP", enemy.maxHP);
         EditorGUILayout.LabelField("Current HP Amount", enemy.CurrentHP.ToString());
         // Health Bar
