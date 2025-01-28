@@ -80,7 +80,7 @@ public class QuestManager : MonoBehaviour
     }
 
     /// <summary>
-
+    ///Retrieve quest information
     /// </summary>
     /// <param name="index"></param>
     /// <param name="quest"></param>
@@ -162,4 +162,71 @@ public class QuestManager : MonoBehaviour
             }
         }
     }
+
+    #region Jayce Requested Features
+    /// <summary>
+    /// If the quest state is false that means it is not a completed quest
+    /// </summary>
+    /// <param name="questName"></param>
+    /// <returns></returns>
+    public bool CheckQuestState(Quest QuestToCheck)
+    {
+        string questName = QuestToCheck.questName;
+        bool questState = false;
+        foreach(Quest quest in completeList)
+        {
+            if(quest.questName == questName)
+            {
+                questState = true;
+               
+            }
+            else
+            {
+                questState = false;
+            }
+        }
+
+        return questState;
+    }
+
+    /// <summary>
+    /// Trigger quest events
+    /// </summary>
+    /// <param name="quest"></param>
+    /// <param name="eventName"></param>
+    public void TriggerQuestEvent(Quest quest, string eventName)
+    {
+        if(eventName == "Complete" || eventName == "complete")
+        {
+            quest.CompleteQuest();
+        }
+    }
+
+    /// <summary>
+    /// Returns all quests
+    /// </summary>
+    /// <returns></returns>
+    public List<Quest> GetAllQuests()
+    {
+        List<Quest> tempList;
+        tempList = questList;
+        foreach(Quest quest in completeList)
+        {
+            tempList.Add(quest);
+        }
+        return tempList;
+    }
+
+    /// <summary>
+    /// Return all active quests but exclude quests that are complete or not yet active
+    /// </summary>
+    /// <returns></returns>
+    public List<Quest> GetActiveQuests()
+    {
+        List<Quest> tempList;
+        tempList = questList;
+        return tempList;
+    }
+
+    #endregion
 }
