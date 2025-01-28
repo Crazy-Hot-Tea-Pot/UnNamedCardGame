@@ -1,5 +1,4 @@
 ﻿using System;
-using UnityEngine;
 
 /// <summary>
 /// Just made this to keep track of Buffs and Debuffs in the game.

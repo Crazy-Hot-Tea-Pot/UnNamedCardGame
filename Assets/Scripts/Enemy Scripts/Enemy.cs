@@ -25,6 +25,13 @@ public class Intent
 }
 public class Enemy : MonoBehaviour
 {   
+    public enum EnemyDifficulty
+    {
+        Easy,
+        Medium,
+        Hard,
+        Boss
+    }
 
     public GameObject enemyTarget;
     /// <summary>
@@ -106,6 +113,23 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    [SerializeField]
+    private EnemyDifficulty enemyDifficulty;
+
+    /// <summary>
+    /// This Enemies Difficulty
+    /// </summary>
+    public EnemyDifficulty Difficulty
+    {
+        get
+        {
+            return enemyDifficulty;
+        }
+        set
+        {
+            enemyDifficulty = value;
+        }
+    }
     /// <summary>
     /// Max Hp of Enemy
     /// </summary>

@@ -40,7 +40,7 @@ public class GameData
     public string SaveName;
     //time of save
     public DateTime TimeStamp;
-    //Level the Player is on
+    //Levels the Player is on
     public Levels Level;
     //Player HealthBar
     public int Health;
