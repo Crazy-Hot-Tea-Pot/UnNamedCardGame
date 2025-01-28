@@ -21,11 +21,13 @@ public class QuestManager : MonoBehaviour
     private static QuestManager instance;
 
     [Tooltip("A list of all quests availiable in order")]
-    public List<Quest> questList;
+    public List<Quest> futureQuestList;
     public List<Quest> completeList;
 
     private TMP_Text textSpeaker;
     private TMP_Text textPlayer;
+
+    public Quest CurrentQuest;
 
     //Validates Quest Complete
     public string nameTemp;
@@ -45,36 +47,44 @@ public class QuestManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //Load all the quest scriptables
+        //Load all the quest scriptables and clone them
         PopulateQuestSciptables();
-        //We don't want to effect the originals so we are instantly copying the quest into its self so it's a list of copiess
-        for (int i = 0; i < questList.Count; i++)
-        {
 
-            //Clone the value
-            Quest Temp = questList[i];
-            questList[i] = Instantiate(Temp);
-        }
+        //Set Current Active Quest
+        CurrentQuest = futureQuestList[0];
+        futureQuestList.RemoveAt(0);
     }
 
     // Update is called once per frame
     void Update()
     {
         //This line tells the manager to stop if we run out of quests
-        if(questList.Count != 0)
+        if(CurrentQuest != null)
         {
             //If the current quest is complete
-            if (questList[0].complete == true)
+            if (CurrentQuest.complete == true)
             {
                 //Add to the complete list
-                completeList.Add(questList[0]);
-                //Remove the quest from the list
-                questList.RemoveAt(0);
+                completeList.Add(CurrentQuest);
+                
+                //Change the current quest if it's not null
+                if(futureQuestList.Count != 0)
+                {
+                    //Make the next quest current quest
+                    CurrentQuest = futureQuestList[0];
+                    futureQuestList.RemoveAt(0);
+                }
+                //If the quest is null
+                else
+                {
+                    //Empty current quest
+                    CurrentQuest = null;
+                }
             }
             //If the quest is not complete then all the quests action
-            else if (questList[0].complete == false)
+            else if (CurrentQuest.complete == false)
             {
-                questList[0].speaking(textSpeaker, textPlayer);
+                CurrentQuest.speaking(textSpeaker, textPlayer);
             }
         }
     }
@@ -90,8 +100,18 @@ public class QuestManager : MonoBehaviour
         //For some reason not having two try catches just will return null even with a != null check 
         try
         {
-            quest.text = questList[index].questName;
-            description.text = questList[index].questDesc;
+            //If we need the current quest
+            if (index == -1)
+            {
+                quest.text = CurrentQuest.questName;
+                description.text = CurrentQuest.questDesc;
+            }
+            //Otherwise
+            else
+            {
+                quest.text = futureQuestList[index].questName;
+                description.text = futureQuestList[index].questDesc;
+            }
         }
         catch
         {
@@ -125,7 +145,7 @@ public class QuestManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Retrieve the name and description of a quest based on a given index
+    /// Retrieve the name and description of a quest based on a given index. Use -1 for current quest
     /// </summary>
     /// <param name="index"></param>
     /// <param name="quest"></param>
@@ -133,7 +153,16 @@ public class QuestManager : MonoBehaviour
     {
         try
         {
-            quest.text = questList[index].questName;
+            //If we need the current quest
+            if(index == -1)
+            {
+                quest.text = CurrentQuest.questName;
+            }
+            //Otherwise
+            else
+            {
+                quest.text = futureQuestList[index].questName;
+            }
         }
         catch
         {
@@ -163,7 +192,7 @@ public class QuestManager : MonoBehaviour
         }
     }
 
-    #region Jayce Requested Features
+    #region Quest Information
     /// <summary>
     /// If the quest state is false that means it is not a completed quest
     /// </summary>
@@ -208,8 +237,12 @@ public class QuestManager : MonoBehaviour
     /// <returns></returns>
     public List<Quest> GetAllQuests()
     {
-        List<Quest> tempList;
-        tempList = questList;
+        List<Quest> tempList = null;
+        tempList.Add(CurrentQuest);
+        foreach (Quest quest in futureQuestList)
+        {
+            tempList.Add(quest);
+        }
         foreach(Quest quest in completeList)
         {
             tempList.Add(quest);
@@ -217,14 +250,20 @@ public class QuestManager : MonoBehaviour
         return tempList;
     }
 
+    //Returns the current quest
+    public Quest GetCurrentQuest()
+    {
+        return CurrentQuest;
+    }
+
     /// <summary>
-    /// Return all active quests but exclude quests that are complete or not yet active
+    /// Return all future quests but exclude quests that are complete or not yet active
     /// </summary>
     /// <returns></returns>
-    public List<Quest> GetActiveQuests()
+    public List<Quest> GetFutureQuests()
     {
         List<Quest> tempList;
-        tempList = questList;
+        tempList = futureQuestList;
         return tempList;
     }
 
@@ -234,7 +273,16 @@ public class QuestManager : MonoBehaviour
     public void PopulateQuestSciptables()
     {
         //Load all quests in the quest folder
-        questList = new List<Quest>(Resources.LoadAll<Quest>("Scriptables/Quest"));
+        futureQuestList = new List<Quest>(Resources.LoadAll<Quest>("Scriptables/Quest"));
+
+        //We don't want to effect the originals so we are instantly copying the quest into its self so it's a list of copiess
+        for (int i = 0; i < futureQuestList.Count; i++)
+        {
+
+            //Clone the value
+            Quest Temp = futureQuestList[i];
+            futureQuestList[i] = Instantiate(Temp);
+        }
     }
 
 

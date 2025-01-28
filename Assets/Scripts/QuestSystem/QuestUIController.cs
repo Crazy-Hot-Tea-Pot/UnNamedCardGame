@@ -182,6 +182,11 @@ public class QuestUIController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Meaninful for animation
+    /// </summary>
+    /// <param name="time"></param>
+    /// <returns></returns>
     public IEnumerator WaitForMinilogContainerDIsable(float time)
     {
         yield return new WaitForSeconds(time);
@@ -198,11 +203,11 @@ public class QuestUIController : MonoBehaviour
             QuestManager.Instance.nameTemp = " ";
             //Add a container for quest one
             Quest1 = logContainer.transform.Find("Quest1").GetComponent<TMP_Text>();
-            QuestManager.Instance.RetrieveQuestInfo(0, Quest1);
+            QuestManager.Instance.RetrieveQuestInfo(-1, Quest1);
 
             //Add a container for quest two
             Quest2 = logContainer.transform.Find("Quest2").GetComponent<TMP_Text>();
-            QuestManager.Instance.RetrieveQuestInfo(1, Quest2);
+            QuestManager.Instance.RetrieveQuestInfo(0, Quest2);
         }
         else if (logContainer == FullLogContainer)
         {
@@ -211,22 +216,22 @@ public class QuestUIController : MonoBehaviour
             //Add a container for quest one
             Quest1 = logContainer.transform.Find("Quest1").GetComponent<TMP_Text>();
             Quest1Desc = logContainer.transform.Find("Quest1LongDescription").GetComponent<TMP_Text>();
-            QuestManager.Instance.RetrieveQuestInfo(0, Quest1,Quest1Desc);
+            QuestManager.Instance.RetrieveQuestInfo(-1, Quest1,Quest1Desc);
 
             //Add a container for quest two
             Quest2 = logContainer.transform.Find("Quest2").GetComponent<TMP_Text>();
             Quest2Desc = logContainer.transform.Find("Quest2LongDescription").GetComponent<TMP_Text>();
-            QuestManager.Instance.RetrieveQuestInfo(1, Quest2, Quest2Desc);
+            QuestManager.Instance.RetrieveQuestInfo(0, Quest2, Quest2Desc);
 
             //Add a container for quest three
             Quest3 = logContainer.transform.Find("Quest3").GetComponent<TMP_Text>();
             Quest3Desc = logContainer.transform.Find("Quest3LongDescription").GetComponent<TMP_Text>();
-            QuestManager.Instance.RetrieveQuestInfo(3, Quest3, Quest3Desc);
+            QuestManager.Instance.RetrieveQuestInfo(1, Quest3, Quest3Desc);
 
             //Add a container for quest four
             Quest4 = logContainer.transform.Find("Quest4").GetComponent<TMP_Text>();
             Quest4Desc = logContainer.transform.Find("Quest4LongDesciption").GetComponent<TMP_Text>();
-            QuestManager.Instance.RetrieveQuestInfo(4, Quest4, Quest4Desc);
+            QuestManager.Instance.RetrieveQuestInfo(3, Quest4, Quest4Desc);
         }
     }
 }

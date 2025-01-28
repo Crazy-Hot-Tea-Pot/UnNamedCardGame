@@ -20,7 +20,7 @@ public class QuestCollision : MonoBehaviour
     {
         if(other.transform.tag == "Player")
         {
-            QuestManager.Instance.questList[0].TouchPassThrough();
+            QuestManager.Instance.CurrentQuest.TouchPassThrough();
             Destroy(this.gameObject);
         }
     }
