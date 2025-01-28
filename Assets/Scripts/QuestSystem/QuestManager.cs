@@ -45,8 +45,8 @@ public class QuestManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //Load all quests in the quest folder
-        questList = new List<Quest>(Resources.LoadAll<Quest>("Scriptables/Quest"));
+        //Load all the quest scriptables
+        PopulateQuestSciptables();
         //We don't want to effect the originals so we are instantly copying the quest into its self so it's a list of copiess
         for (int i = 0; i < questList.Count; i++)
         {
@@ -227,6 +227,17 @@ public class QuestManager : MonoBehaviour
         tempList = questList;
         return tempList;
     }
+
+    /// <summary>
+    /// Populates the quest scriptables
+    /// </summary>
+    public void PopulateQuestSciptables()
+    {
+        //Load all quests in the quest folder
+        questList = new List<Quest>(Resources.LoadAll<Quest>("Scriptables/Quest"));
+    }
+
+
 
     #endregion
 }
