@@ -41,6 +41,7 @@ public class StoryDesignTool : EditorWindow
         EditorGUILayout.Space();
         GUILayout.Label("Levels", EditorStyles.boldLabel);
 
+
         scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Height(200));
         try
         {
@@ -51,7 +52,7 @@ public class StoryDesignTool : EditorWindow
                 {
                     GUILayout.Label($"Level {i + 1}", EditorStyles.boldLabel);
 
-                    levels[i].levelID = (Levels)EditorGUILayout.EnumPopup("Level ID:", levels[i].levelID);
+                    levels[i].LevelName = (Levels)EditorGUILayout.EnumPopup("Level Name:", levels[i].LevelName);
                     levels[i].terminalSpawnChance = EditorGUILayout.IntSlider("Terminal Spawn Chance by %", levels[i].terminalSpawnChance, 0, 100);
 
                     GUILayout.Label("Enemy Spawns", EditorStyles.boldLabel);
@@ -88,19 +89,19 @@ public class StoryDesignTool : EditorWindow
                     if (pathType != StoryPathType.Linear)
                     {
                         GUILayout.Label("Next Levels", EditorStyles.boldLabel);
-                        for (int k = 0; k < levels[i].nextLevels.Count; k++)
+                        for (int k = 0; k < levels[i].nextLevelInBranch.Count; k++)
                         {
                             GUILayout.BeginHorizontal();
                             try
                             {
-                                levels[i].nextLevels[k].levelID = (Levels)EditorGUILayout.EnumPopup($"Next Level {k + 1}:", levels[i].nextLevels[k].levelID);
+                                levels[i].nextLevelInBranch[k].levelName = (Levels)EditorGUILayout.EnumPopup($"Next Level {k + 1}:", levels[i].nextLevelInBranch[k].levelName);
                                 if (pathType == StoryPathType.Conditional)
                                 {
-                                    levels[i].nextLevels[k].questCondition = EditorGUILayout.TextField("Quest Condition:", levels[i].nextLevels[k].questCondition);
+                                    //levels[i].nextLevelInBranch[k].questCondition = (Quest)EditorGUILayout.("Quest Condition:", levels[i].nextLevelInBranch[k].questCondition);
                                 }
                                 if (GUILayout.Button("Remove", GUILayout.Width(70)))
                                 {
-                                    levels[i].nextLevels.RemoveAt(k);
+                                    levels[i].nextLevelInBranch.RemoveAt(k);
                                     break;
                                 }
                             }
@@ -111,7 +112,7 @@ public class StoryDesignTool : EditorWindow
                         }
                         if (GUILayout.Button("Add Next Level"))
                         {
-                            levels[i].nextLevels.Add(new NextLevel());
+                            levels[i].nextLevelInBranch.Add(CreateInstance<Level>());
                         }
                     }
 
@@ -193,11 +194,12 @@ public class StoryDesignTool : EditorWindow
         foreach (var levelDefinition in levels)
         {
             Level level = CreateInstance<Level>();
-            level.levelID = levelDefinition.levelID;
+            level.levelName = levelDefinition.LevelName;
             level.terminalSpawnChance = levelDefinition.terminalSpawnChance;
 
             // Save enemy spawns with names
             level.enemySpawns = new List<EnemySpawn>();
+
             foreach (var spawn in levelDefinition.enemySpawns)
             {
                 level.enemySpawns.Add(new EnemySpawn
@@ -207,9 +209,9 @@ public class StoryDesignTool : EditorWindow
                 });
             }
 
-            level.nextLevels = new List<NextLevel>(levelDefinition.nextLevels);
+            level.nextLevelInBranch = new List<Level>(levelDefinition.nextLevelInBranch);
 
-            string levelPath = $"{levelFolderPath}/{storyName}_Level_{level.levelID}.asset";
+            string levelPath = $"{levelFolderPath}/{storyName}_Level_{level.levelName}.asset";
             AssetDatabase.CreateAsset(level, levelPath);
             newStory.levels.Add(level);
         }

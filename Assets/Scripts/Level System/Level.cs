@@ -4,7 +4,8 @@ using UnityEngine;
 public class Level : ScriptableObject
 {
     [Header("Level Details")]
-    public Levels levelID; // Enum from Levels.cs
+    // Enum from Levels.cs
+    public Levels levelName;
 
     [Header("Enemy Spawns")]
     public List<EnemySpawn> enemySpawns = new();
@@ -14,14 +15,9 @@ public class Level : ScriptableObject
     // 100 means guaranteed activation
     public int terminalSpawnChance;
 
-    public List<NextLevel> nextLevels = new();
-}
+    //TODO limit this to max 2 levels
+    public List<Level> nextLevelInBranch = new();
 
-[System.Serializable]
-public class NextLevel
-{
-    // The next level to go to
-    public Levels levelID;
-    // Optional: Quest required to unlock
-    public string questCondition;
+    //Optional: Quest required to unlock
+    public Quest questCondition;
 }

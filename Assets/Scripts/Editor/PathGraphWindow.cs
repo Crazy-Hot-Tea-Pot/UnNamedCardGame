@@ -43,7 +43,7 @@ public class PathGraphWindow : EditorWindow
         {
             Vector2 position = new Vector2(i * horizontalSpacing, i * verticalSpacing);
             DrawNode(levels[i], position);
-            nodePositions[levels[i].levelID] = position;
+            nodePositions[levels[i].LevelName] = position;
         }
 
         GUILayout.EndArea();
@@ -56,10 +56,10 @@ public class PathGraphWindow : EditorWindow
     private void DrawNode(LevelDefinition level, Vector2 position)
     {
         Rect nodeRect = new Rect(position.x, position.y, nodeWidth, nodeHeight);
-        GUI.Box(nodeRect, level.levelID.ToString());
+        GUI.Box(nodeRect, level.LevelName.ToString());
 
         GUILayout.BeginArea(nodeRect);
-        GUILayout.Label($"Level ID: {level.levelID}");
+        GUILayout.Label($"Level ID: {level.LevelName}");
         GUILayout.Label($"Terminal %: {level.terminalSpawnChance}");
         GUILayout.EndArea();
     }
@@ -70,11 +70,11 @@ public class PathGraphWindow : EditorWindow
 
         foreach (var level in levels)
         {
-            Vector2 fromPosition = nodePositions[level.levelID] + new Vector2(nodeWidth / 2, nodeHeight);
+            Vector2 fromPosition = nodePositions[level.LevelName] + new Vector2(nodeWidth / 2, nodeHeight);
 
             foreach (var next in level.nextLevels)
             {
-                if (nodePositions.TryGetValue(next.levelID, out Vector2 toPosition))
+                if (nodePositions.TryGetValue(next.levelName, out Vector2 toPosition))
                 {
                     toPosition += new Vector2(nodeWidth / 2, 0); // Adjust for center alignment
                     DrawConnectionLine(fromPosition, toPosition, next.questCondition);
