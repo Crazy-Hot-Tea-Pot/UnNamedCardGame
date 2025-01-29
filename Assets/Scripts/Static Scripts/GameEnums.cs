@@ -2,15 +2,16 @@
 {
     public enum StoryPathType
     {
+        // Simple sequence (Level 1 → Level 2)
         Linear,
+        // Max 2 next levels per level
         Branching,
-        Conditional
+        // Procedurally generated levels
+        Random
     }
 
     public enum Difficulty
     {
-        Easy,
-        Normal,
-        Hard
+        Easy, Normal, Hard
     }
 }

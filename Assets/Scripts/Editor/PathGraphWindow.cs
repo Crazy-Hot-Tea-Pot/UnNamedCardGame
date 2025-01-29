@@ -1,5 +1,5 @@
-﻿using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEditor;
 using System.Collections.Generic;
 using static GameEnums;
 
@@ -7,94 +7,124 @@ public class PathGraphWindow : EditorWindow
 {
     private List<LevelDefinition> levels;
     private StoryPathType pathType;
+    private Dictionary<LevelDefinition, Vector2> nodePositions = new Dictionary<LevelDefinition, Vector2>();
 
-    private Vector2 scrollPosition;
-    private const float nodeWidth = 150f;
-    private const float nodeHeight = 100f;
-    private const float horizontalSpacing = 250f;
-    private const float verticalSpacing = 150f;
-
-    public static void OpenWindow(List<LevelDefinition> levels, StoryPathType pathType)
+    public static void OpenWindow(List<LevelDefinition> storyLevels, StoryPathType type)
     {
-        PathGraphWindow window = GetWindow<PathGraphWindow>("Path Graph");
-        window.levels = levels;
-        window.pathType = pathType;
+        PathGraphWindow window = GetWindow<PathGraphWindow>("Story Graph");
+        window.levels = storyLevels;
+        window.pathType = type;
+        window.InitializeGraph();
+        window.Show();
     }
+
+    private void InitializeGraph()
+    {
+        nodePositions.Clear();
+        Vector2 startPos = new Vector2(300, 50);
+
+        if (pathType == StoryPathType.Linear)
+        {
+            ArrangeLinearPath(levels, startPos, 0);
+        }
+        else
+        {
+            ArrangeBranchingPath(levels[0], startPos, 0, 400); // Start at the center
+        }
+    }
+
+    private void ArrangeLinearPath(List<LevelDefinition> levels, Vector2 position, int depth)
+    {
+        if (levels == null) return;
+
+        for (int i = 0; i < levels.Count; i++)
+        {
+            LevelDefinition level = levels[i];
+
+            if (!nodePositions.ContainsKey(level))
+            {
+                nodePositions[level] = position;
+            }
+
+            // Move the next level straight down
+            if (level.nextLevels != null && level.nextLevels.Count > 0)
+            {
+                Vector2 nextPos = position + new Vector2(0, 150); // Space below for next level
+                ArrangeLinearPath(level.nextLevels, nextPos, depth + 1);
+            }
+
+            position += new Vector2(0, 150);
+        }
+    }
+
+
+    private void ArrangeBranchingPath(LevelDefinition level, Vector2 position, int depth, float horizontalSpacing)
+    {
+        if (level == null) return;
+
+        if (!nodePositions.ContainsKey(level))
+        {
+            nodePositions[level] = position;
+        }
+
+        // Ensure max 2 next levels in branching path
+        if (level.nextLevels.Count > 2)
+        {
+            level.nextLevels.RemoveRange(2, level.nextLevels.Count - 2);
+        }
+
+        if (level.nextLevels.Count > 0)
+        {
+            float childSpacing = horizontalSpacing / 2;
+            Vector2 leftPos = position + new Vector2(-childSpacing, 150); // Left Child
+            Vector2 rightPos = position + new Vector2(childSpacing, 150); // Right Child
+
+            if (level.nextLevels.Count > 0)
+                ArrangeBranchingPath(level.nextLevels[0], leftPos, depth + 1, childSpacing);
+
+            if (level.nextLevels.Count > 1)
+                ArrangeBranchingPath(level.nextLevels[1], rightPos, depth + 1, childSpacing);
+        }
+    }
+
 
     private void OnGUI()
     {
         if (levels == null || levels.Count == 0)
         {
-            EditorGUILayout.LabelField("No levels to display.");
+            EditorGUILayout.LabelField("No levels found. Create a story first!");
             return;
         }
 
-        scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
+        BeginWindows();
 
-        GUILayout.Label($"Path Graph - {pathType}", EditorStyles.boldLabel);
-
-        Rect canvasRect = new Rect(0, 0, levels.Count * horizontalSpacing, levels.Count * verticalSpacing);
-        GUILayout.BeginArea(canvasRect);
-
-        Dictionary<Levels, Vector2> nodePositions = new Dictionary<Levels, Vector2>();
-
-        // Draw nodes and store their positions
-        for (int i = 0; i < levels.Count; i++)
+        foreach (var level in nodePositions.Keys)
         {
-            Vector2 position = new Vector2(i * horizontalSpacing, i * verticalSpacing);
-            DrawNode(levels[i], position);
-            nodePositions[levels[i].LevelName] = position;
+            Rect rect = new Rect(nodePositions[level], new Vector2(150, 60));
+            GUI.Box(rect, level.levelID.ToString());
         }
 
-        GUILayout.EndArea();
-        EditorGUILayout.EndScrollView();
+        EndWindows();
 
-        // Draw connections between nodes
-        DrawConnections(nodePositions);
-    }
-
-    private void DrawNode(LevelDefinition level, Vector2 position)
-    {
-        Rect nodeRect = new Rect(position.x, position.y, nodeWidth, nodeHeight);
-        GUI.Box(nodeRect, level.LevelName.ToString());
-
-        GUILayout.BeginArea(nodeRect);
-        GUILayout.Label($"Level ID: {level.LevelName}");
-        GUILayout.Label($"Terminal %: {level.terminalSpawnChance}");
-        GUILayout.EndArea();
-    }
-
-    private void DrawConnections(Dictionary<Levels, Vector2> nodePositions)
-    {
         Handles.BeginGUI();
+        Handles.color = Color.white;
 
-        foreach (var level in levels)
+        foreach (var level in nodePositions.Keys)
         {
-            Vector2 fromPosition = nodePositions[level.LevelName] + new Vector2(nodeWidth / 2, nodeHeight);
+            if (level.nextLevels == null || level.nextLevels.Count == 0) continue;
 
-            foreach (var next in level.nextLevels)
+            foreach (var nextLevel in level.nextLevels)
             {
-                if (nodePositions.TryGetValue(next.levelName, out Vector2 toPosition))
+                if (nodePositions.ContainsKey(level) && nodePositions.ContainsKey(nextLevel))
                 {
-                    toPosition += new Vector2(nodeWidth / 2, 0); // Adjust for center alignment
-                    DrawConnectionLine(fromPosition, toPosition, next.questCondition);
+                    Vector2 start = nodePositions[level] + new Vector2(75, 60); // Bottom center
+                    Vector2 end = nodePositions[nextLevel] + new Vector2(75, 0); // Top center of next node
+
+                    Handles.DrawLine(start, end);
                 }
             }
         }
-
         Handles.EndGUI();
-    }
 
-    private void DrawConnectionLine(Vector2 from, Vector2 to, string questCondition)
-    {
-        // Draw connection line
-        Handles.DrawBezier(from, to, from + Vector2.down * 50, to + Vector2.up * 50, Color.white, null, 2f);
-
-        // Draw quest condition label (for conditional paths)
-        if (!string.IsNullOrEmpty(questCondition))
-        {
-            Vector2 midPoint = (from + to) / 2;
-            GUI.Label(new Rect(midPoint.x, midPoint.y, 100, 20), questCondition, EditorStyles.boldLabel);
-        }
     }
 }

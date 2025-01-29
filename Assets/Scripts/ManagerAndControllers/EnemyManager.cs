@@ -17,6 +17,21 @@ public class EnemyManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Have to manually Update this for now.
+    /// TODO add a generator that auto populates list of enemy types.
+    /// </summary>
+    public enum EnemyType
+    {
+        Looter,
+        SecurityDrone,
+        Maintenancebot,
+        TicketVendor,
+        Garbagebot,
+        GangLeader,
+        Inspector
+    }
+
     public List<GameObject> EnemiesInLevel;
 
     public List<GameObject> CombatEnemies
@@ -34,6 +49,9 @@ public class EnemyManager : MonoBehaviour
 
     private static EnemyManager instance;
     private List<GameObject> combatEnemies = new();
+    [SerializeField] 
+    private List<GameObject> enemyPrefabs;
+    private Dictionary<EnemyType, GameObject> enemyPrefabDict = new();
 
     void Awake()
     {
@@ -48,6 +66,8 @@ public class EnemyManager : MonoBehaviour
         {
             Destroy(gameObject);  // Destroy duplicates
         }
+
+        PopulateDictionary();
     }
 
     // Start is called before the first frame update
@@ -74,6 +94,16 @@ public class EnemyManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Get Enemy Object for Enemy Type
+    /// </summary>
+    /// <param name="type"></param>
+    /// <returns></returns>
+    public GameObject GetEnemyPrefab(EnemyType type)
+    {
+        return enemyPrefabDict.ContainsKey(type) ? enemyPrefabDict[type] : null;
+    }
+
+    /// <summary>
     /// Remove defeated enemy from game.
     /// </summary>
     /// <param name="enemy"></param>
@@ -83,6 +113,27 @@ public class EnemyManager : MonoBehaviour
         CombatEnemies.Remove(enemy);
         
         Destroy(enemy);
+    }
+
+    private void PopulateDictionary()
+    {
+        enemyPrefabDict.Clear();
+        foreach (var prefab in enemyPrefabs)
+        {
+            if (prefab != null)
+            {
+                string normalizedPrefabName = prefab.name.Replace(" ", "").ToLower();
+                foreach (EnemyType type in System.Enum.GetValues(typeof(EnemyType)))
+                {
+                    string normalizedEnumName = type.ToString().ToLower(); // Normalize enum name (lowercase)
+                    if (normalizedPrefabName == normalizedEnumName)
+                    {
+                        enemyPrefabDict[type] = prefab;
+                        break; // Stop looping once we find a match
+                    }
+                }
+            }
+        }
     }
 
     private void GetAllEnemiesInLevel()

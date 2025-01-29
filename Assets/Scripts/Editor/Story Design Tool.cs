@@ -2,6 +2,7 @@ using UnityEditor;
 using UnityEngine;
 using System.Collections.Generic;
 using static GameEnums;
+using static EnemyManager;
 
 public class StoryDesignTool : EditorWindow
 {
@@ -10,9 +11,9 @@ public class StoryDesignTool : EditorWindow
     private Difficulty difficulty = Difficulty.Normal;
     private List<LevelDefinition> levels = new List<LevelDefinition>();
     private Vector2 scrollPos;
+
     private List<GameObject> enemyPrefabs = new List<GameObject>();
     private string[] enemyNames;
-
 
     [MenuItem("Tools/Story Designer")]
     public static void OpenWindow()
@@ -20,11 +21,10 @@ public class StoryDesignTool : EditorWindow
         GetWindow<StoryDesignTool>("Story Design Tool");
     }
 
-    void OnEnable()
+    private void OnEnable()
     {
         LoadEnemyPrefabs();
     }
-
 
     private void OnGUI()
     {
@@ -41,8 +41,7 @@ public class StoryDesignTool : EditorWindow
         EditorGUILayout.Space();
         GUILayout.Label("Levels", EditorStyles.boldLabel);
 
-
-        scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Height(200));
+        scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Height(500));
         try
         {
             for (int i = 0; i < levels.Count; i++)
@@ -50,77 +49,7 @@ public class StoryDesignTool : EditorWindow
                 GUILayout.BeginVertical("box");
                 try
                 {
-                    GUILayout.Label($"Level {i + 1}", EditorStyles.boldLabel);
-
-                    levels[i].LevelName = (Levels)EditorGUILayout.EnumPopup("Level Name:", levels[i].LevelName);
-                    levels[i].terminalSpawnChance = EditorGUILayout.IntSlider("Terminal Spawn Chance by %", levels[i].terminalSpawnChance, 0, 100);
-
-                    GUILayout.Label("Enemy Spawns", EditorStyles.boldLabel);
-                    for (int j = 0; j < levels[i].enemySpawns.Count; j++)
-                    {
-                        GUILayout.BeginHorizontal();
-                        try
-                        {
-                            // Dropdown for selecting enemy prefab
-                            int selectedIndex = Mathf.Max(0, enemyPrefabs.IndexOf(levels[i].enemySpawns[j].enemyPrefab));
-                            selectedIndex = EditorGUILayout.Popup("Enemy Type:", selectedIndex, enemyNames, GUILayout.Width(200));
-                            levels[i].enemySpawns[j].enemyPrefab = enemyPrefabs[selectedIndex];
-
-                            // Enemy name
-                            levels[i].enemySpawns[j].enemyName = EditorGUILayout.TextField("Enemy Name:", levels[i].enemySpawns[j].enemyName);
-
-                            if (GUILayout.Button("Remove", GUILayout.Width(70)))
-                            {
-                                levels[i].enemySpawns.RemoveAt(j);
-                                break;
-                            }
-                        }
-                        finally
-                        {
-                            GUILayout.EndHorizontal();
-                        }
-                    }
-
-                    if (GUILayout.Button("Add Enemy Spawn"))
-                    {
-                        levels[i].enemySpawns.Add(new EnemySpawn());
-                    }
-
-                    if (pathType != StoryPathType.Linear)
-                    {
-                        GUILayout.Label("Next Levels", EditorStyles.boldLabel);
-                        for (int k = 0; k < levels[i].nextLevelInBranch.Count; k++)
-                        {
-                            GUILayout.BeginHorizontal();
-                            try
-                            {
-                                levels[i].nextLevelInBranch[k].levelName = (Levels)EditorGUILayout.EnumPopup($"Next Level {k + 1}:", levels[i].nextLevelInBranch[k].levelName);
-                                if (pathType == StoryPathType.Conditional)
-                                {
-                                    //levels[i].nextLevelInBranch[k].questCondition = (Quest)EditorGUILayout.("Quest Condition:", levels[i].nextLevelInBranch[k].questCondition);
-                                }
-                                if (GUILayout.Button("Remove", GUILayout.Width(70)))
-                                {
-                                    levels[i].nextLevelInBranch.RemoveAt(k);
-                                    break;
-                                }
-                            }
-                            finally
-                            {
-                                GUILayout.EndHorizontal();
-                            }
-                        }
-                        if (GUILayout.Button("Add Next Level"))
-                        {
-                            levels[i].nextLevelInBranch.Add(CreateInstance<Level>());
-                        }
-                    }
-
-                    if (GUILayout.Button("Remove Level"))
-                    {
-                        levels.RemoveAt(i);
-                        break;
-                    }
+                    DrawLevel(levels[i], i);
                 }
                 finally
                 {
@@ -133,9 +62,12 @@ public class StoryDesignTool : EditorWindow
             EditorGUILayout.EndScrollView();
         }
 
-        if (GUILayout.Button("Add Level"))
+        if (levels.Count == 0)
         {
-            levels.Add(new LevelDefinition());
+            if (GUILayout.Button("Add First Level"))
+            {
+                levels.Add(new LevelDefinition());
+            }
         }
 
         // Save Story Button
@@ -148,9 +80,78 @@ public class StoryDesignTool : EditorWindow
         // Graph Visualization Button
         if (GUILayout.Button("Visualize Path Graph"))
         {
-            PathGraphWindow.OpenWindow(levels, pathType);
+            ShowPathGraph();
         }
     }
+    private void DrawLevel(LevelDefinition level, int depth, string parentLabel = "First Level")
+    {
+        GUILayout.BeginVertical("box");
+
+        // Show clear parent-child connection
+        string levelLabel = depth == 0 ? $"{level.levelID}" : $"{parentLabel} > {level.levelID}";
+        GUILayout.Label(levelLabel, EditorStyles.boldLabel);
+
+        level.levelID = (Levels)EditorGUILayout.EnumPopup("Level ID:", level.levelID);
+        level.terminalSpawnChance = EditorGUILayout.IntSlider("Terminal Spawn Chance", level.terminalSpawnChance, 0, 100);
+
+        // Enemy Spawns
+        GUILayout.Label("Enemy Spawns", EditorStyles.boldLabel);
+        for (int j = 0; j < level.enemySpawns.Count; j++)
+        {
+            GUILayout.BeginHorizontal();
+            try
+            {
+                level.enemySpawns[j].enemyType = (EnemyType)EditorGUILayout.EnumPopup("Enemy Type:", level.enemySpawns[j].enemyType);
+                level.enemySpawns[j].enemyName = EditorGUILayout.TextField("Enemy Name:", level.enemySpawns[j].enemyName);
+
+                if (GUILayout.Button("Remove", GUILayout.Width(70)))
+                {
+                    level.enemySpawns.RemoveAt(j);
+                    break;
+                }
+            }
+            finally
+            {
+                GUILayout.EndHorizontal();
+            }
+        }
+
+        if (GUILayout.Button("Add Enemy"))
+        {
+            level.enemySpawns.Add(new EnemySpawn());
+        }
+
+        // Next Levels Section
+        GUILayout.Label("Next Levels", EditorStyles.boldLabel);
+
+        for (int i = 0; i < level.nextLevels.Count; i++)
+        {
+            GUILayout.BeginVertical("box");
+
+            GUILayout.Label($"Next Level {i + 1}: {level.nextLevels[i].levelID}", EditorStyles.boldLabel);
+
+            level.nextLevels[i].questCondition = (Quest)EditorGUILayout.ObjectField("Quest Condition (Optional):", level.nextLevels[i].questCondition, typeof(Quest), false);
+
+            // Draw the next level
+            DrawLevel(level.nextLevels[i], depth + 1, $"{level.levelID}");
+
+            GUILayout.EndVertical();
+        }
+
+
+        // Add Next Level Button (Respecting Path Rules)
+        if ((pathType == StoryPathType.Linear && level.nextLevels.Count < 1) ||
+            (pathType == StoryPathType.Branching && level.nextLevels.Count < 2))
+        {
+            if (GUILayout.Button("+ Add Next Level", GUILayout.Width(200)))
+            {
+                level.nextLevels.Add(new LevelDefinition());
+            }
+        }
+
+        GUILayout.EndVertical();
+    }
+
 
 
     private void SaveStory()
@@ -167,17 +168,11 @@ public class StoryDesignTool : EditorWindow
             return;
         }
 
-        // Validate enemy names
-        if (!ValidateEnemyNames())
-        {
-            return;
-        }
-
         Story newStory = CreateInstance<Story>();
         newStory.storyName = storyName;
         newStory.pathType = pathType;
         newStory.difficulty = difficulty;
-        newStory.levels = new List<Level>();
+        newStory.levels = new List<LevelDefinition>(levels);
 
         string folderPath = "Assets/Resources/Scriptables/Stories";
         if (!AssetDatabase.IsValidFolder(folderPath))
@@ -185,43 +180,11 @@ public class StoryDesignTool : EditorWindow
             AssetDatabase.CreateFolder("Assets/Resources/Scriptables", "Stories");
         }
 
-        string levelFolderPath = "Assets/Resources/Scriptables/Levels";
-        if (!AssetDatabase.IsValidFolder(levelFolderPath))
-        {
-            AssetDatabase.CreateFolder("Assets/Resources/Scriptables", "Levels");
-        }
-
-        foreach (var levelDefinition in levels)
-        {
-            Level level = CreateInstance<Level>();
-            level.levelName = levelDefinition.LevelName;
-            level.terminalSpawnChance = levelDefinition.terminalSpawnChance;
-
-            // Save enemy spawns with names
-            level.enemySpawns = new List<EnemySpawn>();
-
-            foreach (var spawn in levelDefinition.enemySpawns)
-            {
-                level.enemySpawns.Add(new EnemySpawn
-                {
-                    enemyPrefab = spawn.enemyPrefab,
-                    enemyName = spawn.enemyName
-                });
-            }
-
-            level.nextLevelInBranch = new List<Level>(levelDefinition.nextLevelInBranch);
-
-            string levelPath = $"{levelFolderPath}/{storyName}_Level_{level.levelName}.asset";
-            AssetDatabase.CreateAsset(level, levelPath);
-            newStory.levels.Add(level);
-        }
-
-
         string assetPath = $"{folderPath}/{storyName}.asset";
         AssetDatabase.CreateAsset(newStory, assetPath);
         AssetDatabase.SaveAssets();
 
-        EditorUtility.DisplayDialog("Success", "Story and Levels saved successfully!", "OK");
+        EditorUtility.DisplayDialog("Success", "Story saved successfully!", "OK");
 
         ResetFields();
     }
@@ -233,21 +196,10 @@ public class StoryDesignTool : EditorWindow
         difficulty = Difficulty.Normal;
         levels.Clear();
     }
-    private bool ValidateEnemyNames()
+
+    private void ShowPathGraph()
     {
-        HashSet<string> names = new HashSet<string>();
-        foreach (var level in levels)
-        {
-            foreach (var enemy in level.enemySpawns)
-            {
-                if (!names.Add(enemy.enemyName))
-                {
-                    EditorUtility.DisplayDialog("Error", $"Duplicate enemy name detected: {enemy.enemyName}", "OK");
-                    return false;
-                }
-            }
-        }
-        return true;
+        PathGraphWindow.OpenWindow(levels, pathType);
     }
 
     private void LoadEnemyPrefabs()
@@ -257,14 +209,9 @@ public class StoryDesignTool : EditorWindow
         foreach (var guid in guids)
         {
             string path = AssetDatabase.GUIDToAssetPath(guid);
-
             GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
-            
-            if(prefab.tag=="Enemy")
-                if (prefab != null) 
-                    enemyPrefabs.Add(prefab);
+            if (prefab != null) enemyPrefabs.Add(prefab);
         }
         enemyNames = enemyPrefabs.ConvertAll(p => p.name).ToArray();
     }
-
 }
