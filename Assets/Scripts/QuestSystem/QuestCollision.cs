@@ -18,9 +18,15 @@ public class QuestCollision : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        //If the collision is a player
         if(other.transform.tag == "Player")
         {
-            QuestManager.Instance.CurrentQuest.TouchPassThrough();
+            //For each quest in active quest
+            foreach(Quest quest in QuestManager.Instance.activeQuest)
+            {
+                //Use touch pass a method that will only do things on it's corresponding quest
+                quest.TouchPassThrough();
+            }
             Destroy(this.gameObject);
         }
     }
