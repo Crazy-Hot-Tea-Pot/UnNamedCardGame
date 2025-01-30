@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static GameEnums;
 
 public class StoryManager : MonoBehaviour
 {
@@ -16,7 +17,45 @@ public class StoryManager : MonoBehaviour
         }
     }
 
+    public Story CurrentStory
+    {
+        get
+        {
+            return currentStory;
+        }
+        private set
+        {
+            currentStory = value;
+        }
+    }
+
+    public LevelDefinition CurrentLevel
+    {
+        get
+        {
+            return currentLevel;
+        }
+        private set
+        {
+            currentLevel = value;
+        }
+    }
+    public bool StoryCompleted
+    {
+        get
+        {
+            return storyComplete;
+        }
+        private set
+        {
+            storyComplete = value;
+        }
+    }
+
     private static StoryManager instance;
+    private Story currentStory;
+    private LevelDefinition currentLevel;
+    private bool storyComplete = false;
 
     void Awake()
     {
@@ -36,14 +75,69 @@ public class StoryManager : MonoBehaviour
         GameManager.Instance.OnSceneChange += SceneChange;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-    private void SceneChange(Levels newLevel)
+    /// <summary>
+    /// Loads a story from resources and sets teh current level
+    /// </summary>
+    /// <param name="storyName"></param>
+    public void LoadStory(string storyName)
     {
 
+    }
+    /// <summary>
+    /// Returns the currently active level definition.
+    /// Useful for referencing which enemies to spawn or quest gating.
+    /// </summary>
+    public LevelDefinition GetCurrentLevel()
+    {
+        return currentLevel;
+    }
+
+    /// <summary>
+    /// Loads the saved story progress from DataManager, sets currentStory & currentLevel accordingly.
+    /// </summary>
+    public void LoadStoryProgress()
+    {
+        var sp = DataManager.Instance.CurrentGameData.storyProgress;
+        if (!string.IsNullOrEmpty(sp.storyName))
+        {
+            LoadStory(sp.storyName);
+        }
+        // 
+        // Then find the matching LevelDefinition in currentStory 
+        // and set currentLevel to it, if it exists.
+    }
+
+    /// <summary>
+    /// Saves current progress to DataManager’s GameData.
+    /// Usually called right after changing levels or completing objectives.
+    /// </summary>
+    public void SaveStoryProgress()
+    {
+        DataManager.Instance.CurrentGameData.storyProgress.storyName = currentStory ? currentStory.storyName : "";
+        DataManager.Instance.CurrentGameData.storyProgress.currentLevel = currentLevel?.levelID ?? Levels.Title;
+    }
+
+    private void SceneChange(Levels newLevel)
+    {
+        switch (newLevel)
+        {
+            case Levels.Title:
+            case Levels.Credits:
+                break;
+            default:
+                var tempDoors = GameObject.FindGameObjectsWithTag("Exit");
+                // or find by name, if necessary
+                foreach (var doorObj in tempDoors)
+                {
+                    var sceneChangeScript = doorObj.GetComponent<SceneChange>();
+                    if (sceneChangeScript != null)
+                    {
+
+                    }
+                }
+
+                break;
+        }
     }
     void OnDestroy()
     {

@@ -143,12 +143,11 @@ public class EnemyManager : MonoBehaviour
         EnemiesInLevel.AddRange(GameObject.FindGameObjectsWithTag("Enemy"));
     }
     /// <summary>
-    /// TODO
     /// Get Current Level data from Story Manager and spawn those enemies into the scene.
     /// </summary>
     private void SpawnEnemiesForLevel()
     {
-
+        
     }
 
     private void StartCombat()

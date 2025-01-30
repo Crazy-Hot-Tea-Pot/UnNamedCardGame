@@ -21,7 +21,7 @@ public class PathGraphWindow : EditorWindow
     private void InitializeGraph()
     {
         nodePositions.Clear();
-        Vector2 startPos = new Vector2(300, 50);
+        Vector2 startPos = new Vector2(500, 50);
 
         if (pathType == StoryPathType.Linear)
         {

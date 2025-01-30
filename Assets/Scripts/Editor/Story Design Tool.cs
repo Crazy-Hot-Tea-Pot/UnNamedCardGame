@@ -130,7 +130,9 @@ public class StoryDesignTool : EditorWindow
 
             GUILayout.Label($"Next Level {i + 1}: {level.nextLevels[i].levelID}", EditorStyles.boldLabel);
 
-            level.nextLevels[i].questCondition = (Quest)EditorGUILayout.ObjectField("Quest Condition (Optional):", level.nextLevels[i].questCondition, typeof(Quest), false);
+            GUIContent Tip = new GUIContent("Quest Condition (Optiona):", "The quest condition is a quest in the preceeding level that needs to be completed.");
+
+            level.nextLevels[i].questCondition = (Quest)EditorGUILayout.ObjectField(Tip, level.nextLevels[i].questCondition, typeof(Quest), false);
 
             // Draw the next level
             DrawLevel(level.nextLevels[i], depth + 1, $"{level.levelID}");

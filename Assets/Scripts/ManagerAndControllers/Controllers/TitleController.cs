@@ -118,6 +118,8 @@ public class TitleController : MonoBehaviour
         startData.storyProgress.storyName = "Tutorial";
         startData.storyProgress.currentLevel = Levels.Tutorial;
 
+        StoryManager.Instance.LoadStory("Tutorial");
+
 
         // Adds gear to list.
 
