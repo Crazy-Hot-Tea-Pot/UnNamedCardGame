@@ -317,6 +317,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyTarget: {fileID: 0}
   AttackRange: 10
+  EnemyType: Garbage bot
   thisEnemyUI: {fileID: 0}
   CombatController: {fileID: 0}
   animator: {fileID: 0}

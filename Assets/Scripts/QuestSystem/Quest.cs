@@ -41,5 +41,14 @@ public class Quest : ScriptableObject
         Debug.Log("Quest Complete: " + questName);
     }
 
+    /// <summary>
+    /// A class meant to override for the count enemies quest
+    /// </summary>
+    /// <param name="enemyTypeName"></param>
+    public virtual void EnemyQuestCounterUpdate(string enemyTypeName)
+    {
+
+    }
+
 }
 

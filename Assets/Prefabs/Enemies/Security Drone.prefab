@@ -290,6 +290,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyTarget: {fileID: 0}
   AttackRange: 10
+  EnemyType: Security Drone
   thisEnemyUI: {fileID: 6396867329242295756}
   CombatController: {fileID: 0}
   animator: {fileID: 0}

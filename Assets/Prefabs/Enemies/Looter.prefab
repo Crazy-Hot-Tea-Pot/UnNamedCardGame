@@ -52,6 +52,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyTarget: {fileID: 0}
   AttackRange: 10
+  EnemyType: Looter
   thisEnemyUI: {fileID: 3499041421513826723}
   CombatController: {fileID: 0}
   animator: {fileID: 8895841024513928323}

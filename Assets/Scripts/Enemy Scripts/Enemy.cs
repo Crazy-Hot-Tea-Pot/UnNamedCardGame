@@ -53,6 +53,11 @@ public class Enemy : MonoBehaviour
         }               
     }
 
+    /// <summary>
+    /// Important for quest counter UI to know the type of enemy this is 
+    /// </summary>
+    public string EnemyType;
+
     [Header("Enemy Components")]
     /// <summary>
     /// reference to enemy canvas.
@@ -431,6 +436,17 @@ public class Enemy : MonoBehaviour
     /// </summary>
     public virtual void Die()
     {
+        //Update the quest for counting enemies to count it's death
+        try
+        {
+            //Give enemy counter update the enemy name so they can verify it
+            QuestManager.Instance.CurrentQuest.EnemyQuestCounterUpdate(EnemyType);
+        }
+        catch
+        {
+
+        }
+
         SoundManager.PlayFXSound(SoundFX.EnemyDefeated, this.gameObject.transform);
 
         Debug.Log($"{enemyName} has been defeated!");
