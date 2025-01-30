@@ -1,7 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class EnemyManager : MonoBehaviour
 {
@@ -59,12 +57,14 @@ public class EnemyManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);  // Keep this object between scenes
+            // Keep this object between scenes
+            DontDestroyOnLoad(gameObject);
 
         }
         else
         {
-            Destroy(gameObject);  // Destroy duplicates
+            // Destroy duplicates
+            Destroy(gameObject);
         }
 
         PopulateDictionary();
