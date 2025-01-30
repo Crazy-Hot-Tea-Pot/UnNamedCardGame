@@ -142,6 +142,14 @@ public class EnemyManager : MonoBehaviour
         EnemiesInLevel.Clear();
         EnemiesInLevel.AddRange(GameObject.FindGameObjectsWithTag("Enemy"));
     }
+    /// <summary>
+    /// TODO
+    /// Get Current Level data from Story Manager and spawn those enemies into the scene.
+    /// </summary>
+    private void SpawnEnemiesForLevel()
+    {
+
+    }
 
     private void StartCombat()
     {
@@ -161,7 +169,8 @@ public class EnemyManager : MonoBehaviour
             case Levels.Loading:
             case Levels.WorkShop:
                 break;
-            default:                
+            default:
+                SpawnEnemiesForLevel();
                 GetAllEnemiesInLevel();
                 break;
         }

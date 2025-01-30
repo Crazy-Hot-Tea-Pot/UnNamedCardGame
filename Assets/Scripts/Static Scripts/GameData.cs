@@ -35,6 +35,36 @@ public class GameData
         /// </summary>
         public string Teir;
     }
+    [System.Serializable]
+    public class StoryProgress
+    {
+        public string storyName;               // Which story is active?
+        public Levels currentLevel;            // The current 'level' from that story
+        public bool isStoryComplete;           // Example: Are we done?
+
+        // Optional: Track zone states, branching choices, or next level indexes
+        public List<ZoneState> zoneStates = new List<ZoneState>();
+
+        public StoryProgress()
+        {
+            storyName = "";
+            currentLevel = Levels.Title;
+            isStoryComplete = false;
+            zoneStates = new List<ZoneState>();
+        }
+    }
+    [System.Serializable]
+    public class ZoneState
+    {
+        public string zoneID;   // Some unique ID for the zone/combat area
+        public bool isCleared;
+
+        public ZoneState(string id)
+        {
+            zoneID = id;
+            isCleared = false;
+        }
+    }
 
     //Name of Save
     public string SaveName;
@@ -48,6 +78,7 @@ public class GameData
     public int MaxHealth;
     //PlayerScrap
     public int Scraps;
+    public StoryProgress storyProgress = new StoryProgress();
     // Save Chips
     public List<ChipData> Chips = new List<ChipData>();
     // Save Gears

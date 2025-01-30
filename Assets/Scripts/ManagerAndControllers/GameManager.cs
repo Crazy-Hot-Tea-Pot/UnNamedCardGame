@@ -158,7 +158,7 @@ public class GameManager : MonoBehaviour
             case Levels.Credits:
                 break;
             default:
-                DataManager.Instance.CurrentGameData.Level = level;
+                DataManager.Instance.CurrentGameData.Level = level;                
 
                 //Get Player
                 PlayerController player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();

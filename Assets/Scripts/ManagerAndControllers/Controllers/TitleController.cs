@@ -115,9 +115,12 @@ public class TitleController : MonoBehaviour
         startData.Scraps = 100;
         startData.TimeStamp = DateTime.Now;
 
+        startData.storyProgress.storyName = "Tutorial";
+        startData.storyProgress.currentLevel = Levels.Tutorial;
+
 
         // Adds gear to list.
-        
+
         foreach (Item gear in GearManager.Instance.StartingGear)
         {
             Item gearInstance = Instantiate(gear);
