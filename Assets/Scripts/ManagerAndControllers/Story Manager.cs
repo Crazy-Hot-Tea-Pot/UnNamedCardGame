@@ -33,6 +33,14 @@ public class StoryManager : MonoBehaviour
     {
         get
         {
+            if (currentLevel == null)
+            {
+                Debug.LogError("StoryManager: Current level is null!");
+            }
+            else
+            {
+                Debug.Log($"StoryManager: Returning Current Level: {currentLevel.levelID}");
+            }
             return currentLevel;
         }
         private set

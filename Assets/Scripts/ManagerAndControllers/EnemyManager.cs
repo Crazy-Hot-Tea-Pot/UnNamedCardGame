@@ -85,7 +85,7 @@ public class EnemyManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Add Enemy to Combat Enimes list.
+    /// Add Enemy to Combat Enemies list.
     /// </summary>
     /// <param name="enemy"></param>
     public void AddCombatEnemy(GameObject enemy)
@@ -142,13 +142,72 @@ public class EnemyManager : MonoBehaviour
         EnemiesInLevel.Clear();
         EnemiesInLevel.AddRange(GameObject.FindGameObjectsWithTag("Enemy"));
     }
+
     /// <summary>
     /// Get Current Level data from Story Manager and spawn those enemies into the scene.
     /// </summary>
     private void SpawnEnemiesForLevel()
     {
-        
+        // 1. Get the current level from StoryManager
+        LevelDefinition currentLevel = StoryManager.Instance.GetCurrentLevel();
+        if (currentLevel == null)
+        {
+            Debug.LogError("No current level defined in StoryManager.");
+            return;
+        }
+
+        // 2. Get all combat zones in the scene
+        CombatZone[] combatZones = FindObjectsOfType<CombatZone>();
+        if (combatZones.Length == 0)
+        {
+            Debug.LogError("No CombatZones found in the scene.");
+            return;
+        }
+
+        List<EnemySpawn> enemySpawns = new List<EnemySpawn>(currentLevel.enemySpawns);
+        if (enemySpawns.Count == 0)
+        {
+            Debug.LogWarning("No enemies are set to spawn for this level.");
+            return;
+        }
+
+        Debug.Log($"Spawning {enemySpawns.Count} enemies across {combatZones.Length} combat zones.");
+
+        int enemyIndex = 0; // Tracks which enemy from enemySpawns to place next
+
+        // 3. Iterate through Combat Zones and assign enemies
+        foreach (CombatZone combatZone in combatZones)
+        {
+            List<(Vector3 position, EnemyManager.EnemyType type)> availablePositions = combatZone.GetEnemySpawnData();
+
+            int spawnCount = Mathf.Min(enemySpawns.Count - enemyIndex, availablePositions.Count);
+
+            for (int i = 0; i < spawnCount; i++)
+            {
+                EnemySpawn enemySpawn = enemySpawns[enemyIndex++];
+                (Vector3 position, EnemyManager.EnemyType storedType) = availablePositions[i];
+
+                GameObject enemyPrefab = enemySpawn.GetEnemyPrefab();
+                if (enemyPrefab != null)
+                {
+                    GameObject enemy = Instantiate(enemyPrefab, position, Quaternion.identity);
+                    enemy.SetActive(true);
+                    CombatEnemies.Add(enemy);
+                    Debug.Log($"Spawned {enemySpawn.enemyType} at {position}");
+                }
+                else
+                {
+                    Debug.LogError($"Enemy prefab for {enemySpawn.enemyType} not found!");
+                }
+
+                // If we've assigned all enemies, stop early
+                if (enemyIndex >= enemySpawns.Count) return;
+            }
+        }
+
+        Debug.Log($"Finished spawning enemies. {enemySpawns.Count - enemyIndex} enemies were not placed.");
     }
+
 
     private void StartCombat()
     {
